@@ -3,9 +3,8 @@
 import { useEffect, useState } from 'react';
 
 const HomePage = () => {
-  // কাউন্টডাউন টাইমারের জন্য স্টেট (এখানে আপনার টার্গেট ডেট বসাবেন)
   const calculateTimeLeft = () => {
-    const difference = +new Date('2026-08-01') - +new Date(); // উদাহরণ: ১ আগস্ট, ২০২৬
+    const difference = +new Date('2026-08-01') - +new Date();
     let timeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
     if (difference > 0) {
