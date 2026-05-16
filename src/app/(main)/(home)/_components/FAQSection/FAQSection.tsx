@@ -37,34 +37,34 @@ const faqData = [
 ];
 
 const FAQSection = () => {
-  const [openId, setOpenId] = useState<number | null>(3);
+  const [openId, setOpenId] = useState<number | null>(1);
 
   return (
     <section className="bg-white py-20">
-      <div className="container mx-auto px-6 lg:px-16">
-        <div className="flex flex-col gap-16 lg:flex-row">
+      <div className="mx-auto max-w-400 px-6">
+        <div className="flex flex-col gap-12 lg:flex-row">
           {/* Left Side - Content */}
-          <div className="w-full lg:w-1/3">
-            <h2 className="mb-4 text-[42px] leading-tight font-bold text-[#0F172A]">
+          <div className="w-full lg:w-2/5">
+            <h2 className="mb-4 text-5xl leading-tight font-bold text-[#0F172A]">
               Need Help? Check <br /> Our <span className="text-[#34796F]">FAQs</span>
             </h2>
-            <p className="mb-10 text-lg leading-relaxed text-slate-500">
+            <p className="mb-8 text-lg leading-relaxed text-slate-500">
               Find answers to common questions in our FAQs to guide you through your learning
               experience.
             </p>
-            <button className="rounded-lg bg-[#F59E0B] px-8 py-3 font-bold text-white shadow-lg shadow-orange-100 transition-all hover:bg-[#d98c0a] active:scale-95">
-              Contact
+            <button className="cursor-pointer rounded-sm bg-[#F59E0B] px-8 py-3 font-bold text-white shadow-md shadow-orange-100 transition-all hover:bg-[#d98c0a] active:scale-95">
+              Contact Us
             </button>
           </div>
 
           {/* Right Side - Accordion */}
-          <div className="w-full lg:w-2/3">
+          <div className="w-full lg:w-3/5">
             <div className="space-y-2">
               {faqData.map((faq) => (
                 <div key={faq.id} className="overflow-hidden border-b border-slate-200">
                   <button
                     onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
-                    className="flex w-full items-center justify-between py-6 text-left transition-colors hover:text-[#34796F]"
+                    className="flex w-full cursor-pointer items-center justify-between py-6 text-left transition-colors hover:text-[#34796F]"
                   >
                     <span
                       className={`text-xl font-bold ${openId === faq.id ? 'text-[#0F172A]' : 'text-slate-700'}`}
@@ -72,9 +72,9 @@ const FAQSection = () => {
                       {faq.question}
                     </span>
                     {openId === faq.id ? (
-                      <ChevronUp className="text-slate-500" size={24} />
+                      <ChevronUp className="text-slate-500" size={22} />
                     ) : (
-                      <ChevronDown className="text-slate-500" size={24} />
+                      <ChevronDown className="text-slate-500" size={22} />
                     )}
                   </button>
 
