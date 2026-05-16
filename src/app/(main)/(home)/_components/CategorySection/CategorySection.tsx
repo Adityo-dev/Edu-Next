@@ -15,7 +15,7 @@ const CategorySection = () => {
     <section className="overflow-hidden bg-white py-24">
       <div className="mx-auto max-w-400 px-6">
         {/* Header */}
-        <div className="mb-16 flex flex-col items-start justify-between gap-6 md:flex-row">
+        <div className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row">
           <div className="max-w-2xl">
             <h2 className="text-5xl leading-tight font-bold tracking-tight text-[#2D3134]">
               Start Exploring: Find <br />
