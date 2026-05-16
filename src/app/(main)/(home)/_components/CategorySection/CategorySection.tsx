@@ -8,60 +8,22 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-
-const categoryData = [
-  {
-    id: 1,
-    title: 'Data Analytics',
-    desc: 'Master data-driven decision-making with essential analytics skills and tools.',
-    image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=600',
-  },
-  {
-    id: 2,
-    title: 'Marketing',
-    desc: 'Marketing is the art of connecting brands with people, driving engagement.',
-    image: 'https://images.unsplash.com/photo-1533750349088-cd871a92f312?q=80&w=600',
-  },
-  {
-    id: 3,
-    title: 'UI/UX Design',
-    desc: 'UI/UX design focuses on creating seamless, intuitive, and visually.',
-    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600',
-  },
-  {
-    id: 4,
-    title: 'Web Development',
-    desc: 'Build modern applications using the latest web technologies.',
-    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600',
-  },
-  {
-    id: 5,
-    title: 'Machine Learning',
-    desc: 'Explore the fundamentals of AI and predictive algorithms.',
-    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600',
-  },
-  {
-    id: 6,
-    title: 'Graphic Design',
-    desc: 'Learn the principles of visual communication and branding.',
-    image: 'https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=600',
-  },
-];
+import { categoryData } from './data/categoryData.data';
 
 const CategorySection = () => {
   return (
     <section className="overflow-hidden bg-white py-24">
       <div className="mx-auto max-w-400 px-6">
         {/* Header */}
-        <div className="mb-16 flex flex-col items-start justify-between gap-8 md:flex-row">
+        <div className="mb-16 flex flex-col items-start justify-between gap-6 md:flex-row">
           <div className="max-w-2xl">
-            <h2 className="text-5xl leading-tight font-bold tracking-tight text-[#2D3134] md:text-6xl">
+            <h2 className="text-5xl leading-tight font-bold tracking-tight text-[#2D3134]">
               Start Exploring: Find <br />
               Your Perfect <span className="text-[#34796F]/40 italic">Category</span>
             </h2>
           </div>
           <div className="max-w-sm md:self-end">
-            <p className="text-lg leading-relaxed text-slate-500 md:text-right">
+            <p className="text-lg leading-relaxed text-slate-500">
               Dive into our diverse range of categories and discover the ideal course to match your
               interests and goals.
             </p>
@@ -93,14 +55,14 @@ const CategorySection = () => {
               return (
                 <SwiperSlide key={cat.id}>
                   <div
-                    className={`group relative flex h-95 w-full flex-col overflow-hidden rounded-md p-6 shadow-sm transition-all duration-500 ${
+                    className={`group relative flex h-95 w-full cursor-pointer flex-col overflow-hidden rounded-md p-6 shadow-sm transition-all duration-500 ${
                       isYellowStyle ? 'bg-[#FEF5E7]' : 'bg-[#EEF5F5]'
                     }`}
                   >
                     {isYellowStyle ? (
                       <>
                         <div className="flex w-full grow flex-col">
-                          <h3 className="mb-3 text-2xl font-semibold text-[#2D3134]">
+                          <h3 className="mb-2.5 text-2xl font-semibold text-[#2D3134]">
                             {cat.title}
                           </h3>
                           <p className="line-clamp-3 w-full leading-relaxed text-slate-500">
@@ -109,7 +71,7 @@ const CategorySection = () => {
                         </div>
                         <div className="flex items-end justify-between">
                           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#34796F] text-white shadow-lg transition-transform duration-500 group-hover:rotate-45">
-                            <ArrowUpRight size={28} />
+                            <ArrowUpRight size={24} />
                           </div>
                           {/* Pixel Perfect Cut Image */}
                           <div className="relative h-40 w-40 overflow-hidden rounded-tl-[5rem] rounded-tr-md rounded-br-3xl rounded-bl-3xl border-[6px] border-white/60 shadow-xl shadow-black/5">
@@ -127,7 +89,7 @@ const CategorySection = () => {
                       <>
                         <div className="flex justify-between">
                           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#34796F] text-white shadow-lg transition-transform duration-500 group-hover:rotate-45">
-                            <ArrowUpRight size={28} />
+                            <ArrowUpRight size={24} />
                           </div>
 
                           <div className="relative h-40 w-40 overflow-hidden rounded-tl-[5rem] rounded-tr-md rounded-br-3xl rounded-bl-3xl border-[6px] border-white/60 shadow-xl shadow-black/5">
@@ -141,7 +103,7 @@ const CategorySection = () => {
                         </div>
 
                         <div className="mt-auto">
-                          <h3 className="mb-3 text-2xl font-semibold text-[#2D3134]">
+                          <h3 className="mb-2.5 text-2xl font-semibold text-[#2D3134]">
                             {cat.title}
                           </h3>
                           <p className="line-clamp-3 leading-relaxed text-slate-500">{cat.desc}</p>
@@ -155,14 +117,14 @@ const CategorySection = () => {
           </Swiper>
 
           {/* Progress Bar & Navigation */}
-          <div className="mt-10 flex w-full items-center justify-between">
+          <div className="mt-8 flex w-full items-center justify-between">
             <div className="cat-pagination-bar relative h-1.25 max-w-[85%] flex-1 overflow-hidden rounded-full bg-slate-100"></div>
 
             <div className="flex items-center gap-4">
-              <button className="cat-prev flex h-12 w-12 items-center justify-center rounded-xl border border-orange-200 text-[#2D3134] shadow-sm transition-all hover:bg-orange-50 active:scale-95">
+              <button className="cat-prev flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm border border-orange-200 text-[#2D3134] transition-all hover:bg-orange-50 active:scale-95">
                 <ChevronLeft size={24} />
               </button>
-              <button className="cat-next flex h-12 w-12 items-center justify-center rounded-xl bg-[#F59E0B] text-white shadow-lg shadow-orange-200/50 transition-all hover:bg-[#d98c0a] active:scale-95">
+              <button className="cat-next flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm bg-[#F59E0B] text-white shadow-orange-200/50 transition-all hover:bg-[#d98c0a] active:scale-95">
                 <ChevronRight size={24} />
               </button>
             </div>
