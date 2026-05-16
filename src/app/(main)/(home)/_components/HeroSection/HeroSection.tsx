@@ -1,0 +1,156 @@
+'use client';
+
+import { Plus, Star } from 'lucide-react';
+import Image from 'next/image';
+
+const HeroSection = () => {
+  return (
+    <section className="relative flex min-h-[98vh] w-full items-center overflow-hidden bg-[#F9FAFB] py-20">
+      {/* --- Modern Professional Background Logic --- */}
+      <div className="absolute inset-0 z-0">
+        {/* 1. Subtle Dot Grid Pattern */}
+        <div
+          className="absolute inset-0 opacity-[0.15]"
+          style={{
+            backgroundImage: `radial-gradient(#34796F 1px, transparent 1px)`,
+            backgroundSize: '30px 30px',
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 mx-auto w-full max-w-400 px-6">
+        <div className="flex flex-col items-center justify-between gap-16 lg:flex-row">
+          {/* Left Content */}
+          <div className="w-full lg:w-1/2">
+            <div className="relative inline-block">
+              <h1 className="text-5xl leading-tight font-bold tracking-tight text-[#0F172A] md:text-7xl">
+                Empowering You <br />
+                with <span className="text-[#0F172A]">Digital </span>
+                <span className="text-[#F59E0B] italic">Skills</span>
+              </h1>
+              {/* Yellow Spark Icon */}
+              <div className="absolute -top-4 -right-10 animate-pulse">
+                <svg width="45" height="45" viewBox="0 0 40 40" fill="none">
+                  <path
+                    d="M20 0L23.5 16.5L40 20L23.5 23.5L20 40L16.5 23.5L0 20L16.5 16.5L20 0Z"
+                    fill="#F59E0B"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-slate-500">
+              Our platform makes education flexible and convenient, so you can achieve your goals
+              wherever and whenever you choose.
+            </p>
+
+            <div className="mt-10">
+              <button className="cursor-pointer rounded-sm bg-[#34796F] px-10 py-4 font-bold text-white shadow-2xl shadow-emerald-200 transition-all hover:bg-[#2a6159] active:scale-95">
+                Join Our Course
+              </button>
+            </div>
+
+            {/* Avatar Group */}
+            <div className="mt-13 flex flex-wrap items-center gap-6">
+              <div className="flex -space-x-4">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className="h-12 w-12 overflow-hidden rounded-full border-2 border-white shadow-sm"
+                  >
+                    <Image
+                      src={`https://i.pravatar.cc/150?u=${i + 10}`}
+                      width={100}
+                      height={100}
+                      alt="User"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ))}
+                <div className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-[#2D3134] text-white shadow-sm">
+                  <Plus size={20} />
+                </div>
+              </div>
+
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4].map((s) => (
+                    <Star key={s} size={18} fill="#34796F" color="#34796F" />
+                  ))}
+                  <Star size={18} fill="none" color="#34796F" strokeWidth={2} />
+                  <span className="ml-2 font-semibold text-slate-800">(4.5)</span>
+                </div>
+                <p className="mt-1 text-sm font-medium text-slate-500">
+                  1000+ Review of our course
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Content (Image Section) */}
+          <div className="relative flex w-full justify-center lg:w-1/2">
+            <div className="relative w-full max-w-150">
+              {/* Main Image Wrapper */}
+              <div className="relative z-10 overflow-hidden rounded-t-[50px] rounded-br-[50px] rounded-bl-[160px] border-8 border-white shadow-sm shadow-slate-200">
+                <Image
+                  src="/heroImage1.jpg"
+                  alt="Student"
+                  width={600}
+                  height={400}
+                  className="h-auto w-full object-cover"
+                />
+              </div>
+
+              {/* Badge */}
+              <div className="absolute -bottom-6 -left-6 z-20 rounded-full border-[6px] border-white bg-white p-1 shadow-2xl">
+                <div className="relative flex h-30 w-30 items-center justify-center">
+                  <svg
+                    className="absolute inset-0 h-full w-full animate-[spin_12s_linear_infinite]"
+                    viewBox="0 0 100 100"
+                  >
+                    <defs>
+                      <path
+                        id="circlePath"
+                        d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
+                      />
+                    </defs>
+                    <text className="fill-slate-800 text-[9px] font-black tracking-[0.2em] uppercase">
+                      <textPath xlinkHref="#circlePath">
+                        • Edu-next • E-learning • Platform
+                      </textPath>
+                    </text>
+                  </svg>
+                  <div className="z-30 text-[#F59E0B]">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        @keyframes bounce-slow {
+          0%,
+          100% {
+            transform: translateY(0) rotate(-12deg);
+          }
+          50% {
+            transform: translateY(-20px) rotate(-12deg);
+          }
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 5s ease-in-out infinite;
+        }
+      `}</style>
+    </section>
+  );
+};
+
+export default HeroSection;
