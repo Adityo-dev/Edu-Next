@@ -16,11 +16,11 @@ const MainNavigationBar = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed top-0 z-50 w-full border-b border-slate-100 bg-white/80 backdrop-blur-lg">
+    <nav className="bg-subtle fixed top-0 z-50 w-full border-b border-slate-100 backdrop-blur-lg">
       <div className="mx-auto flex max-w-400 items-center justify-between px-6 py-4">
         {/* Left Section: Logo */}
         <div className="group flex cursor-pointer items-center gap-3">
-          <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-sm bg-[#34796F] text-white shadow-sm transition-transform duration-300">
+          <div className="bg-primary relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-sm text-white shadow-sm transition-transform duration-300">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -41,8 +41,8 @@ const MainNavigationBar = () => {
 
           <div className="flex flex-col leading-tight">
             <h1 className="text-2xl font-black tracking-tighter">
-              <span className="text-[#34796F]">Edu</span>
-              <span className="text-[#F59E0B]"> Next</span>
+              <span className="text-primary">Edu</span>
+              <span className="text-secondary"> Next</span>
             </h1>
             <span className="text-xs font-semibold tracking-[0.2em] text-slate-400 uppercase">
               Learn the Future
@@ -59,7 +59,7 @@ const MainNavigationBar = () => {
                 key={link.name}
                 href={link.href}
                 className={`text-sm font-medium transition-all duration-300 ${
-                  isActive ? 'font-bold text-[#34796F]' : 'text-slate-600 hover:text-[#34796F]'
+                  isActive ? 'text-primary font-bold' : 'hover:text-primary text-slate-600'
                 }`}
               >
                 {link.name}
@@ -78,7 +78,7 @@ const MainNavigationBar = () => {
             <Bookmark size={20} className="text-slate-600" />
           </button>
 
-          <button className="hidden rounded-sm bg-[#F59E0B] px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-100 transition-all hover:bg-[#d98c0a] active:scale-95 md:block">
+          <button className="bg-secondary hover:bg-secondary/80 hidden rounded-sm px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-100 transition-all active:scale-95 md:block">
             Sign in
           </button>
 
@@ -92,7 +92,7 @@ const MainNavigationBar = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-75 border-l-slate-100">
                 <SheetHeader className="mb-10 text-left">
-                  <SheetTitle className="text-2xl font-bold text-[#34796F]">Navigation</SheetTitle>
+                  <SheetTitle className="text-primary text-2xl font-bold">Navigation</SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-6">
                   {navLinks.map((link) => (
@@ -100,7 +100,7 @@ const MainNavigationBar = () => {
                       key={link.name}
                       href={link.href}
                       className={`text-lg font-medium transition-colors ${
-                        pathname === link.href ? 'font-bold text-[#34796F]' : 'text-slate-600'
+                        pathname === link.href ? 'text-primary font-bold' : 'text-slate-600'
                       }`}
                     >
                       {link.name}
@@ -114,7 +114,7 @@ const MainNavigationBar = () => {
                     <button className="flex items-center gap-3 text-slate-600">
                       <Bookmark size={20} /> Bookmark
                     </button>
-                    <button className="mt-4 w-full rounded-sm bg-[#F59E0B] py-3 font-bold text-white">
+                    <button className="bg-secondary mt-4 w-full cursor-pointer rounded-sm py-3 font-bold text-white">
                       Sign in
                     </button>
                   </div>

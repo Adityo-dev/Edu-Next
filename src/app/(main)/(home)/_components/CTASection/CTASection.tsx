@@ -1,6 +1,6 @@
 const CTASection = () => {
   return (
-    <section className="px-6 py-20">
+    <section className="px-6 pt-10 pb-24">
       <div className="mx-auto max-w-400">
         {/* Main Banner Container */}
         <div className="relative overflow-hidden rounded-md bg-linear-to-r from-[#ECF7F7] via-[#F4F9F9] to-[#FEFBF6] px-8 py-20 text-center shadow-xs">
@@ -18,17 +18,17 @@ const CTASection = () => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <circle cx="200" cy="200" r="198" stroke="#34796F" strokeWidth="2" />
-              <circle cx="200" cy="200" r="160" stroke="#34796F" strokeWidth="2" />
-              <circle cx="200" cy="200" r="120" stroke="#34796F" strokeWidth="2" />
-              <circle cx="200" cy="200" r="80" stroke="#34796F" strokeWidth="2" />
+              <circle cx="200" cy="200" r="198" stroke="primary" strokeWidth="2" />
+              <circle cx="200" cy="200" r="160" stroke="primary" strokeWidth="2" />
+              <circle cx="200" cy="200" r="120" stroke="primary" strokeWidth="2" />
+              <circle cx="200" cy="200" r="80" stroke="primary" strokeWidth="2" />
             </svg>
           </div>
 
           {/* Content */}
           <div className="relative z-10 flex flex-col items-center">
             <h2 className="text-4xl font-bold tracking-tight text-[#2D3134] md:text-5xl lg:text-6xl">
-              Join the E-Learning <span className="text-[#34796F]">Revolution</span>
+              Join the E-Learning <span className="text-primary">Revolution</span>
             </h2>
 
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-500">
@@ -36,7 +36,7 @@ const CTASection = () => {
               designed for your success.
             </p>
 
-            <button className="mt-10 transform rounded-xl bg-[#F59E0B] px-10 py-4 text-lg font-bold text-white shadow-lg shadow-orange-100 transition-all hover:scale-105 hover:bg-[#d98c0a] active:scale-95">
+            <button className="mt-10 transform cursor-pointer rounded-sm bg-[#F59E0B] px-10 py-4 text-lg font-bold text-white shadow-sm shadow-orange-100 transition-all hover:scale-105 hover:bg-[#d98c0a] active:scale-95">
               Join Our Course
             </button>
           </div>

@@ -46,7 +46,7 @@ const FAQSection = () => {
           {/* Left Side - Content */}
           <div className="w-full lg:w-2/5">
             <h2 className="mb-4 text-5xl leading-tight font-bold text-[#0F172A]">
-              Need Help? Check <br /> Our <span className="text-[#34796F]">FAQs</span>
+              Need Help? Check <br /> Our <span className="text-primary">FAQs</span>
             </h2>
             <p className="mb-8 text-lg leading-relaxed text-slate-500">
               Find answers to common questions in our FAQs to guide you through your learning
@@ -64,7 +64,7 @@ const FAQSection = () => {
                 <div key={faq.id} className="overflow-hidden border-b border-slate-200">
                   <button
                     onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
-                    className="flex w-full cursor-pointer items-center justify-between py-6 text-left transition-colors hover:text-[#34796F]"
+                    className="hover:text-primary flex w-full cursor-pointer items-center justify-between py-6 text-left transition-colors"
                   >
                     <span
                       className={`text-xl font-bold ${openId === faq.id ? 'text-[#0F172A]' : 'text-slate-700'}`}

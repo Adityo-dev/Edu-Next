@@ -11,7 +11,7 @@ const MainFooter = () => {
           <div className="max-w-xs">
             <div className="mb-6 flex items-center gap-2">
               {/* Replace with your actual Logo SVG or Image */}
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#34796F] font-bold text-white">
+              <div className="bg-primary flex h-10 w-10 items-center justify-center rounded-lg font-bold text-white">
                 E
               </div>
               <span className="text-3xl font-bold text-[#F59E0B]">Educ</span>
@@ -27,22 +27,22 @@ const MainFooter = () => {
             <h4 className="mb-6 text-xl font-bold text-[#2D3134]">Page</h4>
             <ul className="space-y-4 text-slate-500">
               <li>
-                <Link href="/" className="transition-colors hover:text-[#34796F]">
+                <Link href="/" className="hover:text-primary transition-colors">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/category" className="transition-colors hover:text-[#34796F]">
+                <Link href="/category" className="hover:text-primary transition-colors">
                   Category
                 </Link>
               </li>
               <li>
-                <Link href="/course" className="transition-colors hover:text-[#34796F]">
+                <Link href="/course" className="hover:text-primary transition-colors">
                   Course
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="transition-colors hover:text-[#34796F]">
+                <Link href="/blog" className="hover:text-primary transition-colors">
                   Blog
                 </Link>
               </li>
@@ -54,22 +54,22 @@ const MainFooter = () => {
             <h4 className="mb-6 text-xl font-bold text-[#2D3134]">Company</h4>
             <ul className="space-y-4 text-slate-500">
               <li>
-                <Link href="/style-guide" className="transition-colors hover:text-[#34796F]">
+                <Link href="/style-guide" className="hover:text-primary transition-colors">
                   Style Guide
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="transition-colors hover:text-[#34796F]">
+                <Link href="/about" className="hover:text-primary transition-colors">
                   About us
                 </Link>
               </li>
               <li>
-                <Link href="/why-choose-us" className="transition-colors hover:text-[#34796F]">
+                <Link href="/why-choose-us" className="hover:text-primary transition-colors">
                   Why Choose Us
                 </Link>
               </li>
               <li>
-                <Link href="/404" className="transition-colors hover:text-[#34796F]">
+                <Link href="/404" className="hover:text-primary transition-colors">
                   404
                 </Link>
               </li>
@@ -113,21 +113,21 @@ const MainFooter = () => {
             {/* Instagram */}
             <a
               href="#"
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-[#34796F] text-white transition-transform hover:scale-110"
+              className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
             >
               <Instagram size={22} />
             </a>
             {/* Linkedin */}
             <a
               href="#"
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-[#34796F] text-white transition-transform hover:scale-110"
+              className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
             >
               <Linkedin size={22} fill="currentColor" />
             </a>
             {/* X (Twitter) */}
             <a
               href="#"
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-[#34796F] text-white transition-transform hover:scale-110"
+              className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
             >
               <Twitter size={22} fill="currentColor" />
             </a>
