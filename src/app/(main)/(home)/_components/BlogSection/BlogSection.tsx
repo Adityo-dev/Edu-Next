@@ -48,13 +48,13 @@ const additionalBlogPosts = [
 
 const BlogSection = () => {
   return (
-    <section className="overflow-hidden bg-white py-20">
+    <section className="overflow-hidden bg-white py-24">
       <div className="mx-auto max-w-400 px-6">
         {/* Section Header */}
-        <div className="mb-12 flex flex-col items-center justify-between gap-6 md:flex-row">
+        <div className="mb-14 flex flex-col items-center justify-between gap-6 md:flex-row">
           <div className="max-w-2xl text-center md:text-left">
-            <h2 className="text-[42px] leading-tight font-bold text-[#0F172A]">
-              Dive Into Our <span className="text-[#34796F]">Blogs</span> Posts
+            <h2 className="text-5xl leading-tight font-bold text-[#0F172A]">
+              Dive Into Our <span className="text-primary">Blogs</span> Posts
             </h2>
             <p className="mt-4 max-w-lg leading-relaxed text-slate-500">
               Discover a wealth of knowledge, tips, and expert insights to enhance your learning
@@ -64,10 +64,10 @@ const BlogSection = () => {
 
           {/* Custom Slider Buttons */}
           <div className="flex gap-4">
-            <button className="blog-prev flex h-12 w-12 items-center justify-center rounded-xl border border-orange-200 text-orange-500 shadow-sm transition-all hover:bg-orange-50 active:scale-90">
+            <button className="blog-prev flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm border border-orange-200 text-orange-500 transition-all hover:bg-orange-50 active:scale-90">
               <ChevronLeft size={24} />
             </button>
-            <button className="blog-next flex h-12 w-12 items-center justify-center rounded-xl bg-[#F59E0B] text-white shadow-lg shadow-orange-100 transition-all hover:bg-[#d98c0a] active:scale-90">
+            <button className="blog-next flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm bg-[#F59E0B] text-white shadow-orange-100 transition-all hover:bg-[#d98c0a] active:scale-90">
               <ChevronRight size={24} />
             </button>
           </div>
@@ -91,12 +91,10 @@ const BlogSection = () => {
               1024: { slidesPerView: 3 },
               1280: { slidesPerView: 4 },
             }}
-            className="pb-12"
           >
             {additionalBlogPosts.map((post) => (
               <SwiperSlide key={post.id}>
-                <div className="group relative py-2">
-                  {/* Main Card - Height adjusted to h-[420px] for 4-column balance */}
+                <div className="group relative">
                   <div className="relative h-105 w-full overflow-hidden rounded-md border border-slate-100 shadow-xl transition-all duration-300 group-hover:shadow-emerald-100/50">
                     <Image
                       src={post.image}
@@ -109,14 +107,14 @@ const BlogSection = () => {
                     <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent" />
 
                     {/* Content */}
-                    <div className="absolute bottom-0 left-0 w-full translate-y-4 p-6 transition-all duration-300 group-hover:translate-y-0">
+                    <div className="absolute bottom-4 left-0 w-full translate-y-4 p-6 transition-all duration-300 group-hover:translate-y-0">
                       <h3 className="mb-2 text-xl leading-snug font-bold text-white">
                         {post.title}
                       </h3>
-                      <p className="mb-5 line-clamp-2 text-xs text-slate-300 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <p className="mb-5 line-clamp-2 text-sm text-slate-300 opacity-100 transition-opacity duration-300">
                         {post.description}
                       </p>
-                      <button className="transform rounded-lg bg-[#34796F] px-5 py-2 text-xs font-medium text-white shadow-lg shadow-emerald-900/20 transition-all hover:bg-[#2a6159] active:scale-95">
+                      <button className="bg-primary transform rounded-sm px-5 py-2.5 text-xs font-medium text-white shadow-lg shadow-emerald-900/20 transition-all hover:bg-[#2a6159] active:scale-95">
                         Read More
                       </button>
                     </div>

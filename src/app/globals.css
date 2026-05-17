@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -52,11 +52,32 @@
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1550px;
+
   /*======> Custom Colors <=======*/
-  /*======> dark mode <=======*/
-  --color-primary-100: #28a745;
-  --color-primary-200: #151519;
-  --color-secondary: #2a2d33;
+  --color-primary: #34796f;
+  --color-secondary: #e96600;
+  --color-primary-dark: #151519;
+  --color-secondary-dark: #2a2d33;
+
+  /*======> Typography (Text Colors) <=======*/
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-text-placeholder: #94a3b8;
+
+  /*======> Interface Backgrounds <=======*/
+  --color-pure-white: #ffffff;
+  --color-teal-accent: #eef5f5;
+  --color-yellow-accent: #fef5e7;
+  --color-section-slate: #f9fafb;
+
+  /*======> Design Accents & Borders <=======*/
+  /* --color-orange: #e96600; */
+  --color-subtle: #f1f5f9;
+
+  /*======> System Status Colors <=======*/
+  --color-success: #28a745;
+  --color-warning: #ffc107;
+  --color-danger: #dc3545;
 }
 
 :root {
@@ -133,6 +154,6 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-section-slate! text-primary-dark!;
   }
 }

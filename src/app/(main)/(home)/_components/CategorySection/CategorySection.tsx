@@ -17,9 +17,9 @@ const CategorySection = () => {
         {/* Header */}
         <div className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row">
           <div className="max-w-2xl">
-            <h2 className="text-5xl leading-tight font-bold tracking-tight text-[#2D3134]">
+            <h2 className="text-3xl leading-tight font-bold tracking-tight text-[#2D3134] md:text-5xl">
               Start Exploring: Find <br />
-              Your Perfect <span className="text-[#34796F]/40 italic">Category</span>
+              Your Perfect <span className="text-primary/40 italic">Category</span>
             </h2>
           </div>
           <div className="max-w-sm md:self-end">
@@ -70,7 +70,7 @@ const CategorySection = () => {
                           </p>
                         </div>
                         <div className="flex items-end justify-between">
-                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#34796F] text-white shadow-lg transition-transform duration-500 group-hover:rotate-45">
+                          <div className="bg-primary flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform duration-500 group-hover:rotate-45">
                             <ArrowUpRight size={24} />
                           </div>
                           {/* Pixel Perfect Cut Image */}
@@ -88,7 +88,7 @@ const CategorySection = () => {
                       /* Data Analytics Style (Teal Card) */
                       <>
                         <div className="flex justify-between">
-                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#34796F] text-white shadow-lg transition-transform duration-500 group-hover:rotate-45">
+                          <div className="bg-primary flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform duration-500 group-hover:rotate-45">
                             <ArrowUpRight size={24} />
                           </div>
 
@@ -144,7 +144,7 @@ const CategorySection = () => {
         }
 
         .cat-pagination-bar .swiper-pagination-progressbar-fill {
-          background: #34796f !important;
+          background: primary !important;
           height: 100% !important;
           border-radius: 99px !important;
           display: block !important;

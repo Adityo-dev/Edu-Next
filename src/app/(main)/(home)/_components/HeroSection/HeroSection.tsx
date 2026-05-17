@@ -5,14 +5,14 @@ import Image from 'next/image';
 
 const HeroSection = () => {
   return (
-    <section className="relative flex min-h-[98vh] w-full items-center overflow-hidden bg-[#F9FAFB] py-20">
+    <section className="relative flex h-full w-full items-center overflow-hidden py-35">
       {/* --- Modern Professional Background Logic --- */}
       <div className="absolute inset-0 z-0">
         {/* 1. Subtle Dot Grid Pattern */}
         <div
           className="absolute inset-0 opacity-[0.15]"
           style={{
-            backgroundImage: `radial-gradient(#34796F 1px, transparent 1px)`,
+            backgroundImage: `radial-gradient(#34796f 1.5px, transparent 1px)`,
             backgroundSize: '30px 30px',
           }}
         />
@@ -23,29 +23,29 @@ const HeroSection = () => {
           {/* Left Content */}
           <div className="w-full lg:w-1/2">
             <div className="relative inline-block">
-              <h1 className="text-5xl leading-tight font-bold tracking-tight text-[#0F172A] md:text-7xl">
+              <h1 className="text-5xl leading-tight font-bold tracking-tight md:text-7xl">
                 Empowering You <br />
-                with <span className="text-[#0F172A]">Digital </span>
-                <span className="text-[#F59E0B] italic">Skills</span>
+                with <span>Digital </span>
+                <span className="text-secondary italic">Skills</span>
               </h1>
               {/* Yellow Spark Icon */}
-              <div className="absolute -top-4 -right-10 animate-pulse">
+              <div className="absolute -top-4 -right-6 animate-pulse">
                 <svg width="45" height="45" viewBox="0 0 40 40" fill="none">
                   <path
                     d="M20 0L23.5 16.5L40 20L23.5 23.5L20 40L16.5 23.5L0 20L16.5 16.5L20 0Z"
-                    fill="#F59E0B"
+                    fill="#e96600"
                   />
                 </svg>
               </div>
             </div>
 
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-slate-500">
+            <p className="text-text-secondary mt-6 max-w-lg text-lg leading-relaxed">
               Our platform makes education flexible and convenient, so you can achieve your goals
               wherever and whenever you choose.
             </p>
 
             <div className="mt-10">
-              <button className="cursor-pointer rounded-sm bg-[#34796F] px-10 py-4 font-bold text-white shadow-2xl shadow-emerald-200 transition-all hover:bg-[#2a6159] active:scale-95">
+              <button className="bg-primary text-pure-white cursor-pointer rounded-sm px-10 py-4 font-bold shadow-2xl shadow-emerald-200 transition-all hover:bg-[#2a6159] active:scale-95">
                 Join Our Course
               </button>
             </div>
@@ -75,14 +75,12 @@ const HeroSection = () => {
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4].map((s) => (
-                    <Star key={s} size={18} fill="#34796F" color="#34796F" />
+                    <Star key={s} size={18} fill="#ffc107" color="#ffc107" />
                   ))}
-                  <Star size={18} fill="none" color="#34796F" strokeWidth={2} />
-                  <span className="ml-2 font-semibold text-slate-800">(4.5)</span>
+                  <Star size={18} fill="none" color="#ffc107" strokeWidth={2} />
+                  <span className="text-text-primary ml-2 font-semibold">(4.5)</span>
                 </div>
-                <p className="mt-1 text-sm font-medium text-slate-500">
-                  1000+ Review of our course
-                </p>
+                <p className="text-text-secondary mt-1 text-sm">1000+ Review of our platform</p>
               </div>
             </div>
           </div>
@@ -93,10 +91,13 @@ const HeroSection = () => {
               {/* Main Image Wrapper */}
               <div className="relative z-10 overflow-hidden rounded-t-[50px] rounded-br-[50px] rounded-bl-[160px] border-8 border-white shadow-sm shadow-slate-200">
                 <Image
-                  src="/heroImage1.jpg"
+                  src="/heroImage4.jpg"
                   alt="Student"
                   width={600}
                   height={400}
+                  priority
+                  sizes="100vw"
+                  style={{ width: '100%', height: 'auto' }}
                   className="h-auto w-full object-cover"
                 />
               </div>
@@ -120,7 +121,7 @@ const HeroSection = () => {
                       </textPath>
                     </text>
                   </svg>
-                  <div className="z-30 text-[#F59E0B]">
+                  <div className="text-secondary z-30">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
                       <path
                         d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z"
