@@ -7,11 +7,11 @@ import { testimonialsData } from './data/testimonials.data';
 
 const TestimonialSection = () => {
   return (
-    <section className="w-full bg-white py-24">
+    <section className="w-full bg-[#F9FAFB] py-20">
       {/* Header */}
       <div className="mx-auto mb-14 max-w-400 px-6 text-center">
-        <h2 className="text-4xl leading-tight font-bold text-[#2D3134] md:text-5xl">
-          Our <span className="text-[#F59E0B]">250k+</span> Satisfied <br /> Student Say
+        <h2 className="text-4xl leading-tight font-bold md:text-5xl">
+          Our <span className="text-secondary">5,000+</span> Satisfied <br /> Students Say
         </h2>
       </div>
 
@@ -24,12 +24,12 @@ const TestimonialSection = () => {
               className="group mx-2.5 w-100 cursor-pointer rounded-md border border-slate-100 bg-white p-6 text-left transition-all duration-300 hover:border-emerald-100 hover:shadow-sm"
             >
               {/* Quote Icon */}
-              <div className="mb-6 inline-flex h-10 w-10 items-center justify-center rounded-sm bg-emerald-50 text-emerald-500 transition-colors group-hover:bg-emerald-500 group-hover:text-white">
+              <div className="text-primary group-hover:bg-primary mb-6 inline-flex h-10 w-10 items-center justify-center rounded-sm bg-emerald-50 transition-colors group-hover:text-white">
                 <Quote size={24} />
               </div>
 
               {/* Feedback Text */}
-              <p className="mb-6 line-clamp-3 text-lg leading-relaxed text-slate-600 italic">
+              <p className="text-text-secondary mb-6 line-clamp-3 text-lg leading-relaxed italic">
                 {item?.text}
               </p>
 
@@ -45,9 +45,9 @@ const TestimonialSection = () => {
                   />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900">{item?.name}</h4>
+                  <h4 className="font-semibold">{item?.name}</h4>
 
-                  <p className="text-sm font-medium text-slate-400">{item?.role}</p>
+                  <p className="text-text-secondary text-sm font-medium">{item?.role}</p>
                 </div>
               </div>
             </div>

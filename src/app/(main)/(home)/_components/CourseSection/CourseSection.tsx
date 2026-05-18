@@ -10,16 +10,16 @@ const CourseSection = () => {
         {/* Section Header */}
         <div className="mb-14 flex flex-col justify-between md:flex-row md:items-end">
           <div className="max-w-xl">
-            <h2 className="mb-3 text-5xl leading-tight font-bold tracking-tight text-[#0F172A]">
-              Explore Our <span className="text-primary">Courses</span>
+            <h2 className="mb-3 text-5xl leading-tight font-bold tracking-tight">
+              Top Rated <span className="text-primary">Courses</span>
             </h2>
-            <p className="text-lg leading-relaxed text-slate-500">
-              Discover a variety of expertly crafted courses designed to help you gain skills, grow
-              your knowledge, and achieve your goals.
+            <p className="text-text-secondary text-lg leading-relaxed">
+              Our highest-rated courses, loved by thousands of students — handpicked to give you the
+              best learning experience.
             </p>
           </div>
-          <button className="bg-primary cursor-pointer rounded-sm px-6 py-3 font-medium text-white transition-all hover:bg-[#2a6159] active:scale-95 md:mt-0">
-            View More
+          <button className="bg-primary mt-6 cursor-pointer rounded-sm px-6 py-3 font-medium text-white transition-all hover:bg-[#2a6159] active:scale-95 md:mt-0">
+            All Courses
           </button>
         </div>
 
@@ -34,7 +34,7 @@ const CourseSection = () => {
                   alt={course?.title}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-w-768px) 100vw, (max-w-1200px) 50vw, 33vw"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   priority={course?.id <= 3}
                 />
 
@@ -46,12 +46,24 @@ const CourseSection = () => {
               </div>
 
               {/* Course Info */}
-              <div className="flex items-center justify-between px-1">
-                <h3 className="group-hover:text-primary text-lg font-semibold text-[#0F172A] transition-colors duration-300">
-                  {course?.title}
-                </h3>
+              <div className="mt-3 px-1">
+                {/* Rating + Enrolled */}
+                <div className="text-text-secondary mb-2 flex items-center gap-3 text-sm">
+                  <span className="flex items-center gap-1">
+                    <span className="text-warning">★</span>
+                    <span className="font-medium">{course?.rating}</span>
+                  </span>
+                  <span className="h-1 w-1 rounded-full bg-slate-300" />
+                  <span>{course?.enrolled} students</span>
+                </div>
 
-                <span className={`text-lg font-semibold text-[#0F172A]`}>${course?.price}</span>
+                {/* Title + Price */}
+                <div className="flex items-center justify-between">
+                  <h3 className="group-hover:text-primary text-lg font-semibold transition-colors duration-300">
+                    {course?.title}
+                  </h3>
+                  <span className="text-primary text-lg font-bold">৳{course?.price}</span>
+                </div>
               </div>
             </Link>
           ))}

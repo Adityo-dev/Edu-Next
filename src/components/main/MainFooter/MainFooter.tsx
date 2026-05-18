@@ -14,7 +14,7 @@ const MainFooter = () => {
               <div className="bg-primary flex h-10 w-10 items-center justify-center rounded-lg font-bold text-white">
                 E
               </div>
-              <span className="text-3xl font-bold text-[#F59E0B]">Educ</span>
+              <span className="text-secondary text-3xl font-bold">Educ</span>
             </div>
             <p className="leading-relaxed text-slate-500">
               Our e-learning platform offers expertly crafted courses to help you gain skills and
@@ -106,7 +106,7 @@ const MainFooter = () => {
             {/* Facebook */}
             <a
               href="#"
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F59E0B] text-white shadow-lg shadow-orange-200 transition-transform hover:scale-110"
+              className="bg-secondary flex h-12 w-12 items-center justify-center rounded-full text-white shadow-orange-200 transition-transform hover:scale-110"
             >
               <Facebook size={22} fill="currentColor" />
             </a>
