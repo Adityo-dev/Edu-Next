@@ -17,15 +17,15 @@ const CategorySection = () => {
         {/* Header */}
         <div className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row">
           <div className="max-w-2xl">
-            <h2 className="text-3xl leading-tight font-bold tracking-tight text-[#2D3134] md:text-5xl">
-              Start Exploring: Find <br />
-              Your Perfect <span className="text-primary/40 italic">Category</span>
+            <h2 className="text-3xl leading-tight font-bold tracking-tight md:text-5xl">
+              Browse by Topic: Find <br />
+              Your Perfect <span className="text-secondary italic">Category</span>
             </h2>
           </div>
           <div className="max-w-sm md:self-end">
-            <p className="text-lg leading-relaxed text-slate-500">
-              Dive into our diverse range of categories and discover the ideal course to match your
-              interests and goals.
+            <p className="text-text-secondary text-lg leading-relaxed">
+              Explore categories from Web Development to Business — and find the right course to
+              grow your skills with EduNext.
             </p>
           </div>
         </div>
@@ -53,7 +53,7 @@ const CategorySection = () => {
               const isYellowStyle = index % 2 !== 0;
 
               return (
-                <SwiperSlide key={cat.id}>
+                <SwiperSlide key={cat?.id}>
                   <div
                     className={`group relative flex h-95 w-full cursor-pointer flex-col overflow-hidden rounded-md p-6 shadow-sm transition-all duration-500 ${
                       isYellowStyle ? 'bg-[#FEF5E7]' : 'bg-[#EEF5F5]'
@@ -62,11 +62,9 @@ const CategorySection = () => {
                     {isYellowStyle ? (
                       <>
                         <div className="flex w-full grow flex-col">
-                          <h3 className="mb-2.5 text-2xl font-semibold text-[#2D3134]">
-                            {cat.title}
-                          </h3>
-                          <p className="line-clamp-3 w-full leading-relaxed text-slate-500">
-                            {cat.desc}
+                          <h3 className="mb-2.5 text-2xl font-semibold">{cat?.title}</h3>
+                          <p className="text-text-secondary line-clamp-3 w-full leading-relaxed">
+                            {cat?.desc}
                           </p>
                         </div>
                         <div className="flex items-end justify-between">
@@ -76,8 +74,8 @@ const CategorySection = () => {
                           {/* Pixel Perfect Cut Image */}
                           <div className="relative h-40 w-40 overflow-hidden rounded-tl-[5rem] rounded-tr-md rounded-br-3xl rounded-bl-3xl border-[6px] border-white/60 shadow-xl shadow-black/5">
                             <Image
-                              src={cat.image}
-                              alt={cat.title}
+                              src={cat?.image}
+                              alt={cat?.title}
                               fill
                               className="object-cover transition-transform duration-700 group-hover:scale-110"
                             />
@@ -94,8 +92,8 @@ const CategorySection = () => {
 
                           <div className="relative h-40 w-40 overflow-hidden rounded-tl-[5rem] rounded-tr-md rounded-br-3xl rounded-bl-3xl border-[6px] border-white/60 shadow-xl shadow-black/5">
                             <Image
-                              src={cat.image}
-                              alt={cat.title}
+                              src={cat?.image}
+                              alt={cat?.title}
                               fill
                               className="object-cover transition-transform duration-700 group-hover:scale-110"
                             />
@@ -103,10 +101,10 @@ const CategorySection = () => {
                         </div>
 
                         <div className="mt-auto">
-                          <h3 className="mb-2.5 text-2xl font-semibold text-[#2D3134]">
-                            {cat.title}
-                          </h3>
-                          <p className="line-clamp-3 leading-relaxed text-slate-500">{cat.desc}</p>
+                          <h3 className="mb-2.5 text-2xl font-semibold">{cat?.title}</h3>
+                          <p className="text-text-secondary line-clamp-3 leading-relaxed">
+                            {cat?.desc}
+                          </p>
                         </div>
                       </>
                     )}
@@ -117,8 +115,8 @@ const CategorySection = () => {
           </Swiper>
 
           {/* Progress Bar & Navigation */}
-          <div className="mt-8 flex w-full items-center justify-between">
-            <div className="cat-pagination-bar relative h-1.25 max-w-[85%] flex-1 overflow-hidden rounded-full bg-slate-100"></div>
+          <div className="mt-8 flex w-full items-center justify-between gap-[10%]">
+            <div className="cat-pagination-bar relative h-1.25 w-full flex-1 overflow-hidden rounded-full bg-slate-100"></div>
 
             <div className="flex items-center gap-4">
               <button className="cat-prev flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm border border-orange-200 text-[#2D3134] transition-all hover:bg-orange-50 active:scale-95">
@@ -144,7 +142,7 @@ const CategorySection = () => {
         }
 
         .cat-pagination-bar .swiper-pagination-progressbar-fill {
-          background: primary !important;
+          background: #f59e0b !important;
           height: 100% !important;
           border-radius: 99px !important;
           display: block !important;

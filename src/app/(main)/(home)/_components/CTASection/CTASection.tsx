@@ -2,12 +2,21 @@ const CTASection = () => {
   return (
     <section className="px-6 pt-10 pb-24">
       <div className="mx-auto max-w-400">
-        {/* Main Banner Container */}
-        <div className="relative overflow-hidden rounded-md bg-linear-to-r from-[#ECF7F7] via-[#F4F9F9] to-[#FEFBF6] px-8 py-20 text-center shadow-xs">
-          {/* Left Side Glowing Orbs  */}
-          <div className="absolute top-1/4 left-10 h-6 w-6 rounded-full bg-white opacity-60 blur-xs" />
-          <div className="absolute top-1/2 left-24 h-12 w-12 rounded-full bg-white opacity-40 blur-md" />
-          <div className="absolute bottom-1/4 left-16 h-4 w-4 rounded-full bg-white opacity-50 blur-xs" />
+        <div className="bg-primary relative overflow-hidden rounded-md px-8 py-24 text-center shadow-sm">
+          {/* Background Dot Grid */}
+          <div
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage: `radial-gradient(#ffffff 1.5px, transparent 1px)`,
+              backgroundSize: '28px 28px',
+            }}
+          />
+
+          {/* Top Left Glow */}
+          <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-white opacity-5 blur-3xl" />
+
+          {/* Bottom Right Glow */}
+          <div className="absolute -right-20 -bottom-20 h-64 w-64 rounded-full bg-white opacity-5 blur-3xl" />
 
           {/* Right Side Curve Lines (SVG) */}
           <div className="absolute -right-12.5 -bottom-12.5 opacity-10">
@@ -18,27 +27,38 @@ const CTASection = () => {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <circle cx="200" cy="200" r="198" stroke="primary" strokeWidth="2" />
-              <circle cx="200" cy="200" r="160" stroke="primary" strokeWidth="2" />
-              <circle cx="200" cy="200" r="120" stroke="primary" strokeWidth="2" />
-              <circle cx="200" cy="200" r="80" stroke="primary" strokeWidth="2" />
+              <circle cx="200" cy="200" r="198" stroke="#ffffff" strokeWidth="2" />
+              <circle cx="200" cy="200" r="160" stroke="#ffffff" strokeWidth="2" />
+              <circle cx="200" cy="200" r="120" stroke="#ffffff" strokeWidth="2" />
+              <circle cx="200" cy="200" r="80" stroke="#ffffff" strokeWidth="2" />
             </svg>
+          </div>
+
+          {/* Badge */}
+          <div className="relative z-10 mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-yellow-400" />
+            <span className="text-sm font-medium text-white">5,000+ Students Already Enrolled</span>
           </div>
 
           {/* Content */}
           <div className="relative z-10 flex flex-col items-center">
-            <h2 className="text-4xl font-bold tracking-tight text-[#2D3134] md:text-5xl lg:text-6xl">
-              Join the E-Learning <span className="text-primary">Revolution</span>
+            <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
+              Your Future Starts <span className="text-yellow-400">Here</span>
             </h2>
 
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-500">
-              Transform the way you learn with flexible, accessible, and engaging online courses
-              designed for your success.
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
+              Join thousands of students on EduNext — learn from verified instructors, earn
+              certificates, and unlock new career opportunities from anywhere in Bangladesh.
             </p>
 
-            <button className="mt-10 transform cursor-pointer rounded-sm bg-[#F59E0B] px-10 py-4 text-lg font-bold text-white shadow-sm shadow-orange-100 transition-all hover:scale-105 hover:bg-[#d98c0a] active:scale-95">
-              Join Our Course
-            </button>
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+              <button className="bg-secondary cursor-pointer rounded-sm px-10 py-4 text-lg font-bold text-white shadow-sm shadow-orange-300/30 transition-all hover:scale-105 active:scale-95">
+                Get Started for Free
+              </button>
+              <button className="cursor-pointer rounded-sm border border-white/30 bg-white/10 px-10 py-4 text-lg font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20 active:scale-95">
+                Browse Courses
+              </button>
+            </div>
           </div>
         </div>
       </div>

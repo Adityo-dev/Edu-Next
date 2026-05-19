@@ -40,13 +40,13 @@ const HeroSection = () => {
             </div>
 
             <p className="text-text-secondary mt-6 max-w-lg text-lg leading-relaxed">
-              Our platform makes education flexible and convenient, so you can achieve your goals
-              wherever and whenever you choose.
+              EduNext brings you verified instructors, live sessions, and certificates — so you can
+              learn at your own pace and unlock new career opportunities.
             </p>
 
             <div className="mt-10">
               <button className="bg-primary text-pure-white cursor-pointer rounded-sm px-10 py-4 font-bold shadow-2xl shadow-emerald-200 transition-all hover:bg-[#2a6159] active:scale-95">
-                Join Our Course
+                Explore Courses
               </button>
             </div>
 
@@ -80,13 +80,13 @@ const HeroSection = () => {
                   <Star size={18} fill="none" color="#ffc107" strokeWidth={2} />
                   <span className="text-text-primary ml-2 font-semibold">(4.5)</span>
                 </div>
-                <p className="text-text-secondary mt-1 text-sm">1000+ Review of our platform</p>
+                <p className="text-text-secondary mt-1 text-sm">5,000+ Students trust EduNext</p>
               </div>
             </div>
           </div>
 
           {/* Right Content (Image Section) */}
-          <div className="relative flex w-full justify-center lg:w-1/2">
+          <div className="relative flex w-full justify-end lg:w-1/2">
             <div className="relative w-full max-w-150">
               {/* Main Image Wrapper */}
               <div className="relative z-10 overflow-hidden rounded-t-[50px] rounded-br-[50px] rounded-bl-[160px] border-8 border-white shadow-sm shadow-slate-200">
@@ -115,9 +115,9 @@ const HeroSection = () => {
                         d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
                       />
                     </defs>
-                    <text className="fill-slate-800 text-[9px] font-black tracking-[0.2em] uppercase">
+                    <text className="fill-slate-800 text-[9px] font-black tracking-[0.15em] uppercase">
                       <textPath xlinkHref="#circlePath">
-                        • Edu-next • E-learning • Platform
+                        • EduNext • Learn Online • Grow Fast
                       </textPath>
                     </text>
                   </svg>

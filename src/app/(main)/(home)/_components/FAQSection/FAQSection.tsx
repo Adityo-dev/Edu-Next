@@ -1,94 +1,122 @@
 'use client';
 
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useState } from 'react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 
 const faqData = [
   {
     id: 1,
     question: 'How Do I Enroll in a Course?',
     answer:
-      "To enroll in a course, simply browse our catalog, select the course you're interested in, and click the 'Enroll Now' button. You'll be guided through the payment and registration process.",
+      'Simply browse our course catalog, select your desired course, and click "Enroll Now". Complete the payment via bKash, Nagad, or Rocket — and you will get instant access to all course materials.',
   },
   {
     id: 2,
-    question: 'Is Financial Aid Available?',
+    question: 'Will I Get a Certificate After Completing a Course?',
     answer:
-      'Yes, we offer financial aid for selected courses. You can apply directly through the course details page by submitting the required documentation.',
+      'Yes! Once you complete all lessons and pass the required quizzes, EduNext will automatically generate a PDF certificate for you to download and share with employers.',
   },
   {
     id: 3,
-    question: 'What Happens If I Miss a Class?',
+    question: 'Can I Watch the Course Videos at My Own Pace?',
     answer:
-      "If you miss a class, don't worry! All course materials, including recorded sessions, will be available for you to catch up at your own pace you can access them anytime.",
+      'Absolutely! All video lessons are pre-recorded and available 24/7. You can pause, rewind, and rewatch any lesson anytime — no deadline pressure.',
   },
   {
     id: 4,
-    question: 'What Is the Course Duration?',
+    question: 'Are There Any Live Classes Available?',
     answer:
-      'Course duration varies depending on the subject. Most of our professional courses range from 4 to 12 weeks with flexible learning schedules.',
+      'Yes! Many instructors on EduNext offer live sessions via Zoom or Google Meet. You will get notified before each live class and can join directly from your dashboard.',
   },
   {
     id: 5,
-    question: 'Can I Interact with Other Learners?',
+    question: 'How Do Instructors Receive Their Payments?',
     answer:
-      'Absolutely! We provide dedicated community forums and live Q&A sessions where you can interact with fellow students and instructors.',
+      'Instructors earn money from every course sale. After the platform commission is deducted, the remaining amount is added to their EduNext wallet. They can then request a withdrawal which the admin approves and processes.',
+  },
+  {
+    id: 6,
+    question: 'Is My Payment Information Secure?',
+    answer:
+      'Yes, all transactions on EduNext are processed through SSLCommerz — a fully secured and trusted payment gateway used across Bangladesh.',
+  },
+  {
+    id: 7,
+    question: 'What If I Face Any Problem with a Course?',
+    answer:
+      'You can submit a support ticket directly from your dashboard. Our admin team will review your issue and respond as soon as possible to help resolve it.',
   },
 ];
 
 const FAQSection = () => {
-  const [openId, setOpenId] = useState<number | null>(1);
-
   return (
     <section className="bg-white py-20">
       <div className="mx-auto max-w-400 px-6">
-        <div className="flex flex-col gap-12 lg:flex-row">
-          {/* Left Side - Content */}
-          <div className="w-full lg:w-2/5">
-            <h2 className="mb-4 text-5xl leading-tight font-bold text-[#0F172A]">
-              Need Help? Check <br /> Our <span className="text-primary">FAQs</span>
+        <div className="flex flex-col gap-16 lg:flex-row lg:items-start">
+          {/* Left Sticky Side */}
+          <div className="top-24 w-full lg:sticky lg:w-2/5">
+            <h2 className="mb-4 text-4xl leading-tight font-bold tracking-tight md:text-5xl">
+              Got <span className="text-primary">Questions?</span> <br /> We Have Answers.
             </h2>
-            <p className="mb-8 text-lg leading-relaxed text-slate-500">
-              Find answers to common questions in our FAQs to guide you through your learning
-              experience.
+
+            <p className="text-text-secondary mb-8 text-lg leading-relaxed">
+              Everything you need to know about EduNext. Can not find the answer you are looking
+              for? Contact our support team.
             </p>
-            <button className="cursor-pointer rounded-sm bg-[#F59E0B] px-8 py-3 font-bold text-white shadow-md shadow-orange-100 transition-all hover:bg-[#d98c0a] active:scale-95">
-              Contact Us
+
+            {/* Stats */}
+            <div className="mb-8 flex gap-8">
+              <div>
+                <h4 className="text-primary text-3xl font-black">5k+</h4>
+                <p className="text-text-secondary text-sm">Happy Students</p>
+              </div>
+              <div className="w-px bg-slate-100" />
+              <div>
+                <h4 className="text-primary text-3xl font-black">50+</h4>
+                <p className="text-text-secondary text-sm">Expert Instructors</p>
+              </div>
+              <div className="w-px bg-slate-100" />
+              <div>
+                <h4 className="text-primary text-3xl font-black">120+</h4>
+                <p className="text-text-secondary text-sm">Total Courses</p>
+              </div>
+            </div>
+
+            <button className="bg-secondary cursor-pointer rounded-sm px-8 py-3 font-bold text-white shadow-md shadow-orange-100 transition-all hover:bg-[#d98c0a] active:scale-95">
+              Contact Support
             </button>
           </div>
 
-          {/* Right Side - Accordion */}
+          {/* Right Side - Shadcn Accordion */}
           <div className="w-full lg:w-3/5">
-            <div className="space-y-2">
-              {faqData.map((faq) => (
-                <div key={faq.id} className="overflow-hidden border-b border-slate-200">
-                  <button
-                    onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
-                    className="hover:text-primary flex w-full cursor-pointer items-center justify-between py-6 text-left transition-colors"
-                  >
-                    <span
-                      className={`text-xl font-bold ${openId === faq.id ? 'text-[#0F172A]' : 'text-slate-700'}`}
-                    >
-                      {faq.question}
-                    </span>
-                    {openId === faq.id ? (
-                      <ChevronUp className="text-slate-500" size={22} />
-                    ) : (
-                      <ChevronDown className="text-slate-500" size={22} />
-                    )}
-                  </button>
+            <Accordion type="single" collapsible defaultValue="item-1">
+              {faqData.map((faq, index) => (
+                <AccordionItem
+                  key={faq.id}
+                  value={`item-${faq.id}`}
+                  className="group data-[state=open]:bg-primary mb-2 overflow-hidden rounded-md border-none bg-[#F9FAFB] px-6 transition-all duration-300 data-[state=open]:shadow-sm data-[state=open]:shadow-emerald-100"
+                >
+                  <AccordionTrigger className="cursor-pointer gap-4 py-5 hover:no-underline [&>svg]:hidden">
+                    <div className="flex items-center gap-4">
+                      <span className="text-text-secondary text-sm font-black group-data-[state=open]:text-white/50">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <span className="text-left text-lg font-semibold group-data-[state=open]:text-white">
+                        {faq.question}
+                      </span>
+                    </div>
+                  </AccordionTrigger>
 
-                  {/* Accordion Content with Animation */}
-                  <div
-                    className={`transition-all duration-300 ease-in-out ${
-                      openId === faq.id ? 'mb-6 max-h-40 opacity-100' : 'max-h-0 opacity-0'
-                    }`}
-                  >
-                    <p className="pr-8 leading-relaxed text-slate-500">{faq.answer}</p>
-                  </div>
-                </div>
+                  <AccordionContent className="text-text-secondary pb-5 leading-relaxed group-data-[state=open]:text-white/80">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
               ))}
-            </div>
+            </Accordion>
           </div>
         </div>
       </div>
