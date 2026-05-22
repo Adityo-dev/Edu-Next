@@ -13,11 +13,11 @@ const missionPoints = [
 
 const OurMission = () => {
   return (
-    <div className="mx-auto max-w-[1600px] px-6 py-12">
+    <div className="mx-auto max-w-400 px-6 py-12">
       <div className="flex flex-col justify-between gap-12 lg:flex-row lg:items-center">
         {/* Left Side: Main Image */}
         <div className="flex w-full justify-center lg:w-1/2 lg:justify-start">
-          <div className="bg-pure-white relative aspect-[4/3] w-full max-w-[550px] overflow-hidden rounded-[2.5rem] shadow-md">
+          <div className="bg-pure-white relative aspect-4/3 w-full max-w-137.5 overflow-hidden rounded-[2.5rem] shadow-md">
             <Image
               src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800"
               alt="Our Mission Student"
