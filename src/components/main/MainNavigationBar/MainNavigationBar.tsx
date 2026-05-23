@@ -78,9 +78,12 @@ const MainNavigationBar = () => {
             <Bookmark size={20} className="text-slate-600" />
           </button>
 
-          <button className="bg-secondary hover:bg-secondary/80 hidden rounded-sm px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-100 transition-all active:scale-95 md:block">
+          <Link
+            href="/login"
+            className="bg-secondary hover:bg-secondary/80 hidden rounded-sm px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-100 transition-all active:scale-95 md:block"
+          >
             Sign in
-          </button>
+          </Link>
 
           {/* Shadcn Sheet (Drawer) for Mobile */}
           <div className="md:hidden">
