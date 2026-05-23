@@ -104,7 +104,7 @@ const myCoursesData = [
     completedLessons: 6,
     duration: '15 hrs',
     rating: 4.7,
-    image: 'https://images.unsplash.com/photo-1432888622747-4eb9a8f5a07d?q=80&w=600',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600',
     status: 'in-progress',
     enrolledDate: 'Mar 2025',
     lastAccessed: '3 days ago',
@@ -262,6 +262,8 @@ const MyCourses = () => {
                     src={course.image}
                     alt={course.title}
                     fill
+                    priority
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
 

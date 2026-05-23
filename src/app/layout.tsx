@@ -82,8 +82,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      {/* 💡 WHY suppressHydrationWarning?
+        Prevents Next.js/React hydration mismatch errors caused by browser extensions 
+        (like Grammarly, ColorPick, or ad-blockers) injecting dynamic attributes 
+        (e.g., 'cz-shortcut-listen') into the HTML before React finishes loading.
+      */}
       <body
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} max-w-screen overflow-x-hidden antialiased`}
       >
         {children}
