@@ -8,13 +8,23 @@ function SidebarHeaderSection() {
   const isExpanded = state === 'expanded';
 
   return (
-    <SidebarHeader className="mt-6 flex flex-col items-center gap-6 px-4">
-      {/* Logo Section */}
-      <Link href={'/'} className="flex items-center justify-center gap-2.5">
+    <SidebarHeader className="border-b border-white/5 px-4 py-5">
+      <Link href="/" className="flex items-center gap-3">
+        {/* Icon — always visible */}
+        <div className="bg-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-sm">
+          <span className="text-base font-black text-white">E</span>
+        </div>
+
+        {/* Text — only when expanded */}
         {isExpanded && (
-          <h4 className="text-primary font-sans text-2xl font-bold text-nowrap">
-            Edu <span className="text-[#D4AF37]">Next</span>
-          </h4>
+          <div className="flex flex-col leading-tight">
+            <span className="text-lg font-black text-white">
+              Edu<span className="text-yellow-400">Next</span>
+            </span>
+            <span className="text-[10px] font-semibold tracking-[0.15em] text-white/30 uppercase">
+              Dashboard
+            </span>
+          </div>
         )}
       </Link>
     </SidebarHeader>

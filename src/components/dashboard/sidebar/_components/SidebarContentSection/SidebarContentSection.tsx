@@ -25,8 +25,8 @@ function SidebarContentSection({ role }: { role: roleTypes }) {
   const menuItems = roleBaseRoutes[role] || [];
 
   return (
-    <SidebarContent className={`${state === 'expanded' ? 'px-4' : 'ps-4'} no-scrollbar pt-5`}>
-      <SidebarMenu className="gap-2.5">
+    <SidebarContent className={`no-scrollbar pt-4 ${state === 'expanded' ? 'px-3' : 'px-2'}`}>
+      <SidebarMenu className="gap-1">
         {menuItems.map((item: any) => {
           const isActive = pathname === item?.url;
           const Icon = item?.icon;
@@ -37,17 +37,19 @@ function SidebarContentSection({ role }: { role: roleTypes }) {
                 asChild
                 isActive={isActive}
                 tooltip={state === 'collapsed' ? item?.title : undefined}
-                className="gap-3.5 px-5 py-6 font-medium transition-all duration-200"
+                className={`rounded-sm px-3 py-5 font-medium transition-all duration-200 ${
+                  isActive
+                    ? 'bg-primary! text-white!'
+                    : 'text-white/50! hover:bg-white/5! hover:text-white!'
+                }`}
               >
                 <Link
                   href={item?.url}
                   onClick={() => isMobile && setOpenMobile(false)}
-                  className={`flex items-center gap-3.5 font-medium transition-all duration-300 ${isActive ? 'text-primary! bg-[#1E293B]!' : 'hover:text-primary! text-[#F8FAFC]! hover:bg-[#1E293B]/40!'}`}
+                  className="flex items-center gap-3"
                 >
-                  {Icon && <Icon />}
-                  <span className={`${state === 'collapsed' ? 'hidden' : 'block'}`}>
-                    {item?.title}
-                  </span>
+                  {Icon && <Icon size={18} className={isActive ? 'text-white' : 'text-white/40'} />}
+                  {state !== 'collapsed' && <span className="text-sm">{item?.title}</span>}
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
