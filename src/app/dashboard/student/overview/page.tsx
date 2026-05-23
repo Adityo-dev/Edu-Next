@@ -65,7 +65,7 @@ const continueLearning = [
     progress: 20,
     totalLessons: 30,
     completedLessons: 6,
-    image: 'https://images.unsplash.com/photo-1432888622747-4eb9a8f5a07d?q=80&w=600',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600',
     lastLesson: 'SEO Fundamentals',
   },
 ];
@@ -244,7 +244,14 @@ const StudentOverviewPage = () => {
                   >
                     {/* Thumbnail */}
                     <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-sm">
-                      <Image src={course.image} alt={course.title} fill className="object-cover" />
+                      <Image
+                        src={course.image}
+                        alt={course.title}
+                        fill
+                        priority
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 240px"
+                      />
                     </div>
 
                     {/* Info */}
@@ -307,6 +314,7 @@ const StudentOverviewPage = () => {
                         src={cert.image}
                         alt={cert.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, 240px"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40">
