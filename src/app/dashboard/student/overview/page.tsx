@@ -159,7 +159,7 @@ const certificates = [
 
 const StudentOverviewPage = () => {
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <div className="min-h-screen">
       <div className="mx-auto space-y-6">
         <div className="bg-primary relative overflow-hidden rounded-md px-8 py-8">
           {/* Dot Grid */}
