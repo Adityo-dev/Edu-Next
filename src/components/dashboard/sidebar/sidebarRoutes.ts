@@ -1,15 +1,15 @@
 import {
-  BarChart3,
+  BadgePercent,
+  Bell,
   BookOpen,
-  CreditCard,
-  FileText,
-  FolderOpen,
-  Layers,
+  CircleDollarSign,
+  ClipboardList,
+  GraduationCap,
   LayoutGrid,
-  LifeBuoy,
   MessageSquare,
   Settings,
-  Sliders,
+  ShieldCheck,
+  Star,
   Users,
   Video,
   Wallet,
@@ -17,39 +17,57 @@ import {
 
 export type roleTypes = 'admin' | 'student' | 'instructor';
 
-// =========================================================================
-// 1. Super Admin Dashboard Routes List
-// =========================================================================
+// 1. Super Admin Dashboard Routes
 export const AdminRoutes = [
   {
-    title: 'Dashboard',
+    title: 'Overview',
     url: '/dashboard/admin/overview',
     icon: LayoutGrid,
   },
   {
-    title: 'User Management',
-    url: '/dashboard/admin/user-management',
+    title: 'Users Management',
+    url: '/dashboard/admin/users',
     icon: Users,
   },
   {
-    title: 'System Configs',
-    url: '/dashboard/admin/system-configs',
-    icon: Sliders,
+    title: 'Courses Management',
+    url: '/dashboard/admin/courses',
+    icon: BookOpen,
   },
   {
-    title: 'CMS / Content',
-    url: '/dashboard/admin/cms-content',
-    icon: FileText,
+    title: 'Instructor Verification',
+    url: '/dashboard/admin/instructors',
+    icon: ShieldCheck,
   },
   {
-    title: 'Billing',
-    url: '/dashboard/admin/billing',
-    icon: CreditCard,
+    title: 'Commission Settings',
+    url: '/dashboard/admin/commission',
+    icon: BadgePercent,
+  },
+  {
+    title: 'Revenue & Payments',
+    url: '/dashboard/admin/revenue',
+    icon: CircleDollarSign,
+  },
+  {
+    title: 'Withdrawal Requests',
+    url: '/dashboard/admin/withdrawals',
+    icon: Wallet,
+  },
+  {
+    title: 'Review Moderation',
+    url: '/dashboard/admin/reviews',
+    icon: Star,
   },
   {
     title: 'Support Tickets',
-    url: '/dashboard/admin/support-tickets',
-    icon: LifeBuoy,
+    url: '/dashboard/admin/support',
+    icon: MessageSquare,
+  },
+  {
+    title: 'Notifications',
+    url: '/dashboard/admin/notifications',
+    icon: Bell,
   },
   {
     title: 'Settings',
@@ -58,9 +76,7 @@ export const AdminRoutes = [
   },
 ];
 
-// =========================================================================
-// 2. Student Dashboard Routes List
-// =========================================================================
+// 2. Student Dashboard Routes
 export const StudentRoutes = [
   {
     title: 'Overview',
@@ -69,23 +85,38 @@ export const StudentRoutes = [
   },
   {
     title: 'My Courses',
-    url: '/dashboard/student/my-courses',
+    url: '/dashboard/student/courses',
     icon: BookOpen,
   },
   {
-    title: 'Interactive Classroom',
-    url: '/dashboard/student/classroom',
+    title: 'My Progress',
+    url: '/dashboard/student/progress',
+    icon: ClipboardList,
+  },
+  {
+    title: 'Live Sessions',
+    url: '/dashboard/student/live-sessions',
     icon: Video,
   },
   {
-    title: 'Support Chat',
-    url: '/dashboard/student/support-chat',
+    title: 'Certificates',
+    url: '/dashboard/student/certificates',
+    icon: GraduationCap,
+  },
+  {
+    title: 'My Reviews',
+    url: '/dashboard/student/reviews',
+    icon: Star,
+  },
+  {
+    title: 'Support',
+    url: '/dashboard/student/support',
     icon: MessageSquare,
   },
   {
-    title: 'Order History',
-    url: '/dashboard/student/orders',
-    icon: CreditCard,
+    title: 'Notifications',
+    url: '/dashboard/student/notifications',
+    icon: Bell,
   },
   {
     title: 'Settings',
@@ -93,10 +124,7 @@ export const StudentRoutes = [
     icon: Settings,
   },
 ];
-
-// =========================================================================
-// 3. Instructor / Teacher Dashboard Routes List
-// =========================================================================
+// 3. Instructor Dashboard Routes
 export const InstructorRoutes = [
   {
     title: 'Overview',
@@ -104,24 +132,49 @@ export const InstructorRoutes = [
     icon: LayoutGrid,
   },
   {
-    title: 'Course Studio',
-    url: '/dashboard/instructor/course-studio',
-    icon: FolderOpen,
+    title: 'My Courses',
+    url: '/dashboard/instructor/courses',
+    icon: BookOpen,
   },
   {
-    title: 'Analytics & Revenue',
+    title: 'Create Course',
+    url: '/dashboard/instructor/courses/create',
+    icon: ClipboardList,
+  },
+  {
+    title: 'Live Sessions',
+    url: '/dashboard/instructor/live-sessions',
+    icon: Video,
+  },
+  {
+    title: 'Students',
+    url: '/dashboard/instructor/students',
+    icon: Users,
+  },
+  {
+    title: 'Analytics',
     url: '/dashboard/instructor/analytics',
-    icon: BarChart3,
+    icon: CircleDollarSign,
   },
   {
-    title: 'Curriculum Builder',
-    url: '/dashboard/instructor/curriculum-builder',
-    icon: Layers,
-  },
-  {
-    title: 'Earnings & Payouts',
-    url: '/dashboard/instructor/payouts',
+    title: 'My Wallet',
+    url: '/dashboard/instructor/wallet',
     icon: Wallet,
+  },
+  {
+    title: 'Withdrawal',
+    url: '/dashboard/instructor/withdrawal',
+    icon: BadgePercent,
+  },
+  {
+    title: 'Reviews',
+    url: '/dashboard/instructor/reviews',
+    icon: Star,
+  },
+  {
+    title: 'Notifications',
+    url: '/dashboard/instructor/notifications',
+    icon: Bell,
   },
   {
     title: 'Settings',
