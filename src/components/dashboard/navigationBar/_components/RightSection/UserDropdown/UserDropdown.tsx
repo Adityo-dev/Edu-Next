@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,13 +10,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Bell, ChevronDown, LogOut, User } from 'lucide-react';
+import { Bell, ChevronDown, LogOut, Settings, User } from 'lucide-react';
 
-// Mock User Data
 const user = {
-  name: 'Rk',
-  email: 'trategy@agentarum.com',
+  name: 'Sumaiya Akter',
+  email: 'sumaiya@edunext.com.bd',
   role: 'Super Admin',
+  image: 'https://i.pravatar.cc/150?u=sumaiya',
 };
 
 export default function UserDropdown() {
@@ -25,59 +25,73 @@ export default function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="group flex cursor-pointer items-center gap-3 rounded-md border-white/5 outline-0! transition-all duration-300 hover:bg-[#111B33]/80 md:border md:bg-[#0F1A2C] md:px-3 md:py-1.5">
-          <Avatar className="size-10 border transition-all duration-300 md:size-9">
-            <AvatarFallback className="bg-primary text-xs font-semibold text-white">
-              {user?.name.substring(0, 2).toUpperCase()}
+        <button className="group flex cursor-pointer items-center gap-2.5 rounded-sm border border-slate-200 bg-white px-3 py-2 transition-all outline-none hover:border-emerald-100 hover:bg-emerald-50">
+          <Avatar className="h-7 w-7 border-2 border-emerald-100">
+            <AvatarImage src={user.image} />
+            <AvatarFallback className="bg-primary text-xs font-black text-white">
+              {user.name.substring(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-
           <div className="hidden flex-col items-start md:flex">
-            <span className="text-sm leading-none font-semibold text-white">{user?.name}</span>
-            <span className="text-gray mt-1 text-[10px] font-semibold tracking-widest uppercase">
-              {user?.role}
+            <span className="text-text-primary text-sm leading-none font-bold">{user.name}</span>
+            <span className="text-text-secondary mt-0.5 text-[10px] font-semibold tracking-widest uppercase">
+              {user.role}
             </span>
           </div>
-          <ChevronDown className="text-gray hidden h-4 w-4 md:block" />
+          <ChevronDown
+            size={14}
+            className="hidden text-slate-400 transition-transform group-data-[state=open]:rotate-180 md:block"
+          />
         </button>
       </DropdownMenuTrigger>
-      {/* Dropdown Menu Content */}
+
       <DropdownMenuContent
-        className="rounded-ms animate-in fade-in zoom-in-95 z-100 w-64 border-white/10 bg-[#0F1A2C] p-2 shadow-xl backdrop-blur-xl duration-200"
+        className="w-60 rounded-md border border-slate-100 bg-white p-2 shadow-lg shadow-slate-100"
         align="end"
-        sideOffset={10}
+        sideOffset={8}
       >
-        <DropdownMenuLabel>
-          <p className="text-gray text-xs font-semibold tracking-[0.2em] uppercase">
-            Manage Profile
-          </p>
-          <p className="text-gray mt-0.5 text-sm">{user.email}</p>
+        {/* User Info */}
+        <DropdownMenuLabel className="px-3 py-2">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9 border-2 border-emerald-50">
+              <AvatarImage src={user.image} />
+              <AvatarFallback className="bg-primary text-xs font-black text-white">
+                {user.name.substring(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-text-primary text-sm font-bold">{user.name}</p>
+              <p className="text-text-secondary text-xs">{user.email}</p>
+            </div>
+          </div>
         </DropdownMenuLabel>
 
-        <DropdownMenuSeparator className="bg-white/5" />
+        <DropdownMenuSeparator className="bg-slate-100" />
 
-        <DropdownMenuGroup className="space-y-1">
-          <DropdownMenuItem className="text-gray flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all outline-none hover:bg-white/5 hover:text-white! focus:bg-white/5 active:text-white!">
-            <User className="h-4 w-4" />
+        <DropdownMenuGroup className="space-y-0.5 py-1">
+          <DropdownMenuItem className="hover:text-primary! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-slate-600 transition-all outline-none hover:bg-emerald-50 focus:bg-emerald-50">
+            <User size={15} className="text-slate-400" />
             Profile Settings
           </DropdownMenuItem>
-          <DropdownMenuItem className="text-gray flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-all outline-none hover:bg-white/5 hover:text-white! focus:bg-white/5 active:text-white!">
-            <Bell className="h-4 w-4" />
+          <DropdownMenuItem className="hover:text-primary! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-slate-600 transition-all outline-none hover:bg-emerald-50 focus:bg-emerald-50">
+            <Bell size={15} className="text-slate-400" />
             Notifications
+          </DropdownMenuItem>
+          <DropdownMenuItem className="hover:text-primary! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-slate-600 transition-all outline-none hover:bg-emerald-50 focus:bg-emerald-50">
+            <Settings size={15} className="text-slate-400" />
+            Settings
           </DropdownMenuItem>
         </DropdownMenuGroup>
 
-        <DropdownMenuSeparator className="bg-white/5" />
+        <DropdownMenuSeparator className="bg-slate-100" />
 
-        <div>
-          <DropdownMenuItem
-            onClick={handleLogout}
-            className="text-error hover:bg-error/10 focus:bg-error/10 hover:text-error! active:text-error! flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 text-sm font-bold transition-all outline-none"
-          >
-            <LogOut className="h-4 w-4" />
-            Logout Account
-          </DropdownMenuItem>
-        </div>
+        <DropdownMenuItem
+          onClick={handleLogout}
+          className="flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-bold text-red-500 transition-all outline-none hover:bg-red-50 focus:bg-red-50"
+        >
+          <LogOut size={15} />
+          Logout Account
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
