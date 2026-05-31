@@ -1,4 +1,3 @@
-import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -31,12 +30,12 @@ const recentStudents = [
 
 const RecentStudents = () => {
   return (
-    <div className="rounded-md border border-slate-100 bg-white p-6 shadow-xs">
-      <div className="mb-5 flex items-center justify-between">
-        <h2 className="text-lg font-bold">New Students</h2>
+    <div className="rounded-md border border-slate-200 bg-white p-5 shadow-xs">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold">New Students</h2>
         <Link
           href="/dashboard/instructor/students"
-          className="text-primary text-sm font-semibold hover:underline"
+          className="text-primary text-sm font-medium hover:underline"
         >
           View All →
         </Link>
@@ -52,8 +51,8 @@ const RecentStudents = () => {
               className="rounded-full border-2 border-emerald-50"
             />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold">{student.name}</p>
-              <p className="text-text-secondary truncate text-xs">{student.course}</p>
+              <p className="text-sm font-semibold">{student.name}</p>
+              <p className="text-text-secondary text-xs">{student.course}</p>
             </div>
             <p className="text-text-secondary shrink-0 text-xs">{student.date}</p>
           </div>

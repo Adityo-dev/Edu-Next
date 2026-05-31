@@ -1,7 +1,7 @@
-import React from 'react';
+import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
+import { CircleDollarSign, Star, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { CircleDollarSign, Star, Users } from 'lucide-react';
 
 const recentCourses = [
   {
@@ -35,12 +35,12 @@ const recentCourses = [
 
 const MyCourses = () => {
   return (
-    <div className="rounded-md border border-slate-100 bg-white p-6 shadow-xs">
-      <div className="mb-5 flex items-center justify-between">
-        <h2 className="text-lg font-bold">My Courses</h2>
+    <div className="rounded-md border border-slate-200 bg-white p-5 shadow-xs">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold">My Courses</h2>
         <Link
           href="/dashboard/instructor/courses"
-          className="text-primary text-sm font-semibold hover:underline"
+          className="text-primary text-sm font-medium hover:underline"
         >
           View All →
         </Link>
@@ -55,33 +55,29 @@ const MyCourses = () => {
               <Image src={course.image} alt={course.title} fill className="object-cover" />
             </div>
             <div className="min-w-0 flex-1">
-              <h4 className="mb-1 truncate text-sm font-bold">{course.title}</h4>
-              <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
+              <h4 className="mb-1 truncate text-sm font-semibold">{course.title}</h4>
+              <div className="text-text-secondary flex flex-wrap items-center gap-3 text-sm">
                 <span className="flex items-center gap-1">
-                  <Users size={11} />
+                  <Users size={14} />
                   {course.students} students
                 </span>
                 <span className="flex items-center gap-1">
-                  <CircleDollarSign size={11} />
+                  <CircleDollarSign size={14} />
                   {course.revenue}
                 </span>
                 {course.rating > 0 && (
                   <span className="flex items-center gap-1">
-                    <Star size={11} fill="#ffc107" color="#ffc107" />
+                    <Star size={14} fill="#ffc107" color="#ffc107" />
                     {course.rating}
                   </span>
                 )}
               </div>
             </div>
-            <span
-              className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${
-                course.status === 'published'
-                  ? 'text-primary bg-emerald-50'
-                  : 'bg-yellow-50 text-yellow-600'
-              }`}
-            >
-              {course.status === 'published' ? 'Published' : 'Pending'}
-            </span>
+
+            <DynamicBadge
+              text={course.status === 'published' ? 'Published' : 'Pending'}
+              color={course.status === 'published' ? '#34796f' : '#f59e0b'}
+            />
           </div>
         ))}
       </div>

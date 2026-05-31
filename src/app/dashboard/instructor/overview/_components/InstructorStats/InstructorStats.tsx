@@ -1,4 +1,3 @@
-import React from 'react';
 import { BookOpen, CircleDollarSign, Users, Wallet } from 'lucide-react';
 
 const stats = [
@@ -20,17 +19,17 @@ const stats = [
 
 const InstructorStats = () => {
   return (
-    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
       {stats.map((stat, i) => (
         <div
           key={i}
-          className="rounded-md border border-slate-100 bg-white p-5 shadow-xs transition-all hover:border-emerald-100 hover:shadow-sm"
+          className="rounded-md border border-slate-200 bg-white p-5 shadow-xs transition-all hover:border-emerald-100 hover:shadow-sm"
         >
           <div className="text-primary mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm bg-emerald-50">
             {stat.icon}
           </div>
-          <p className="text-text-primary text-2xl font-black">{stat.value}</p>
-          <p className="text-sm font-semibold text-slate-600">{stat.label}</p>
+          <p className="text-2xl font-black">{stat.value}</p>
+          <p className="text-text-secondary text-sm font-semibold">{stat.label}</p>
           <p className="text-text-secondary mt-0.5 text-xs">{stat.sub}</p>
         </div>
       ))}

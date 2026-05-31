@@ -1,6 +1,6 @@
 const WelcomeSection = () => {
   return (
-    <div className="bg-primary relative overflow-hidden rounded-md px-8 py-8">
+    <div className="bg-primary relative overflow-hidden rounded-md px-4 py-6 sm:px-8 sm:py-10">
       <div
         className="absolute inset-0 opacity-10"
         style={{
@@ -19,11 +19,11 @@ const WelcomeSection = () => {
           </p>
         </div>
         <div className="flex gap-4">
-          <div className="rounded-md border border-white/10 bg-white/10 px-5 py-3 text-center backdrop-blur-sm">
-            <p className="text-2xl font-black text-yellow-400">4.9</p>
+          <div className="w-full rounded-md border border-white/10 bg-white/10 px-5 py-3 text-center backdrop-blur-sm sm:w-auto">
+            <p className="text-warning text-2xl font-black">4.9</p>
             <p className="text-xs text-white/60">Avg Rating</p>
           </div>
-          <div className="rounded-md border border-white/10 bg-white/10 px-5 py-3 text-center backdrop-blur-sm">
+          <div className="w-full rounded-md border border-white/10 bg-white/10 px-5 py-3 text-center backdrop-blur-sm sm:w-auto">
             <p className="text-2xl font-black text-white">8</p>
             <p className="text-xs text-white/60">Courses</p>
           </div>

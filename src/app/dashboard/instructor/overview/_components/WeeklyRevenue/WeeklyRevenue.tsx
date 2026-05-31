@@ -43,10 +43,10 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 export default function WeeklyRevenue() {
   return (
-    <div className="rounded-md border border-slate-100 bg-white p-6 shadow-xs">
-      <div className="mb-5 flex flex-row items-center justify-between space-y-0 p-0">
-        <CardTitle className="text-lg font-bold text-black">Weekly Revenue</CardTitle>
-        <span className="text-primary text-sm font-bold">৳27,500 this week</span>
+    <div className="rounded-md border border-slate-200 bg-white p-5 shadow-xs">
+      <div className="mb-4 flex flex-row items-center justify-between space-y-0 p-0">
+        <CardTitle className="text-lg font-semibold">Weekly Revenue</CardTitle>
+        <span className="text-primary font-semibold">৳27,500 this week</span>
       </div>
 
       <div className="h-62.5 w-full p-0">
