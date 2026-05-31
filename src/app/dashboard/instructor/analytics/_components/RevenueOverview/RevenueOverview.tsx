@@ -1,5 +1,3 @@
-import React from 'react';
-
 const monthlyData = [
   { month: 'Nov', revenue: 8200, students: 42 },
   { month: 'Dec', revenue: 12400, students: 68 },

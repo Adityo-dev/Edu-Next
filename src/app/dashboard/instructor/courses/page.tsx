@@ -1,9 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import CoursesHeader from './_components/CoursesHeader/CoursesHeader';
 import CoursesStats from './_components/CoursesStats/CoursesStats';
-import CoursesFilter from './_components/CoursesFilter/CoursesFilter';
 import CoursesTable from './_components/CoursesTable/CoursesTable';
 
 const coursesData = [
@@ -75,36 +73,16 @@ const coursesData = [
 ];
 
 const InstructorCoursesPage = () => {
-  const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('all');
-  const [openMenu, setOpenMenu] = useState<number | null>(null);
-
-  const filtered = coursesData.filter((c) => {
-    const matchSearch = c.title.toLowerCase().includes(search.toLowerCase());
-    const matchFilter = filter === 'all' || c.status === filter;
-    return matchSearch && matchFilter;
-  });
-
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        {/* Header */}
-        <CoursesHeader />
+    <div className="mx-auto space-y-6">
+      {/* Header */}
+      <CoursesHeader />
 
-        {/* Stats */}
-        <CoursesStats courses={coursesData} />
+      {/* Stats */}
+      <CoursesStats courses={coursesData} />
 
-        {/* Filters */}
-        <CoursesFilter
-          filter={filter}
-          setFilter={setFilter}
-          search={search}
-          setSearch={setSearch}
-        />
-
-        {/* Courses Table */}
-        <CoursesTable filtered={filtered} openMenu={openMenu} setOpenMenu={setOpenMenu} />
-      </div>
+      {/* Courses Table */}
+      <CoursesTable />
     </div>
   );
 };

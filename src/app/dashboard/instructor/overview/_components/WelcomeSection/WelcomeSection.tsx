@@ -1,5 +1,3 @@
-import React from 'react';
-
 const WelcomeSection = () => {
   return (
     <div className="bg-primary relative overflow-hidden rounded-md px-8 py-8">
