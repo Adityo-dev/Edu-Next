@@ -1,5 +1,6 @@
 'use client';
 
+import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import { Eye, EyeOff, GraduationCap, Lock, Mail, Phone, User, Video } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -66,45 +67,33 @@ const RegisterPage = () => {
               <span className="text-lg font-black text-white">E</span>
             </div>
             <span className="text-xl font-black text-white">
-              Edu<span className="text-yellow-400">Next</span>
+              Edu<span className="text-warning">Next</span>
             </span>
           </Link>
 
           {/* Center */}
           <div>
-            <div
-              className={`mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 ${
-                role === 'student'
-                  ? 'bg-primary/30 text-emerald-300'
-                  : 'bg-secondary/30 text-orange-300'
-              }`}
-            >
-              {role === 'student' ? (
-                <>
-                  <GraduationCap size={15} /> Joining as Student
-                </>
-              ) : (
-                <>
-                  <Video size={15} /> Joining as Instructor
-                </>
-              )}
-            </div>
+            <DynamicBadge
+              text={role === 'student' ? 'Joining as Student' : 'Joining as Instructor'}
+              icon={role === 'student' ? GraduationCap : Video}
+              size="base"
+              color={role === 'student' ? '#34796f' : '#e96600'}
+              className="mb-5"
+            />
 
             <h2 className="mb-5 text-5xl leading-[1.1] font-black text-white">
               {role === 'student' ? (
                 <>
-                  Start Your <br /> Learning <br />{' '}
-                  <span className="text-yellow-400">Journey.</span>
+                  Start Your Learning <br /> <span className="text-warning">Journey.</span>
                 </>
               ) : (
                 <>
-                  Share Your <br /> Expertise & <br />{' '}
-                  <span className="text-yellow-400">Earn.</span>
+                  Share Your Expertise <br /> <span className="text-warning"> & Earn.</span>
                 </>
               )}
             </h2>
 
-            <p className="mb-10 max-w-xs text-sm leading-relaxed text-white/50">
+            <p className="mb-10 max-w-md text-sm leading-relaxed text-white/50">
               {role === 'student'
                 ? 'Create your free account and get instant access to 120+ courses taught by verified instructors in Bangladesh.'
                 : 'Apply as an instructor, get verified by our admin, and start earning from thousands of eager learners.'}
