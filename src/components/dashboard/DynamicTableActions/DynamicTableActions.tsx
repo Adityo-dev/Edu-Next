@@ -37,13 +37,41 @@ interface DynamicTableActionsProps {
 const DynamicTableActions = ({ actions }: DynamicTableActionsProps) => {
   //   Internal configuration map for action aesthetics.
   const iconMap = {
-    edit: { icon: Pencil, defaultLabel: 'Edit', color: '#28a745' },
-    delete: { icon: Trash2, defaultLabel: 'Delete', color: '#dc3545' },
-    view: { icon: Eye, defaultLabel: 'View', color: '#64748b' },
-    save: { icon: Check, defaultLabel: 'Save', color: '#10B981' },
-    close: { icon: X, defaultLabel: 'Cancel', color: '#6B7280' },
-    suspend: { icon: Ban, defaultLabel: 'Suspend', color: '#dc3545' },
-    message: { icon: MessageCircle, defaultLabel: 'Message', color: '#10B981' },
+    edit: {
+      icon: Pencil,
+      defaultLabel: 'Edit',
+      color: '#34796f',
+    },
+    delete: {
+      icon: Trash2,
+      defaultLabel: 'Delete',
+      color: '#dc3545',
+    },
+    view: {
+      icon: Eye,
+      defaultLabel: 'View',
+      color: '#64748b',
+    },
+    save: {
+      icon: Check,
+      defaultLabel: 'Save',
+      color: '#28a745',
+    },
+    close: {
+      icon: X,
+      defaultLabel: 'Cancel',
+      color: '#64748b',
+    },
+    suspend: {
+      icon: Ban,
+      defaultLabel: 'Suspend',
+      color: '#e96600',
+    },
+    message: {
+      icon: MessageCircle,
+      defaultLabel: 'Message',
+      color: '#34796f',
+    },
   };
 
   return (
