@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { ArrowUpRight, Loader2, LucideIcon } from 'lucide-react';
+import { Loader2, LucideIcon, Plus } from 'lucide-react';
 import Link from 'next/link';
 
 interface DynamicButtonProps {
@@ -27,7 +27,7 @@ const DynamicActionButton = ({
   variant = 'default',
   disabled = false,
   isLoading = false,
-  icon: Icon = ArrowUpRight,
+  icon: Icon = Plus,
   showIcon = false,
 }: DynamicButtonProps) => {
   const variantStyles = {
@@ -38,29 +38,19 @@ const DynamicActionButton = ({
   };
 
   const combinedClasses = cn(
-    'group relative h-11 text-xs sm:h-13 w-fit cursor-pointer sm:text-base transition-all duration-300 border px-8 active:scale-95 flex items-center justify-center gap-2 font-semibold overflow-hidden',
+    'group relative h-11 text-xs sm:h-12 w-fit cursor-pointer sm:text-base transition-all duration-300 border px-8 active:scale-95 flex items-center justify-center gap-2 font-semibold overflow-hidden',
     variantStyles[variant],
     className,
   );
 
   const buttonContent = (
     <>
-      <span className="relative z-10 transition-transform duration-300 group-hover:-translate-x-0.5">
-        {label}
-      </span>
-
       {isLoading ? (
         <Loader2 className="h-4 w-4 animate-spin" />
       ) : (
-        showIcon &&
-        Icon && (
-          <Icon
-            size={18}
-            strokeWidth={2.5}
-            className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
-          />
-        )
+        showIcon && Icon && <Icon size={18} strokeWidth={2.5} />
       )}
+      <span className="relative z-10 text-sm">{label}</span>
     </>
   );
 

@@ -1,103 +1,105 @@
+/* eslint-disable no-unused-vars */
 'use client';
 
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ITableFilter } from '@/types/table-filter.types';
-import { CalendarIcon, Download, Search } from 'lucide-react'; // Added Download icon matching esv.png
+import { Download, Search, X } from 'lucide-react';
 
 interface DynamicTableFilterBarProps {
   fields: ITableFilter[];
-  // Dynamic configurations for the Export button
+  filter: string;
+  setFilter: (f: string) => void;
+  search: string;
+  setSearch: (s: string) => void;
   showExport?: boolean;
   exportText?: string;
   onExport?: () => void;
 }
 
-export default function DynamicTableFilterBar({
+const DynamicTableFilterBar = ({
   fields,
+  filter,
+  setFilter,
+  search,
+  setSearch,
   showExport = false,
   exportText = 'Export CSV',
   onExport,
-}: DynamicTableFilterBarProps) {
+}: DynamicTableFilterBarProps) => {
+  const selectField = fields.find((f) => f.type === 'select');
   const searchField = fields.find((f) => f.type === 'search');
-  const otherFields = fields.filter((f) => f.type !== 'search');
 
   return (
-    <div className="flex flex-wrap items-center gap-3 overflow-hidden">
-      {searchField && (
-        <div className="group relative w-full sm:w-70">
-          <Search className="group-focus-within:text-primary absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
-          <Input
-            placeholder={searchField.placeholder}
-            onChange={(e) => searchField.onChange(e.target.value)}
-            value={searchField?.value || ''}
-            className="focus:border-primary/50! h-11 w-full rounded-md border border-[#334155]! bg-[#0B1120] pr-4 pl-9 text-xs text-[#9CA3AF] transition-all focus-visible:ring-0 focus-visible:ring-offset-0"
-          />
-        </div>
-      )}
+    <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      {/* [LEFT SIDE]  */}
+      <div className="flex justify-start">
+        {selectField?.options && (
+          <Tabs
+            value={filter || 'all'}
+            onValueChange={(val) => {
+              setFilter(val);
+              if (selectField.onChange) selectField.onChange(val);
+            }}
+            className="w-auto"
+          >
+            <TabsList className="h-10! rounded-sm border border-slate-200 bg-white p-0 shadow-xs">
+              {selectField.options.map((option) => (
+                <TabsTrigger
+                  key={option.value}
+                  value={option.value}
+                  className="data-[state=active]:bg-primary cursor-pointer rounded-xs px-4 py-2 text-sm font-semibold text-slate-500 capitalize transition-all hover:bg-slate-50 data-[state=active]:text-white"
+                >
+                  {option.value === 'all' ? 'all' : option.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        )}
+      </div>
 
-      {otherFields.length > 0 && (
-        <div className="flex items-center gap-2">
-          {otherFields.map((field, index) => {
-            if (field.type === 'select') {
-              return (
-                <div key={index} className="w-full min-w-40">
-                  <Select onValueChange={field.onChange}>
-                    <SelectTrigger className="h-11! w-full cursor-pointer border border-[#334155]! bg-[#0B1120] px-3 py-1 text-xs text-[#9CA3AF] focus:ring-0! focus:ring-offset-0!">
-                      <SelectValue placeholder={field.placeholder} />
-                    </SelectTrigger>
-                    <SelectContent className="border-[#334155]! bg-[#0B1222] text-[#9CA3AF]">
-                      {field.options?.map((opt) => (
-                        <SelectItem
-                          key={opt?.value}
-                          value={opt?.value}
-                          className="cursor-pointer text-sm focus:bg-[#334155]! focus:text-white"
-                        >
-                          {opt?.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              );
-            }
+      {/* [RIGHT SIDE]  */}
+      <div className="flex flex-wrap items-center gap-3 sm:justify-end">
+        {/* [SEARCH INPUT] */}
+        {searchField && (
+          <div className="relative">
+            <Search size={15} className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                if (searchField.onChange) searchField.onChange(e.target.value);
+              }}
+              placeholder={searchField.placeholder || 'Search...'}
+              className="focus:border-primary w-64 rounded-sm border border-slate-200 bg-white py-2.5 pr-4 pl-10 text-sm outline-none focus:ring-2 focus:ring-emerald-100"
+            />
+            {search && (
+              <button
+                onClick={() => {
+                  setSearch('');
+                  if (searchField.onChange) searchField.onChange('');
+                }}
+                className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-600"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+        )}
 
-            if (field.type === 'date') {
-              return (
-                <div key={index} className="relative w-full min-w-40">
-                  <Input
-                    type="text"
-                    placeholder={field.placeholder || 'mm/dd/yyyy'}
-                    onFocus={(e) => (e.target.type = 'date')}
-                    onBlur={(e) => (e.target.type = 'text')}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    className="h-11 w-full rounded-md border border-[#334155]! bg-[#0B1222] pr-8 text-xs text-[#9CA3AF] focus:ring-0"
-                  />
-                  <CalendarIcon className="pointer-events-none absolute top-1/2 right-3 h-3.5 w-3.5 -translate-y-1/2 text-[#9CA3AF]" />
-                </div>
-              );
-            }
-            return null;
-          })}
-        </div>
-      )}
-
-      {/* --- Dynamic Export Button  --- */}
-      {showExport && (
-        <button
-          onClick={onExport}
-          className="flex h-11 cursor-pointer items-center gap-2 rounded-sm border border-[#334155] bg-[#0B1120] px-4 text-xs font-medium text-[#9CA3AF] transition-all duration-300 hover:bg-[#0B1120]/10 hover:text-white active:scale-[0.98]"
-        >
-          <Download size={15} className="text-[#9CA3AF]" />
-          <span>{exportText}</span>
-        </button>
-      )}
+        {/* [EXPORT BUTTON] */}
+        {showExport && (
+          <button
+            onClick={onExport}
+            className="flex h-10 cursor-pointer items-center gap-2 rounded-sm border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-500 transition-all hover:bg-slate-50 active:scale-[0.98]"
+          >
+            <Download size={15} className="text-slate-400" />
+            <span>{exportText}</span>
+          </button>
+        )}
+      </div>
     </div>
   );
-}
+};
+
+export default DynamicTableFilterBar;

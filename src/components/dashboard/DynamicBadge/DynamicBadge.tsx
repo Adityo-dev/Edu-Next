@@ -24,14 +24,14 @@ interface IBadgeProps {
 
 const DynamicBadge = ({
   text,
-  color = '#00B8A9',
+  color = '#34796f',
   size = 'xs',
   icon: Icon,
   className = '',
 }: IBadgeProps) => {
   // Mapping sizes to Tailwind classes
   const sizeClasses = {
-    xs: 'px-2 py-0.5 text-[10px] gap-1',
+    xs: 'px-2 py-0.5 text-[11px] gap-1',
     sm: 'px-2.5 py-1 text-xs gap-1.5',
     base: 'px-3 py-1.5 text-base gap-2',
   };
@@ -45,7 +45,7 @@ const DynamicBadge = ({
 
   return (
     <div
-      className={`inline-flex w-fit items-center justify-center rounded font-semibold tracking-wider uppercase transition-all ${sizeClasses[size]} ${className}`}
+      className={`inline-flex w-fit items-center justify-center rounded font-semibold tracking-wider transition-all ${sizeClasses[size]} ${className}`}
       style={{
         // Adding '1A' to the hex color for 10% opacity background
         backgroundColor: `${color}1A`,
