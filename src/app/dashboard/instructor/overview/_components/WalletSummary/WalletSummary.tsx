@@ -10,7 +10,10 @@ const WalletSummary = () => {
       </div>
       <p className="mb-1 text-3xl font-black text-white">৳12,300</p>
       <p className="mb-4 text-xs text-white/60">Last withdrawal: ৳8,000 on Apr 1</p>
-      <DynamicActionButton label="Withdrawal Request" className="bg-secondary w-full" />
+      <DynamicActionButton
+        label="Withdrawal Request"
+        className="bg-secondary hover:bg-secondary/90 w-full"
+      />
     </div>
   );
 };
