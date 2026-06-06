@@ -2,7 +2,7 @@ import { ITableProps } from '@/types/custom-table.types';
 
 const CustomTable = <T extends object>({ columns, data }: ITableProps<T>) => {
   return (
-    <div className="custom-scrollbar overflow-x-auto rounded-md border border-slate-100 bg-white shadow-xs">
+    <div className="custom-scrollbar overflow-x-auto rounded-md border border-slate-200 bg-white shadow-xs">
       <table className="min-w-full divide-y divide-slate-100">
         <thead>
           <tr className="bg-slate-50">

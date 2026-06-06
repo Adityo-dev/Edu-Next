@@ -1,61 +1,63 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import React, { forwardRef } from 'react';
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
-interface TextAreaFieldProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface TextAreaFieldProps<T extends FieldValues> {
   label: string;
-  error?: string;
+  name: Path<T>;
+  placeholder?: string;
+  error?: any;
+  control: Control<T>;
   required?: boolean;
+  readOnly?: boolean;
+  rows?: number;
 }
 
-const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>(
-  (
-    {
-      label,
-      name,
-      placeholder,
-      error,
-      required = false,
-      readOnly = false,
-      rows = 4,
-      className,
-      ...props
-    },
-    ref,
-  ) => {
-    return (
-      <div className="w-full space-y-2">
-        <Label className="text-mute text-sm">
-          {label} {required && <span className="text-error">*</span>}
-        </Label>
+const TextAreaField = <T extends FieldValues>({
+  label,
+  name,
+  placeholder,
+  error,
+  control,
+  required = false,
+  readOnly = false,
+  rows,
+}: TextAreaFieldProps<T>) => {
+  return (
+    <div className="space-y-2">
+      <Label className="block font-medium">
+        {label} {required && <span className="text-danger">*</span>}
+      </Label>
 
-        <Textarea
-          name={name}
-          placeholder={placeholder}
-          readOnly={readOnly}
-          rows={rows}
-          ref={ref}
-          {...props}
-          className={cn(
-            'min-h-24 w-full resize-none rounded-lg p-3 transition-all duration-300',
-            'placeholder:text-secondary border focus-visible:ring-0 focus-visible:ring-offset-0',
-            {
-              'bg-secondary cursor-default opacity-60': readOnly,
-              'bg-[#F3F3F5]': !readOnly,
-              'border-red-500 focus-visible:border-red-500': error,
-              'border-mute/10 focus-visible:border-primary-100': !error,
-            },
-            className,
-          )}
-        />
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <Textarea
+            {...field}
+            placeholder={placeholder}
+            readOnly={readOnly}
+            rows={rows}
+            className={cn(
+              'text-primary custom-scrollbar max-h-75 min-h-30 w-full resize-none overflow-y-auto rounded-sm p-3 text-sm leading-relaxed shadow-none transition-all outline-none',
+              'focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-emerald-100 focus-visible:ring-offset-0 focus-visible:focus:bg-white',
+              {
+                'cursor-default bg-[#F9FAFB] opacity-60': readOnly,
+                'bg-[#F9FAFB] focus:bg-white': !readOnly,
+                'border-danger/50 focus-visible:border-danger focus-visible:ring-danger/10': error,
+                'border-slate-200': !error,
+              },
+            )}
+          />
+        )}
+      />
 
-        {error && <p className="text-xs font-medium text-red-500">{error}</p>}
-      </div>
-    );
-  },
-);
+      {error && <p className="text-danger text-xs font-medium">{error}</p>}
+    </div>
+  );
+};
 
-TextAreaField.displayName = 'TextAreaField';
 export default TextAreaField;

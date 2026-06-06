@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import LiveSessionsHeader from './_components/LiveSessionsHeader/LiveSessionsHeader';
 import CreateSessionForm from './_components/CreateSessionForm/CreateSessionForm';
-import LiveSessionsStats from './_components/LiveSessionsStats/LiveSessionsStats';
 import LiveSessionsFilter from './_components/LiveSessionsFilter/LiveSessionsFilter';
+import LiveSessionsHeader from './_components/LiveSessionsHeader/LiveSessionsHeader';
 import LiveSessionsList from './_components/LiveSessionsList/LiveSessionsList';
+import LiveSessionsStats from './_components/LiveSessionsStats/LiveSessionsStats';
 
 const sessionsData = [
   {
@@ -80,29 +80,27 @@ const InstructorLiveSessionsPage = () => {
   const filtered = sessionsData.filter((s) => filter === 'all' || s.status === filter);
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        {/* Header */}
-        <LiveSessionsHeader showCreate={showCreate} setShowCreate={setShowCreate} />
+    <div className="mx-auto space-y-6">
+      {/* Header */}
+      <LiveSessionsHeader showCreate={showCreate} setShowCreate={setShowCreate} />
 
-        {/* Create Form */}
-        {showCreate && (
-          <CreateSessionForm
-            setShowCreate={setShowCreate}
-            newSession={newSession}
-            setNewSession={setNewSession}
-          />
-        )}
+      {/* Create Form */}
+      {showCreate && (
+        <CreateSessionForm
+          setShowCreate={setShowCreate}
+          newSession={newSession}
+          setNewSession={setNewSession}
+        />
+      )}
 
-        {/* Stats */}
-        <LiveSessionsStats sessionsData={sessionsData} />
+      {/* Stats */}
+      <LiveSessionsStats sessionsData={sessionsData} />
 
-        {/* Filter */}
-        <LiveSessionsFilter filter={filter} setFilter={setFilter} />
+      {/* Filter */}
+      <LiveSessionsFilter filter={filter} setFilter={setFilter} />
 
-        {/* Sessions */}
-        <LiveSessionsList filtered={filtered} statusConfig={statusConfig} />
-      </div>
+      {/* Sessions */}
+      <LiveSessionsList filtered={filtered} statusConfig={statusConfig} />
     </div>
   );
 };

@@ -18,7 +18,8 @@ interface SelectFieldProps<T extends FieldValues> {
   control: Control<T>;
   required?: boolean;
   placeholder?: string;
-  className?: string;
+  maxHeight?: string;
+  readOnly?: boolean;
 }
 
 const SelectField = <T extends FieldValues>({
@@ -28,8 +29,9 @@ const SelectField = <T extends FieldValues>({
   error,
   control,
   required,
+  maxHeight,
   placeholder = 'Select an option',
-  className,
+  readOnly = false,
 }: SelectFieldProps<T>) => {
   const {
     field: { onChange, value },
@@ -39,38 +41,42 @@ const SelectField = <T extends FieldValues>({
   });
 
   return (
-    <div className={cn('w-full space-y-2', className)}>
-      <Label className="text-gray text-sm font-semibold">
-        {label} {required && <span className="text-error">*</span>}
+    <div className="space-y-2">
+      <Label className="block font-medium">
+        {label} {required && <span className="text-danger">*</span>}
       </Label>
 
-      <Select onValueChange={onChange} value={value || ''}>
+      <Select onValueChange={onChange} value={value || ''} disabled={readOnly}>
         <SelectTrigger
           className={cn(
-            'h-12! w-full cursor-pointer p-3 py-3.5 transition-all duration-300 focus:ring-0 focus:ring-offset-0',
-            'border-[#334155]! bg-[#131D30]! text-white',
+            'text-primary w-full rounded-sm border p-3 py-6 text-sm shadow-none transition-all outline-none',
+            'focus:border-primary focus:ring-emerald-100 focus:ring-offset-0 focus-visible:ring-2 focus-visible:ring-emerald-100 focus-visible:ring-offset-0',
             {
-              'border-error': error,
+              'cursor-default bg-[#F9FAFB] opacity-60': readOnly,
+              'bg-[#F9FAFB] focus:bg-white': !readOnly,
+              'border-danger/50 focus:border-danger focus-visible:border-danger focus-visible:ring-danger/10':
+                error,
+              'border-slate-200': !error,
             },
           )}
         >
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-
-        <SelectContent className="border-[#334155]! bg-[#131D30]! text-white">
-          {options.map((opt) => (
-            <SelectItem
-              key={opt.value}
-              value={opt.value}
-              className="cursor-pointer hover:bg-white/10! hover:text-white!"
-            >
-              {opt.label}
-            </SelectItem>
-          ))}
+        <SelectContent className="text-primary border border-slate-200 bg-white">
+          <div style={maxHeight ? { maxHeight, overflowY: 'auto' } : undefined}>
+            {options.map((opt) => (
+              <SelectItem
+                key={opt.value}
+                value={opt.value}
+                className="focus:text-primary cursor-pointer transition-colors focus:bg-emerald-50"
+              >
+                {opt.label}
+              </SelectItem>
+            ))}
+          </div>
         </SelectContent>
       </Select>
-
-      {error && <p className="text-error mt-1 text-xs font-medium">{error}</p>}
+      {error && <p className="text-danger mt-1 text-xs font-medium">{error}</p>}
     </div>
   );
 };
