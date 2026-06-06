@@ -1,9 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import StudentsHeader from './_components/StudentsHeader/StudentsHeader';
 import StudentsStats from './_components/StudentsStats/StudentsStats';
-import StudentsFilter from './_components/StudentsFilter/StudentsFilter';
 import StudentsTable from './_components/StudentsTable/StudentsTable';
 
 const studentsData = [
@@ -76,36 +74,11 @@ const studentsData = [
 ];
 
 const InstructorStudentsPage = () => {
-  const [search, setSearch] = useState('');
-  const [courseFilter, setCourseFilter] = useState('all');
-
-  const courses = ['all', ...Array.from(new Set(studentsData.map((s) => s.course)))];
-
-  const filtered = studentsData.filter((s) => {
-    const matchSearch =
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.email.toLowerCase().includes(search.toLowerCase());
-    const matchCourse = courseFilter === 'all' || s.course === courseFilter;
-    return matchSearch && matchCourse;
-  });
-
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        <StudentsHeader />
-
-        <StudentsStats studentsData={studentsData} />
-
-        <StudentsFilter
-          courseFilter={courseFilter}
-          setCourseFilter={setCourseFilter}
-          search={search}
-          setSearch={setSearch}
-          courses={courses}
-        />
-
-        <StudentsTable filtered={filtered} />
-      </div>
+    <div className="mx-auto space-y-6">
+      <StudentsHeader />
+      <StudentsStats studentsData={studentsData} />
+      <StudentsTable />
     </div>
   );
 };

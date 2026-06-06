@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState } from 'react';
-import LiveSessionsHeader from './_components/LiveSessionsHeader/LiveSessionsHeader';
 import CreateSessionForm from './_components/CreateSessionForm/CreateSessionForm';
-import LiveSessionsStats from './_components/LiveSessionsStats/LiveSessionsStats';
 import LiveSessionsFilter from './_components/LiveSessionsFilter/LiveSessionsFilter';
+import LiveSessionsHeader from './_components/LiveSessionsHeader/LiveSessionsHeader';
 import LiveSessionsList from './_components/LiveSessionsList/LiveSessionsList';
+import LiveSessionsStats from './_components/LiveSessionsStats/LiveSessionsStats';
 
 const sessionsData = [
   {
@@ -67,42 +68,49 @@ const statusConfig: Record<string, { label: string; color: string; dot: string }
 const InstructorLiveSessionsPage = () => {
   const [filter, setFilter] = useState('all');
   const [showCreate, setShowCreate] = useState(false);
-  const [newSession, setNewSession] = useState({
-    title: '',
-    course: '',
-    date: '',
-    time: '',
-    duration: '',
-    platform: 'Zoom',
-    link: '',
-  });
 
-  const filtered = sessionsData.filter((s) => filter === 'all' || s.status === filter);
+  // Dynamic local state handled by API/State managers or arrays in real flow
+  const [sessions, setSessions] = useState(sessionsData);
+
+  const filtered = sessions.filter((s) => filter === 'all' || s.status === filter);
+
+  const handleCreateSessionSubmit = (data: any) => {
+    const newlyCreated = {
+      id: sessions.length + 1,
+      title: data.title,
+      course: data.course,
+      date: data.date,
+      time: data.time,
+      duration: `${data.duration} min`,
+      platform: data.platform,
+      link: data.meetingLink,
+      students: 0,
+      status: 'upcoming',
+    };
+    setSessions((prev) => [newlyCreated, ...prev]);
+  };
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        {/* Header */}
-        <LiveSessionsHeader showCreate={showCreate} setShowCreate={setShowCreate} />
+    <div className="mx-auto space-y-6">
+      {/* Header */}
+      <LiveSessionsHeader showCreate={showCreate} setShowCreate={setShowCreate} />
 
-        {/* Create Form */}
-        {showCreate && (
-          <CreateSessionForm
-            setShowCreate={setShowCreate}
-            newSession={newSession}
-            setNewSession={setNewSession}
-          />
-        )}
+      {/* Create Form */}
+      {showCreate && (
+        <CreateSessionForm
+          setShowCreate={setShowCreate}
+          handleCreateSession={handleCreateSessionSubmit}
+        />
+      )}
 
-        {/* Stats */}
-        <LiveSessionsStats sessionsData={sessionsData} />
+      {/* Stats */}
+      <LiveSessionsStats sessionsData={sessions} />
 
-        {/* Filter */}
-        <LiveSessionsFilter filter={filter} setFilter={setFilter} />
+      {/* Filter */}
+      <LiveSessionsFilter filter={filter} setFilter={setFilter} />
 
-        {/* Sessions */}
-        <LiveSessionsList filtered={filtered} statusConfig={statusConfig} />
-      </div>
+      {/* Sessions */}
+      <LiveSessionsList filtered={filtered} statusConfig={statusConfig} />
     </div>
   );
 };

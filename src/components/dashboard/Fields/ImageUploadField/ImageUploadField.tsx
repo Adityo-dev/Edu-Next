@@ -1,72 +1,114 @@
+/* eslint-disable no-unused-vars */
 'use client';
-import { UploadCloud } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { ImageIcon, X } from 'lucide-react';
 import Image from 'next/image';
-import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import React, { useMemo } from 'react';
 
 interface ImageUploadFieldProps {
-  label?: string;
+  label: string;
+  subLabel?: string;
+  icon?: React.ReactNode;
   value?: File | string | null;
-  // eslint-disable-next-line no-unused-vars
   onChange: (file: File | null) => void;
   error?: string;
   required?: boolean;
 }
 
-const ImageUploadField = ({ label, value, onChange, error, required }: ImageUploadFieldProps) => {
-  const [preview, setPreview] = useState<string | null>(
-    typeof value === 'string' ? value : value instanceof File ? URL.createObjectURL(value) : null,
-  );
+const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
+  label,
+  subLabel = 'PNG, JPG up to 10MB',
+  icon,
+  value,
+  onChange,
+  error,
+  required = false,
+}) => {
+  const previewUrl = useMemo(() => {
+    if (!value) return null;
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-      if (file) {
-        onChange(file);
-        setPreview(URL.createObjectURL(file));
-      }
-    },
-    [onChange],
-  );
+    if (value instanceof File) {
+      return URL.createObjectURL(value);
+    }
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: { 'image/*': [] },
-    multiple: false,
-  });
+    return value;
+  }, [value]);
+
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (value instanceof File && previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    onChange(null);
+  };
 
   return (
-    <div className="w-full">
-      {label && (
-        <label className="text-gray text-sm font-medium">
-          {label} {required && <span className="text-error"> *</span>}
-        </label>
-      )}
+    <div className="space-y-2">
+      <Label className="block font-medium">
+        {label} {required && <span className="text-danger">*</span>}
+      </Label>
 
-      <div
-        {...getRootProps()}
-        className={`relative mt-2 h-52 w-full cursor-pointer overflow-hidden rounded-md border-2 border-dashed transition-all duration-300 ${error ? 'border-error bg-error/5' : 'hover:border-primary border-white/10 bg-[#131D30]'}`}
-      >
-        <input {...getInputProps()} />
-
-        {preview ? (
-          <>
-            <Image src={preview} alt="Cover" fill className="object-cover opacity-60" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
-              <div className="flex flex-col items-center gap-2 rounded-md bg-black/60 px-4 py-2 text-white backdrop-blur-md">
-                <UploadCloud size={20} />
-                <span className="text-xs font-semibold">Replace Cover</span>
-              </div>
+      <div className="relative">
+        {!previewUrl ? (
+          <div
+            className={`flex cursor-pointer flex-col items-center justify-center rounded-sm border border-dashed p-10 transition-all duration-300 outline-none focus-within:ring-2 focus-within:ring-emerald-100 ${
+              error
+                ? 'border-danger/50 hover:border-danger bg-red-50/10'
+                : 'hover:border-primary/60 border-slate-200 bg-[#F9FAFB] hover:bg-white'
+            }`}
+            onClick={() => document.getElementById('fileInput')?.click()}
+          >
+            <div className="rounded-full bg-emerald-50 p-3 shadow-none">
+              {icon || <ImageIcon className="text-primary h-5 w-5" />}
             </div>
-          </>
+
+            <p className="mt-4 text-sm font-medium text-slate-700">
+              Click to upload or drag and drop
+            </p>
+            <p className="mt-1 text-xs text-slate-400">{subLabel}</p>
+
+            <input
+              id="fileInput"
+              type="file"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0] || null;
+                onChange(file);
+                e.target.value = '';
+              }}
+              accept="image/*"
+            />
+          </div>
         ) : (
-          <div className="text-gray flex h-full flex-col items-center justify-center space-y-2">
-            <UploadCloud size={32} />
-            <p className="text-sm">Click or drag to upload cover</p>
+          <div
+            className={`group relative h-52 w-full overflow-hidden rounded-sm border bg-[#F9FAFB] ${
+              error ? 'border-danger/50' : 'border-slate-200'
+            }`}
+          >
+            <Image
+              src={previewUrl}
+              alt="Preview"
+              fill
+              className="object-contain p-2 transition-transform duration-500 group-hover:scale-105"
+            />
+
+            <button
+              type="button"
+              onClick={handleRemove}
+              className="bg-danger absolute top-3 right-3 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-white shadow-md transition-all hover:bg-red-600 active:scale-90"
+              title="Remove image"
+            >
+              <X size={14} strokeWidth={2.5} />
+            </button>
+
+            <div className="bg-primary/80 absolute right-0 bottom-0 left-0 p-2 text-center text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+              {value instanceof File ? value.name : 'Current Image'}
+            </div>
           </div>
         )}
       </div>
-      {error && <p className="text-error text-xs font-medium">{error}</p>}
+
+      {error && <p className="text-danger text-xs font-medium">{error}</p>}
     </div>
   );
 };
