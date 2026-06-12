@@ -20,10 +20,7 @@ const LiveSessionsStats = ({ sessionsData }: { sessionsData: any[] }) => {
           color: 'text-primary',
         },
       ].map((stat, i) => (
-        <div
-          key={i}
-          className="rounded-md border border-slate-100 bg-white p-5 text-center shadow-xs"
-        >
+        <div key={i} className="dashboard-card-container text-center">
           <p className={`text-3xl font-black ${stat.color}`}>{stat.value}</p>
           <p className="text-text-secondary text-sm">{stat.label}</p>
         </div>

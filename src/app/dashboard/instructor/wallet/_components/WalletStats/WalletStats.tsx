@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrowUpRight, Clock, TrendingUp } from 'lucide-react';
 
 interface WalletStatsProps {
@@ -29,7 +28,7 @@ const WalletStats = ({ credits, debits }: WalletStatsProps) => {
           color: 'bg-blue-50 text-blue-600',
         },
       ].map((stat, i) => (
-        <div key={i} className="rounded-md border border-slate-100 bg-white p-5 shadow-xs">
+        <div key={i} className="dashboard-card-container">
           <div
             className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm ${stat.color}`}
           >

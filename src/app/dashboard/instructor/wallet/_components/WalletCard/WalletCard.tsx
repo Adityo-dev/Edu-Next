@@ -1,6 +1,5 @@
-import React from 'react';
-import Link from 'next/link';
 import { ArrowUpRight, Wallet } from 'lucide-react';
+import Link from 'next/link';
 
 interface WalletCardProps {
   balance: number;
@@ -8,7 +7,7 @@ interface WalletCardProps {
 
 const WalletCard = ({ balance }: WalletCardProps) => {
   return (
-    <div className="bg-primary relative overflow-hidden rounded-md p-8">
+    <div className="bg-primary dashboard-card-container p-6">
       <div
         className="absolute inset-0 opacity-10"
         style={{
@@ -23,7 +22,7 @@ const WalletCard = ({ balance }: WalletCardProps) => {
             <Wallet size={20} className="text-white/70" />
             <span className="text-sm text-white/60">Available Balance</span>
           </div>
-          <p className="text-5xl font-black text-white">৳{balance.toLocaleString()}</p>
+          <p className="py-2 text-5xl font-black text-white">৳{balance.toLocaleString()}</p>
           <p className="mt-2 text-sm text-white/60">After 20% platform commission deducted</p>
         </div>
         <Link

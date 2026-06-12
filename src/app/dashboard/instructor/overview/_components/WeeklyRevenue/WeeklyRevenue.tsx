@@ -43,7 +43,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 export default function WeeklyRevenue() {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-5 shadow-xs">
+    <div className="dashboard-card-container">
       <div className="mb-4 flex flex-row items-center justify-between space-y-0 p-0">
         <CardTitle className="text-lg font-semibold">Weekly Revenue</CardTitle>
         <span className="text-primary font-semibold">৳27,500 this week</span>

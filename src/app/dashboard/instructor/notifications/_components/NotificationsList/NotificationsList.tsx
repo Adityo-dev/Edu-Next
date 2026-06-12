@@ -25,7 +25,7 @@ const NotificationsList = ({
           {filtered.map((notif) => (
             <div
               key={notif.id}
-              className={`group flex items-start gap-4 rounded-md border p-4 transition-all ${!notif.read ? 'border-emerald-100 bg-white shadow-xs' : 'border-slate-100 bg-white opacity-70'}`}
+              className={`group dashboard-card-container flex items-start gap-4 p-3 shadow-none transition-all ${notif.read && 'border-slate-100 bg-white opacity-70'}`}
             >
               <div
                 className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-sm ${notif.color}`}
@@ -34,7 +34,7 @@ const NotificationsList = ({
               </div>
               <div className="flex-1">
                 <div className="mb-0.5 flex items-center gap-2">
-                  <p className="text-sm font-bold">{notif.title}</p>
+                  <p className="text-sm font-semibold">{notif.title}</p>
                   {!notif.read && <span className="bg-secondary h-2 w-2 rounded-full" />}
                 </div>
                 <p className="text-text-secondary text-sm leading-relaxed">{notif.message}</p>
@@ -42,7 +42,7 @@ const NotificationsList = ({
               </div>
               <button
                 onClick={() => setNotifications(notifications.filter((n) => n.id !== notif.id))}
-                className="mt-0.5 shrink-0 text-slate-300 opacity-0 transition-all group-hover:opacity-100 hover:text-red-400"
+                className="hover:text-danger/80 text-danger mt-0.5 shrink-0 cursor-pointer transition-all"
               >
                 <Trash2 size={15} />
               </button>

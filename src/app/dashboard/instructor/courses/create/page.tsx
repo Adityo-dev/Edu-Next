@@ -143,7 +143,7 @@ const CreateCoursePage = () => {
       />
 
       {/* Step Progress */}
-      <div className="rounded-md border border-slate-100 bg-white p-5 shadow-xs">
+      <div className="dashboard-card-container">
         <div className="flex items-center gap-2">
           {steps.map((s, i) => (
             <div key={i} className="flex flex-1 items-center">

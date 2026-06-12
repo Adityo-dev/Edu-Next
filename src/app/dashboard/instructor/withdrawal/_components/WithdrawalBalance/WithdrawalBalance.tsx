@@ -1,4 +1,3 @@
-import React from 'react';
 import { Wallet } from 'lucide-react';
 
 interface WithdrawalBalanceProps {
@@ -7,7 +6,7 @@ interface WithdrawalBalanceProps {
 
 const WithdrawalBalance = ({ balance }: WithdrawalBalanceProps) => {
   return (
-    <div className="bg-primary relative overflow-hidden rounded-md p-7">
+    <div className="bg-primary dashboard-card-container p-6">
       <div
         className="absolute inset-0 opacity-10"
         style={{

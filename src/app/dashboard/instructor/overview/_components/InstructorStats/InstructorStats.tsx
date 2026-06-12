@@ -23,7 +23,7 @@ const InstructorStats = () => {
       {stats.map((stat, i) => (
         <div
           key={i}
-          className="rounded-md border border-slate-200 bg-white p-5 shadow-xs transition-all hover:border-emerald-100 hover:shadow-sm"
+          className="dashboard-card-container transition-all hover:border-emerald-100 hover:shadow-sm"
         >
           <div className="text-primary mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm bg-emerald-50">
             {stat.icon}

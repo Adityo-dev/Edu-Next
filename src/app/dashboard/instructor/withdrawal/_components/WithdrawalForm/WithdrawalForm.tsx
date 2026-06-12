@@ -22,8 +22,8 @@ const WithdrawalForm = ({
   minWithdrawal,
 }: WithdrawalFormProps) => {
   return (
-    <div className="rounded-md border border-slate-100 bg-white p-6 shadow-xs">
-      <h2 className="mb-5 text-lg font-bold">New Withdrawal Request</h2>
+    <div className="dashboard-card-container">
+      <h2 className="mb-5 text-lg font-semibold">New Withdrawal Request</h2>
 
       <div className="space-y-4">
         {/* Method */}

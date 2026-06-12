@@ -54,7 +54,7 @@ const CommissionSettingsPage = () => {
               color: 'text-blue-500',
             },
           ].map((stat, i) => (
-            <div key={i} className="rounded-md border border-slate-100 bg-white p-5 shadow-xs">
+            <div key={i} className="dashboard-card-container">
               <div className="text-primary mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm bg-emerald-50">
                 {stat.icon}
               </div>

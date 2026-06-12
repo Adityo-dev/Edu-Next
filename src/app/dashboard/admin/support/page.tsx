@@ -160,7 +160,7 @@ const SupportTicketsPage = () => {
           </div>
 
           {/* Ticket Detail */}
-          <div className="rounded-md border border-slate-100 bg-white shadow-xs lg:col-span-2">
+          <div className="dashboard-card-container lg:col-span-2">
             {selected ? (
               <div className="flex h-full flex-col">
                 {/* Header */}

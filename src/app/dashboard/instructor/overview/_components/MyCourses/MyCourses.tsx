@@ -35,7 +35,7 @@ const recentCourses = [
 
 const MyCourses = () => {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-5 shadow-xs">
+    <div className="dashboard-card-container">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">My Courses</h2>
         <Link

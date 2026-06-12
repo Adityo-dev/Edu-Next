@@ -1,7 +1,10 @@
 'use client';
 
-import { Award, Bell, BookOpen, CheckCheck, MessageSquare, Trash2, Video } from 'lucide-react';
+import { Award, BookOpen, MessageSquare, Video } from 'lucide-react';
 import { useState } from 'react';
+import NotificationsHeader from './_components/NotificationsHeader/NotificationsHeader';
+import NotificationsFilter from './_components/NotificationsFilter/NotificationsFilter';
+import NotificationsList from './_components/NotificationsList/NotificationsList';
 
 const notificationsData = [
   {
@@ -86,89 +89,18 @@ const NotificationsPage = () => {
     <div className="min-h-screen bg-[#F9FAFB]">
       <div className="mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-text-primary flex items-center gap-2 text-2xl font-black">
-              Notifications
-              {unreadCount > 0 && (
-                <span className="bg-secondary rounded-full px-2.5 py-0.5 text-sm font-bold text-white">
-                  {unreadCount}
-                </span>
-              )}
-            </h1>
-            <p className="text-text-secondary mt-1 text-sm">
-              Stay updated with your learning activity.
-            </p>
-          </div>
-          {unreadCount > 0 && (
-            <button
-              onClick={markAllRead}
-              className="flex items-center gap-2 rounded-sm border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50"
-            >
-              <CheckCheck size={15} />
-              Mark All Read
-            </button>
-          )}
-        </div>
+        <NotificationsHeader unreadCount={unreadCount} markAllRead={markAllRead} />
 
         {/* Filter */}
-        <div className="flex w-fit overflow-hidden rounded-sm border border-slate-200 bg-white shadow-xs">
-          {[
-            { key: 'all', label: `All (${notifications.length})` },
-            { key: 'unread', label: `Unread (${unreadCount})` },
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setFilter(tab.key as typeof filter)}
-              className={`px-5 py-2.5 text-sm font-semibold transition-all ${
-                filter === tab.key ? 'bg-primary text-white' : 'text-slate-500 hover:bg-slate-50'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+        <NotificationsFilter
+          filter={filter}
+          setFilter={setFilter}
+          totalCount={notifications.length}
+          unreadCount={unreadCount}
+        />
 
-        {/* Notifications */}
-        {filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-md border border-slate-100 bg-white py-20 text-center shadow-xs">
-            <Bell size={40} className="mb-4 text-slate-300" />
-            <p className="font-bold text-slate-400">No notifications</p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {filtered.map((notif) => (
-              <div
-                key={notif.id}
-                className={`group flex items-start gap-4 rounded-md border p-4 transition-all ${
-                  !notif.read
-                    ? 'border-emerald-100 bg-white shadow-xs'
-                    : 'border-slate-100 bg-white opacity-70'
-                }`}
-              >
-                <div
-                  className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-sm ${notif.color}`}
-                >
-                  {notif.icon}
-                </div>
-                <div className="flex-1">
-                  <div className="mb-0.5 flex items-center gap-2">
-                    <p className="text-sm font-bold">{notif.title}</p>
-                    {!notif.read && <span className="bg-secondary h-2 w-2 rounded-full" />}
-                  </div>
-                  <p className="text-text-secondary text-sm leading-relaxed">{notif.message}</p>
-                  <p className="text-text-secondary mt-1 text-xs">{notif.time}</p>
-                </div>
-                <button
-                  onClick={() => deleteNotification(notif.id)}
-                  className="mt-0.5 shrink-0 text-slate-300 opacity-0 transition-all group-hover:opacity-100 hover:text-red-400"
-                >
-                  <Trash2 size={15} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Notifications List */}
+        <NotificationsList notifications={filtered} deleteNotification={deleteNotification} />
       </div>
     </div>
   );

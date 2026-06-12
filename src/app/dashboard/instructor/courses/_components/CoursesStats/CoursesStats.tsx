@@ -28,7 +28,7 @@ const CoursesStats = ({ courses }: { courses: any[] }) => {
       ].map((stat, i) => (
         <div
           key={i}
-          className="flex items-center justify-between rounded-md border border-slate-200 bg-white p-5 shadow-xs transition-all hover:border-emerald-100 hover:shadow-sm"
+          className="dashboard-card-container flex items-center justify-between transition-all hover:border-emerald-100 hover:shadow-sm"
         >
           <div>
             <p className="text-primary text-3xl font-black">{stat.value}</p>
