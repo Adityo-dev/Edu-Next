@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
+
+import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
+import { Bar, BarChart, CartesianGrid, Tooltip, XAxis } from 'recharts';
+
 const monthlyRevenue = [
   { month: 'Nov', revenue: 28000 },
   { month: 'Dec', revenue: 42000 },
@@ -7,13 +13,35 @@ const monthlyRevenue = [
   { month: 'Apr', revenue: 72000 },
 ];
 
-const maxRevenue = Math.max(...monthlyRevenue.map((d) => d.revenue));
-
 const revenueBreakdown = [
   { label: 'Total Revenue', value: '৳2,48,500', color: 'text-primary' },
   { label: 'Commission (20%)', value: '৳49,700', color: 'text-secondary' },
   { label: 'Instructor Earnings', value: '৳1,98,800', color: 'text-blue-500' },
 ];
+
+const chartConfig = {
+  revenue: {
+    label: 'Revenue',
+    color: '#34796f',
+  },
+} satisfies ChartConfig;
+
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="flex flex-col gap-1 rounded-sm border border-slate-100 bg-white/95 p-3 shadow-md backdrop-blur-md">
+        <p className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
+          {payload[0].payload.month}
+        </p>
+        <div className="flex items-center gap-2">
+          <span className="bg-primary h-2.5 w-2.5 rounded-full" />
+          <p className="text-secondary text-sm font-bold">৳{payload[0].value.toLocaleString()}</p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
 
 const RevenueChart = () => {
   return (
@@ -24,26 +52,33 @@ const RevenueChart = () => {
           Last 6 Months
         </span>
       </div>
-      <div className="flex items-end justify-between gap-3" style={{ height: '160px' }}>
-        {monthlyRevenue.map((d) => (
-          <div key={d.month} className="flex flex-1 flex-col items-center gap-2">
-            <span className="text-text-secondary text-xs">৳{(d.revenue / 1000).toFixed(0)}k</span>
-            <div
-              className="w-full overflow-hidden rounded-sm bg-slate-100"
-              style={{ height: '120px' }}
-            >
-              <div
-                className="bg-primary w-full rounded-sm transition-all duration-700"
-                style={{
-                  height: `${(d.revenue / maxRevenue) * 100}%`,
-                  marginTop: `${100 - (d.revenue / maxRevenue) * 100}%`,
-                }}
-              />
-            </div>
-            <span className="text-text-secondary text-xs">{d.month}</span>
-          </div>
-        ))}
+
+      <div className="h-[180px] w-full">
+        <ChartContainer config={chartConfig} className="h-full w-full">
+          <BarChart
+            accessibilityLayer
+            data={monthlyRevenue}
+            margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
+            barSize={32}
+          >
+            <CartesianGrid vertical={false} strokeDasharray="3 3" opacity={0.4} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              className="text-text-secondary text-[10px]"
+            />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: 'rgba(52, 121, 111, 0.04)', radius: 4 }}
+              animationDuration={200}
+            />
+            <Bar dataKey="revenue" fill="var(--color-revenue)" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ChartContainer>
       </div>
+
       <div className="mt-5 grid grid-cols-3 gap-4 border-t border-slate-100 pt-5">
         {revenueBreakdown.map((item, i) => (
           <div key={i} className="rounded-sm bg-slate-50 p-3 text-center">

@@ -160,17 +160,17 @@ const CourseManagementTable = () => {
             ...(row?.status === 'pending'
               ? [
                   {
-                    type: 'save',
+                    type: 'save' as const,
                     onClick: () => {},
                   },
                   {
-                    type: 'close',
+                    type: 'close' as const,
                     onClick: () => {},
                   },
                 ]
               : [
                   {
-                    type: 'delete',
+                    type: 'delete' as const,
                     onClick: () => {},
                   },
                 ]),
