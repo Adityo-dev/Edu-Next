@@ -1,10 +1,9 @@
-import React from 'react';
 import { TrendingUp } from 'lucide-react';
 
 const GrowthRate = () => {
   return (
-    <div className="rounded-md border border-slate-100 bg-white p-6 shadow-xs">
-      <h2 className="mb-5 text-lg font-bold">Growth Rate</h2>
+    <div className="dashboard-card-container">
+      <h2 className="mb-5 text-lg font-semibold">Growth Rate</h2>
       <div className="space-y-4">
         {[
           { label: 'Revenue Growth', value: '+22%', trend: 'up', color: 'text-primary' },
@@ -14,11 +13,11 @@ const GrowthRate = () => {
         ].map((item, i) => (
           <div
             key={i}
-            className="flex items-center justify-between rounded-sm border border-slate-100 px-4 py-3"
+            className="border-primary/20 flex items-center justify-between rounded-sm border px-4 py-3"
           >
             <div className="flex items-center gap-2">
               <TrendingUp size={15} className={item.color} />
-              <span className="text-sm font-medium text-slate-600">{item.label}</span>
+              <span className="text-sm font-medium">{item.label}</span>
             </div>
             <span className={`text-sm font-black ${item.color}`}>{item.value}</span>
           </div>

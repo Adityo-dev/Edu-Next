@@ -1,5 +1,6 @@
 'use client';
 
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import { useState } from 'react';
 import WithdrawalBalance from './_components/WithdrawalBalance/WithdrawalBalance';
 import WithdrawalForm from './_components/WithdrawalForm/WithdrawalForm';
@@ -14,29 +15,24 @@ const WithdrawalPage = () => {
   const minWithdrawal = 500;
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        <div>
-          <h1 className="text-text-primary text-2xl font-black">Withdrawal</h1>
-          <p className="text-text-secondary mt-1 text-sm">Request your earnings withdrawal.</p>
-        </div>
+    <div className="space-y-6">
+      <SectionHeader title="Withdrawal" description="Request your earnings withdrawal." />
 
-        <WithdrawalBalance balance={balance} />
+      <WithdrawalBalance balance={balance} />
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <WithdrawalForm
-            method={method}
-            setMethod={setMethod}
-            amount={amount}
-            setAmount={setAmount}
-            account={account}
-            setAccount={setAccount}
-            balance={balance}
-            minWithdrawal={minWithdrawal}
-          />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <WithdrawalForm
+          method={method}
+          setMethod={setMethod}
+          amount={amount}
+          setAmount={setAmount}
+          account={account}
+          setAccount={setAccount}
+          balance={balance}
+          minWithdrawal={minWithdrawal}
+        />
 
-          <WithdrawalHistory />
-        </div>
+        <WithdrawalHistory />
       </div>
     </div>
   );

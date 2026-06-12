@@ -90,7 +90,7 @@ const RevenuePaymentsPage = () => {
             { icon: <ArrowUpRight size={20} />, label: 'Instructor Earnings', value: '৳1,98,800' },
             { icon: <Users size={20} />, label: 'Total Transactions', value: '1,240' },
           ].map((stat, i) => (
-            <div key={i} className="rounded-md border border-slate-100 bg-white p-5 shadow-xs">
+            <div key={i} className="dashboard-card-container">
               <div className="text-primary mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm bg-emerald-50">
                 {stat.icon}
               </div>
@@ -143,7 +143,7 @@ const RevenuePaymentsPage = () => {
         </div>
 
         {/* Transactions Table */}
-        <div className="rounded-md border border-slate-100 bg-white shadow-xs">
+        <div className="dashboard-card-container">
           <div className="border-b border-slate-100 px-6 py-4">
             <h2 className="text-lg font-bold">Recent Transactions</h2>
           </div>

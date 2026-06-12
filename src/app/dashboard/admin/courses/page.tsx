@@ -156,7 +156,7 @@ const CoursesManagementPage = () => {
         </div>
 
         {/* Table */}
-        <div className="overflow-hidden rounded-md border border-slate-100 bg-white shadow-xs">
+        <div className="dashboard-card-container overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>

@@ -1,8 +1,9 @@
 'use client';
 
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
+import TransactionHistory from './_components/TransactionHistory/TransactionHistory';
 import WalletCard from './_components/WalletCard/WalletCard';
 import WalletStats from './_components/WalletStats/WalletStats';
-import TransactionHistory from './_components/TransactionHistory/TransactionHistory';
 
 const transactions = [
   { id: 1, type: 'credit', amount: 1200 },
@@ -20,21 +21,14 @@ const InstructorWalletPage = () => {
   const balance = credits - debits;
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        <div>
-          <h1 className="text-text-primary text-2xl font-black">My Wallet</h1>
-          <p className="text-text-secondary mt-1 text-sm">
-            Track your earnings and transaction history.
-          </p>
-        </div>
+    <div className="mx-auto space-y-6">
+      <SectionHeader title="My Wallet" description="Track your earnings and transaction history." />
 
-        <WalletCard balance={balance} />
+      <WalletCard balance={balance} />
 
-        <WalletStats credits={credits} debits={debits} />
+      <WalletStats credits={credits} debits={debits} />
 
-        <TransactionHistory />
-      </div>
+      <TransactionHistory />
     </div>
   );
 };

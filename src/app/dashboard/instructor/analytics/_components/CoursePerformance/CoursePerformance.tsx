@@ -1,6 +1,5 @@
-import React from 'react';
-import Image from 'next/image';
 import { CircleDollarSign, Eye, Star, Users } from 'lucide-react';
+import Image from 'next/image';
 
 const courseAnalytics = [
   {
@@ -37,8 +36,8 @@ const courseAnalytics = [
 
 const CoursePerformance = () => {
   return (
-    <div className="rounded-md border border-slate-100 bg-white p-6 shadow-xs">
-      <h2 className="mb-5 text-lg font-bold">Course Performance</h2>
+    <div className="dashboard-card-container">
+      <h2 className="mb-5 text-lg font-semibold">Course Performance</h2>
       <div className="space-y-4">
         {courseAnalytics.map((course) => (
           <div
@@ -50,7 +49,7 @@ const CoursePerformance = () => {
             </div>
             <div className="min-w-0 flex-1">
               <p className="mb-2 line-clamp-1 font-bold">{course.title}</p>
-              <div className="grid grid-cols-2 gap-2 text-xs text-slate-500 sm:grid-cols-4">
+              <div className="text-text-secondary grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
                 <span className="flex items-center gap-1">
                   <Users size={11} />
                   {course.students} students

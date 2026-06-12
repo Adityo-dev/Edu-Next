@@ -11,7 +11,7 @@ const maxRevenue = Math.max(...monthlyData.map((d) => d.revenue));
 
 const RevenueOverview = () => {
   return (
-    <div className="rounded-md border border-slate-100 bg-white p-6 shadow-xs lg:col-span-2">
+    <div className="dashboard-card-container lg:col-span-2">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-lg font-bold">Revenue Overview</h2>
         <span className="text-primary rounded-sm bg-emerald-50 px-3 py-1 text-xs font-bold">

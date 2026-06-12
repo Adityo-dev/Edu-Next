@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const QuickActions = () => {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-5 shadow-xs">
+    <div className="dashboard-card-container">
       <h2 className="mb-4 text-lg font-semibold">Quick Actions</h2>
       <div className="space-y-2">
         {[

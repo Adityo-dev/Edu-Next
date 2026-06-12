@@ -146,7 +146,7 @@ const StudentProgressPage = () => {
           {overallStats.map((stat, i) => (
             <div
               key={i}
-              className="rounded-md border border-slate-100 bg-white p-5 shadow-xs transition-all hover:border-emerald-100 hover:shadow-sm"
+              className="dashboard-card-container transition-all hover:border-emerald-100 hover:shadow-sm"
             >
               <div className="text-primary mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm bg-emerald-50">
                 {stat.icon}
@@ -189,7 +189,7 @@ const StudentProgressPage = () => {
                 {courseProgress.map((course) => (
                   <div
                     key={course.id}
-                    className="rounded-md border border-slate-100 bg-white p-5 shadow-xs transition-all hover:border-emerald-100"
+                    className="dashboard-card-container transition-all hover:border-emerald-100"
                   >
                     <div className="flex gap-4">
                       {/* Thumbnail */}
@@ -272,7 +272,7 @@ const StudentProgressPage = () => {
 
             {/* ── Quiz History Tab ──────────────────────────────────────── */}
             {activeTab === 'quizzes' && (
-              <div className="rounded-md border border-slate-100 bg-white shadow-xs">
+              <div className="dashboard-card-container">
                 <div className="divide-y divide-slate-50">
                   {quizHistory.map((quiz, i) => (
                     <div key={i} className="flex items-center justify-between p-5">

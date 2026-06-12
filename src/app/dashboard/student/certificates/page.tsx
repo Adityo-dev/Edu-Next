@@ -93,7 +93,7 @@ const CertificatesPage = () => {
             {filtered.map((cert) => (
               <div
                 key={cert.id}
-                className="group overflow-hidden rounded-md border border-slate-100 bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-md"
+                className="group dashboard-card-container overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-md"
               >
                 {/* Image */}
                 <div className="relative h-40 overflow-hidden">
@@ -148,10 +148,7 @@ const CertificatesPage = () => {
           <h2 className="mb-4 text-lg font-bold">Certificates in Progress</h2>
           <div className="space-y-3">
             {inProgressCourses.map((course, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-4 rounded-md border border-slate-100 bg-white p-5 shadow-xs"
-              >
+              <div key={i} className="dashboard-card-container flex items-center gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-slate-200">
                   <Award size={18} className="text-slate-300" />
                 </div>

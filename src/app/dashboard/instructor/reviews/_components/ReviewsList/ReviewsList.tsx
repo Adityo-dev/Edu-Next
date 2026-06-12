@@ -1,6 +1,5 @@
-import React from 'react';
-import Image from 'next/image';
 import { Star, ThumbsUp } from 'lucide-react';
+import Image from 'next/image';
 
 const reviewsData = [
   {
@@ -49,7 +48,7 @@ const ReviewsList = () => {
   return (
     <div className="space-y-4">
       {reviewsData.map((review) => (
-        <div key={review.id} className="rounded-md border border-slate-100 bg-white p-5 shadow-xs">
+        <div key={review.id} className="dashboard-card-container p-4 shadow-none">
           <div className="flex gap-4">
             <Image
               src={review.image}

@@ -197,7 +197,7 @@ const SupportPage = () => {
 
         {/* Ticket Detail */}
         {view === 'detail' && selectedTicket && (
-          <div className="rounded-md border border-slate-100 bg-white shadow-xs">
+          <div className="dashboard-card-container">
             <div className="border-b border-slate-100 p-5">
               <div className="flex items-center justify-between">
                 <div>

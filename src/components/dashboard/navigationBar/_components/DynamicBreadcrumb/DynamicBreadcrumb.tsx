@@ -31,7 +31,7 @@ export function DynamicBreadcrumb() {
               <BreadcrumbItem>
                 {isLast || isFirst || isSecond ? (
                   <BreadcrumbPage
-                    className={`${isLast ? 'font-semibold text-white' : 'text-secondary font-medium'} capitalize`}
+                    className={`${isLast ? 'text-primary font-semibold' : 'text-secondary font-medium'} capitalize`}
                   >
                     {label}
                   </BreadcrumbPage>

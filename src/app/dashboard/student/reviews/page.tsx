@@ -90,10 +90,7 @@ const MyReviewsPage = () => {
           <h2 className="mb-4 text-lg font-bold">Submitted Reviews</h2>
           <div className="space-y-4">
             {reviewsData.map((review) => (
-              <div
-                key={review.id}
-                className="rounded-md border border-slate-100 bg-white p-5 shadow-xs"
-              >
+              <div key={review.id} className="dashboard-card-container">
                 <div className="flex gap-4">
                   <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-sm">
                     <Image src={review.image} alt={review.course} fill className="object-cover" />

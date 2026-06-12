@@ -203,7 +203,7 @@ const StudentOverviewPage = () => {
           {stats.map((stat, i) => (
             <div
               key={i}
-              className="rounded-md border border-slate-100 bg-white p-5 shadow-xs transition-all duration-300 hover:border-emerald-100 hover:shadow-sm"
+              className="dashboard-card-container transition-all duration-300 hover:border-emerald-100 hover:shadow-sm"
             >
               <div className="mb-4 flex items-center justify-between">
                 <div className="text-primary flex h-10 w-10 items-center justify-center rounded-sm bg-emerald-50">

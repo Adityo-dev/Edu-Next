@@ -188,7 +188,7 @@ const MyCourses = () => {
               color: 'bg-orange-50 text-secondary',
             },
           ].map((stat, i) => (
-            <div key={i} className="rounded-md border border-slate-100 bg-white p-5 shadow-xs">
+            <div key={i} className="dashboard-card-container">
               <div
                 className={`mb-3 inline-flex h-9 w-9 items-center justify-center rounded-sm ${stat.color}`}
               >
@@ -254,7 +254,7 @@ const MyCourses = () => {
             {filtered.map((course) => (
               <div
                 key={course.id}
-                className="group overflow-hidden rounded-md border border-slate-100 bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-md hover:shadow-emerald-100/40"
+                className="group dashboard-card-container overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-md hover:shadow-emerald-100/40"
               >
                 {/* Image */}
                 <div className="relative h-44 overflow-hidden">

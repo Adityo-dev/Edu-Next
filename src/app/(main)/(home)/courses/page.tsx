@@ -382,7 +382,7 @@ const CoursesPage = () => {
         <div className="flex gap-8">
           {/* ── Sticky Sidebar ─────────────────────────────────────────────── */}
           <aside className="hidden w-68 shrink-0 lg:block">
-            <div className="sticky top-24 rounded-md border border-slate-100 bg-white p-5 shadow-xs">
+            <div className="dashboard-card-container sticky top-24">
               <SidebarContent />
             </div>
           </aside>
@@ -517,7 +517,7 @@ const CoursesPage = () => {
                   <Link
                     href={`/courses/${course.id}`}
                     key={course.id}
-                    className="group overflow-hidden rounded-md border border-slate-100 bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-lg hover:shadow-emerald-100/40"
+                    className="group dashboard-card-container overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-lg hover:shadow-emerald-100/40"
                   >
                     {/* Image */}
                     <div className="relative h-48 w-full overflow-hidden">
@@ -617,7 +617,7 @@ const CoursesPage = () => {
                   <Link
                     href={`/courses/${course.id}`}
                     key={course.id}
-                    className="group flex overflow-hidden rounded-md border border-slate-100 bg-white shadow-xs transition-all duration-300 hover:border-emerald-100 hover:shadow-md hover:shadow-emerald-100/40"
+                    className="group dashboard-card-container flex overflow-hidden transition-all duration-300 hover:border-emerald-100 hover:shadow-md hover:shadow-emerald-100/40"
                   >
                     <div className="relative w-52 shrink-0 overflow-hidden">
                       <Image

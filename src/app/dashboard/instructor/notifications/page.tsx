@@ -2,8 +2,8 @@
 
 import { BookOpen, CircleDollarSign, Star, Users } from 'lucide-react';
 import { useState } from 'react';
-import NotificationsHeader from './_components/NotificationsHeader/NotificationsHeader';
 import NotificationsFilter from './_components/NotificationsFilter/NotificationsFilter';
+import NotificationsHeader from './_components/NotificationsHeader/NotificationsHeader';
 import NotificationsList from './_components/NotificationsList/NotificationsList';
 
 const notificationsData = [
@@ -62,27 +62,25 @@ const InstructorNotificationsPage = () => {
   const filtered = filter === 'unread' ? notifications.filter((n) => !n.read) : notifications;
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        <NotificationsHeader
-          unreadCount={unreadCount}
-          notifications={notifications}
-          setNotifications={setNotifications}
-        />
+    <div className="space-y-6">
+      <NotificationsHeader
+        unreadCount={unreadCount}
+        notifications={notifications}
+        setNotifications={setNotifications}
+      />
 
-        <NotificationsFilter
-          filter={filter}
-          setFilter={setFilter}
-          unreadCount={unreadCount}
-          notifications={notifications}
-        />
+      <NotificationsFilter
+        filter={filter}
+        setFilter={setFilter}
+        unreadCount={unreadCount}
+        notifications={notifications}
+      />
 
-        <NotificationsList
-          filtered={filtered}
-          setNotifications={setNotifications}
-          notifications={notifications}
-        />
-      </div>
+      <NotificationsList
+        filtered={filtered}
+        setNotifications={setNotifications}
+        notifications={notifications}
+      />
     </div>
   );
 };

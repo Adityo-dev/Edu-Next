@@ -1,23 +1,19 @@
 'use client';
 
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import RatingOverview from './_components/RatingOverview/RatingOverview';
 import ReviewsList from './_components/ReviewsList/ReviewsList';
 
 const InstructorReviewsPage = () => {
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        <div>
-          <h1 className="text-text-primary text-2xl font-black">Reviews</h1>
-          <p className="text-text-secondary mt-1 text-sm">See what your students are saying.</p>
-        </div>
+    <div className="space-y-6">
+      <SectionHeader title="Reviews" description="See what your students are saying." />
 
-        {/* Rating Overview */}
-        <RatingOverview />
+      {/* Rating Overview */}
+      <RatingOverview />
 
-        {/* Reviews List */}
-        <ReviewsList />
-      </div>
+      {/* Reviews List */}
+      <ReviewsList />
     </div>
   );
 };
