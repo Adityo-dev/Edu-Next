@@ -65,7 +65,7 @@ const DynamicTableActions = ({ actions }: DynamicTableActionsProps) => {
     suspend: {
       icon: Ban,
       defaultLabel: 'Suspend',
-      color: '#e96600',
+      color: '#dc3545',
     },
     message: {
       icon: MessageCircle,

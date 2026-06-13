@@ -1,9 +1,9 @@
 'use client';
 
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import { useState } from 'react';
 import InstructorDetail from './_components/InstructorDetail/InstructorDetail';
 import InstructorsFilter from './_components/InstructorsFilter/InstructorsFilter';
-import InstructorsHeader from './_components/InstructorsHeader/InstructorsHeader';
 import InstructorsList from './_components/InstructorsList/InstructorsList';
 import InstructorsStats from './_components/InstructorsStats/InstructorsStats';
 
@@ -84,19 +84,20 @@ const InstructorVerificationPage = () => {
   const filtered = instructorsData.filter((i) => filter === 'all' || i.status === filter);
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        <InstructorsHeader />
-        <InstructorsStats instructors={instructorsData} />
-        <InstructorsFilter filter={filter} onFilterChange={setFilter} />
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <InstructorsList
-            instructors={filtered}
-            selectedId={selected?.id ?? null}
-            onSelect={setSelected}
-          />
-          <InstructorDetail instructor={selected} />
-        </div>
+    <div className="mx-auto space-y-5">
+      <SectionHeader
+        title="Instructor Verification"
+        description="Review and approve instructor applications."
+      />
+      <InstructorsStats instructors={instructorsData} />
+      <InstructorsFilter filter={filter} onFilterChange={setFilter} />
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <InstructorsList
+          instructors={filtered}
+          selectedId={selected?.id ?? null}
+          onSelect={setSelected}
+        />
+        <InstructorDetail instructor={selected} />
       </div>
     </div>
   );

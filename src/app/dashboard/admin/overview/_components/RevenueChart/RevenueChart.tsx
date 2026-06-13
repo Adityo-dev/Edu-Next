@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
 import { Bar, BarChart, CartesianGrid, Tooltip, XAxis } from 'recharts';
 
@@ -45,21 +46,19 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 const RevenueChart = () => {
   return (
-    <div className="dashboard-card-container lg:col-span-2">
+    <div className="dashboard-card-container h-fit lg:col-span-2">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-bold">Revenue Overview</h2>
-        <span className="text-primary rounded-sm bg-emerald-50 px-3 py-1 text-xs font-bold">
-          Last 6 Months
-        </span>
+        <h2 className="text-lg font-semibold">Revenue Overview</h2>
+        <DynamicBadge text="Last 6 Months" />
       </div>
 
-      <div className="h-[180px] w-full">
+      <div className="h-62.5 w-full">
         <ChartContainer config={chartConfig} className="h-full w-full">
           <BarChart
             accessibilityLayer
             data={monthlyRevenue}
             margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
-            barSize={32}
+            barSize={60}
           >
             <CartesianGrid vertical={false} strokeDasharray="3 3" opacity={0.4} />
             <XAxis
@@ -79,9 +78,9 @@ const RevenueChart = () => {
         </ChartContainer>
       </div>
 
-      <div className="mt-5 grid grid-cols-3 gap-4 border-t border-slate-100 pt-5">
+      <div className="border-primary/10 mt-5 grid grid-cols-3 gap-4 border-t pt-5">
         {revenueBreakdown.map((item, i) => (
-          <div key={i} className="rounded-sm bg-slate-50 p-3 text-center">
+          <div key={i} className="bg-primary/10 rounded-sm p-3 text-center">
             <p className={`text-lg font-black ${item.color}`}>{item.value}</p>
             <p className="text-text-secondary text-xs">{item.label}</p>
           </div>

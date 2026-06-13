@@ -1,3 +1,4 @@
+import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -32,29 +33,29 @@ const RecentUsers = () => {
   return (
     <div className="dashboard-card-container">
       <div className="mb-5 flex items-center justify-between">
-        <h2 className="text-lg font-bold">Recent Users</h2>
+        <h2 className="text-lg font-semibold">Recent Users</h2>
         <Link
           href="/dashboard/admin/users"
-          className="text-primary text-sm font-semibold hover:underline"
+          className="text-primary flex items-center gap-2 text-sm font-semibold hover:underline"
         >
-          View All →
+          View All <ArrowRight size={16} />
         </Link>
       </div>
       <div className="space-y-4">
         {recentUsers.map((user, i) => (
           <div key={i} className="flex items-center gap-3">
             <Image
-              src={user.image}
-              alt={user.name}
+              src={user?.image}
+              alt={user?.name}
               width={36}
               height={36}
-              className="rounded-full border-2 border-emerald-50"
+              className="border-primary/50 rounded-full border-2"
             />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold">{user.name}</p>
-              <p className="text-text-secondary text-xs">{user.role}</p>
+              <p className="truncate text-sm font-semibold">{user?.name}</p>
+              <p className="text-text-secondary text-xs">{user?.role}</p>
             </div>
-            <p className="text-text-secondary shrink-0 text-xs">{user.date}</p>
+            <p className="text-text-secondary shrink-0 text-xs">{user?.date}</p>
           </div>
         ))}
       </div>

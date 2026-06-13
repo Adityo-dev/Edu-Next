@@ -45,7 +45,7 @@ const DynamicBadge = ({
 
   return (
     <div
-      className={`inline-flex w-fit items-center justify-center rounded font-semibold tracking-wider transition-all ${sizeClasses[size]} ${className}`}
+      className={`inline-flex w-fit items-center justify-center rounded font-semibold tracking-wider capitalize transition-all ${sizeClasses[size]} ${className}`}
       style={{
         // Adding '1A' to the hex color for 10% opacity background
         backgroundColor: `${color}1A`,

@@ -1,11 +1,7 @@
-import { CheckCircle, Clock, Wallet, XCircle } from 'lucide-react';
+import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
+import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
+import { Clock, Wallet } from 'lucide-react';
 import Image from 'next/image';
-
-const statusConfig: Record<string, string> = {
-  pending: 'bg-yellow-50 text-yellow-600',
-  approved: 'bg-emerald-50 text-primary',
-  rejected: 'bg-red-50 text-red-500',
-};
 
 interface Withdrawal {
   id: string;
@@ -25,11 +21,11 @@ interface WithdrawalsListProps {
 
 const WithdrawalsList = ({ withdrawals }: WithdrawalsListProps) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {withdrawals.map((wd) => (
         <div
           key={wd.id}
-          className={`rounded-md border bg-white p-5 shadow-xs ${wd.status === 'pending' ? 'border-yellow-100' : 'border-slate-100'}`}
+          className={`dashboard-card-container p-3 shadow-none ${wd.status === 'pending' ? 'border-warning/30' : wd.status === 'rejected' ? 'border-danger/30' : 'border-primary/30'}`}
         >
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <div className="flex flex-1 items-center gap-4">
@@ -38,18 +34,17 @@ const WithdrawalsList = ({ withdrawals }: WithdrawalsListProps) => {
                 alt={wd.instructor}
                 width={44}
                 height={44}
-                className="rounded-full border-2 border-emerald-50"
+                className="border-primary/20 rounded-full border-2"
               />
               <div>
                 <div className="mb-1 flex items-center gap-2">
                   <h3 className="font-bold">{wd.instructor}</h3>
-                  <span
-                    className={`rounded-full px-2.5 py-0.5 text-xs font-bold capitalize ${statusConfig[wd.status]}`}
-                  >
-                    {wd.status}
-                  </span>
+                  <DynamicBadge
+                    text={wd?.status}
+                    color={`${wd.status === 'pending' ? '#ffc107' : wd.status === 'rejected' ? '#dc3545' : '#34796f'}`}
+                  />
                 </div>
-                <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                <div className="text-text-secondary flex flex-wrap items-center gap-3 text-xs">
                   <span className="flex items-center gap-1">
                     <Wallet size={11} /> Wallet: ৳{wd.walletBalance.toLocaleString()}
                   </span>
@@ -67,19 +62,25 @@ const WithdrawalsList = ({ withdrawals }: WithdrawalsListProps) => {
             </div>
             <div className="flex shrink-0 items-center gap-4">
               <div className="text-right">
-                <p className="text-text-primary text-2xl font-black">
+                <p className="text-text-primary text-xl font-semibold">
                   ৳{wd.amount.toLocaleString()}
                 </p>
                 <p className="text-text-secondary text-xs">{wd.id}</p>
               </div>
               {wd.status === 'pending' && (
                 <div className="flex gap-2">
-                  <button className="bg-primary flex items-center gap-2 rounded-sm px-5 py-2.5 text-sm font-bold text-white hover:bg-[#2a6159]">
-                    <CheckCircle size={14} /> Approve
-                  </button>
-                  <button className="flex items-center gap-2 rounded-sm border border-red-100 px-5 py-2.5 text-sm font-bold text-red-400 hover:bg-red-50">
-                    <XCircle size={14} /> Reject
-                  </button>
+                  <DynamicTableActions
+                    actions={[
+                      {
+                        type: 'message',
+                        label: 'Approve',
+                      },
+                      {
+                        type: 'suspend',
+                        label: 'Reject',
+                      },
+                    ]}
+                  />
                 </div>
               )}
             </div>
