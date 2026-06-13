@@ -1,6 +1,6 @@
 'use client';
 
-import CoursesHeader from './_components/CoursesHeader/CoursesHeader';
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import CoursesStats from './_components/CoursesStats/CoursesStats';
 import CoursesTable from './_components/CoursesTable/CoursesTable';
 
@@ -75,12 +75,13 @@ const coursesData = [
 
 const CoursesManagementPage = () => {
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        <CoursesHeader />
-        <CoursesStats courses={coursesData} />
-        <CoursesTable />
-      </div>
+    <div className="space-y-5">
+      <SectionHeader
+        title="Courses Management"
+        description="Approve, reject or manage all courses on EduNext."
+      />
+      <CoursesStats courses={coursesData} />
+      <CoursesTable />
     </div>
   );
 };

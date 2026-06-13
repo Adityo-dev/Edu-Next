@@ -7,8 +7,8 @@ interface SectionHeaderProps {
 
 const SectionHeader: React.FC<SectionHeaderProps> = ({ title, description }) => {
   return (
-    <div className="space-y-1.5">
-      <h1 className="text-2xl font-black">{title}</h1>
+    <div>
+      <h1 className="text-2xl font-bold">{title}</h1>
       <p className="text-text-secondary mt-1 text-sm sm:text-base">{description}</p>
     </div>
   );

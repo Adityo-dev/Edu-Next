@@ -1,6 +1,6 @@
 'use client';
 
-import UsersHeader from './_components/UsersHeader/UsersHeader';
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import UsersStats from './_components/UsersStats/UsersStats';
 import UsersTable from './_components/UsersTable/UsersTable';
 
@@ -79,12 +79,13 @@ const usersData = [
 
 const UsersManagementPage = () => {
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        <UsersHeader />
-        <UsersStats users={usersData} />
-        <UsersTable />
-      </div>
+    <div className="space-y-5">
+      <SectionHeader
+        title="Users Management"
+        description="Manage all students and instructors on EduNext."
+      />
+      <UsersStats users={usersData} />
+      <UsersTable />
     </div>
   );
 };

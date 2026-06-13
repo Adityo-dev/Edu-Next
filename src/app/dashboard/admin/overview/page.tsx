@@ -7,17 +7,15 @@ import RevenueChart from './_components/RevenueChart/RevenueChart';
 
 const AdminOverviewPage = () => {
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        <AdminBanner />
-        <AdminStats />
-        <PendingTasks />
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <RevenueChart />
-          <div className="space-y-6">
-            <RecentUsers />
-            <QuickActions />
-          </div>
+    <div className="space-y-5">
+      <AdminBanner />
+      <AdminStats />
+      <PendingTasks />
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <RevenueChart />
+        <div className="space-y-5">
+          <RecentUsers />
+          <QuickActions />
         </div>
       </div>
     </div>

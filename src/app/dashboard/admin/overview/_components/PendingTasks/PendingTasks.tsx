@@ -30,7 +30,7 @@ const PendingTasks = () => {
         <Link
           key={i}
           href={task.url}
-          className={`flex items-center gap-3 rounded-sm border p-4 text-sm font-semibold transition-all hover:shadow-sm ${task.color}`}
+          className={`flex items-center gap-3 rounded-sm border p-4 text-sm font-semibold transition-all hover:shadow-xs ${task.color}`}
         >
           <span className="h-2 w-2 shrink-0 rounded-full bg-current" />
           {task.label}

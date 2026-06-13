@@ -27,13 +27,13 @@ const actions = [
 const QuickActions = () => {
   return (
     <div className="dashboard-card-container">
-      <h2 className="mb-4 text-lg font-bold">Quick Actions</h2>
+      <h2 className="mb-4 text-lg font-semibold">Quick Actions</h2>
       <div className="space-y-2">
         {actions.map((action, i) => (
           <Link
             key={i}
             href={action.href}
-            className="bg-primary first:bg-primary flex items-center gap-3 rounded-sm px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-[#2a6159] [&:not(:first-child)]:border [&:not(:first-child)]:border-slate-200 [&:not(:first-child)]:bg-white [&:not(:first-child)]:text-slate-600 [&:not(:first-child)]:hover:bg-slate-50"
+            className="bg-primary first:bg-primary not-first:hover:bg-primary/10 flex items-center gap-3 rounded px-4 py-3 text-sm font-semibold text-white transition-all not-first:border not-first:border-slate-200 not-first:bg-white not-first:text-slate-600 hover:bg-[#2a6159]"
           >
             {action.icon}
             {action.label}

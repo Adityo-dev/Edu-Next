@@ -160,3 +160,10 @@
     @apply relative overflow-hidden rounded-md border border-slate-200 bg-white p-5 shadow-xs;
   }
 }
+
+/* Removes the default focus outline when an element is clicked with a mouse, 
+  while maintaining visibility for keyboard navigation (Accessibility/WCAG compliance). 
+*/
+*:focus:not(:focus-visible) {
+  outline: none;
+}

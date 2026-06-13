@@ -203,7 +203,7 @@ const CourseManagementTable = () => {
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="dashboard-card-container space-y-5 p-3">
       <DynamicTableFilterBar
         fields={CourseFilters}
         filter={filter}
