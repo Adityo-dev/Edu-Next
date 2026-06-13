@@ -7,7 +7,7 @@ import TransactionsTable from './_components/TransactionsTable/TransactionsTable
 
 const RevenuePaymentsPage = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <SectionHeader
         title="Revenue & Payments"
         description="Track all transactions and revenue breakdown."

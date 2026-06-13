@@ -150,7 +150,7 @@ const TransactionsTable = () => {
   return (
     <div className="dashboard-card-container space-y-4 p-3">
       {/* Header Title */}
-      <h2 className="text-lg font-bold">Recent Transactions</h2>
+      <h2 className="text-lg font-semibold">Recent Transactions</h2>
       {/* Table Filter */}
       <DynamicTableFilterBar
         fields={TransactionsFilters}
