@@ -4,6 +4,7 @@ import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
 import { useState } from 'react';
 
+import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import { TColumn } from '@/types/custom-table.types';
 import { ITableFilter } from '@/types/table-filter.types';
 
@@ -87,7 +88,7 @@ const TransactionsTable = () => {
   const TransactionsTableConfig: TColumn<ITransaction>[] = [
     {
       header: 'TRANSACTION ID',
-      cell: (row) => <span className="font-mono text-xs text-slate-400">{row?.id}</span>,
+      cell: (row) => <span className="font-mono text-xs">{row?.id}</span>,
     },
     {
       header: 'STUDENT',
@@ -95,33 +96,27 @@ const TransactionsTable = () => {
     },
     {
       header: 'COURSE',
-      cell: (row) => (
-        <span className="line-clamp-1 max-w-xs text-xs text-slate-600">{row?.course}</span>
-      ),
+      cell: (row) => <span className="line-clamp-1 max-w-xs">{row?.course}</span>,
     },
     {
       header: 'AMOUNT',
-      cell: (row) => (
-        <span className="font-black text-[#0f172a]">৳{row?.amount.toLocaleString()}</span>
-      ),
+      cell: (row) => <span className="font-semibold">৳{row?.amount.toLocaleString()}</span>,
     },
     {
       header: 'COMMISSION',
-      cell: (row) => <span className="text-secondary font-bold">৳{row?.commission}</span>,
+      cell: (row) => <span className="text-secondary font-semibold">৳{row?.commission}</span>,
     },
     {
       header: 'INSTRUCTOR EARNING',
       cell: (row) => (
-        <span className="text-primary font-bold">৳{row?.instructorEarning.toLocaleString()}</span>
+        <span className="text-primary font-semibold">
+          ৳{row?.instructorEarning.toLocaleString()}
+        </span>
       ),
     },
     {
       header: 'METHOD',
-      cell: (row) => (
-        <span className="rounded-sm bg-slate-100 px-2.5 py-1 text-xs font-medium">
-          {row?.method}
-        </span>
-      ),
+      cell: (row) => <DynamicBadge text={row?.method} />,
     },
     {
       header: 'DATE',
@@ -153,10 +148,10 @@ const TransactionsTable = () => {
   ];
 
   return (
-    <div className="space-y-5">
-      <div className="border-b border-slate-100 px-1 py-2">
-        <h2 className="text-lg font-bold">Recent Transactions</h2>
-      </div>
+    <div className="dashboard-card-container space-y-4 p-3">
+      {/* Header Title */}
+      <h2 className="text-lg font-bold">Recent Transactions</h2>
+      {/* Table Filter */}
       <DynamicTableFilterBar
         fields={TransactionsFilters}
         filter={methodFilter}
@@ -164,6 +159,7 @@ const TransactionsTable = () => {
         search={search}
         setSearch={setSearch}
       />
+      {/* Table */}
       <CustomTable columns={TransactionsTableConfig} data={filteredData} />
     </div>
   );

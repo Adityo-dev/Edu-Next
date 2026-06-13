@@ -45,7 +45,7 @@ const CustomTooltip = ({ active, payload }: any) => {
                 />
                 <span className="text-text-secondary text-xs capitalize">{entry.name}</span>
               </div>
-              <span className="text-sm font-bold">৳{entry.value.toLocaleString()}</span>
+              <span className="text-sm font-semibold">৳{entry.value.toLocaleString()}</span>
             </div>
           ))}
         </div>
@@ -59,7 +59,7 @@ const RevenueChartAdmin = () => {
   return (
     <div className="dashboard-card-container">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-bold">Monthly Revenue Breakdown</h2>
+        <h2 className="text-lg font-semibold">Monthly Revenue Breakdown</h2>
         <div className="flex items-center gap-4 text-xs font-semibold">
           <span className="flex items-center gap-1.5">
             <span className="bg-primary h-3 w-3 rounded-sm" /> Total
@@ -73,14 +73,14 @@ const RevenueChartAdmin = () => {
         </div>
       </div>
 
-      <div className="h-[180px] w-full">
+      <div className="h-62.5 w-full">
         <ChartContainer config={chartConfig} className="h-full w-full">
           <BarChart
             accessibilityLayer
             data={monthlyRevenue}
             margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
-            barSize={12}
-            barGap={2}
+            barSize={50}
+            barGap={5}
           >
             <CartesianGrid vertical={false} strokeDasharray="3 3" opacity={0.4} />
             <XAxis
