@@ -46,7 +46,7 @@ export const coursesData = [
     duration: '15 hrs',
     lessons: 30,
     price: 1200,
-    image: 'https://images.unsplash.com/photo-1432888622747-4eb9a8f5a07d?q=80&w=1000',
+    image: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=1000',
     certificate: true,
     badge: null,
   },

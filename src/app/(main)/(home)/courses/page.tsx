@@ -13,21 +13,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Slider } from '@/components/ui/slider';
-import {
-  ArrowUpRight,
-  Clock,
-  Filter,
-  LayoutGrid,
-  List,
-  Search,
-  SlidersHorizontal,
-  Star,
-  Users,
-  X,
-} from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Filter, LayoutGrid, List, Search, SlidersHorizontal, Star, X } from 'lucide-react';
 import { useState } from 'react';
+import CourseGridCard from './_components/CourseGridCard/CourseGridCard';
+import CourseListCard from './_components/CourseListCard/CourseListCard';
 import { coursesData } from './data/coursesData.data';
 
 // ─── Data
@@ -424,13 +413,13 @@ const CoursesPage = () => {
                 <div className="flex overflow-hidden rounded-sm border border-slate-200 bg-white shadow-xs">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`flex h-10 w-10 items-center justify-center transition-all ${viewMode === 'grid' ? 'bg-primary text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                    className={`flex h-10 w-10 cursor-pointer items-center justify-center transition-all ${viewMode === 'grid' ? 'bg-primary text-white' : 'text-slate-500 hover:bg-slate-50'}`}
                   >
                     <LayoutGrid size={16} />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`flex h-10 w-10 items-center justify-center transition-all ${viewMode === 'list' ? 'bg-primary text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                    className={`flex h-10 w-10 cursor-pointer items-center justify-center transition-all ${viewMode === 'list' ? 'bg-primary text-white' : 'text-slate-500 hover:bg-slate-50'}`}
                   >
                     <List size={16} />
                   </button>
@@ -511,188 +500,27 @@ const CoursesPage = () => {
                 </button>
               </div>
             ) : viewMode === 'grid' ? (
-              /* ── Grid View ─────────────────────────────────────────────── */
+              /* ── Grid View  */
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {filtered.map((course) => (
-                  <Link
-                    href={`/courses/${course.id}`}
+                  <CourseGridCard
                     key={course.id}
-                    className="group dashboard-card-container overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-lg hover:shadow-emerald-100/40"
-                  >
-                    {/* Image */}
-                    <div className="relative h-48 w-full overflow-hidden">
-                      <Image
-                        src={course.image}
-                        alt={course.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      {course.badge && (
-                        <span
-                          className={`absolute top-3 left-3 rounded-sm px-2.5 py-1 text-xs font-bold shadow-sm ${badgeColors[course.badge]}`}
-                        >
-                          {course.badge}
-                        </span>
-                      )}
-                      <div className="bg-primary/10 absolute inset-0 flex items-center justify-center opacity-0 backdrop-blur-[2px] transition-all duration-300 group-hover:opacity-100">
-                        <div className="bg-primary translate-y-3 rounded-full p-3 text-white shadow-md transition-transform duration-300 group-hover:translate-y-0">
-                          <ArrowUpRight size={20} strokeWidth={2.5} />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Body */}
-                    <div className="p-5">
-                      {/* Tags */}
-                      <div className="mb-3 flex flex-wrap items-center gap-2">
-                        <span className="text-primary rounded-sm bg-emerald-50 px-2.5 py-1 text-xs font-semibold">
-                          {course.category}
-                        </span>
-                        <span
-                          className={`rounded-sm px-2.5 py-1 text-xs font-semibold ${levelColors[course.level]}`}
-                        >
-                          {course.level}
-                        </span>
-                        <span className="rounded-sm bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-500">
-                          {course.language}
-                        </span>
-                      </div>
-
-                      {/* Title */}
-                      <h3 className="group-hover:text-primary mb-2 line-clamp-2 text-base leading-snug font-bold transition-colors duration-300">
-                        {course.title}
-                      </h3>
-
-                      {/* Instructor */}
-                      <div className="mb-3 flex items-center gap-2">
-                        <Image
-                          src={course.instructorImage}
-                          alt={course.instructor}
-                          width={22}
-                          height={22}
-                          className="rounded-full border border-emerald-100"
-                        />
-                        <p className="text-text-secondary text-xs">
-                          <span className="font-medium text-slate-600">{course.instructor}</span>
-                        </p>
-                      </div>
-
-                      {/* Stats Row */}
-                      <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                        <span className="flex items-center gap-1">
-                          <Star size={11} fill="#ffc107" color="#ffc107" />
-                          <span className="font-bold text-slate-700">{course.rating}</span>
-                        </span>
-                        <span className="text-slate-300">|</span>
-                        <span className="flex items-center gap-1">
-                          <Users size={11} /> {course.enrolled} students
-                        </span>
-                        <span className="text-slate-300">|</span>
-                        <span className="flex items-center gap-1">
-                          <Clock size={11} /> {course.duration}
-                        </span>
-                      </div>
-
-                      <Separator className="mb-4" />
-
-                      {/* Price */}
-                      <div className="flex items-center justify-between">
-                        <span className="text-primary text-xl font-black">
-                          ৳{course.price.toLocaleString()}
-                        </span>
-                        {course.certificate && (
-                          <span className="text-primary rounded-sm bg-emerald-50 px-2.5 py-1 text-xs font-semibold">
-                            🎓 Certificate
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
+                    course={course}
+                    badgeColors={badgeColors}
+                    levelColors={levelColors}
+                  />
                 ))}
               </div>
             ) : (
-              /* ── List View ─────────────────────────────────────────────── */
+              /* ── List View  */
               <div className="space-y-4">
                 {filtered.map((course) => (
-                  <Link
-                    href={`/courses/${course.id}`}
+                  <CourseListCard
                     key={course.id}
-                    className="group dashboard-card-container flex overflow-hidden transition-all duration-300 hover:border-emerald-100 hover:shadow-md hover:shadow-emerald-100/40"
-                  >
-                    <div className="relative w-52 shrink-0 overflow-hidden">
-                      <Image
-                        src={course.image}
-                        alt={course.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      {course.badge && (
-                        <span
-                          className={`absolute top-3 left-3 rounded-sm px-2.5 py-1 text-xs font-bold ${badgeColors[course.badge]}`}
-                        >
-                          {course.badge}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex flex-1 flex-col justify-between p-5">
-                      <div>
-                        <div className="mb-2 flex flex-wrap gap-2">
-                          <span className="text-primary rounded-sm bg-emerald-50 px-2.5 py-1 text-xs font-semibold">
-                            {course.category}
-                          </span>
-                          <span
-                            className={`rounded-sm px-2.5 py-1 text-xs font-semibold ${levelColors[course.level]}`}
-                          >
-                            {course.level}
-                          </span>
-                          <span className="rounded-sm bg-slate-100 px-2.5 py-1 text-xs text-slate-500">
-                            {course.language}
-                          </span>
-                        </div>
-                        <h3 className="group-hover:text-primary mb-2 text-lg font-bold transition-colors">
-                          {course.title}
-                        </h3>
-                        <div className="mb-3 flex items-center gap-2">
-                          <Image
-                            src={course.instructorImage}
-                            alt={course.instructor}
-                            width={20}
-                            height={20}
-                            className="rounded-full border border-emerald-100"
-                          />
-                          <span className="text-text-secondary text-xs font-medium">
-                            {course.instructor}
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500">
-                          <span className="flex items-center gap-1">
-                            <Star size={11} fill="#ffc107" color="#ffc107" />
-                            <span className="font-bold text-slate-700">{course.rating}</span>
-                          </span>
-                          <span className="text-slate-300">|</span>
-                          <span className="flex items-center gap-1">
-                            <Users size={11} />
-                            {course.enrolled} students
-                          </span>
-                          <span className="text-slate-300">|</span>
-                          <span className="flex items-center gap-1">
-                            <Clock size={11} />
-                            {course.duration}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
-                        <span className="text-primary text-xl font-black">
-                          ৳{course.price.toLocaleString()}
-                        </span>
-                        {course.certificate && (
-                          <span className="text-primary rounded-sm bg-emerald-50 px-2.5 py-1 text-xs font-semibold">
-                            🎓 Certificate
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
+                    course={course}
+                    badgeColors={badgeColors}
+                    levelColors={levelColors}
+                  />
                 ))}
               </div>
             )}
