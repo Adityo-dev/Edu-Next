@@ -1,13 +1,67 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import { baseApi } from '@/services/root/baseApi'; // Adjust this path based on your folder structure
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
 
 const LoginPage = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [apiSuccess, setApiSuccess] = useState<string | null>(null);
+
+  const [form, setForm] = useState({ email: '', password: '', remember: false });
+
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault();
+    setApiError(null);
+    setApiSuccess(null);
+
+    // 1. Basic Frontend Validation
+    if (!form.email.trim() || !form.password) {
+      setApiError('Please fill in all fields.');
+      return;
+    }
+
+    // 2. Prepare Payload
+    const payload = {
+      email: form.email.trim(),
+      password: form.password,
+    };
+
+    try {
+      setIsLoading(true);
+
+      // 3. API Request using baseApi
+      const response = await baseApi('/auth/login', {
+        method: 'POST',
+        data: payload,
+      });
+
+      // Adjust condition based on your exact API response structure
+      if (response && (response.success || response.statusCode === 200)) {
+        setApiSuccess('Login successful! Redirecting...');
+
+        // Save token or session info here if not handled by baseApi interceptors
+        // e.g., localStorage.setItem('token', response.data.accessToken);
+
+        setTimeout(() => {
+          router.push('/'); // Change path to your desired landing page
+        }, 1500);
+      } else {
+        setApiError(response?.message || 'Invalid email or password.');
+      }
+    } catch (error: any) {
+      setApiError(error.message || 'An unexpected network error occurred.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen bg-white">
@@ -141,7 +195,11 @@ const LoginPage = () => {
           </div>
 
           {/* Google */}
-          <button className="mb-6 flex w-full items-center justify-center gap-3 rounded-sm border border-slate-200 py-3.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50 active:scale-95">
+          <button
+            type="button"
+            disabled={isLoading}
+            className="mb-6 flex w-full items-center justify-center gap-3 rounded-sm border border-slate-200 py-3.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50 active:scale-95 disabled:opacity-50"
+          >
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path
                 fill="#4285F4"
@@ -170,8 +228,21 @@ const LoginPage = () => {
             <div className="h-px flex-1 bg-slate-100" />
           </div>
 
-          {/* Fields */}
-          <div className="space-y-4">
+          {/* Error and Success Notifications */}
+          {apiError && (
+            <div className="mb-4 rounded-sm border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-600">
+              ⚠️ {apiError}
+            </div>
+          )}
+          {apiSuccess && (
+            <div className="mb-4 rounded-sm border border-emerald-200 bg-emerald-50 p-3 text-xs font-medium text-emerald-600">
+              ✅ {apiSuccess}
+            </div>
+          )}
+
+          {/* Wrapped inputs in an HTML form element */}
+          <form onSubmit={handleLogin} className="space-y-4">
+            {/* Email */}
             <div>
               <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
                 Email
@@ -183,14 +254,17 @@ const LoginPage = () => {
                 />
                 <input
                   type="email"
+                  required
+                  disabled={isLoading}
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="you@example.com"
-                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100"
+                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                 />
               </div>
             </div>
 
+            {/* Password */}
             <div>
               <div className="mb-1.5 flex items-center justify-between">
                 <label className="text-xs font-bold tracking-wider text-slate-500 uppercase">
@@ -210,10 +284,12 @@ const LoginPage = () => {
                 />
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  required
+                  disabled={isLoading}
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   placeholder="••••••••"
-                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-12 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100"
+                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-12 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                 />
                 <button
                   type="button"
@@ -225,10 +301,14 @@ const LoginPage = () => {
               </div>
             </div>
 
+            {/* Remember Me */}
             <div className="flex items-center gap-2 pt-1">
               <input
                 type="checkbox"
                 id="remember"
+                disabled={isLoading}
+                checked={form.remember}
+                onChange={(e) => setForm({ ...form, remember: e.target.checked })}
                 className="accent-primary h-4 w-4 cursor-pointer"
               />
               <label htmlFor="remember" className="cursor-pointer text-sm text-slate-500">
@@ -236,11 +316,17 @@ const LoginPage = () => {
               </label>
             </div>
 
-            <button className="bg-primary w-full cursor-pointer rounded-sm py-4 text-sm font-bold text-white transition-all hover:bg-[#2a6159] active:scale-95">
-              Sign In →
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="bg-primary w-full cursor-pointer rounded-sm py-4 text-sm font-bold text-white transition-all hover:bg-[#2a6159] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isLoading ? 'Signing In...' : 'Sign In →'}
             </button>
-          </div>
+          </form>
 
+          {/* Footer Terms */}
           <p className="text-text-secondary mt-8 text-center text-xs">
             By signing in, you agree to our{' '}
             <Link href="/terms" className="text-primary hover:underline">

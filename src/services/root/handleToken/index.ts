@@ -1,9 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use server';
 
 import { jwtDecode } from 'jwt-decode';
 import { cookies } from 'next/headers';
 
+/* =============================================================================
+🛑 DISABLED: This function is commented out because the backend does not use Refresh Tokens.
+=============================================================================
 export const getNewToken = async () => {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get('refreshToken')?.value;
@@ -35,6 +37,7 @@ export const getNewToken = async () => {
     return null;
   }
 };
+*/
 
 export const isTokenExpired = async (token: string): Promise<boolean> => {
   if (!token) return true;
@@ -48,12 +51,16 @@ export const isTokenExpired = async (token: string): Promise<boolean> => {
 
 export const getValidToken = async (): Promise<string | null> => {
   const cookieStore = await cookies();
-  let token = cookieStore.get('accessToken')?.value;
+  const token = cookieStore.get('accessToken')?.value;
 
+  // Modified logic to handle Access Token only
   if (!token || (await isTokenExpired(token))) {
-    console.log('Token expired or missing, refreshing...');
-    const res = await getNewToken();
+    console.log('Token expired or missing. No refresh token available.');
 
+    /* =============================================================================
+    🛑 DISABLED: Refresh flow disabled due to backend single-token architecture
+    =============================================================================
+    const res = await getNewToken();
     console.log('Res Inside GeT NEW TOKEN======>', res);
 
     if (res?.data?.accessToken) {
@@ -66,6 +73,17 @@ export const getValidToken = async (): Promise<string | null> => {
     } else {
       return null;
     }
+    */
+
+    // If token is missing or expired, clear it and return null
+    if (token) {
+      try {
+        cookieStore.delete('accessToken');
+      } catch (e) {
+        console.error('Failed to clear expired token:', e);
+      }
+    }
+    return null;
   }
 
   return token;

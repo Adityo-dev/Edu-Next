@@ -1,19 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
+import { baseApi } from '@/services/root/baseApi';
 import { Eye, EyeOff, GraduationCap, Lock, Mail, Phone, User, Video } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
 
 type Role = 'student' | 'instructor';
 
 const RegisterPage = () => {
+  const router = useRouter();
   const [role, setRole] = useState<Role>('student');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const [apiSuccess, setApiSuccess] = useState<string | null>(null);
+
   const [form, setForm] = useState({
-    name: '',
+    name: '', // Will split into firstName and lastName before sending
     email: '',
     phone: '',
     password: '',
@@ -35,6 +43,74 @@ const RegisterPage = () => {
       { emoji: '📡', text: 'Host live classes' },
       { emoji: '🏦', text: 'Withdraw via bKash' },
     ],
+  };
+
+  const handleRegister = async (e: FormEvent) => {
+    e.preventDefault();
+    setApiError(null);
+    setApiSuccess(null);
+
+    // 1. Basic Frontend Validations
+    if (!form.name.trim()) {
+      setApiError('Full Name is required.');
+      return;
+    }
+    if (!form.agree) {
+      setApiError('You must agree to the Terms and Privacy Policy.');
+      return;
+    }
+    if (form.password !== form.confirm) {
+      setApiError('Passwords do not match.');
+      return;
+    }
+    if (form.password.length < 8) {
+      setApiError('Password must be at least 8 characters long.');
+      return;
+    }
+    if (role === 'instructor' && !form.expertise) {
+      setApiError('Please select your area of expertise.');
+      return;
+    }
+
+    // 2. Split Name into firstName and lastName
+    const nameParts = form.name.trim().split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '.'; // Fallback dot if no last name provided
+
+    // 3. Prepare Payload structure according to your Swagger spec
+    const payload = {
+      firstName,
+      lastName,
+      email: form.email.trim(),
+      phone: form.phone.trim(),
+      password: form.password,
+      role: role,
+      ...(role === 'instructor' && {
+        areaOfExpertise: [form.expertise], // API expects an array of strings
+      }),
+    };
+
+    try {
+      setIsLoading(true);
+
+      const response = await baseApi('/auth/signup', {
+        method: 'POST',
+        data: payload,
+      });
+
+      if (response && (response.success || response.statusCode === 201)) {
+        setApiSuccess('Registration successful! Redirecting to login...');
+        setTimeout(() => {
+          router.push('/login');
+        }, 2500);
+      } else {
+        setApiError(response?.message || 'Registration failed. Please try again.');
+      }
+    } catch (error: any) {
+      setApiError(error.message || 'An unexpected network error occurred.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -159,29 +235,43 @@ const RegisterPage = () => {
           {/* Role Toggle */}
           <div className="mb-6 grid grid-cols-2 gap-2">
             <button
-              onClick={() => setRole('student')}
+              type="button"
+              onClick={() => {
+                setRole('student');
+                setApiError(null);
+              }}
+              disabled={isLoading}
               className={`flex items-center justify-center gap-2.5 rounded-sm border-2 py-4 text-sm font-bold transition-all duration-300 ${
                 role === 'student'
                   ? 'border-primary text-primary bg-emerald-50'
                   : 'border-slate-200 text-slate-400 hover:border-slate-300'
               }`}
             >
-              <GraduationCap size={18} />I am a Student
+              <CircleIcon role={role} current="student" defaultIcon={GraduationCap} />I am a Student
             </button>
             <button
-              onClick={() => setRole('instructor')}
+              type="button"
+              onClick={() => {
+                setRole('instructor');
+                setApiError(null);
+              }}
+              disabled={isLoading}
               className={`flex items-center justify-center gap-2.5 rounded-sm border-2 py-4 text-sm font-bold transition-all duration-300 ${
                 role === 'instructor'
                   ? 'border-secondary text-secondary bg-orange-50'
                   : 'border-slate-200 text-slate-400 hover:border-slate-300'
               }`}
             >
-              <Video size={18} />I am an Instructor
+              <CircleIcon role={role} current="instructor" defaultIcon={Video} />I am an Instructor
             </button>
           </div>
 
           {/* Google */}
-          <button className="mb-5 flex w-full items-center justify-center gap-3 rounded-sm border border-slate-200 py-3.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50 active:scale-95">
+          <button
+            type="button"
+            disabled={isLoading}
+            className="mb-5 flex w-full items-center justify-center gap-3 rounded-sm border border-slate-200 py-3.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50 active:scale-95 disabled:opacity-50"
+          >
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path
                 fill="#4285F4"
@@ -210,8 +300,20 @@ const RegisterPage = () => {
             <div className="h-px flex-1 bg-slate-100" />
           </div>
 
-          {/* Fields */}
-          <div className="space-y-4">
+          {/* Global Notifications Alert */}
+          {apiError && (
+            <div className="mb-4 rounded-sm border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-600">
+              ⚠️ {apiError}
+            </div>
+          )}
+          {apiSuccess && (
+            <div className="mb-4 rounded-sm border border-emerald-200 bg-emerald-50 p-3 text-xs font-medium text-emerald-600">
+              ✅ {apiSuccess}
+            </div>
+          )}
+
+          {/* Form wrapper added */}
+          <form onSubmit={handleRegister} className="space-y-4">
             {/* Name */}
             <div>
               <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
@@ -224,10 +326,12 @@ const RegisterPage = () => {
                 />
                 <input
                   type="text"
+                  required
+                  disabled={isLoading}
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Your full name"
-                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100"
+                  placeholder="Your full name (e.g. Aditto Dev)"
+                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                 />
               </div>
             </div>
@@ -244,10 +348,12 @@ const RegisterPage = () => {
                 />
                 <input
                   type="email"
+                  required
+                  disabled={isLoading}
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="you@example.com"
-                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100"
+                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                 />
               </div>
             </div>
@@ -264,10 +370,12 @@ const RegisterPage = () => {
                 />
                 <input
                   type="tel"
+                  required
+                  disabled={isLoading}
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  placeholder="+880 1700-000000"
-                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100"
+                  placeholder="01712345678"
+                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                 />
               </div>
             </div>
@@ -279,12 +387,17 @@ const RegisterPage = () => {
                   Area of Expertise
                 </label>
                 <select
+                  required
+                  disabled={isLoading}
                   value={form.expertise}
                   onChange={(e) => setForm({ ...form, expertise: e.target.value })}
-                  className="focus:border-secondary w-full cursor-pointer appearance-none rounded-sm border border-slate-200 bg-[#F9FAFB] px-4 py-3.5 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-orange-100"
+                  className="focus:border-secondary w-full cursor-pointer appearance-none rounded-sm border border-slate-200 bg-[#F9FAFB] px-4 py-3.5 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-orange-100 disabled:opacity-60"
                 >
                   <option value="">Select your expertise</option>
                   {[
+                    'Next.js',
+                    'TypeScript',
+                    'React',
                     'Web Development',
                     'UI/UX Design',
                     'Digital Marketing',
@@ -295,9 +408,10 @@ const RegisterPage = () => {
                     'Cybersecurity',
                     'Machine Learning & AI',
                     'Video Editing',
-                    'Other',
                   ].map((o) => (
-                    <option key={o}>{o}</option>
+                    <option key={o} value={o}>
+                      {o}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -316,10 +430,12 @@ const RegisterPage = () => {
                   />
                   <input
                     type={showPassword ? 'text' : 'password'}
+                    required
+                    disabled={isLoading}
                     value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
                     placeholder="Min. 8 chars"
-                    className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-10 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100"
+                    className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-10 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                   />
                   <button
                     type="button"
@@ -341,10 +457,12 @@ const RegisterPage = () => {
                   />
                   <input
                     type={showConfirm ? 'text' : 'password'}
+                    required
+                    disabled={isLoading}
                     value={form.confirm}
                     onChange={(e) => setForm({ ...form, confirm: e.target.value })}
                     placeholder="Re-enter"
-                    className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-10 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100"
+                    className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-10 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                   />
                   <button
                     type="button"
@@ -362,6 +480,7 @@ const RegisterPage = () => {
               <input
                 type="checkbox"
                 id="agree"
+                disabled={isLoading}
                 checked={form.agree}
                 onChange={(e) => setForm({ ...form, agree: e.target.checked })}
                 className="accent-primary mt-0.5 h-4 w-4 cursor-pointer"
@@ -385,13 +504,19 @@ const RegisterPage = () => {
 
             {/* Submit */}
             <button
-              className={`w-full cursor-pointer rounded-sm py-4 text-sm font-bold text-white transition-all active:scale-95 ${
+              type="submit"
+              disabled={isLoading}
+              className={`w-full cursor-pointer rounded-sm py-4 text-sm font-bold text-white transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 ${
                 role === 'student'
                   ? 'bg-primary hover:bg-[#2a6159]'
                   : 'bg-secondary hover:bg-[#d98c0a]'
               }`}
             >
-              {role === 'student' ? 'Create Student Account →' : 'Apply as Instructor →'}
+              {isLoading
+                ? 'Processing...'
+                : role === 'student'
+                  ? 'Create Student Account →'
+                  : 'Apply as Instructor →'}
             </button>
 
             {/* Instructor Note */}
@@ -401,11 +526,24 @@ const RegisterPage = () => {
                 verification. You will receive an email notification once approved.
               </div>
             )}
-          </div>
+          </form>
         </div>
       </div>
     </div>
   );
+};
+
+// Small utility component to fix implicit icon binding
+const CircleIcon = ({
+  role,
+  current,
+  defaultIcon: Icon,
+}: {
+  role: string;
+  current: string;
+  defaultIcon: any;
+}) => {
+  return <Icon size={18} className={role === current ? 'animate-pulse' : ''} />;
 };
 
 export default RegisterPage;
