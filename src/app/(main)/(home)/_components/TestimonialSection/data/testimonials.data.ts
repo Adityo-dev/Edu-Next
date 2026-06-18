@@ -1,0 +1,51 @@
+export const testimonialsData = [
+  {
+    id: 1,
+    name: 'Rakibul Hasan',
+    role: 'Freelance Web Developer',
+    text: 'EduNext changed my life! After completing the Web Development course, I started freelancing on Fiverr and now earning consistently every month.',
+    image: 'https://i.pravatar.cc/150?u=rakib',
+  },
+  {
+    id: 2,
+    name: 'Sumaiya Akter',
+    role: 'UI/UX Designer',
+    text: 'The UI/UX Design course was incredibly detailed. The instructor explained everything step by step and I landed my first design job within 3 months.',
+    image: 'https://i.pravatar.cc/150?u=sumaiya',
+  },
+  {
+    id: 3,
+    name: 'Tanvir Ahmed',
+    role: 'Digital Marketer',
+    text: 'I had zero knowledge about digital marketing. After finishing the course on EduNext, I now manage social media for 3 local businesses.',
+    image: 'https://i.pravatar.cc/150?u=tanvir',
+  },
+  {
+    id: 4,
+    name: 'Nusrat Jahan',
+    role: 'Graphic Designer',
+    text: 'The live sessions were the best part! I could ask questions directly to the instructor and get real-time feedback on my designs.',
+    image: 'https://i.pravatar.cc/150?u=nusrat',
+  },
+  {
+    id: 5,
+    name: 'Ariful Islam',
+    role: 'Mobile App Developer',
+    text: 'Completed the App Development course and published my first app on Play Store. The certificate from EduNext also helped me get hired.',
+    image: 'https://i.pravatar.cc/150?u=ariful',
+  },
+  {
+    id: 6,
+    name: 'Mithila Rahman',
+    role: 'Data Analyst',
+    text: 'Very structured course content with real-world projects. I now work at a local startup as a junior data analyst thanks to EduNext.',
+    image: 'https://i.pravatar.cc/150?u=mithila',
+  },
+  {
+    id: 7,
+    name: 'Sabbir Hossain',
+    role: 'Cybersecurity Enthusiast',
+    text: 'The Cybersecurity course was eye-opening. Verified instructors, quality content, and a certificate I can actually show to employers.',
+    image: 'https://i.pravatar.cc/150?u=sabbir',
+  },
+];

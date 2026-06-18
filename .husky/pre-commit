@@ -1,0 +1,21 @@
+echo ""
+echo "================================="
+echo "🔍  Running Pre-Commit Checks..."
+echo "================================="
+echo ""
+if npx lint-staged; then
+  echo ""
+  echo "========================================="
+  echo "✅  All checks passed! Ready to commit!"
+  echo "========================================="
+  echo ""
+else
+  echo ""
+  echo "========================================================"
+  echo "❌  Step 1 Failed: ESLint or Prettier errors detected!"
+  echo "💡  Please fix the errors or warnings before committing."
+  echo "========================================================"
+  echo ""
+  exit 1
+fi
+echo ""

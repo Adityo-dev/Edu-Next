@@ -1,0 +1,36 @@
+'use client';
+
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
+import TransactionHistory from './_components/TransactionHistory/TransactionHistory';
+import WalletCard from './_components/WalletCard/WalletCard';
+import WalletStats from './_components/WalletStats/WalletStats';
+
+const transactions = [
+  { id: 1, type: 'credit', amount: 1200 },
+  { id: 2, type: 'credit', amount: 1440 },
+  { id: 3, type: 'debit', amount: 8000 },
+  { id: 4, type: 'credit', amount: 1200 },
+  { id: 5, type: 'credit', amount: 720 },
+  { id: 6, type: 'credit', amount: 1440 },
+  { id: 7, type: 'debit', amount: 5000 },
+];
+
+const InstructorWalletPage = () => {
+  const credits = transactions.filter((t) => t.type === 'credit').reduce((a, b) => a + b.amount, 0);
+  const debits = transactions.filter((t) => t.type === 'debit').reduce((a, b) => a + b.amount, 0);
+  const balance = credits - debits;
+
+  return (
+    <div className="mx-auto space-y-6">
+      <SectionHeader title="My Wallet" description="Track your earnings and transaction history." />
+
+      <WalletCard balance={balance} />
+
+      <WalletStats credits={credits} debits={debits} />
+
+      <TransactionHistory />
+    </div>
+  );
+};
+
+export default InstructorWalletPage;
