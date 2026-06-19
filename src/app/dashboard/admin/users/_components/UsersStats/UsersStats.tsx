@@ -6,10 +6,10 @@ const UsersStats = () => {
   const { data, isLoading, isError } = useGetUserStatsQuery();
 
   const stats = [
-    { label: 'Total Users', value: data?.data.totalUsers },
-    { label: 'Students', value: data?.data.totalStudents },
-    { label: 'Instructors', value: data?.data.totalInstructors },
-    { label: 'Suspended', value: data?.data.totalSuspended },
+    { label: 'Total Users', value: data?.data.totalUsers || 0 },
+    { label: 'Students', value: data?.data.totalStudents || 0 },
+    { label: 'Instructors', value: data?.data.totalInstructors || 0 },
+    { label: 'Suspended', value: data?.data.totalSuspended || 0 },
   ];
 
   return (

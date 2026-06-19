@@ -16,26 +16,27 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils';
 import { Check, ChevronDown, X } from 'lucide-react';
 import * as React from 'react';
-import { Control, Controller } from 'react-hook-form';
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
 
 interface Option {
   value: string;
   label: string;
 }
 
-interface SearchableSelectProps {
+interface SearchableSelectProps<T extends FieldValues> {
   label: string;
-  name: string;
+  name: Path<T>;
   options: Option[];
-  control: Control<any>;
-  error?: string;
+  control: Control<T>;
+  error?: any;
   required?: boolean;
   placeholder?: string;
   disabled?: boolean;
+  isSingle?: boolean;
   onSearchChange?: (value: string) => void;
 }
 
-const SearchableSelect: React.FC<SearchableSelectProps> = ({
+const SearchableSelect = <T extends FieldValues>({
   label,
   name,
   options,
@@ -44,9 +45,12 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
   required = false,
   placeholder = 'Select members...',
   disabled = false,
+  isSingle = false,
   onSearchChange,
-}) => {
+}: SearchableSelectProps<T>) => {
   const [open, setOpen] = React.useState(false);
+
+  const errorMessage = typeof error === 'object' ? error?.message : error;
 
   return (
     <div className="space-y-2">
@@ -58,25 +62,34 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
         name={name}
         control={control}
         render={({ field }) => {
-          const selectedValues = Array.isArray(field.value)
-            ? field.value
+          const selectedValues: string[] = Array.isArray(field.value)
+            ? (field.value as string[])
             : field.value
-              ? [field.value]
+              ? [String(field.value)]
               : [];
 
           const handleRemove = (valToRemove: string, e: React.MouseEvent) => {
             e.preventDefault();
             e.stopPropagation();
-            const newValues = selectedValues.filter((v: string) => v !== valToRemove);
-            field.onChange(newValues);
+            if (isSingle) {
+              field.onChange('');
+            } else {
+              const newValues = selectedValues.filter((v) => v !== valToRemove);
+              field.onChange(newValues);
+            }
           };
 
           const handleSelect = (value: string) => {
-            const isSelected = selectedValues.includes(value);
-            const newValues = isSelected
-              ? selectedValues.filter((v: string) => v !== value)
-              : [...selectedValues, value];
-            field.onChange(newValues);
+            if (isSingle) {
+              field.onChange(value);
+              setOpen(false);
+            } else {
+              const isSelected = selectedValues.includes(value);
+              const newValues = isSelected
+                ? selectedValues.filter((v) => v !== value)
+                : [...selectedValues, value];
+              field.onChange(newValues);
+            }
           };
 
           return (
@@ -98,7 +111,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                 >
                   <div className="flex flex-wrap gap-1.5">
                     {selectedValues.length > 0 ? (
-                      selectedValues.map((val: string) => {
+                      selectedValues.map((val) => {
                         const option = options.find((o) => o.value === val);
                         return (
                           <span
@@ -171,7 +184,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
           );
         }}
       />
-      {error && <p className="text-danger mt-1 text-xs font-medium">{error}</p>}
+      {errorMessage && <p className="text-danger mt-1 text-xs font-medium">{errorMessage}</p>}
     </div>
   );
 };

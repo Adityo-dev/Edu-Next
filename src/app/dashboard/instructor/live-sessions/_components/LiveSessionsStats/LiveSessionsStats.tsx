@@ -1,27 +1,37 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useGetInstructorLiveSessionStatsQuery } from '@/redux/features/instructor/liveSessionsManagement/liveSessionsManagement.api';
 
-const LiveSessionsStats = ({ sessionsData }: { sessionsData: any[] }) => {
+const LiveSessionsStats = () => {
+  const { data, isLoading, isError } = useGetInstructorLiveSessionStatsQuery();
+  console.log(data);
+
   return (
     <div className="grid grid-cols-3 gap-4">
       {[
         {
           label: 'Live Now',
-          value: sessionsData.filter((s) => s.status === 'live').length,
+          value: data?.data?.liveNow || 0,
           color: 'text-red-500',
         },
         {
           label: 'Upcoming',
-          value: sessionsData.filter((s) => s.status === 'upcoming').length,
+          value: data?.data?.upcoming || 0,
           color: 'text-blue-600',
         },
         {
           label: 'Completed',
-          value: sessionsData.filter((s) => s.status === 'completed').length,
+          value: data?.data?.completed || 0,
           color: 'text-primary',
         },
       ].map((stat, i) => (
         <div key={i} className="dashboard-card-container text-center">
-          <p className={`text-3xl font-black ${stat.color}`}>{stat.value}</p>
+          {isError ? (
+            <p className="text-text-secondary text-2xl font-black">—</p>
+          ) : isLoading ? (
+            <div className="mx-auto h-8 w-10 animate-pulse rounded bg-slate-100" />
+          ) : (
+            <p className={`text-primary text-3xl font-black ${stat.color}`}>{stat.value ?? 0}</p>
+          )}
+
           <p className="text-text-secondary text-sm">{stat.label}</p>
         </div>
       ))}

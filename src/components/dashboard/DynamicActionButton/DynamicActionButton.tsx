@@ -38,7 +38,7 @@ const DynamicActionButton = ({
   };
 
   const combinedClasses = cn(
-    'group relative h-11 text-xs sm:h-12 w-fit cursor-pointer sm:text-base transition-all duration-300 border px-8 active:scale-95 flex items-center justify-center gap-2 font-semibold overflow-hidden',
+    'group relative h-11 text-xs sm:h-12 w-fit cursor-pointer sm:text-base transition-all duration-300 border px-8 active:scale-95 flex items-center justify-center gap-2 font-semibold overflow-hidden rounded-sm',
     variantStyles[variant],
     className,
   );

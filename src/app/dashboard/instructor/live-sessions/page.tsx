@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState } from 'react';
@@ -70,25 +69,9 @@ const InstructorLiveSessionsPage = () => {
   const [showCreate, setShowCreate] = useState(false);
 
   // Dynamic local state handled by API/State managers or arrays in real flow
-  const [sessions, setSessions] = useState(sessionsData);
+  const [sessions] = useState(sessionsData);
 
   const filtered = sessions.filter((s) => filter === 'all' || s.status === filter);
-
-  const handleCreateSessionSubmit = (data: any) => {
-    const newlyCreated = {
-      id: sessions.length + 1,
-      title: data.title,
-      course: data.course,
-      date: data.date,
-      time: data.time,
-      duration: `${data.duration} min`,
-      platform: data.platform,
-      link: data.meetingLink,
-      students: 0,
-      status: 'upcoming',
-    };
-    setSessions((prev) => [newlyCreated, ...prev]);
-  };
 
   return (
     <div className="mx-auto space-y-6">
@@ -96,15 +79,10 @@ const InstructorLiveSessionsPage = () => {
       <LiveSessionsHeader showCreate={showCreate} setShowCreate={setShowCreate} />
 
       {/* Create Form */}
-      {showCreate && (
-        <CreateSessionForm
-          setShowCreate={setShowCreate}
-          handleCreateSession={handleCreateSessionSubmit}
-        />
-      )}
+      {showCreate && <CreateSessionForm setShowCreate={setShowCreate} />}
 
       {/* Stats */}
-      <LiveSessionsStats sessionsData={sessions} />
+      <LiveSessionsStats />
 
       {/* Filter */}
       <LiveSessionsFilter filter={filter} setFilter={setFilter} />

@@ -7,49 +7,57 @@ import { z } from 'zod';
 
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
+import SearchableSelect from '@/components/dashboard/Fields/SearchableSelect/SearchableSelect';
 import SelectField from '@/components/dashboard/Fields/SelectField/SelectField';
+import { useScheduleLiveSessionMutation } from '@/redux/features/instructor/liveSessionsManagement/liveSessionsManagement.api';
 
-// 🛠️ ১. Zod স্কিমা ডিফাইন করা হলো
 const sessionSchema = z.object({
   title: z.string().min(1, 'Session title is required'),
-  course: z.string().min(1, 'Course selection is required'),
+  courseId: z.any().refine((val) => {
+    if (Array.isArray(val)) return val.length > 0;
+    return !!val;
+  }, 'Course selection is required'),
   date: z.string().min(1, 'Date is required'),
   time: z.string().min(1, 'Time is required'),
-  duration: z.string().min(1, 'Duration is required'),
-  platform: z.string().min(1, 'Platform is required'),
+  durationInMins: z.string().min(1, 'Duration is required'),
+  meetingPlatform: z.string().min(1, 'Platform is required'),
   meetingLink: z.string().url('Invalid URL format').min(1, 'Meeting link is required'),
+  description: z.string().optional(),
 });
 
 type TSessionFormValues = z.infer<typeof sessionSchema>;
 
 interface CreateSessionFormProps {
   setShowCreate: (show: boolean) => void;
-
-  handleCreateSession?: (data: TSessionFormValues) => void;
 }
 
-const CreateSessionForm = ({ setShowCreate, handleCreateSession }: CreateSessionFormProps) => {
+const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
+  // RTK Query Mutation Hook
+  const [scheduleLiveSession, { isLoading }] = useScheduleLiveSessionMutation();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<TSessionFormValues>({
     resolver: zodResolver(sessionSchema),
     defaultValues: {
       title: '',
-      course: 'Complete Web Development Bootcamp',
+      courseId: '', // সার্চেবল সিলেক্টের জন্য শুরুতে ক্লিয়ার বা খালি রাখা হলো
       date: '',
       time: '',
-      duration: '',
-      platform: 'Zoom',
+      durationInMins: '',
+      meetingPlatform: 'Zoom',
       meetingLink: '',
+      description: 'Deep dive session.',
     },
   });
 
   const courseOptions = [
-    { value: 'Complete Web Development Bootcamp', label: 'Complete Web Development Bootcamp' },
-    { value: 'React.js Advanced Masterclass', label: 'React.js Advanced Masterclass' },
-    { value: 'Node.js & Express API Development', label: 'Node.js & Express API Development' },
+    { value: '6a1f71b6409d7d7ea7633912', label: 'Complete Web Development Bootcamp' },
+    { value: '6a1f71b6409d7d7ea7633913', label: 'React.js Advanced Masterclass' },
+    { value: '6a1f71b6409d7d7ea7633914', label: 'Node.js & Express API Development' },
   ];
 
   const platformOptions = [
@@ -57,19 +65,35 @@ const CreateSessionForm = ({ setShowCreate, handleCreateSession }: CreateSession
     { value: 'Google Meet', label: 'Google Meet' },
   ];
 
-  const onSubmitForm = (data: TSessionFormValues) => {
-    if (handleCreateSession) {
-      handleCreateSession(data);
-    } else {
-      // eslint-disable-next-line no-console
-      console.log('Scheduled Session Data:', data);
+  const onSubmitForm = async (values: TSessionFormValues) => {
+    try {
+      const combinedDateTime = new Date(`${values.date}T${values.time}:00`).toISOString();
+
+      // SearchableSelect যদি অ্যারে রিটার্ন করে, তবে প্রথম সিলেক্টেড আইডিটি ব্যাকএন্ডে পাঠানো হচ্ছে
+      const finalCourseId = Array.isArray(values.courseId) ? values.courseId[0] : values.courseId;
+
+      const requestBody = {
+        courseId: finalCourseId,
+        title: values.title,
+        description: values.description || 'No description provided.',
+        meetingLink: values.meetingLink,
+        meetingPlatform: values.meetingPlatform,
+        startTime: combinedDateTime,
+        durationInMins: Number(values.durationInMins),
+      };
+
+      await scheduleLiveSession(requestBody).unwrap();
+
+      reset();
+      setShowCreate(false);
+    } catch (error) {
+      console.error('Failed to schedule session:', error);
     }
-    setShowCreate(false);
   };
 
   return (
-    <div className="rounded-md border border-emerald-200 bg-white p-5 shadow-xs">
-      <h2 className="mb-5 text-lg font-semibold">Schedule New Session</h2>
+    <div className="dashboard-card-container p-4!">
+      <h2 className="mb-5 text-lg font-semibold text-gray-900">Schedule New Session</h2>
 
       <form onSubmit={handleSubmit(onSubmitForm)}>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -85,14 +109,15 @@ const CreateSessionForm = ({ setShowCreate, handleCreateSession }: CreateSession
             />
           </div>
 
-          {/* Course Selection */}
           <div className="sm:col-span-2">
-            <SelectField
+            <SearchableSelect
               label="Course"
-              name="course"
+              name="courseId"
               control={control}
               options={courseOptions}
-              error={errors.course?.message}
+              placeholder="Select a course..."
+              error={errors.courseId}
+              isSingle={true}
               required
             />
           </div>
@@ -120,21 +145,21 @@ const CreateSessionForm = ({ setShowCreate, handleCreateSession }: CreateSession
           {/* Duration */}
           <InputField
             label="Duration (minutes)"
-            name="duration"
+            name="durationInMins"
             type="number"
             control={control}
             placeholder="Enter session duration"
-            error={errors.duration?.message}
+            error={errors.durationInMins?.message}
             required
           />
 
           {/* Platform */}
           <SelectField
             label="Platform"
-            name="platform"
+            name="meetingPlatform"
             control={control}
             options={platformOptions}
-            error={errors.platform?.message}
+            error={errors.meetingPlatform?.message}
             required
           />
 
@@ -154,10 +179,18 @@ const CreateSessionForm = ({ setShowCreate, handleCreateSession }: CreateSession
 
         {/* Action Buttons */}
         <div className="mt-5 flex gap-3">
-          <DynamicActionButton type="submit" label="Schedule Session" />
+          <DynamicActionButton
+            type="submit"
+            label="Schedule Session"
+            isLoading={isLoading}
+            className="h-11!"
+          />
           <DynamicActionButton
             variant="outline"
             label="Cancel Form"
+            type="button"
+            className="h-11!"
+            disabled={isLoading}
             onClick={() => setShowCreate(false)}
           />
         </div>
