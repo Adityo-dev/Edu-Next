@@ -3,9 +3,11 @@ export type TUserRole = 'ADMIN';
 export type TAccountStatus = 'ACTIVE' | 'PENDING' | 'INACTIVE';
 
 export type TLoginUser = {
-  email: string;
+  firstName: string;
+  lastName: string;
   fullName: string;
-  profilePicture: string;
+  email: string;
+  avatar: string;
   role: string;
 };
 

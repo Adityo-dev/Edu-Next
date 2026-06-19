@@ -1,7 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
+import { ROLE_DASHBOARD_HOME } from '@/components/dashboard/sidebar/sidebarRoutes';
+import { setAuth } from '@/redux/features/auth/authSlice';
+import { useAppDispatch } from '@/redux/hooks';
+import { setUserProfile } from '@/services/auth/auth.service';
 import { baseApi } from '@/services/root/baseApi';
 import { Eye, EyeOff, GraduationCap, Lock, Mail, Phone, User, Video } from 'lucide-react';
 import Image from 'next/image';
@@ -13,6 +19,7 @@ type Role = 'student' | 'instructor';
 
 const RegisterPage = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [role, setRole] = useState<Role>('student');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -21,7 +28,7 @@ const RegisterPage = () => {
   const [apiSuccess, setApiSuccess] = useState<string | null>(null);
 
   const [form, setForm] = useState({
-    name: '', // Will split into firstName and lastName before sending
+    name: '',
     email: '',
     phone: '',
     password: '',
@@ -50,7 +57,6 @@ const RegisterPage = () => {
     setApiError(null);
     setApiSuccess(null);
 
-    // 1. Basic Frontend Validations
     if (!form.name.trim()) {
       setApiError('Full Name is required.');
       return;
@@ -72,12 +78,10 @@ const RegisterPage = () => {
       return;
     }
 
-    // 2. Split Name into firstName and lastName
     const nameParts = form.name.trim().split(' ');
     const firstName = nameParts[0] || '';
-    const lastName = nameParts.slice(1).join(' ') || '.'; // Fallback dot if no last name provided
+    const lastName = nameParts.slice(1).join(' ') || '.';
 
-    // 3. Prepare Payload structure according to your Swagger spec
     const payload = {
       firstName,
       lastName,
@@ -86,7 +90,7 @@ const RegisterPage = () => {
       password: form.password,
       role: role,
       ...(role === 'instructor' && {
-        areaOfExpertise: [form.expertise], // API expects an array of strings
+        areaOfExpertise: [form.expertise],
       }),
     };
 
@@ -99,10 +103,28 @@ const RegisterPage = () => {
       });
 
       if (response && (response.success || response.statusCode === 201)) {
-        setApiSuccess('Registration successful! Redirecting to login...');
-        setTimeout(() => {
-          router.push('/login');
-        }, 2500);
+        const { token, user } = response;
+
+        if (token && user) {
+          const { password: _password, ...safeUser } = user;
+
+          await setUserProfile(safeUser, token);
+          dispatch(setAuth({ user: safeUser }));
+
+          setApiSuccess('Registration successful! Redirecting...');
+
+          const dashboardPath =
+            ROLE_DASHBOARD_HOME[safeUser.role as keyof typeof ROLE_DASHBOARD_HOME] ?? '/';
+
+          setTimeout(() => {
+            router.push(dashboardPath);
+          }, 500);
+        } else {
+          setApiSuccess('Registration successful! Redirecting to login...');
+          setTimeout(() => {
+            router.push('/login');
+          }, 500);
+        }
       } else {
         setApiError(response?.message || 'Registration failed. Please try again.');
       }
@@ -115,7 +137,7 @@ const RegisterPage = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
-      {/* ── Left Panel ───────────────────────────────────────────────────── */}
+      {/* ── Left Panel ─ */}
       <div className="relative hidden w-[45%] overflow-hidden lg:flex">
         <div className="absolute inset-0 bg-[#0f1a19]" />
 
@@ -210,7 +232,7 @@ const RegisterPage = () => {
         </div>
       </div>
 
-      {/* ── Right Panel ──────────────────────────────────────────────────── */}
+      {/* ── Right Panel  */}
       <div className="flex w-full flex-col items-center justify-center overflow-y-auto px-6 py-12 lg:w-[55%]">
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
@@ -330,7 +352,7 @@ const RegisterPage = () => {
                   disabled={isLoading}
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="Your full name (e.g. Aditto Dev)"
+                  placeholder="Enter your full name"
                   className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                 />
               </div>
@@ -352,7 +374,7 @@ const RegisterPage = () => {
                   disabled={isLoading}
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="you@example.com"
+                  placeholder="Enter your email"
                   className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                 />
               </div>
@@ -374,7 +396,7 @@ const RegisterPage = () => {
                   disabled={isLoading}
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  placeholder="01712345678"
+                  placeholder="Enter your phone number"
                   className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                 />
               </div>
@@ -434,7 +456,7 @@ const RegisterPage = () => {
                     disabled={isLoading}
                     value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
-                    placeholder="Min. 8 chars"
+                    placeholder="Enter your password"
                     className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-10 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                   />
                   <button
@@ -461,7 +483,7 @@ const RegisterPage = () => {
                     disabled={isLoading}
                     value={form.confirm}
                     onChange={(e) => setForm({ ...form, confirm: e.target.value })}
-                    placeholder="Re-enter"
+                    placeholder="Enter re-enter your password"
                     className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-10 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                   />
                   <button
@@ -533,7 +555,6 @@ const RegisterPage = () => {
   );
 };
 
-// Small utility component to fix implicit icon binding
 const CircleIcon = ({
   role,
   current,

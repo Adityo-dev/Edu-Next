@@ -14,6 +14,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NODE_ENV === 'production'
+      ? 'https://edunext-six.vercel.app'
+      : 'http://localhost:3000',
+  ),
   title: {
     default: 'EduNext | The Next-Gen Learning Platform',
     template: '%s | EduNext',
@@ -29,7 +34,7 @@ export const metadata: Metadata = {
     'Learn Coding',
     'Skill Development',
   ],
-  authors: [{ name: 'EduNext Team', url: 'https://edunext.com' }],
+  authors: [{ name: 'EduNext Team', url: 'https://edunext-six.vercel.app' }],
   creator: 'EduNext Corporation',
   publisher: 'EduNext Corporation',
 
@@ -42,7 +47,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'bn_BD',
-    url: 'https://edunext.com',
+    url: 'https://edunext-six.vercel.app',
     title: 'EduNext - Learn & Teach on the Next-Gen LMS Platform',
     description: 'Enroll in top-tier courses or start your instructor journey today on EduNext.',
     siteName: 'EduNext',
@@ -63,7 +68,6 @@ export const metadata: Metadata = {
     images: ['/og-image.jpg'],
   },
 
-  //
   robots: {
     index: true,
     follow: true,

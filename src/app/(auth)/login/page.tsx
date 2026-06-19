@@ -1,7 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { baseApi } from '@/services/root/baseApi'; // Adjust this path based on your folder structure
+import { ROLE_DASHBOARD_HOME } from '@/components/dashboard/sidebar/sidebarRoutes';
+import { setAuth } from '@/redux/features/auth/authSlice';
+import { useAppDispatch } from '@/redux/hooks';
+import { setUserProfile } from '@/services/auth/auth.service';
+import { baseApi } from '@/services/root/baseApi';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,6 +16,7 @@ import { FormEvent, useState } from 'react';
 
 const LoginPage = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -22,13 +29,11 @@ const LoginPage = () => {
     setApiError(null);
     setApiSuccess(null);
 
-    // 1. Basic Frontend Validation
     if (!form.email.trim() || !form.password) {
       setApiError('Please fill in all fields.');
       return;
     }
 
-    // 2. Prepare Payload
     const payload = {
       email: form.email.trim(),
       password: form.password,
@@ -37,22 +42,32 @@ const LoginPage = () => {
     try {
       setIsLoading(true);
 
-      // 3. API Request using baseApi
       const response = await baseApi('/auth/login', {
         method: 'POST',
         data: payload,
       });
 
-      // Adjust condition based on your exact API response structure
       if (response && (response.success || response.statusCode === 200)) {
+        const { token, user: rawUser } = response;
+
+        if (!token || !rawUser) {
+          setApiError('Login response is missing token or user data.');
+          return;
+        }
+
+        const { password: _password, ...user } = rawUser;
+
+        await setUserProfile(user, token);
+        dispatch(setAuth({ user }));
+
         setApiSuccess('Login successful! Redirecting...');
 
-        // Save token or session info here if not handled by baseApi interceptors
-        // e.g., localStorage.setItem('token', response.data.accessToken);
+        const dashboardPath =
+          ROLE_DASHBOARD_HOME[user.role as keyof typeof ROLE_DASHBOARD_HOME] ?? '/';
 
         setTimeout(() => {
-          router.push('/'); // Change path to your desired landing page
-        }, 1500);
+          router.push(dashboardPath);
+        }, 500);
       } else {
         setApiError(response?.message || 'Invalid email or password.');
       }
@@ -65,7 +80,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
-      {/* ── Left Panel ───────────────────────────────────────────────────── */}
+      {/* ── Left Panel  */}
       <div className="relative hidden w-[55%] overflow-hidden lg:flex">
         {/* Background */}
         <div className="bg-primary absolute inset-0" />
@@ -172,7 +187,7 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* ── Right Panel ──────────────────────────────────────────────────── */}
+      {/* ── Right Panel  */}
       <div className="flex w-full flex-col items-center justify-center px-6 py-16 lg:w-[45%]">
         <div className="w-full max-w-sm">
           {/* Mobile Logo */}
@@ -258,7 +273,7 @@ const LoginPage = () => {
                   disabled={isLoading}
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="you@example.com"
+                  placeholder="Enter your email"
                   className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                 />
               </div>
@@ -288,7 +303,7 @@ const LoginPage = () => {
                   disabled={isLoading}
                   value={form.password}
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  placeholder="••••••••"
+                  placeholder="Enter your Password"
                   className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-12 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
                 />
                 <button

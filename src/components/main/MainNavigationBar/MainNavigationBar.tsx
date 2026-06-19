@@ -4,6 +4,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Bookmark, Menu, Search } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import NavbarAuthSection from './_components/NavbarAuthSection/NavbarAuthSection';
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -78,12 +79,7 @@ const MainNavigationBar = () => {
             <Bookmark size={20} className="text-slate-600" />
           </button>
 
-          <Link
-            href="/login"
-            className="bg-secondary hover:bg-secondary/80 hidden rounded-sm px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-100 transition-all active:scale-95 md:block"
-          >
-            Sign in
-          </Link>
+          <NavbarAuthSection />
 
           {/* Shadcn Sheet (Drawer) for Mobile */}
           <div className="md:hidden">

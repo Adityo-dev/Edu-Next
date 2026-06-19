@@ -1,6 +1,4 @@
-import type { NextConfig } from 'next';
-
-const nextConfig: NextConfig = {
+const nextConfig = {
   reactCompiler: true,
   images: {
     remotePatterns: [
@@ -13,6 +11,11 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
       },
     ],
+  },
+  experimental: {
+    turbopack: {
+      root: '.',
+    },
   },
 };
 
