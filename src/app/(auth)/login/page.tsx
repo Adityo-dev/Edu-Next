@@ -3,40 +3,58 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import { ROLE_DASHBOARD_HOME } from '@/components/dashboard/sidebar/sidebarRoutes';
+
 import { setAuth } from '@/redux/features/auth/authSlice';
 import { useAppDispatch } from '@/redux/hooks';
 import { setUserProfile } from '@/services/auth/auth.service';
 import { baseApi } from '@/services/root/baseApi';
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+// Zod Validation Schema
+const loginSchema = z.object({
+  email: z.string().min(1, 'Email is required.').email('Please enter a valid email address.'),
+  password: z.string().min(1, 'Password is required.'),
+  remember: z.boolean().default(false),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [apiSuccess, setApiSuccess] = useState<string | null>(null);
 
-  const [form, setForm] = useState({ email: '', password: '', remember: false });
+  // React Hook Form Configuration
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+      remember: false,
+    },
+  });
 
-  const handleLogin = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (data: LoginFormData) => {
     setApiError(null);
     setApiSuccess(null);
 
-    if (!form.email.trim() || !form.password) {
-      setApiError('Please fill in all fields.');
-      return;
-    }
-
     const payload = {
-      email: form.email.trim(),
-      password: form.password,
+      email: data.email.trim(),
+      password: data.password,
     };
 
     try {
@@ -255,66 +273,31 @@ const LoginPage = () => {
             </div>
           )}
 
-          {/* Wrapped inputs in an HTML form element */}
-          <form onSubmit={handleLogin} className="space-y-4">
-            {/* Email */}
-            <div>
-              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-                Email
-              </label>
-              <div className="relative">
-                <Mail
-                  size={15}
-                  className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
-                />
-                <input
-                  type="email"
-                  required
-                  disabled={isLoading}
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  placeholder="Enter your email"
-                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
-                />
-              </div>
-            </div>
+          {/* Form with InputField Components */}
+          <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
+            {/* Email Field Using Your InputField */}
+            <InputField
+              label="Email"
+              name="email"
+              type="email"
+              control={control}
+              placeholder="Enter your email"
+              error={errors.email}
+              required
+              disabled={isLoading}
+            />
 
-            {/* Password */}
-            <div>
-              <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-xs font-bold tracking-wider text-slate-500 uppercase">
-                  Password
-                </label>
-                <Link
-                  href="/forgot-password"
-                  className="text-primary text-xs font-semibold hover:underline"
-                >
-                  Forgot?
-                </Link>
-              </div>
-              <div className="relative">
-                <Lock
-                  size={15}
-                  className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
-                />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  disabled={isLoading}
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  placeholder="Enter your Password"
-                  className="focus:border-primary w-full rounded-sm border border-slate-200 bg-[#F9FAFB] py-3.5 pr-12 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                >
-                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                </button>
-              </div>
-            </div>
+            {/* Password Field Using Your InputField */}
+            <InputField
+              label="Password"
+              name="password"
+              type="password"
+              control={control}
+              placeholder="Enter your Password"
+              error={errors.password}
+              required
+              disabled={isLoading}
+            />
 
             {/* Remember Me */}
             <div className="flex items-center gap-2 pt-1">
@@ -322,8 +305,8 @@ const LoginPage = () => {
                 type="checkbox"
                 id="remember"
                 disabled={isLoading}
-                checked={form.remember}
-                onChange={(e) => setForm({ ...form, remember: e.target.checked })}
+                const
+                {...(control.register ? control.register('remember') : {})} // react-hook-form অটো সিঙ্ক করবে
                 className="accent-primary h-4 w-4 cursor-pointer"
               />
               <label htmlFor="remember" className="cursor-pointer text-sm text-slate-500">
