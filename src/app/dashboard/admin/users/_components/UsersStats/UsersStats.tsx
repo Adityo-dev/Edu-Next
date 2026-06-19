@@ -1,25 +1,28 @@
-interface User {
-  role: string;
-  status: string;
-}
+'use client';
 
-interface UsersStatsProps {
-  users: User[];
-}
+import { useGetUserStatsQuery } from '@/redux/features/admin/userManagement/userManagement.api';
 
-const UsersStats = ({ users }: UsersStatsProps) => {
+const UsersStats = () => {
+  const { data, isLoading, isError } = useGetUserStatsQuery();
+
   const stats = [
-    { label: 'Total Users', value: users.length },
-    { label: 'Students', value: users.filter((u) => u.role === 'student').length },
-    { label: 'Instructors', value: users.filter((u) => u.role === 'instructor').length },
-    { label: 'Suspended', value: users.filter((u) => u.status === 'suspended').length },
+    { label: 'Total Users', value: data?.data.totalUsers },
+    { label: 'Students', value: data?.data.totalStudents },
+    { label: 'Instructors', value: data?.data.totalInstructors },
+    { label: 'Suspended', value: data?.data.totalSuspended },
   ];
 
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {stats.map((stat, i) => (
         <div key={i} className="dashboard-card-container text-center">
-          <p className="text-primary text-3xl font-black">{stat.value}</p>
+          {isError ? (
+            <p className="text-text-secondary text-2xl font-black">—</p>
+          ) : isLoading ? (
+            <div className="mx-auto h-8 w-10 animate-pulse rounded bg-slate-100" />
+          ) : (
+            <p className="text-primary text-3xl font-black">{stat.value ?? 0}</p>
+          )}
           <p className="text-text-secondary text-sm">{stat.label}</p>
         </div>
       ))}

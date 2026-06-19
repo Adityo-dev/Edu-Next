@@ -1,12 +1,12 @@
 'use client';
 
-import { TLoginUser } from '@/types/userRole.types';
+import { TUserListItem } from '@/types/userRole.types';
 import { useEffect, useRef } from 'react';
 import { setAuth } from '../features/auth/authSlice';
 import { useAppDispatch, useAppStore } from '../hooks';
 
 interface ReduxInitializerProps {
-  user: TLoginUser | null;
+  user: TUserListItem | null;
 }
 
 export default function ReduxInitializer({ user }: ReduxInitializerProps) {

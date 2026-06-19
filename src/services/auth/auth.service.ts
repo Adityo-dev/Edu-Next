@@ -1,6 +1,6 @@
 'use server';
 
-import { TLoginUser } from '@/types/userRole.types';
+import { TUserListItem } from '@/types/userRole.types';
 import { cookies } from 'next/headers';
 import { FieldValues } from 'react-hook-form';
 import { baseApi } from '../root/baseApi';
@@ -76,13 +76,13 @@ export const setAccessToken = async (accessToken: string) => {
   const cookieStore = await cookies();
   cookieStore.set('accessToken', accessToken);
 };
-export const setUserProfile = async (user: TLoginUser, token: string) => {
+export const setUserProfile = async (user: TUserListItem, token: string) => {
   const cookieStore = await cookies();
   cookieStore.set('accessToken', token);
   cookieStore.set('user', JSON.stringify(user));
   // cookieStore.set("refreshToken", tokens?.refreshToken);
 };
-export const updateUserProfile = async (user: TLoginUser) => {
+export const updateUserProfile = async (user: TUserListItem) => {
   const cookieStore = await cookies();
   cookieStore.set('user', JSON.stringify(user));
 };

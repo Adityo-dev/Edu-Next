@@ -1,30 +1,25 @@
-export type TUserRole = 'ADMIN';
+export type TUserRole = 'admin' | 'instructor' | 'student';
+export type TUserStatus = 'active' | 'suspended';
+export type TInstructorVerificationStatus = 'approved' | 'rejected';
 
-export type TAccountStatus = 'ACTIVE' | 'PENDING' | 'INACTIVE';
-
-export type TLoginUser = {
+export interface TUserListItem {
+  _id: string;
   firstName: string;
   lastName: string;
   fullName: string;
   email: string;
-  avatar: string;
-  role: string;
-};
-
-export interface IUser {
-  id: string;
-  username: string;
-  email: string;
+  phone: string;
   role: TUserRole;
-  accountStatus: TAccountStatus;
-  isActive: boolean;
-  isDeleted: boolean;
   isVerified: boolean;
-  avatarUrl: string | null;
-  fullName: string | null;
-  phone: string | null;
-  lastActive: string | null;
-  lastLogin: string | null;
+  isSuspended: boolean;
+  areaOfExpertise: string[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TUserStats {
+  totalUsers: number;
+  totalStudents: number;
+  totalInstructors: number;
+  totalSuspended: number;
 }

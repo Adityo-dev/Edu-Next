@@ -25,5 +25,5 @@ export const apiClient = createApi({
   baseQuery: baseQuery,
   endpoints: () => ({}),
 
-  tagTypes: [],
+  tagTypes: ['user'],
 });

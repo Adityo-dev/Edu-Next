@@ -1,6 +1,6 @@
 'use client';
 
-import { Ban, Check, Eye, MessageCircle, Pencil, Trash2, X } from 'lucide-react';
+import { Ban, Check, Eye, Loader2, MessageCircle, Pencil, Trash2, X } from 'lucide-react';
 import Link from 'next/link';
 
 /**
@@ -27,6 +27,7 @@ interface ActionItem {
   label?: string;
   onClick?: () => void;
   href?: string;
+  isLoading?: boolean;
   className?: string;
 }
 
@@ -95,12 +96,20 @@ const DynamicTableActions = ({ actions }: DynamicTableActionsProps) => {
           borderColor: `${config.color}33`,
         };
 
-        const commonClass = `group flex items-center gap-1.5 px-3 py-1.5 rounded cursor-pointer border text-xs font-medium transition-all hover:brightness-110 active:scale-95 ${action.className}`;
+        const commonClass = `group flex items-center gap-1.5 px-3 py-1.5 rounded border text-xs font-medium transition-all ${
+          action.isLoading
+            ? 'opacity-50 cursor-not-allowed select-none'
+            : 'cursor-pointer hover:brightness-110 active:scale-95'
+        } ${action.className || ''}`;
 
-        // Fragment to avoid redundant code in Link and Button
+        //  isLoading
         const content = (
           <>
-            <Icon size={14} className="transition-transform group-hover:scale-110" />
+            {action.isLoading ? (
+              <Loader2 size={14} className="animate-spin" />
+            ) : (
+              <Icon size={14} className="transition-transform group-hover:scale-110" />
+            )}
             <span>{action.label || config.defaultLabel}</span>
           </>
         );
@@ -108,7 +117,15 @@ const DynamicTableActions = ({ actions }: DynamicTableActionsProps) => {
         // Render as Next.js Link if href is present
         if (action.href) {
           return (
-            <Link key={index} href={action.href} className={commonClass} style={dynamicStyle}>
+            <Link
+              key={index}
+              href={action.isLoading ? '#' : action.href}
+              className={commonClass}
+              style={dynamicStyle}
+              onClick={(e) => {
+                if (action.isLoading) e.preventDefault();
+              }}
+            >
               {content}
             </Link>
           );
@@ -119,9 +136,12 @@ const DynamicTableActions = ({ actions }: DynamicTableActionsProps) => {
           <button
             key={index}
             type="button"
+            disabled={action.isLoading}
             onClick={(e) => {
               e.stopPropagation(); // Prevents triggering row clicks if used inside a table
-              action.onClick?.();
+              if (!action.isLoading) {
+                action.onClick?.();
+              }
             }}
             className={commonClass}
             style={dynamicStyle}

@@ -1,9 +1,9 @@
 import { RootState } from '@/redux/store';
-import { TLoginUser } from '@/types/userRole.types';
+import { TUserListItem } from '@/types/userRole.types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {
-  user: TLoginUser | null;
+  user: TUserListItem | null;
   isAuthenticated: boolean;
   isSessionExpired: boolean;
 }
@@ -18,8 +18,8 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    // Replaced 'any' with TLoginUser to ensure strict TypeScript safety
-    setAuth: (state, action: PayloadAction<{ user: TLoginUser | null }>) => {
+    // Replaced 'any' with TUserListItem to ensure strict TypeScript safety
+    setAuth: (state, action: PayloadAction<{ user: TUserListItem | null }>) => {
       state.user = action.payload.user;
       state.isAuthenticated = !!action.payload.user;
       state.isSessionExpired = false;

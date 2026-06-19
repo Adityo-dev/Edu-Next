@@ -43,8 +43,6 @@ export const baseApi = async (endpoint: string, options: TRequestOptions = {}): 
     });
   }
 
-  console.log('baseApi url', url);
-
   // 2. Header Setup
   const headers = new Headers();
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,7 +48,7 @@ const NavbarAuthSection = () => {
       <DropdownMenuTrigger asChild>
         <button className="flex cursor-pointer items-center justify-center rounded-full border-2 border-slate-200 p-0.5 transition-all outline-none hover:border-emerald-400 hover:bg-emerald-50 active:scale-95">
           <Avatar className="h-9 w-9">
-            <AvatarImage src={user?.avatar} alt={user?.fullName} />
+            {/* <AvatarImage src={user?.avatar} alt={user?.fullName} /> */}
             <AvatarFallback className="bg-primary text-sm font-semibold text-white">
               {user?.fullName?.charAt(0).toUpperCase() ?? 'U'}
             </AvatarFallback>
@@ -66,7 +66,7 @@ const NavbarAuthSection = () => {
         <DropdownMenuLabel>
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9">
-              <AvatarImage src={user?.avatar} alt={user?.fullName} />
+              {/* <AvatarImage src={user?.avatar} alt={user?.fullName} /> */}
               <AvatarFallback className="bg-primary text-xs font-semibold text-white">
                 {user?.fullName?.charAt(0).toUpperCase() ?? 'U'}
               </AvatarFallback>
