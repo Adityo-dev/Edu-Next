@@ -4,6 +4,9 @@ import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
+import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
+import TableSkeleton from '@/components/dashboard/Skeletons/TableSkeleton';
 import {
   useDeleteUserMutation,
   useGetUsersQuery,
@@ -13,7 +16,7 @@ import { TColumn } from '@/types/custom-table.types';
 import { ITableFilter } from '@/types/table-filter.types';
 import { TUserListItem, TUserRole, TUserStatus } from '@/types/userRole.types';
 import { FormatDateTime } from '@/utils/formatDateTime';
-import { GraduationCap, ShieldCheck, ShieldX, User, UserStar } from 'lucide-react';
+import { GraduationCap, ShieldCheck, ShieldX, User, User2, UserStar } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -203,19 +206,19 @@ const UsersTable = () => {
       />
 
       {isError ? (
-        <div className="flex flex-col items-center gap-3 py-12 text-center">
-          <p className="text-text-secondary text-sm">Failed to load users.</p>
-          <button
-            onClick={() => refetch()}
-            className="bg-primary rounded-sm px-4 py-2 text-xs font-bold text-white shadow-sm transition-transform active:scale-95"
-          >
-            Retry
-          </button>
-        </div>
+        <ErrorState
+          title="Failed to load users"
+          message="We couldn't load the user list from the server right now. Please check your network connection and retry."
+          onRetry={refetch}
+        />
       ) : isLoading ? (
-        <div className="text-text-secondary py-12 text-center text-sm">Loading users...</div>
+        <TableSkeleton />
       ) : rows.length === 0 ? (
-        <div className="text-text-secondary py-12 text-center text-sm">No users found.</div>
+        <EmptyState
+          title="No Users Found"
+          icon={User2}
+          description="There are no registered users found in the database. New users, students, or instructors will appear here once they register on the platform."
+        />
       ) : (
         <CustomTable columns={UsersTableConfig} data={rows} />
       )}
