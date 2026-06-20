@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import { ROLE_DASHBOARD_HOME } from '@/components/dashboard/sidebar/sidebarRoutes';
+import { setAuth } from '@/redux/features/auth/authSlice';
+import { useAppDispatch } from '@/redux/hooks';
+import { setUserProfile } from '@/services/auth/auth.service';
 import { baseApi } from '@/services/root/baseApi';
 import { Mail, RefreshCw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -11,6 +15,7 @@ const RESEND_COOLDOWN = 60;
 
 const VerifyOtpForm = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || '';
 
@@ -32,6 +37,7 @@ const VerifyOtpForm = () => {
     };
   }, [cooldown]);
 
+  // ── Verify OTP — Auto Login + Redirect to Dashboard ──────────────────────
   const handleVerify = async (otp: string) => {
     setApiError(null);
     setApiSuccess(null);
@@ -43,7 +49,21 @@ const VerifyOtpForm = () => {
         data: { email, otp },
       });
 
-      if (response?.success) {
+      if (response?.success && response?.token && response?.user) {
+        const { token, user } = response;
+
+        // ── Cookie + Redux এ login state সেট করো ──
+        await setUserProfile(user, token);
+        dispatch(setAuth({ user }));
+
+        setApiSuccess('Email verified successfully! Redirecting...');
+
+        const dashboardPath =
+          ROLE_DASHBOARD_HOME[user.role as keyof typeof ROLE_DASHBOARD_HOME] ?? '/';
+
+        setTimeout(() => router.push(dashboardPath), 1000);
+      } else if (response?.success) {
+        // token না থাকলেও fallback — login page এ পাঠাও
         setApiSuccess('Email verified successfully! Redirecting to login...');
         setTimeout(() => router.push('/login'), 1200);
       } else {
@@ -58,6 +78,7 @@ const VerifyOtpForm = () => {
     }
   };
 
+  // ── Resend OTP ────────────────────────────────────────────────────────────
   const handleResend = async () => {
     if (cooldown > 0) return;
 

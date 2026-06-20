@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import { ROLE_DASHBOARD_HOME } from '@/components/dashboard/sidebar/sidebarRoutes';
-
 import { setAuth } from '@/redux/features/auth/authSlice';
 import { useAppDispatch } from '@/redux/hooks';
 import { setUserProfile } from '@/services/auth/auth.service';
@@ -18,14 +16,13 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-// Zod Validation Schema
 const loginSchema = z.object({
   email: z.string().min(1, 'Email is required.').email('Please enter a valid email address.'),
   password: z.string().min(1, 'Password is required.'),
   remember: z.boolean().default(false),
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = z.input<typeof loginSchema>;
 
 const LoginPage = () => {
   const router = useRouter();
@@ -34,9 +31,9 @@ const LoginPage = () => {
   const [apiError, setApiError] = useState<string | null>(null);
   const [apiSuccess, setApiSuccess] = useState<string | null>(null);
 
-  // React Hook Form Configuration
   const {
     control,
+    register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormData>({
@@ -65,6 +62,22 @@ const LoginPage = () => {
         data: payload,
       });
 
+      // ── 403: email verify করা নেই / suspended / pending approval ──
+      if (response?.statusCode === 403 || response?.success === false) {
+        const message = (response?.message || '').toLowerCase();
+
+        if (message.includes('verify') || message.includes('not verified')) {
+          setApiError('Your email is not verified yet. Redirecting to verification page...');
+          setTimeout(() => {
+            router.push(`/verify-otp?email=${encodeURIComponent(data.email.trim())}`);
+          }, 1200);
+          return;
+        }
+
+        setApiError(response?.message || 'Login failed. Please try again.');
+        return;
+      }
+
       if (response && (response.success || response.statusCode === 200)) {
         const { token, user: rawUser } = response;
 
@@ -73,6 +86,7 @@ const LoginPage = () => {
           return;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { password: _password, ...user } = rawUser;
 
         await setUserProfile(user, token);
@@ -98,12 +112,10 @@ const LoginPage = () => {
 
   return (
     <div className="flex min-h-screen bg-white">
-      {/* ── Left Panel  */}
+      {/* ── Left Panel ── */}
       <div className="relative hidden w-[55%] overflow-hidden lg:flex">
-        {/* Background */}
         <div className="bg-primary absolute inset-0" />
 
-        {/* Dot Grid */}
         <div
           className="absolute inset-0 opacity-[0.07]"
           style={{
@@ -112,13 +124,10 @@ const LoginPage = () => {
           }}
         />
 
-        {/* Gradient Orbs */}
         <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white/10 blur-3xl" />
         <div className="bg-secondary/20 absolute -right-32 -bottom-32 h-96 w-96 rounded-full blur-3xl" />
 
-        {/* Content */}
         <div className="relative z-10 flex w-full flex-col justify-between p-14">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-white/15 backdrop-blur-sm">
               <span className="text-lg font-black text-white">E</span>
@@ -128,7 +137,6 @@ const LoginPage = () => {
             </span>
           </Link>
 
-          {/* Center */}
           <div>
             <h2 className="mb-5 text-5xl leading-[1.1] font-black text-white">
               Learn Skills <br />
@@ -140,7 +148,6 @@ const LoginPage = () => {
               are waiting.
             </p>
 
-            {/* Floating Course Cards */}
             <div className="space-y-3">
               {[
                 {
@@ -175,7 +182,6 @@ const LoginPage = () => {
             </div>
           </div>
 
-          {/* Bottom Avatars */}
           <div className="flex items-center gap-4">
             <div className="flex -space-x-3">
               {[1, 2, 3, 4, 5].map((i) => (
@@ -205,10 +211,9 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* ── Right Panel  */}
+      {/* ── Right Panel ── */}
       <div className="flex w-full flex-col items-center justify-center px-6 py-16 lg:w-[45%]">
         <div className="w-full max-w-sm">
-          {/* Mobile Logo */}
           <Link href="/" className="mb-10 flex items-center gap-2 lg:hidden">
             <span className="text-2xl font-black">
               <span className="text-primary">Edu</span>
@@ -216,7 +221,6 @@ const LoginPage = () => {
             </span>
           </Link>
 
-          {/* Header */}
           <div className="mb-8">
             <h1 className="text-text-primary mb-2 text-3xl font-black">Welcome back 👋</h1>
             <p className="text-text-secondary text-sm">
@@ -227,7 +231,6 @@ const LoginPage = () => {
             </p>
           </div>
 
-          {/* Google */}
           <button
             type="button"
             disabled={isLoading}
@@ -254,14 +257,12 @@ const LoginPage = () => {
             Continue with Google
           </button>
 
-          {/* Divider */}
           <div className="mb-6 flex items-center gap-3">
             <div className="h-px flex-1 bg-slate-100" />
             <span className="text-text-secondary text-xs">or continue with email</span>
             <div className="h-px flex-1 bg-slate-100" />
           </div>
 
-          {/* Error and Success Notifications */}
           {apiError && (
             <div className="mb-4 rounded-sm border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-600">
               ⚠️ {apiError}
@@ -273,9 +274,7 @@ const LoginPage = () => {
             </div>
           )}
 
-          {/* Form with InputField Components */}
           <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
-            {/* Email Field Using Your InputField */}
             <InputField
               label="Email"
               name="email"
@@ -284,10 +283,8 @@ const LoginPage = () => {
               placeholder="Enter your email"
               error={errors.email}
               required
-              disabled={isLoading}
             />
 
-            {/* Password Field Using Your InputField */}
             <InputField
               label="Password"
               name="password"
@@ -296,17 +293,15 @@ const LoginPage = () => {
               placeholder="Enter your Password"
               error={errors.password}
               required
-              disabled={isLoading}
             />
 
-            {/* Remember Me */}
+            {/* ── Remember Me — register() দিয়ে fix করা হলো ── */}
             <div className="flex items-center gap-2 pt-1">
               <input
                 type="checkbox"
                 id="remember"
                 disabled={isLoading}
-                const
-                {...(control.register ? control.register('remember') : {})} // react-hook-form অটো সিঙ্ক করবে
+                {...register('remember')}
                 className="accent-primary h-4 w-4 cursor-pointer"
               />
               <label htmlFor="remember" className="cursor-pointer text-sm text-slate-500">
@@ -314,7 +309,6 @@ const LoginPage = () => {
               </label>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
@@ -324,7 +318,6 @@ const LoginPage = () => {
             </button>
           </form>
 
-          {/* Footer Terms */}
           <p className="text-text-secondary mt-8 text-center text-xs">
             By signing in, you agree to our{' '}
             <Link href="/terms" className="text-primary hover:underline">

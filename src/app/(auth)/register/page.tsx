@@ -1,11 +1,6 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { ROLE_DASHBOARD_HOME } from '@/components/dashboard/sidebar/sidebarRoutes';
-import { setAuth } from '@/redux/features/auth/authSlice';
-import { useAppDispatch } from '@/redux/hooks';
-import { setUserProfile } from '@/services/auth/auth.service';
 import { baseApi } from '@/services/root/baseApi';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -16,7 +11,6 @@ import { RegisterFormValues } from './_components/registerSchema';
 
 const RegisterPage = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
   const [role, setRole] = useState<'student' | 'instructor'>('student');
 
@@ -49,24 +43,11 @@ const RegisterPage = () => {
       });
 
       if (response && (response.success || response.statusCode === 201)) {
-        const { token, user } = response;
+        setApiSuccess('Registration successful! Please verify your email...');
 
-        if (token && user) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { password: _password, ...safeUser } = user;
-          await setUserProfile(safeUser, token);
-          dispatch(setAuth({ user: safeUser }));
-
-          setApiSuccess('Registration successful! Redirecting...');
-
-          const dashboardPath =
-            ROLE_DASHBOARD_HOME[safeUser.role as keyof typeof ROLE_DASHBOARD_HOME] ?? '/';
-
-          setTimeout(() => router.push(dashboardPath), 500);
-        } else {
-          setApiSuccess('Registration successful! Redirecting to login...');
-          setTimeout(() => router.push('/login'), 500);
-        }
+        setTimeout(() => {
+          router.push(`/verify-otp?email=${encodeURIComponent(data.email.trim())}`);
+        }, 800);
       } else {
         setApiError(response?.message || 'Registration failed. Please try again.');
       }

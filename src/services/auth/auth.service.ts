@@ -13,6 +13,7 @@ export const forgetPassword = async (data: FieldValues) => {
   });
   return result;
 };
+
 export const resetPassword = async (data: FieldValues) => {
   const result = await baseApi(`/auth/reset-password`, {
     method: 'POST',
@@ -30,7 +31,9 @@ export const updateTemporaryPassword = async (data: FieldValues) => {
   return result;
 };
 
-//Gwt Access Token using Refresh Token
+/* =============================================================================
+🛑 DISABLED: Backend এ Refresh Token নেই — শুধু Access Token (single-token architecture)
+=============================================================================
 export const refreshToken = async () => {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get('refreshToken')?.value;
@@ -44,6 +47,7 @@ export const refreshToken = async () => {
   console.log('verify refresh', result);
   return result;
 };
+*/
 
 //Get Current User
 export const getCurrentUser = async () => {
@@ -68,21 +72,40 @@ export const getCurrentUser = async () => {
 export const logoutUser = async () => {
   const cookiesStore = await cookies();
   cookiesStore.delete('accessToken');
-  cookiesStore.delete('refreshToken');
   cookiesStore.delete('user');
+  // 🛑 refreshToken cookie
 };
 
 export const setAccessToken = async (accessToken: string) => {
   const cookieStore = await cookies();
   cookieStore.set('accessToken', accessToken);
 };
+
 export const setUserProfile = async (user: TUserListItem, token: string) => {
   const cookieStore = await cookies();
   cookieStore.set('accessToken', token);
   cookieStore.set('user', JSON.stringify(user));
-  // cookieStore.set("refreshToken", tokens?.refreshToken);
 };
+
 export const updateUserProfile = async (user: TUserListItem) => {
   const cookieStore = await cookies();
   cookieStore.set('user', JSON.stringify(user));
+};
+
+//  OTP Verify
+export const verifyOtpUser = async (data: { email: string; otp: string }) => {
+  const result = await baseApi('/auth/verify-otp', {
+    method: 'POST',
+    data: data,
+  });
+  return result;
+};
+
+//  OTP Resend
+export const resendOtpUser = async (data: { email: string }) => {
+  const result = await baseApi('/auth/resend-otp', {
+    method: 'POST',
+    data: data,
+  });
+  return result;
 };
