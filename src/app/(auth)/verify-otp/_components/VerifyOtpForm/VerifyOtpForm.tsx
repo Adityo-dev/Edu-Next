@@ -11,7 +11,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import OtpInput from './_components/OtpInput/OtpInput';
 
-const RESEND_COOLDOWN = 60;
+const RESEND_COOLDOWN = 20;
 
 const VerifyOtpForm = () => {
   const router = useRouter();
