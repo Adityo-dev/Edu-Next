@@ -1,13 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ChevronRight, GripVertical, Plus, Trash2, Upload, Video } from 'lucide-react';
+import { ChevronRight, GripVertical, Plus, Trash2, Video } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { toast } from 'sonner'; // tumi je toast lib use koro shetai use koro
 import { z } from 'zod';
 
+import ImageUploadField from '@/components/dashboard/Fields/ImageUploadField/ImageUploadField';
+import InputField from '@/components/dashboard/Fields/InputField/InputField';
+import SelectField from '@/components/dashboard/Fields/SelectField/SelectField';
+import TextAreaField from '@/components/dashboard/Fields/TextAreaField/TextAreaField';
 import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
+
+import { useCreateCourseMutation } from '@/redux/features/courseManagement/instructorCourse.api';
+import { useUploadImageMutation } from '@/redux/features/upload/uploadApi';
+import { useState } from 'react';
+import { Control, FieldErrors, useController } from 'react-hook-form';
 
 // ─── Zod Schema ────────────────────────────────────────────────────────────────
 
@@ -17,6 +28,7 @@ const lessonSchema = z.object({
     .string()
     .min(1, 'Duration is required')
     .regex(/^\d{1,2}:\d{2}$/, 'Format must be mm:ss or h:mm'),
+  videoUrl: z.string().min(1, 'Video URL is required').url('Must be a valid URL'),
   free: z.boolean(),
 });
 
@@ -27,6 +39,7 @@ const sectionSchema = z.object({
 
 const courseSchema = z.object({
   // Step 1
+  thumbnail: z.string().min(1, 'Course thumbnail is required'),
   title: z.string().min(3, 'Course title must be at least 3 characters'),
   subtitle: z.string().min(5, 'Subtitle must be at least 5 characters'),
   category: z.string().min(1, 'Please select a category'),
@@ -75,23 +88,45 @@ const LANGUAGE_OPTIONS = [
 // ─── Step field map for per-step validation ────────────────────────────────────
 
 const STEP_FIELDS: Record<number, (keyof CourseFormValues)[]> = {
-  0: ['title', 'subtitle', 'category', 'level', 'language', 'description'],
+  0: ['thumbnail', 'title', 'subtitle', 'category', 'level', 'language', 'description'],
   1: ['sections'],
   2: ['price'],
+};
+
+// ─── Helpers ────────────────────────────────────────────────────────────────────
+
+// mm:ss -> "X hrs Y mins" total calculation
+const calcTotalDuration = (sections: CourseFormValues['sections']) => {
+  let totalSeconds = 0;
+  sections.forEach((s) =>
+    s.lessons.forEach((l) => {
+      const [m, s2] = l.duration.split(':').map(Number);
+      if (!isNaN(m) && !isNaN(s2)) totalSeconds += m * 60 + s2;
+    }),
+  );
+  const hrs = Math.floor(totalSeconds / 3600);
+  const mins = Math.round((totalSeconds % 3600) / 60);
+  return `${hrs} hrs ${mins} mins`;
 };
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 const CreateCoursePage = () => {
+  const router = useRouter();
+  const [createCourse, { isLoading: isCreating }] = useCreateCourseMutation();
+  const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation();
+
   const {
     control,
     handleSubmit,
     trigger,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<CourseFormValues>({
     resolver: zodResolver(courseSchema),
     defaultValues: {
+      thumbnail: '',
       title: '',
       subtitle: '',
       category: '',
@@ -101,7 +136,7 @@ const CreateCoursePage = () => {
       sections: [
         {
           title: 'Getting Started',
-          lessons: [{ title: '', duration: '', free: false }],
+          lessons: [{ title: '', duration: '', videoUrl: '', free: false }],
         },
       ],
       price: '',
@@ -119,6 +154,7 @@ const CreateCoursePage = () => {
   // eslint-disable-next-line react-hooks/incompatible-library
   const watchedPrice = watch('price');
   const watchedTitle = watch('title');
+  const watchedThumbnail = watch('thumbnail');
   const watchedCategory = watch('category');
   const watchedLevel = watch('level');
   const watchedSections = watch('sections');
@@ -129,9 +165,58 @@ const CreateCoursePage = () => {
     if (valid) setStep((s) => Math.min(s + 1, steps.length - 1));
   };
 
-  const onSubmit = (data: CourseFormValues) => {
-    console.log('Course submitted:', data);
-    alert('Course submitted for review!');
+  // ── Thumbnail upload handler ──
+  const handleThumbnailChange = async (file: File | null) => {
+    if (!file) {
+      setValue('thumbnail', '', { shouldValidate: true });
+      return;
+    }
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      const res = await uploadImage(formData).unwrap();
+      setValue('thumbnail', res.data.url, { shouldValidate: true });
+      toast.success('Thumbnail uploaded successfully');
+    } catch (err) {
+      console.error('Thumbnail upload failed:', err);
+      toast.error('Thumbnail upload failed. Try again.');
+    }
+  };
+
+  const onSubmit = async (data: CourseFormValues) => {
+    try {
+      const payload = {
+        title: data.title,
+        subtitle: data.subtitle,
+        description: data.description,
+        price: parseFloat(data.price),
+        estimatedPrice: parseFloat(data.price),
+        thumbnail: data.thumbnail,
+        category: data.category,
+        level: data.level,
+        language: data.language,
+        hasCertificate: true,
+        totalDuration: calcTotalDuration(data.sections),
+        sections: data.sections.map((section, sIdx) => ({
+          title: section.title,
+          order: sIdx + 1,
+          lessons: section.lessons.map((lesson, lIdx) => ({
+            title: lesson.title,
+            duration: lesson.duration,
+            videoUrl: lesson.videoUrl,
+            isFree: lesson.free,
+            order: lIdx + 1,
+          })),
+        })),
+      };
+
+      await createCourse(payload as any).unwrap();
+      toast.success('Course submitted for review!');
+      router.push('/dashboard/instructor/courses');
+    } catch (err: any) {
+      console.error('Course creation failed:', err);
+      toast.error(err?.data?.message || 'Failed to create course. Please try again.');
+    }
   };
 
   return (
@@ -184,18 +269,17 @@ const CreateCoursePage = () => {
               <h2 className="text-lg font-bold">Basic Information</h2>
 
               {/* Thumbnail */}
-              <div>
-                <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-                  Course Thumbnail
-                </label>
-                <div className="hover:border-primary flex h-40 w-full cursor-pointer items-center justify-center rounded-sm border-2 border-dashed border-slate-200 bg-slate-50 transition-all hover:bg-emerald-50/30">
-                  <div className="text-center">
-                    <Upload size={24} className="mx-auto mb-2 text-slate-300" />
-                    <p className="text-sm font-medium text-slate-400">Click to upload thumbnail</p>
-                    <p className="text-xs text-slate-400">PNG, JPG max 2MB</p>
-                  </div>
-                </div>
-              </div>
+              <ImageUploadField
+                label="Course Thumbnail"
+                subLabel="PNG, JPG max 5MB"
+                value={watchedThumbnail}
+                onChange={handleThumbnailChange}
+                error={isUploading ? undefined : errors.thumbnail?.message}
+                required
+              />
+              {isUploading && (
+                <p className="text-primary text-xs font-medium">Uploading thumbnail...</p>
+              )}
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="sm:col-span-2">
@@ -293,7 +377,7 @@ const CreateCoursePage = () => {
                 onClick={() =>
                   appendSection({
                     title: '',
-                    lessons: [{ title: '', duration: '', free: false }],
+                    lessons: [{ title: '', duration: '', videoUrl: '', free: false }],
                   })
                 }
                 className="hover:border-primary hover:text-primary flex w-full items-center justify-center gap-2 rounded-sm border border-dashed border-slate-300 py-3.5 text-sm font-semibold text-slate-500 transition-all"
@@ -356,6 +440,11 @@ const CreateCoursePage = () => {
               <h2 className="text-lg font-bold">Ready to Publish</h2>
               <div className="space-y-3">
                 {[
+                  {
+                    label: 'Thumbnail',
+                    value: watchedThumbnail ? 'Uploaded' : 'Not set',
+                    done: !!watchedThumbnail,
+                  },
                   {
                     label: 'Course Title',
                     value: watchedTitle || 'Not set',
@@ -432,9 +521,10 @@ const CreateCoursePage = () => {
             ) : (
               <button
                 type="submit"
-                className="bg-secondary rounded-sm px-8 py-2.5 text-sm font-bold text-white hover:bg-[#d98c0a]"
+                disabled={isCreating}
+                className="bg-secondary rounded-sm px-8 py-2.5 text-sm font-bold text-white hover:bg-[#d98c0a] disabled:opacity-50"
               >
-                Submit for Review
+                {isCreating ? 'Submitting...' : 'Submit for Review'}
               </button>
             )}
           </div>
@@ -445,12 +535,6 @@ const CreateCoursePage = () => {
 };
 
 // ─── SectionBlock Sub-component ────────────────────────────────────────────────
-
-import InputField from '@/components/dashboard/Fields/InputField/InputField';
-import SelectField from '@/components/dashboard/Fields/SelectField/SelectField';
-import TextAreaField from '@/components/dashboard/Fields/TextAreaField/TextAreaField';
-import { useState } from 'react';
-import { Control, FieldErrors, useController } from 'react-hook-form';
 
 interface SectionBlockProps {
   sectionIndex: number;
@@ -530,7 +614,7 @@ const SectionBlock = ({
 
         <button
           type="button"
-          onClick={() => appendLesson({ title: '', duration: '', free: false })}
+          onClick={() => appendLesson({ title: '', duration: '', videoUrl: '', free: false })}
           className="hover:border-primary hover:text-primary flex w-full items-center gap-2 rounded-sm border border-dashed border-slate-200 px-3 py-2 text-xs font-semibold text-slate-400 transition-all"
         >
           <Plus size={13} /> Add Lesson
@@ -574,6 +658,13 @@ const LessonRow = ({
   });
 
   const {
+    field: { value: videoUrl, onChange: onVideoUrlChange, onBlur: onVideoUrlBlur },
+  } = useController({
+    control,
+    name: `sections.${sectionIndex}.lessons.${lessonIndex}.videoUrl`,
+  });
+
+  const {
     field: { value: free, onChange: onFreeChange },
   } = useController({
     control,
@@ -584,11 +675,11 @@ const LessonRow = ({
 
   return (
     <div className="space-y-1 pt-2">
-      <div className="flex items-center gap-3 rounded-sm bg-white px-3 py-2.5">
+      <div className="flex flex-wrap items-center gap-3 rounded-sm bg-white px-3 py-2.5">
         <Video size={14} className="shrink-0 text-slate-300" />
 
         {/* Lesson Title */}
-        <div className="flex-1">
+        <div className="min-w-35 flex-1">
           <input
             type="text"
             value={title}
@@ -599,7 +690,23 @@ const LessonRow = ({
           />
         </div>
 
-        {/* Duration — professional styled input */}
+        {/* Video URL */}
+        <div className="min-w-40 flex-1">
+          <input
+            type="text"
+            value={videoUrl}
+            onChange={onVideoUrlChange}
+            onBlur={onVideoUrlBlur}
+            placeholder="Video URL (vimeo/youtube)"
+            className={`w-full rounded-sm border px-2 py-1 text-xs outline-none ${
+              lessonErrors?.videoUrl
+                ? 'border-red-300 text-red-500'
+                : 'border-slate-200 text-slate-500 focus:border-emerald-300'
+            }`}
+          />
+        </div>
+
+        {/* Duration */}
         <div className="relative">
           <input
             type="text"
@@ -645,10 +752,13 @@ const LessonRow = ({
       </div>
 
       {/* Inline errors for lesson row */}
-      {(lessonErrors?.title || lessonErrors?.duration) && (
-        <div className="flex gap-4 px-3 pb-1">
+      {(lessonErrors?.title || lessonErrors?.duration || lessonErrors?.videoUrl) && (
+        <div className="flex flex-wrap gap-4 px-3 pb-1">
           {lessonErrors?.title && (
             <p className="text-xs text-red-500">Title: {lessonErrors.title.message}</p>
+          )}
+          {lessonErrors?.videoUrl && (
+            <p className="text-xs text-red-500">Video: {lessonErrors.videoUrl.message}</p>
           )}
           {lessonErrors?.duration && (
             <p className="text-xs text-red-500">Duration: {lessonErrors.duration.message}</p>
