@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-export type ITableFilterType = 'search' | 'select' | 'date';
+export interface ITableFilterOption {
+  label: string;
+  value: string;
+}
 
 export interface ITableFilter {
-  type: ITableFilterType;
+  type: 'select' | 'search' | 'tabs';
   name: string;
   placeholder?: string;
-  value?: any;
-  options?: { label: string; value: string }[];
-  onChange: (value: any) => void;
+  options?: ITableFilterOption[];
+  value?: string;
+  onChange?: (val: string) => void;
 }

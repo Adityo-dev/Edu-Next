@@ -1,5 +1,6 @@
 'use client';
 
+import CustomPagination from '@/components/dashboard/CustomPagination/CustomPagination';
 import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
@@ -7,6 +8,8 @@ import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
 import TableSkeleton from '@/components/dashboard/Skeletons/TableSkeleton';
+import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
+
 import {
   useDeleteUserMutation,
   useGetUsersQuery,
@@ -43,27 +46,32 @@ const mapUserToRow = (user: TUserListItem): IUserRow => ({
 });
 
 const UsersTable = () => {
-  const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState<'all' | TUserRole>('all');
+  const { getQueryObject } = useSetSearchQueryInURL();
   const [actingRowId, setActingRowId] = useState<string | null>(null);
 
-  const { data, isLoading, isError, refetch } = useGetUsersQuery(
-    roleFilter === 'all' ? undefined : { role: roleFilter },
-  );
+  // 1. Reading current query data from the URL (to pass directly to RTK Query)
+  const queryParams = getQueryObject();
+  const currentRole = (queryParams.role as 'all' | TUserRole) || 'all';
+  const currentStatus = (queryParams.status as 'all' | TUserStatus) || 'all';
+  const currentPage = Number(queryParams.page) || 1;
+  const currentLimit = Number(queryParams.limit) || 10;
+  const currentSearchUrl = queryParams.search || '';
+
+  // 2. RTK Query Hook-
+  const { data, isLoading, isError, refetch } = useGetUsersQuery({
+    search: currentSearchUrl || undefined,
+    role: currentRole === 'all' ? undefined : currentRole,
+    status: currentStatus === 'all' ? undefined : currentStatus,
+    page: currentPage,
+    limit: currentLimit,
+  });
 
   const [updateUserStatus, { isLoading: isUpdatingStatus }] = useUpdateUserStatusMutation();
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
   const rows: IUserRow[] = useMemo(() => {
-    const allRows = (data?.data ?? []).map(mapUserToRow);
-
-    if (!search.trim()) return allRows;
-
-    const query = search.trim().toLowerCase();
-    return allRows.filter(
-      (row) => row?.name.toLowerCase().includes(query) || row?.email.toLowerCase().includes(query),
-    );
-  }, [data, search]);
+    return (data?.data?.users ?? []).map(mapUserToRow);
+  }, [data]);
 
   const handleToggleStatus = async (row: IUserRow) => {
     const nextStatus: TUserStatus = row?.status === 'active' ? 'suspended' : 'active';
@@ -174,36 +182,36 @@ const UsersTable = () => {
 
   const UsersFilters: ITableFilter[] = [
     {
-      type: 'select',
+      type: 'tabs',
       name: 'role-filter',
       placeholder: 'Role',
       options: [
-        { label: 'All', value: 'all' },
+        { label: 'All Roles', value: 'all' },
         { label: 'Admin', value: 'admin' },
         { label: 'Student', value: 'student' },
         { label: 'Instructor', value: 'instructor' },
       ],
-      onChange: (val) => setRoleFilter(val as 'all' | TUserRole),
-      value: roleFilter,
+    },
+    {
+      type: 'select',
+      name: 'status-filter',
+      placeholder: 'Status',
+      options: [
+        { label: 'All Status', value: 'all' },
+        { label: 'Active', value: 'active' },
+        { label: 'Suspended', value: 'suspended' },
+      ],
     },
     {
       type: 'search',
       name: 'search',
       placeholder: 'Search by name or email...',
-      onChange: (val) => setSearch(val),
-      value: search,
     },
   ];
 
   return (
-    <div className="dashboard-card-container space-y-5 p-3">
-      <DynamicTableFilterBar
-        fields={UsersFilters}
-        filter={roleFilter}
-        setFilter={(val) => setRoleFilter(val as 'all' | TUserRole)}
-        search={search}
-        setSearch={setSearch}
-      />
+    <div className="dashboard-card-container space-y-4 p-3">
+      <DynamicTableFilterBar fields={UsersFilters} />
 
       {isError ? (
         <ErrorState
@@ -217,10 +225,22 @@ const UsersTable = () => {
         <EmptyState
           title="No Users Found"
           icon={User2}
-          description="There are no registered users found in the database. New users, students, or instructors will appear here once they register on the platform."
+          description="There are no registered users found in the database matching your criteria."
         />
       ) : (
-        <CustomTable columns={UsersTableConfig} data={rows} />
+        <>
+          <CustomTable columns={UsersTableConfig} data={rows} />
+          {data?.data?.pagination && (
+            <CustomPagination
+              meta={{
+                total: data.data.pagination.total,
+                page: data.data.pagination.page,
+                limit: data.data.pagination.limit,
+                totalPages: data.data.pagination.totalPages,
+              }}
+            />
+          )}
+        </>
       )}
     </div>
   );
