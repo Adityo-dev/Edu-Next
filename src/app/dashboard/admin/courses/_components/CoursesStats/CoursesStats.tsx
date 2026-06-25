@@ -1,28 +1,28 @@
-interface Course {
-  status: string;
-  students: number;
-}
+'use client';
 
-interface CoursesStatsProps {
-  courses: Course[];
-}
+import { useGetCourseStatsQuery } from '@/redux/features/courseManagement/adminCourse.api';
 
-const CoursesStats = ({ courses }: CoursesStatsProps) => {
+const CoursesStats = () => {
+  const { data, isLoading, isError } = useGetCourseStatsQuery();
+
   const stats = [
-    { label: 'Total Courses', value: courses.length },
-    { label: 'Published', value: courses.filter((c) => c.status === 'published').length },
-    { label: 'Pending Review', value: courses.filter((c) => c.status === 'pending').length },
-    {
-      label: 'Total Students',
-      value: courses.reduce((a, b) => a + b.students, 0).toLocaleString(),
-    },
+    { label: 'Total Courses', value: data?.data.totalCourses || 0 },
+    { label: 'Published', value: data?.data.published || 0 },
+    { label: 'Pending', value: data?.data.pending || 0 },
+    { label: 'Rejected', value: data?.data.rejected || 0 },
   ];
 
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
       {stats.map((stat, i) => (
         <div key={i} className="dashboard-card-container text-center">
-          <p className="text-primary text-3xl font-black">{stat.value}</p>
+          {isError ? (
+            <p className="text-text-secondary text-2xl font-black">—</p>
+          ) : isLoading ? (
+            <div className="mx-auto h-8 w-10 animate-pulse rounded bg-slate-100" />
+          ) : (
+            <p className="text-primary text-3xl font-black">{stat.value ?? 0}</p>
+          )}
           <p className="text-text-secondary text-sm">{stat.label}</p>
         </div>
       ))}
