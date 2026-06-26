@@ -1,252 +1,354 @@
-// /* eslint-disable no-console */
-// 'use client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
 
-// import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
-// import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
-// import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
-// import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
-// import { useState } from 'react';
+import CustomPagination from '@/components/dashboard/CustomPagination/CustomPagination';
+import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
+import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
+import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
+import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
+import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
+import TableSkeleton from '@/components/dashboard/Skeletons/TableSkeleton';
+import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
+import {
+  useDeleteCourseMutation,
+  useGetInstructorCoursesQuery,
+  useSubmitPublishRequestMutation,
+} from '@/redux/features/courseManagement/instructorCourse.api';
 
-// import { useModal } from '@/context/ModalContext';
-// import { TColumn } from '@/types/custom-table.types';
-// import { ITableFilter } from '@/types/table-filter.types';
-// import { Star } from 'lucide-react';
-// import Image from 'next/image';
+import { ICourse, TCourseLevel, TCourseStatus } from '@/types/courseManagement.types';
+import { TColumn } from '@/types/custom-table.types';
+import { ITableFilter } from '@/types/table-filter.types';
+import { AlertTriangle, BookOpen, CheckCircle, HelpCircle, Star, XCircle } from 'lucide-react';
+import Image from 'next/image';
+import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
-// export interface ICourseMember {
-//   id: string;
-//   title: string;
-//   category: string;
-//   students: number;
-//   revenue: number;
-//   rating: number;
-//   reviews: number;
-//   lessons: number;
-//   status: 'Published' | 'Pending' | 'Draft';
-//   image: string;
-//   createdAt: string;
-// }
-
-// const CourseManagementTable = () => {
-//   const { openModal } = useModal();
-
-//   const [filter, setFilter] = useState('all');
-//   const [search, setSearch] = useState('');
-
-//   const coursesData: ICourseMember[] = [
-//     {
-//       id: '1',
-//       title: 'Complete Web Development Bootcamp',
-//       category: 'Web Development',
-//       students: 320,
-//       revenue: 18000,
-//       rating: 4.9,
-//       reviews: 89,
-//       lessons: 48,
-//       status: 'Published',
-//       image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=600',
-//       createdAt: 'Jan 2025',
-//     },
-//     {
-//       id: '2',
-//       title: 'React.js Advanced Masterclass',
-//       category: 'Web Development',
-//       students: 210,
-//       revenue: 12600,
-//       rating: 4.8,
-//       reviews: 54,
-//       lessons: 36,
-//       status: 'Published',
-//       image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=600',
-//       createdAt: 'Feb 2025',
-//     },
-//     {
-//       id: '3',
-//       title: 'Node.js & Express API Development',
-//       category: 'Web Development',
-//       students: 0,
-//       revenue: 0,
-//       rating: 0,
-//       reviews: 0,
-//       lessons: 24,
-//       status: 'Pending',
-//       image: 'https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=600',
-//       createdAt: 'Apr 2025',
-//     },
-//     {
-//       id: '4',
-//       title: 'JavaScript ES6+ Fundamentals',
-//       category: 'Web Development',
-//       students: 180,
-//       revenue: 9000,
-//       rating: 4.7,
-//       reviews: 42,
-//       lessons: 28,
-//       status: 'Published',
-//       image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=600',
-//       createdAt: 'Nov 2024',
-//     },
-//     {
-//       id: '5',
-//       title: 'CSS & Tailwind Mastery',
-//       category: 'Web Development',
-//       students: 0,
-//       revenue: 0,
-//       rating: 0,
-//       reviews: 0,
-//       lessons: 20,
-//       status: 'Draft',
-//       image: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?q=80&w=600',
-//       createdAt: 'Apr 2025',
-//     },
-//   ];
-
-//   // handle search
-//   const handleSearchCourses = (val: string) => {
-//     console.log('Searching for course:', val);
-//   };
-
-//   // handle filter
-//   const handleSelectStatus = (val: string) => {
-//     console.log('Status Filter updated:', val);
-//   };
-
-//   // Table column configuration
-//   const CourseTableConfig: TColumn<ICourseMember>[] = [
-//     {
-//       header: 'COURSE',
-//       cell: (row) => (
-//         <div className="flex items-center gap-3 py-1">
-//           <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-sm border border-white/5">
-//             <Image src={row?.image} alt={row?.title} fill className="object-cover" />
-//           </div>
-//           <div className="flex flex-col">
-//             <span className="text-text-primary line-clamp-1 text-sm font-semibold">
-//               {row?.title}
-//             </span>
-//             <span className="mt-0.5 text-xs font-medium">
-//               {row?.lessons} lessons • {row?.createdAt}
-//             </span>
-//           </div>
-//         </div>
-//       ),
-//     },
-//     {
-//       header: 'STUDENTS',
-//       accessor: 'students',
-//     },
-//     {
-//       header: 'REVENUE',
-//       cell: (row) => (
-//         <span className="text-primary font-bold">৳{row?.revenue.toLocaleString()}</span>
-//       ),
-//     },
-//     {
-//       header: 'RATING',
-//       cell: (row) => (
-//         <>
-//           {row?.rating > 0 ? (
-//             <div className="flex items-center gap-1.5">
-//               <Star size={13} fill="#ffc107" color="#ffc107" />
-//               <span className="font-semibold">{row?.rating}</span>
-//               <span>({row?.reviews})</span>
-//             </div>
-//           ) : (
-//             <span>No reviews</span>
-//           )}
-//         </>
-//       ),
-//     },
-//     {
-//       header: 'STATUS',
-//       cell: (row) => (
-//         <DynamicBadge
-//           text={row?.status}
-//           color={
-//             row?.status === 'Published'
-//               ? '#34796f'
-//               : row?.status === 'Pending'
-//                 ? '#d97706'
-//                 : '#6b7280'
-//           }
-//         />
-//       ),
-//     },
-//     {
-//       header: 'ACTION',
-//       cell: (row) => (
-//         <DynamicTableActions
-//           actions={[
-//             {
-//               type: 'view',
-//               onClick: () => {
-//                 console.log('Viewing course:', row?.id);
-//               },
-//             },
-//             {
-//               type: 'edit',
-//               onClick: () => {
-//                 console.log('Editing course:', row?.id);
-//               },
-//             },
-//             {
-//               type: 'delete',
-//               onClick: () => {
-//                 openModal({
-//                   view: 'DELETE_CONFIRM',
-//                   data: { deleteItem: row?.title, onConfirm: () => {} },
-//                 });
-//               },
-//             },
-//           ]}
-//         />
-//       ),
-//     },
-//   ];
-
-//   // Table filter configuration
-//   const CourseFilters: ITableFilter[] = [
-//     {
-//       type: 'select',
-//       name: 'status-filter',
-//       placeholder: 'Status',
-//       options: [
-//         { label: 'Status: All', value: 'all' },
-//         { label: 'Published', value: 'published' },
-//         { label: 'Pending', value: 'pending' },
-//         { label: 'Draft', value: 'draft' },
-//       ],
-//       onChange: handleSelectStatus,
-//       value: filter,
-//     },
-//     {
-//       type: 'search',
-//       name: 'search',
-//       placeholder: 'Search courses...',
-//       onChange: handleSearchCourses,
-//       value: search,
-//     },
-//   ];
-
-//   return (
-//     <div className="space-y-5">
-//       <DynamicTableFilterBar
-//         fields={CourseFilters}
-//         filter={filter}
-//         setFilter={setFilter}
-//         search={search}
-//         setSearch={setSearch}
-//       />
-
-//       <CustomTable columns={CourseTableConfig} data={coursesData} />
-//     </div>
-//   );
-// };
-
-// export default CourseManagementTable;
-
-function CoursesTable() {
-  return <div>CoursesTable</div>;
+interface IInstructorCourseRow {
+  id: string;
+  slug: string;
+  title: string;
+  thumbnail: string;
+  category: string;
+  level: TCourseLevel;
+  price: number;
+  status: TCourseStatus;
+  enrolledCount: number;
+  rating: number;
+  lessonsCount: number;
+  createdAt: string;
 }
 
-export default CoursesTable;
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=600';
+
+const mapCourseToRow = (course: ICourse): IInstructorCourseRow => ({
+  id: course._id,
+  slug: course.slug,
+  title: course.title,
+  thumbnail: course.thumbnail,
+  category: course.category,
+  level: course.level,
+  price: course.price,
+  status: course.status,
+  enrolledCount: course.enrolledCount ?? 0,
+  rating: course.rating ?? 0,
+  lessonsCount: course.lessonsCount ?? 0,
+  createdAt: course.createdAt
+    ? new Date(course.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    : 'N/A',
+});
+
+const CourseManagementTable = () => {
+  const { getQueryObject } = useSetSearchQueryInURL();
+  const [actingRowId, setActingRowId] = useState<string | null>(null);
+
+  // 1. Reading URL Query States
+  const queryParams = getQueryObject();
+  const currentStatus = (queryParams.status as 'all' | TCourseStatus) || 'all';
+  const currentPage = Number(queryParams.page) || 1;
+  const currentLimit = Number(queryParams.limit) || 10;
+  const currentSearchUrl = queryParams.search || '';
+
+  // 2. RTK Query Hooks for Instructor Dashboard
+  const { data, isLoading, isError, refetch } = useGetInstructorCoursesQuery({
+    status: currentStatus === 'all' ? undefined : currentStatus,
+    page: currentPage,
+    limit: currentLimit,
+  });
+
+  const [submitPublishRequest, { isLoading: isSubmittingPublish }] =
+    useSubmitPublishRequestMutation();
+  const [deleteCourse, { isLoading: isDeleting }] = useDeleteCourseMutation();
+
+  const rows: IInstructorCourseRow[] = useMemo(() => {
+    return (data?.data?.courses ?? []).map(mapCourseToRow);
+  }, [data]);
+
+  // Client side local search logic if backend query search filter isn't active for instructor route
+  const filteredRows = useMemo(() => {
+    if (!currentSearchUrl) return rows;
+    return rows.filter((row) => row.title.toLowerCase().includes(currentSearchUrl.toLowerCase()));
+  }, [rows, currentSearchUrl]);
+
+  const handlePublishRequest = async (row: IInstructorCourseRow) => {
+    const confirmed = window.confirm(`Submit publish review request for "${row.title}"?`);
+    if (!confirmed) return;
+
+    try {
+      setActingRowId(row.id);
+      await submitPublishRequest(row.id).unwrap();
+      toast.success('Publish request submitted for admin review successfully.');
+    } catch (err: any) {
+      toast.error(err?.data?.message || 'Failed to submit publish request.');
+    } finally {
+      setActingRowId(null);
+    }
+  };
+
+  const handleDeleteCourse = async (row: IInstructorCourseRow) => {
+    const confirmed = window.confirm(
+      `Permanently delete "${row.title}"? This action cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    try {
+      setActingRowId(row.id);
+      await deleteCourse(row.id).unwrap();
+      toast.success('Course deleted successfully.');
+    } catch (err: any) {
+      toast.error(err?.data?.message || 'Failed to delete course.');
+    } finally {
+      setActingRowId(null);
+    }
+  };
+
+  const CourseTableConfig: TColumn<IInstructorCourseRow>[] = [
+    {
+      header: 'COURSE',
+      cell: (row) => {
+        const isValidUrl =
+          row?.thumbnail &&
+          (row.thumbnail.startsWith('http://') || row.thumbnail.startsWith('https://'));
+        const imageSrc = isValidUrl ? row.thumbnail : FALLBACK_IMAGE;
+
+        return (
+          <div className="flex items-center gap-3 py-1">
+            <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-sm border border-white/5">
+              <Image
+                src={imageSrc}
+                alt={row?.title}
+                fill
+                className="object-cover"
+                unoptimized={!isValidUrl}
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-text-primary line-clamp-1 max-w-62.5 text-sm font-semibold">
+                {row?.title}
+              </span>
+              <span className="text-text-secondary mt-0.5 text-xs">
+                {row?.lessonsCount} lessons • {row?.createdAt}
+              </span>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      header: 'STUDENTS',
+      cell: (row) => (
+        <span className="text-sm font-medium text-slate-600">
+          {row?.enrolledCount?.toLocaleString()}
+        </span>
+      ),
+    },
+    {
+      header: 'PRICE',
+      cell: (row) => (
+        <span className="text-primary font-bold">৳{row?.price?.toLocaleString()}</span>
+      ),
+    },
+    {
+      header: 'RATING',
+      cell: (row) => (
+        <>
+          {row?.rating > 0 ? (
+            <div className="flex items-center gap-1.5">
+              <Star size={13} className="fill-amber-400 text-amber-400" />
+              <span className="text-sm font-semibold text-slate-700">{row?.rating.toFixed(1)}</span>
+            </div>
+          ) : (
+            <span className="text-text-secondary text-xs">No reviews</span>
+          )}
+        </>
+      ),
+    },
+    {
+      header: 'RATING',
+      cell: (row) => (
+        <>
+          {row?.lessonsCount > 0 ? (
+            <div className="flex items-center gap-1.5">
+              <Star size={13} className="fill-amber-400 text-amber-400" />
+              <span className="text-sm font-semibold text-slate-700">{row?.lessonsCount}</span>
+            </div>
+          ) : (
+            <span className="text-text-secondary text-xs">No reviews</span>
+          )}
+        </>
+      ),
+    },
+    {
+      header: 'STATUS',
+      cell: (row) => {
+        const isPublished = row?.status === 'published';
+        const isPending = row?.status === 'pending';
+        const isRejected = row?.status === 'rejected';
+        const isSuspended = row?.status === 'suspended';
+
+        return (
+          <DynamicBadge
+            text={row?.status}
+            color={
+              isPublished
+                ? '#34796f'
+                : isPending
+                  ? '#d97706'
+                  : isRejected
+                    ? '#ef4444'
+                    : isSuspended
+                      ? '#dc2626'
+                      : '#64748b'
+            }
+            icon={
+              isPublished
+                ? CheckCircle
+                : isPending
+                  ? HelpCircle
+                  : isRejected
+                    ? XCircle
+                    : AlertTriangle
+            }
+          />
+        );
+      },
+    },
+    {
+      header: 'ACTION',
+      cell: (row) => {
+        // Fixed: Removed 'isSuspended' as it wasn't being read directly
+        const isDraft = row?.status === 'draft';
+        const isRejected = row?.status === 'rejected';
+
+        const tableActions: any[] = [
+          {
+            type: 'view',
+            onClick: () => {
+              window.open(`/courses/${row?.slug}`, '_blank');
+            },
+          },
+        ];
+
+        // 1. If Draft or Rejected, Instructor can edit, submit for review, or delete course
+        if (isDraft || isRejected) {
+          tableActions.push(
+            {
+              type: 'edit',
+              onClick: () => {
+                console.log('Editing course:', row?.id);
+              },
+            },
+            {
+              type: 'save',
+              label: 'Publish Request',
+              onClick: () => {
+                handlePublishRequest(row);
+              },
+              isLoading: actingRowId === row?.id && isSubmittingPublish,
+            },
+            {
+              type: 'delete',
+              onClick: () => {
+                handleDeleteCourse(row);
+              },
+              isLoading: actingRowId === row?.id && isDeleting,
+            },
+          );
+        }
+
+        // 2. If Published, Instructor can only view or live edit contents
+        if (row?.status === 'published') {
+          tableActions.push({
+            type: 'edit',
+            onClick: () => {
+              console.log('Editing live content for course:', row?.id);
+            },
+          });
+        }
+
+        // 3. If Suspended (row?.status === 'suspended'), no action except view is allowed
+
+        return <DynamicTableActions actions={tableActions} />;
+      },
+    },
+  ];
+
+  const CourseFilters: ITableFilter[] = [
+    {
+      type: 'tabs',
+      name: 'status-filter',
+      placeholder: 'Status',
+      options: [
+        { label: 'All Status', value: 'all' },
+        { label: 'Published', value: 'published' },
+        { label: 'Pending', value: 'pending' },
+        { label: 'Draft', value: 'draft' },
+        { label: 'Rejected', value: 'rejected' },
+        { label: 'Suspended', value: 'suspended' },
+      ],
+    },
+    {
+      type: 'search',
+      name: 'search',
+      placeholder: 'Search courses...',
+    },
+  ];
+
+  return (
+    <div className="dashboard-card-container space-y-4 p-3">
+      <DynamicTableFilterBar fields={CourseFilters} />
+
+      {isError ? (
+        <ErrorState
+          title="Failed to load your courses"
+          message="We couldn't load your courses from the server. Please check your network connection and retry."
+          onRetry={refetch}
+        />
+      ) : isLoading ? (
+        <TableSkeleton />
+      ) : filteredRows.length === 0 ? (
+        <EmptyState
+          title="No Courses Found"
+          icon={BookOpen}
+          description="You haven't created any courses matching these parameters yet."
+        />
+      ) : (
+        <>
+          <CustomTable columns={CourseTableConfig} data={filteredRows} />
+          {data?.data?.pagination && (
+            <CustomPagination
+              meta={{
+                total: data.data.pagination.total,
+                page: data.data.pagination.page,
+                limit: data.data.pagination.limit,
+                totalPages: data.data.pagination.totalPages,
+              }}
+            />
+          )}
+        </>
+      )}
+    </div>
+  );
+};
+
+export default CourseManagementTable;

@@ -1,45 +1,51 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { apiClient } from '@/redux/apiClient/apiClient';
-import { ICourse, ICourseStats, TQueryResponse } from '@/types/courseManagement.types';
+import {
+  IAdminCoursesQueryParams,
+  ICommonResponse,
+  ICourse,
+  ICourseStats,
+  IPaginatedData,
+  IUpdateStatusPayload,
+} from '@/types/courseManagement.types';
 
 export const adminCourseApi = apiClient.injectEndpoints({
   endpoints: (builder) => ({
-    // GET /courses/admin/courses - Get all courses for admin dashboard (Admin Only)
+    // 1. Get all courses for admin dashboard
     getAdminCourses: builder.query<
-      TQueryResponse<{ courses: ICourse[]; pagination: any }>,
-      Record<string, any>
+      ICommonResponse<IPaginatedData<ICourse>>,
+      IAdminCoursesQueryParams
     >({
       query: (params) => ({
         url: '/courses/admin/courses',
         method: 'GET',
         params,
       }),
-      providesTags: ['AdminCourses'],
     }),
 
-    // GET /courses/admin/course-stats - Get course management overview stats (Admin Only)
-    getCourseStats: builder.query<TQueryResponse<ICourseStats>, void>({
+    // 2. Get course management overview stats
+    getAdminCourseStats: builder.query<ICommonResponse<ICourseStats>, void>({
       query: () => ({
         url: '/courses/admin/course-stats',
         method: 'GET',
       }),
-      providesTags: ['CourseStats'],
     }),
 
-    // PATCH /courses/{id}/status - Approve, reject, or change course status (Admin Only)
+    // 3. Approve, reject, suspend, or change course status
     updateCourseStatus: builder.mutation<
-      TQueryResponse<ICourse>,
-      { id: string; payload: { status: string; rejectedReason?: string; badge?: string } }
+      ICommonResponse<ICourse>,
+      { id: string; payload: IUpdateStatusPayload }
     >({
       query: ({ id, payload }) => ({
         url: `/courses/${id}/status`,
         method: 'PATCH',
         body: payload,
       }),
-      invalidatesTags: ['AdminCourses', 'CourseStats', 'Courses', 'InstructorCourses'],
     }),
   }),
 });
 
-export const { useGetAdminCoursesQuery, useGetCourseStatsQuery, useUpdateCourseStatusMutation } =
-  adminCourseApi;
+export const {
+  useGetAdminCoursesQuery,
+  useGetAdminCourseStatsQuery,
+  useUpdateCourseStatusMutation,
+} = adminCourseApi;

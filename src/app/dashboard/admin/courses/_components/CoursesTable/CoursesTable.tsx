@@ -85,9 +85,10 @@ const CourseManagementTable = () => {
     return (data?.data?.courses ?? []).map(mapCourseToRow);
   }, [data]);
 
+  // Fixed: Expanded type union to include 'suspended' and mapped corresponding reason structures
   const handleStatusUpdate = async (
     row: ICourseRow,
-    status: 'published' | 'rejected',
+    status: 'published' | 'rejected' | 'suspended',
     reason?: string,
   ) => {
     const confirmed = window.confirm(
@@ -97,7 +98,11 @@ const CourseManagementTable = () => {
 
     try {
       setActingRowId(row?.id);
-      const payload = { status, ...(reason && { rejectedReason: reason }) };
+      const payload = {
+        status,
+        ...(status === 'rejected' && reason && { rejectedReason: reason }),
+        ...(status === 'suspended' && reason && { suspendedReason: reason }),
+      };
       await updateCourseStatus({ id: row?.id, payload }).unwrap();
       toast.success(`Course status updated to ${status} successfully.`);
     } catch {
@@ -194,12 +199,21 @@ const CourseManagementTable = () => {
         const isPublished = row?.status === 'published';
         const isPending = row?.status === 'pending';
         const isRejected = row?.status === 'rejected';
+        const isSuspended = row?.status === 'suspended';
 
         return (
           <DynamicBadge
             text={row?.status}
             color={
-              isPublished ? '#34796f' : isPending ? '#d97706' : isRejected ? '#ef4444' : '#64748b'
+              isPublished
+                ? '#34796f'
+                : isPending
+                  ? '#d97706'
+                  : isRejected
+                    ? '#ef4444'
+                    : isSuspended
+                      ? '#dc2626'
+                      : '#64748b'
             }
             icon={
               isPublished
@@ -231,7 +245,6 @@ const CourseManagementTable = () => {
         ];
 
         if (row?.status === 'pending') {
-          // If course is pending, Admin can Approve or Reject
           tableActions.push(
             {
               type: 'save',
@@ -250,17 +263,16 @@ const CourseManagementTable = () => {
             },
           );
         } else if (row?.status === 'published') {
-          // If already published, Admin should Suspend instead of delete
           tableActions.push({
             type: 'suspend',
             onClick: () => {
               const reason = prompt('Enter reason for suspension:');
-              if (reason) handleStatusUpdate(row, 'rejected', reason);
+              // Fixed: Correctly passes 'suspended' instead of 'rejected' string literal
+              if (reason) handleStatusUpdate(row, 'suspended', reason);
             },
             isLoading: actingRowId === row?.id && isUpdatingStatus,
           });
         } else {
-          // Only allow deletion for Draft or Rejected courses
           tableActions.push({
             type: 'delete',
             onClick: () => {
@@ -274,6 +286,7 @@ const CourseManagementTable = () => {
       },
     },
   ];
+
   const CourseFilters: ITableFilter[] = [
     {
       type: 'tabs',
@@ -285,6 +298,7 @@ const CourseManagementTable = () => {
         { label: 'Pending', value: 'pending' },
         { label: 'Draft', value: 'draft' },
         { label: 'Rejected', value: 'rejected' },
+        { label: 'Suspended', value: 'suspended' }, // Added to filter bar options
       ],
     },
     {

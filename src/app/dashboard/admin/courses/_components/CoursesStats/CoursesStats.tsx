@@ -1,9 +1,9 @@
 'use client';
 
-import { useGetCourseStatsQuery } from '@/redux/features/courseManagement/adminCourse.api';
+import { useGetAdminCourseStatsQuery } from '@/redux/features/courseManagement/adminCourse.api';
 
 const CoursesStats = () => {
-  const { data, isLoading, isError } = useGetCourseStatsQuery();
+  const { data, isLoading, isError } = useGetAdminCourseStatsQuery();
 
   const stats = [
     { label: 'Total Courses', value: data?.data.totalCourses || 0 },
