@@ -9,7 +9,10 @@ import DynamicActionButton from '@/components/dashboard/DynamicActionButton/Dyna
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import SearchableSelect from '@/components/dashboard/Fields/SearchableSelect/SearchableSelect';
 import SelectField from '@/components/dashboard/Fields/SelectField/SelectField';
-import { useScheduleLiveSessionMutation } from '@/redux/features/instructor/liveSessionsManagement/liveSessionsManagement.api';
+
+import { useGetInstructorCoursesQuery } from '@/redux/features/courseManagement/instructorCourse.api';
+import { useScheduleLiveSessionMutation } from '@/redux/features/liveSessionsManagement/instructorLiveSessionApi';
+import { ICourse } from '@/types/courseManagement.types';
 
 const sessionSchema = z.object({
   title: z.string().min(1, 'Session title is required'),
@@ -32,8 +35,20 @@ interface CreateSessionFormProps {
 }
 
 const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
-  // RTK Query Mutation Hook
-  const [scheduleLiveSession, { isLoading }] = useScheduleLiveSessionMutation();
+  // 1. Fetch Dynamic Instructor Courses
+  const { data: coursesData, isLoading: isCoursesLoading } = useGetInstructorCoursesQuery({
+    status: 'published',
+  });
+
+  const fetchedCourses = coursesData?.data?.courses || [];
+
+  const courseOptions = fetchedCourses.map((course: ICourse) => ({
+    value: course._id,
+    label: course.title || 'Untitled Course',
+  }));
+
+  // 2. RTK Query Mutation Hook
+  const [scheduleLiveSession, { isLoading: isScheduling }] = useScheduleLiveSessionMutation();
 
   const {
     control,
@@ -44,7 +59,7 @@ const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
     resolver: zodResolver(sessionSchema),
     defaultValues: {
       title: '',
-      courseId: '', // সার্চেবল সিলেক্টের জন্য শুরুতে ক্লিয়ার বা খালি রাখা হলো
+      courseId: '',
       date: '',
       time: '',
       durationInMins: '',
@@ -53,12 +68,6 @@ const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
       description: 'Deep dive session.',
     },
   });
-
-  const courseOptions = [
-    { value: '6a1f71b6409d7d7ea7633912', label: 'Complete Web Development Bootcamp' },
-    { value: '6a1f71b6409d7d7ea7633913', label: 'React.js Advanced Masterclass' },
-    { value: '6a1f71b6409d7d7ea7633914', label: 'Node.js & Express API Development' },
-  ];
 
   const platformOptions = [
     { value: 'Zoom', label: 'Zoom' },
@@ -69,7 +78,6 @@ const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
     try {
       const combinedDateTime = new Date(`${values.date}T${values.time}:00`).toISOString();
 
-      // SearchableSelect যদি অ্যারে রিটার্ন করে, তবে প্রথম সিলেক্টেড আইডিটি ব্যাকএন্ডে পাঠানো হচ্ছে
       const finalCourseId = Array.isArray(values.courseId) ? values.courseId[0] : values.courseId;
 
       const requestBody = {
@@ -109,14 +117,15 @@ const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
             />
           </div>
 
+          {/* Dynamic Course Field */}
           <div className="sm:col-span-2">
             <SearchableSelect
               label="Course"
               name="courseId"
               control={control}
               options={courseOptions}
-              placeholder="Select a course..."
-              error={errors.courseId}
+              placeholder={isCoursesLoading ? 'Loading courses...' : 'Select a published course...'}
+              error={errors.courseId?.message}
               isSingle={true}
               required
             />
@@ -182,7 +191,7 @@ const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
           <DynamicActionButton
             type="submit"
             label="Schedule Session"
-            isLoading={isLoading}
+            isLoading={isScheduling}
             className="h-11!"
           />
           <DynamicActionButton
@@ -190,7 +199,7 @@ const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
             label="Cancel Form"
             type="button"
             className="h-11!"
-            disabled={isLoading}
+            disabled={isScheduling}
             onClick={() => setShowCreate(false)}
           />
         </div>

@@ -1,4 +1,4 @@
-import { useGetInstructorLiveSessionStatsQuery } from '@/redux/features/instructor/liveSessionsManagement/liveSessionsManagement.api';
+import { useGetInstructorLiveSessionStatsQuery } from '@/redux/features/liveSessionsManagement/instructorLiveSessionApi';
 
 const LiveSessionsStats = () => {
   const { data, isLoading, isError } = useGetInstructorLiveSessionStatsQuery();

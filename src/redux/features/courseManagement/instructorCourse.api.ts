@@ -20,7 +20,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
     // 2. Get instructor's own dashboard courses
     getInstructorCourses: builder.query<
       ICommonResponse<IPaginatedData<ICourse>>,
-      IInstructorCoursesQueryParams
+      IInstructorCoursesQueryParams | undefined
     >({
       query: (params) => ({
         url: '/courses/instructor/my-courses',
