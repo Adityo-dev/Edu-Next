@@ -14,6 +14,7 @@ const perksMap = {
     { emoji: '🎥', text: 'Join live sessions' },
     { emoji: '🔓', text: 'Free course previews' },
   ],
+
   instructor: [
     { emoji: '💰', text: 'Earn from every sale' },
     { emoji: '👥', text: 'Reach 5,000+ students' },
@@ -50,7 +51,6 @@ const RegisterLeftPanel = ({ role }: { role: Role }) => {
           </span>
         </Link>
 
-        {/* Center — role change হলে instant update হয় */}
         <div>
           <DynamicBadge
             text={role === 'student' ? 'Joining as Student' : 'Joining as Instructor'}
@@ -60,7 +60,7 @@ const RegisterLeftPanel = ({ role }: { role: Role }) => {
             className="mb-5 transition-all duration-300"
           />
 
-          <h2 className="mb-5 text-5xl leading-[1.1] font-black text-white transition-all duration-300">
+          <h2 className="mb-5 text-5xl leading-[1.1] font-bold text-white transition-all duration-300">
             {role === 'student' ? (
               <>
                 Start Your Learning <br /> <span className="text-warning">Journey.</span>
@@ -72,7 +72,7 @@ const RegisterLeftPanel = ({ role }: { role: Role }) => {
             )}
           </h2>
 
-          <p className="mb-10 max-w-md text-sm leading-relaxed text-white/50 transition-all duration-300">
+          <p className="mb-10 max-w-lg text-base leading-relaxed text-white/80 transition-all duration-300">
             {role === 'student'
               ? 'Create your free account and get instant access to 120+ courses taught by verified instructors in Bangladesh.'
               : 'Apply as an instructor, get verified by our admin, and start earning from thousands of eager learners.'}
@@ -86,7 +86,7 @@ const RegisterLeftPanel = ({ role }: { role: Role }) => {
                 className="flex items-center gap-3 rounded-sm border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm transition-all duration-300"
               >
                 <span className="text-xl">{perk.emoji}</span>
-                <span className="text-xs font-medium text-white/70">{perk.text}</span>
+                <span className="text-sm text-white/80">{perk.text}</span>
               </div>
             ))}
           </div>
@@ -106,8 +106,8 @@ const RegisterLeftPanel = ({ role }: { role: Role }) => {
               />
             ))}
           </div>
-          <p className="text-xs text-white/40">
-            <span className="font-bold text-white">5,000+</span> people already joined
+          <p className="text-xs text-white/80">
+            <span className="font-semibold text-white">5,000+</span> People already joined
           </p>
         </div>
       </div>

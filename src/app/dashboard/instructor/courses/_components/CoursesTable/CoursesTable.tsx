@@ -184,16 +184,13 @@ const CourseManagementTable = () => {
       ),
     },
     {
-      header: 'RATING',
+      header: 'Level',
       cell: (row) => (
         <>
-          {row?.lessonsCount > 0 ? (
-            <div className="flex items-center gap-1.5">
-              <Star size={13} className="fill-amber-400 text-amber-400" />
-              <span className="text-sm font-semibold text-slate-700">{row?.lessonsCount}</span>
-            </div>
+          {row?.level ? (
+            <span className="text-sm font-semibold text-slate-700">{row?.level}</span>
           ) : (
-            <span className="text-text-secondary text-xs">No reviews</span>
+            <span className="text-text-secondary text-xs">No level</span>
           )}
         </>
       ),

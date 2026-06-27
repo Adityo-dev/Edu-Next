@@ -13,15 +13,16 @@ const RegisterPage = () => {
   const router = useRouter();
 
   const [role, setRole] = useState<'student' | 'instructor'>('student');
-
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [apiSuccess, setApiSuccess] = useState<string | null>(null);
 
+  // Register Handler
   const handleRegister = async (data: RegisterFormValues) => {
     setApiError(null);
     setApiSuccess(null);
 
+    // Register Data Payload
     const payload = {
       firstName: data?.firstName.trim(),
       lastName: data?.lastName?.trim() || '.',
@@ -36,7 +37,6 @@ const RegisterPage = () => {
 
     try {
       setIsLoading(true);
-
       const response = await baseApi('/auth/signup', {
         method: 'POST',
         data: payload,
@@ -44,7 +44,6 @@ const RegisterPage = () => {
 
       if (response && (response.success || response.statusCode === 201)) {
         setApiSuccess('Registration successful! Please verify your email...');
-
         setTimeout(() => {
           router.push(`/verify-otp?email=${encodeURIComponent(data.email.trim())}`);
         }, 800);
@@ -59,7 +58,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex h-screen w-full overflow-hidden bg-white">
       <RegisterLeftPanel role={role} />
       <RegisterRightPanel
         onSubmitForm={handleRegister}

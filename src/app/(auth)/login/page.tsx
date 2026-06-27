@@ -1,14 +1,15 @@
+/* eslint-disable react-hooks/incompatible-library */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import { ROLE_DASHBOARD_HOME } from '@/components/dashboard/sidebar/sidebarRoutes';
 import { setAuth } from '@/redux/features/auth/authSlice';
 import { useAppDispatch } from '@/redux/hooks';
 import { setUserProfile } from '@/services/auth/auth.service';
 import { baseApi } from '@/services/root/baseApi';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BadgeCheck, Eye, EyeOff, Lock, Mail, PlayCircle, ShieldCheck, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -30,20 +31,25 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [apiSuccess, setApiSuccess] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
-    control,
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
+    mode: 'onBlur',
     defaultValues: {
       email: '',
       password: '',
       remember: false,
     },
   });
+
+  const emailValue = watch('email');
 
   const handleLogin = async (data: LoginFormData) => {
     setApiError(null);
@@ -143,42 +149,50 @@ const LoginPage = () => {
               That Actually <br />
               <span className="text-yellow-400">Matter.</span>
             </h2>
-            <p className="mb-10 max-w-sm text-base leading-relaxed text-white/60">
-              Sign in to continue your learning journey. Your progress, courses, and certificates
-              are waiting.
+            <p className="mb-10 max-w-md text-base leading-relaxed text-white/60">
+              Bangladesh er sera instructor der theke শিখুন বাংলায় — verified courses, live
+              sessions, ar industry-recognized certificates, ekta platform e.
             </p>
 
-            <div className="space-y-3">
-              {[
-                {
-                  title: 'Web Development',
-                  students: '1.2k',
-                  progress: 72,
-                  color: 'bg-emerald-400',
-                },
-                { title: 'UI/UX Design', students: '980', progress: 45, color: 'bg-yellow-400' },
-                { title: 'Digital Marketing', students: '850', progress: 88, color: 'bg-blue-400' },
-              ].map((card, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-4 rounded-md border border-white/10 bg-white/10 px-5 py-4 backdrop-blur-sm"
-                >
-                  <div className={`h-2.5 w-2.5 shrink-0 rounded-full ${card.color}`} />
-                  <div className="flex-1">
-                    <div className="mb-1.5 flex items-center justify-between">
-                      <span className="text-sm font-semibold text-white">{card.title}</span>
-                      <span className="text-xs text-white/50">{card.students} students</span>
-                    </div>
-                    <div className="h-1 w-full overflow-hidden rounded-full bg-white/10">
-                      <div
-                        className={`h-full rounded-full ${card.color}`}
-                        style={{ width: `${card.progress}%` }}
-                      />
-                    </div>
-                  </div>
-                  <span className="text-xs font-bold text-white/60">{card.progress}%</span>
+            <div className="space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-white/10">
+                  <PlayCircle size={19} className="text-yellow-400" />
                 </div>
-              ))}
+                <div>
+                  <p className="text-sm font-semibold text-white">Live & Recorded Sessions</p>
+                  <p className="text-xs leading-relaxed text-white/55">
+                    Instructor der sathe direct live class korun, ba apnar shomoy moto recorded
+                    lesson dekhun.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-white/10">
+                  <BadgeCheck size={19} className="text-yellow-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white">Verified Instructors Only</p>
+                  <p className="text-xs leading-relaxed text-white/55">
+                    Protek instructor admin theke verified — quality content er guarantee shate
+                    shate.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-white/10">
+                  <ShieldCheck size={19} className="text-yellow-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white">Lifetime Course Access</p>
+                  <p className="text-xs leading-relaxed text-white/55">
+                    Ekbar enroll korle course content e apnar lifetime access thakbe, kono hidden
+                    fee nai.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -214,13 +228,6 @@ const LoginPage = () => {
       {/* ── Right Panel ── */}
       <div className="flex w-full flex-col items-center justify-center px-6 py-16 lg:w-[45%]">
         <div className="w-full max-w-sm">
-          <Link href="/" className="mb-10 flex items-center gap-2 lg:hidden">
-            <span className="text-2xl font-black">
-              <span className="text-primary">Edu</span>
-              <span className="text-secondary">Next</span>
-            </span>
-          </Link>
-
           <div className="mb-8">
             <h1 className="text-text-primary mb-2 text-3xl font-black">Welcome back 👋</h1>
             <p className="text-text-secondary text-sm">
@@ -234,7 +241,7 @@ const LoginPage = () => {
           <button
             type="button"
             disabled={isLoading}
-            className="mb-6 flex w-full items-center justify-center gap-3 rounded-sm border border-slate-200 py-3.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50 active:scale-95 disabled:opacity-50"
+            className="mb-6 flex w-full cursor-pointer items-center justify-center gap-3 rounded-sm border border-slate-200 py-3.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path
@@ -274,37 +281,95 @@ const LoginPage = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
-            <InputField
-              label="Email"
-              name="email"
-              type="email"
-              control={control}
-              placeholder="Enter your email"
-              error={errors.email}
-              required
-            />
+          <form onSubmit={handleSubmit(handleLogin)} className="space-y-4" noValidate>
+            {/* ── Email (raw input + clear ✕ button) ── */}
+            <div>
+              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
+                Email <span className="text-red-400">*</span>
+              </label>
+              <div className="relative">
+                <Mail
+                  size={15}
+                  className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
+                />
+                <input
+                  type="email"
+                  disabled={isLoading}
+                  {...register('email')}
+                  placeholder="Enter your email"
+                  autoComplete="email"
+                  className={`focus:border-primary w-full rounded-sm border bg-[#F9FAFB] py-3.5 pr-10 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60 ${
+                    errors.email ? 'border-red-300' : 'border-slate-200'
+                  }`}
+                />
+                {emailValue && (
+                  <button
+                    type="button"
+                    onClick={() => setValue('email', '', { shouldValidate: true })}
+                    className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    tabIndex={-1}
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+              {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
+            </div>
 
-            <InputField
-              label="Password"
-              name="password"
-              type="password"
-              control={control}
-              placeholder="Enter your Password"
-              error={errors.password}
-              required
-            />
+            {/* ── Password (raw input + eye toggle) ── */}
+            <div>
+              <div className="mb-1.5 flex items-center justify-between">
+                <span className="text-xs font-bold tracking-wider text-slate-500 uppercase">
+                  Password <span className="text-red-400">*</span>
+                </span>
+                <Link
+                  href="/forgot-password"
+                  className="text-primary text-xs font-semibold hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="relative">
+                <Lock
+                  size={15}
+                  className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
+                />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  disabled={isLoading}
+                  {...register('password')}
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  className={`focus:border-primary w-full rounded-sm border bg-[#F9FAFB] py-3.5 pr-10 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60 ${
+                    errors.password ? 'border-red-300' : 'border-slate-200'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>
+              )}
+            </div>
 
-            {/* ── Remember Me — register() দিয়ে fix করা হলো ── */}
             <div className="flex items-center gap-2 pt-1">
               <input
                 type="checkbox"
                 id="remember"
                 disabled={isLoading}
                 {...register('remember')}
-                className="accent-primary h-4 w-4 cursor-pointer"
+                className="accent-primary h-4 w-4 cursor-pointer disabled:cursor-not-allowed"
               />
-              <label htmlFor="remember" className="cursor-pointer text-sm text-slate-500">
+              <label
+                htmlFor="remember"
+                className="cursor-pointer text-sm text-slate-500 select-none"
+              >
                 Remember me for 30 days
               </label>
             </div>
@@ -312,9 +377,16 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="bg-primary w-full cursor-pointer rounded-sm py-4 text-sm font-bold text-white transition-all hover:bg-[#2a6159] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+              className="bg-primary flex w-full cursor-pointer items-center justify-center gap-2 rounded-sm py-4 text-sm font-bold text-white transition-all hover:bg-[#2a6159] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isLoading ? 'Signing In...' : 'Sign In →'}
+              {isLoading ? (
+                <>
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                  Signing In...
+                </>
+              ) : (
+                'Sign In →'
+              )}
             </button>
           </form>
 

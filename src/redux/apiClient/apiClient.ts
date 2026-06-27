@@ -25,5 +25,13 @@ export const apiClient = createApi({
   baseQuery: baseQuery,
   endpoints: () => ({}),
 
-  tagTypes: ['user', 'liveSessions', 'Courses', 'InstructorCourses', 'AdminCourses', 'CourseStats'],
+  tagTypes: [
+    'user',
+    'liveSessions',
+    'Courses',
+    'InstructorCourses',
+    'AdminCourses',
+    'CourseStats',
+    'UserProfile',
+  ],
 });

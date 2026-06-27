@@ -67,9 +67,9 @@ const RegisterForm = ({ onSubmitForm, onRoleChange, isLoading, apiError }: Regis
           type="button"
           onClick={() => handleRoleSelect('student')}
           disabled={isLoading}
-          className={`flex items-center justify-center gap-2.5 rounded-sm border-2 py-4 text-sm font-bold transition-all duration-300 ${
+          className={`flex cursor-pointer items-center justify-center gap-2.5 rounded-sm border py-4 text-sm font-semibold transition-all duration-300 ${
             role === 'student'
-              ? 'border-primary text-primary bg-emerald-50'
+              ? 'border-primary/50 text-primary bg-emerald-50'
               : 'border-slate-200 text-slate-400 hover:border-slate-300'
           }`}
         >
@@ -79,9 +79,9 @@ const RegisterForm = ({ onSubmitForm, onRoleChange, isLoading, apiError }: Regis
           type="button"
           onClick={() => handleRoleSelect('instructor')}
           disabled={isLoading}
-          className={`flex items-center justify-center gap-2.5 rounded-sm border-2 py-4 text-sm font-bold transition-all duration-300 ${
+          className={`flex cursor-pointer items-center justify-center gap-2.5 rounded-sm border py-4 text-sm font-semibold transition-all duration-300 ${
             role === 'instructor'
-              ? 'border-secondary text-secondary bg-orange-50'
+              ? 'border-secondary/50 text-secondary bg-orange-50'
               : 'border-slate-200 text-slate-400 hover:border-slate-300'
           }`}
         >
@@ -96,7 +96,7 @@ const RegisterForm = ({ onSubmitForm, onRoleChange, isLoading, apiError }: Regis
         </div>
       )}
 
-      {/* First Name + Last Name — পাশাপাশি */}
+      {/* First Name + Last Name —  */}
       <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">

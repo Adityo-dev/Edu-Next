@@ -22,21 +22,13 @@ const RegisterRightPanel = ({
 }: RegisterRightPanelProps) => {
   return (
     <div className="flex w-full flex-col items-center justify-center overflow-y-auto px-6 py-12 lg:w-[55%]">
-      <div className="w-full max-w-md">
-        {/* Mobile Logo */}
-        <Link href="/" className="mb-8 flex items-center gap-2 lg:hidden">
-          <span className="text-2xl font-black">
-            <span className="text-primary">Edu</span>
-            <span className="text-secondary">Next</span>
-          </span>
-        </Link>
-
+      <div className="w-full max-w-lg">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-text-primary mb-2 text-3xl font-black">Create account ✨</h1>
+          <h1 className="text-text-primary mb-2 text-3xl font-bold">Create account ✨</h1>
           <p className="text-text-secondary text-sm">
             Already have an account?{' '}
-            <Link href="/login" className="text-primary font-bold hover:underline">
+            <Link href="/login" className="text-primary font-semibold underline">
               Sign in
             </Link>
           </p>
@@ -46,7 +38,7 @@ const RegisterRightPanel = ({
         <button
           type="button"
           disabled={isLoading}
-          className="mb-5 flex w-full items-center justify-center gap-3 rounded-sm border border-slate-200 py-3.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50 active:scale-95 disabled:opacity-50"
+          className="mb-5 flex w-full cursor-pointer items-center justify-center gap-3 rounded-sm border border-slate-200 py-3.5 text-sm font-semibold text-slate-700 transition-all hover:bg-slate-50 active:scale-95 disabled:opacity-50"
         >
           <svg width="18" height="18" viewBox="0 0 24 24">
             <path

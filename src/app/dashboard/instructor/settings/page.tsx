@@ -2,11 +2,11 @@
 
 import { Lock, Shield, User, Video } from 'lucide-react';
 import { useState } from 'react';
-import SettingsSidebar from './_components/SettingsSidebar/SettingsSidebar';
-import ProfileSettings from './_components/ProfileSettings/ProfileSettings';
-import PasswordSettings from './_components/PasswordSettings/PasswordSettings';
 import NotificationSettings from './_components/NotificationSettings/NotificationSettings';
+import PasswordSettings from './_components/PasswordSettings/PasswordSettings';
 import PrivacySettings from './_components/PrivacySettings/PrivacySettings';
+import ProfileSettings from './_components/ProfileSettings/ProfileSettings';
+import SettingsSidebar from './_components/SettingsSidebar/SettingsSidebar';
 
 const InstructorSettingsPage = () => {
   const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'notifications' | 'privacy'>(
