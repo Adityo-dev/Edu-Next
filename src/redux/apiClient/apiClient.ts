@@ -27,7 +27,11 @@ export const apiClient = createApi({
 
   tagTypes: [
     'user',
-    'liveSessions',
+    'LiveSessionStats',
+    'StudentLiveSessions',
+    'InstructorLiveSessions',
+    'InstructorLiveSessionStats',
+    'CourseLiveSessions',
     'Courses',
     'InstructorCourses',
     'AdminCourses',
