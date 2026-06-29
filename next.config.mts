@@ -19,6 +19,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'placeholder.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'example.com',
+      },
     ],
   },
   experimental: {
