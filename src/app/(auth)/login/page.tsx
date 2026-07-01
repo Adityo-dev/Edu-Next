@@ -68,7 +68,7 @@ const LoginPage = () => {
         data: payload,
       });
 
-      // ── 403: email verify করা নেই / suspended / pending approval ──
+      // ── 403: email not verify  / suspended / pending approval
       if (response?.statusCode === 403 || response?.success === false) {
         const message = (response?.message || '').toLowerCase();
 

@@ -37,7 +37,6 @@ const VerifyOtpForm = () => {
     };
   }, [cooldown]);
 
-  // ── Verify OTP — Auto Login + Redirect to Dashboard ──────────────────────
   const handleVerify = async (otp: string) => {
     setApiError(null);
     setApiSuccess(null);
@@ -51,19 +50,13 @@ const VerifyOtpForm = () => {
 
       if (response?.success && response?.token && response?.user) {
         const { token, user } = response;
-
-        // ── Cookie + Redux এ login state সেট করো ──
         await setUserProfile(user, token);
         dispatch(setAuth({ user }));
-
         setApiSuccess('Email verified successfully! Redirecting...');
-
         const dashboardPath =
           ROLE_DASHBOARD_HOME[user.role as keyof typeof ROLE_DASHBOARD_HOME] ?? '/';
-
         setTimeout(() => router.push(dashboardPath), 1000);
       } else if (response?.success) {
-        // token না থাকলেও fallback — login page এ পাঠাও
         setApiSuccess('Email verified successfully! Redirecting to login...');
         setTimeout(() => router.push('/login'), 1200);
       } else {
@@ -78,10 +71,8 @@ const VerifyOtpForm = () => {
     }
   };
 
-  // ── Resend OTP ────────────────────────────────────────────────────────────
   const handleResend = async () => {
     if (cooldown > 0) return;
-
     setApiError(null);
     setApiSuccess(null);
     setIsResending(true);
@@ -107,35 +98,38 @@ const VerifyOtpForm = () => {
   };
 
   return (
-    <div className="w-full rounded-md border border-slate-100 bg-white p-8 text-center shadow-sm">
+    <div className="w-full rounded-xl border border-slate-100 bg-white p-6 text-center shadow-md shadow-slate-100/70">
       {/* Icon */}
-      <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50/80 ring-8 ring-emerald-50/30">
-        <Mail size={26} className="text-primary" />
+      <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50/80 ring-8 ring-emerald-50/40">
+        <Mail size={24} className="text-primary" />
       </div>
 
       {/* Heading */}
-      <h1 className="text-text-primary mb-2 text-2xl font-black tracking-tight sm:text-3xl">
+      <h1 className="mb-1.5 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
         Verify Your Email
       </h1>
-      <p className="text-text-secondary text-sm">We sent a 6-digit code to</p>
-      <p className="text-text-primary mt-1 mb-8 inline-block rounded-sm bg-slate-50 px-3 py-1.5 text-sm font-bold break-all">
+      <p className="text-sm text-slate-500">We sent a 6-digit code to</p>
+      <p className="mt-2 mb-6 inline-block max-w-full rounded-md border border-slate-100 bg-slate-50 px-3 py-1.5 text-xs font-semibold break-all text-slate-700">
         {email || 'your email'}
       </p>
 
       {/* Alerts */}
-      {apiError && (
-        <div className="animate-in fade-in zoom-in-95 mb-6 rounded-sm border border-red-200 bg-red-50 p-3.5 text-xs font-medium text-red-600 transition-all">
-          ⚠️ {apiError}
-        </div>
-      )}
-      {apiSuccess && (
-        <div className="animate-in fade-in zoom-in-95 mb-6 rounded-sm border border-emerald-200 bg-emerald-50 p-3.5 text-xs font-medium text-emerald-600 transition-all">
-          ✅ {apiSuccess}
-        </div>
-      )}
+      <div className="min-h-12.5 empty:hidden">
+        {apiError && (
+          <div className="animate-in fade-in zoom-in-95 text-danger border-danger/20 bg-danger/5 mb-5 flex items-start gap-2 rounded-sm border p-3 text-left text-xs font-medium">
+            <span>⚠️</span> <span>{apiError}</span>
+          </div>
+        )}
+
+        {apiSuccess && (
+          <div className="animate-in fade-in zoom-in-95 text-success border-success/20 bg-success/5 mb-5 flex items-start gap-2 rounded-md border p-3 text-left text-xs font-medium">
+            <span>✅</span> <span>{apiSuccess}</span>
+          </div>
+        )}
+      </div>
 
       {/* OTP Input */}
-      <div className="mb-6 flex justify-center">
+      <div className="mb-5 flex justify-center">
         <OtpInput
           key={otpKey}
           length={6}
@@ -146,7 +140,7 @@ const VerifyOtpForm = () => {
       </div>
 
       {/* Verifying Indicator */}
-      <div className="mb-4 flex min-h-7 items-center justify-center">
+      <div className="mb-4 flex min-h-6 items-center justify-center">
         {isVerifying && (
           <p className="text-primary animate-in fade-in flex items-center gap-2 text-sm font-semibold">
             <RefreshCw size={14} className="animate-spin" />
@@ -156,10 +150,10 @@ const VerifyOtpForm = () => {
       </div>
 
       {/* Resend Action */}
-      <div className="text-text-secondary border-t border-slate-100 pt-5 text-sm">
+      <div className="border-t border-slate-100 pt-5 text-sm text-slate-500">
         Didn&apos;t receive the code?{' '}
         {cooldown > 0 ? (
-          <span className="ml-1 rounded-full bg-slate-50 px-2 py-0.5 text-xs font-semibold text-slate-400">
+          <span className="ml-1 inline-block rounded-md border border-slate-100 bg-slate-50 px-2 py-0.5 text-xs font-semibold text-slate-400">
             Resend in {cooldown}s
           </span>
         ) : (

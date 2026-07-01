@@ -101,10 +101,10 @@ const OtpInput = ({ length = 6, onComplete, disabled, error }: OtpInputProps) =>
           onPaste={handlePaste}
           onFocus={(e) => e.target.select()}
           className={cn(
-            'text-text-primary h-12 w-10 rounded-md border text-center text-lg font-black transition-all outline-none disabled:opacity-50 sm:h-14 sm:w-12 sm:text-xl',
+            'text-text-primary h-10 w-10 rounded-md border text-center text-lg font-semibold transition-all outline-none disabled:opacity-50 sm:h-12 sm:w-12 sm:text-xl',
             'focus:border-primary focus:bg-white focus:ring-2 focus:ring-emerald-100',
             {
-              'border-red-300 bg-red-50/50 focus:border-red-500 focus:ring-red-100': error,
+              'focus:border-danger bg-danger/5 border-danger/20 focus:ring-danger/20': error,
               'border-primary ring-primary/20 bg-white ring-1': !error && val,
               'border-slate-200 bg-[#F9FAFB]': !error && !val,
             },

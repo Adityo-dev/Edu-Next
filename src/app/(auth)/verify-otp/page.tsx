@@ -5,7 +5,7 @@ import VerifyOtpForm from './_components/VerifyOtpForm/VerifyOtpForm';
 
 const VerifyOtpPage = () => {
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-white px-6 py-12">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-white px-4 py-12 sm:px-6">
       {/* Background dot grid */}
       <div
         className="absolute inset-0 opacity-[0.06]"
@@ -15,11 +15,11 @@ const VerifyOtpPage = () => {
         }}
       />
 
-      {/* Decorative Blur Orbs */}
-      <div className="bg-primary/5 absolute top-1/4 left-1/4 h-72 w-72 rounded-full blur-3xl" />
-      <div className="absolute right-1/4 bottom-1/4 h-72 w-72 rounded-full bg-emerald-500/5 blur-3xl" />
+      {/* Decorative Glow Orbs */}
+      <div className="bg-primary/5 pointer-events-none absolute top-1/4 left-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
+      <div className="bg-primary/10 pointer-events-none absolute right-1/4 bottom-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
 
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-110">
         <Suspense fallback={null}>
           <VerifyOtpForm />
         </Suspense>
