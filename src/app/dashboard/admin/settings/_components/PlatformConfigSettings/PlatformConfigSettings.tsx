@@ -16,7 +16,7 @@ import KeywordInputField from '@/components/dashboard/Fields/KeywordInputField/K
 import {
   useGetPlatformConfigQuery,
   useUpdatePlatformConfigMutation,
-} from '@/redux/features/settings/platformConfigManagement/platformConfig.api';
+} from '@/redux/features/settings/admin/platformConfigManagement/platformConfig.api';
 import { useUploadImageMutation } from '@/redux/features/upload/uploadApi';
 
 const SOCIAL_BASE_URLS = {
