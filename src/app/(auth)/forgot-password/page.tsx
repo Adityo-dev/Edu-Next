@@ -3,7 +3,7 @@
 
 import { baseApi } from '@/services/root/baseApi';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Mail, X } from 'lucide-react';
+import { ArrowLeft, Mail, RefreshCw, LockKeyhole } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -25,17 +25,12 @@ const ForgotPasswordPage = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm<ForgotFormData>({
     resolver: zodResolver(forgotSchema),
     mode: 'onBlur',
     defaultValues: { email: '' },
   });
-
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const emailValue = watch('email');
 
   const handleSendOtp = async (data: ForgotFormData) => {
     setApiError(null);
@@ -50,7 +45,7 @@ const ForgotPasswordPage = () => {
 
       if (response?.success || response?.statusCode === 200) {
         setApiSuccess(
-          response?.message || 'A 6-digit verification code has been sent to your email.',
+          response?.message || 'A verification code has been sent to your email.',
         );
         setTimeout(() => {
           router.push(`/forgot-password/verify-otp?email=${encodeURIComponent(data.email.trim())}`);
@@ -80,57 +75,57 @@ const ForgotPasswordPage = () => {
       <div className="bg-primary/5 pointer-events-none absolute top-1/4 left-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
       <div className="bg-primary/10 pointer-events-none absolute right-1/4 bottom-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
 
-      <div className="relative z-10 w-full max-w-sm rounded-xl border border-slate-100 bg-white p-6 shadow-md shadow-slate-100/70 sm:p-8">
-        <div className="mb-6 text-center">
-          <h1 className="mb-2 text-2xl font-black text-slate-900 sm:text-3xl">Forgot Password?</h1>
-          <p className="text-sm text-slate-500">
-            No worries! Enter your email and we will send you a 6-digit OTP to reset it.
-          </p>
+      <div className="relative z-10 w-full max-w-sm rounded-xl border border-slate-100 bg-white p-6 text-center shadow-md shadow-slate-100/70 sm:p-8">
+        {/* Icon */}
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50/80 ring-8 ring-emerald-50/40">
+          <LockKeyhole size={24} className="text-primary" />
         </div>
 
-        {apiError && (
-          <div className="mb-4 rounded-sm border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-600">
-            ⚠️ {apiError}
-          </div>
-        )}
-        {apiSuccess && (
-          <div className="mb-4 rounded-sm border border-emerald-200 bg-emerald-50 p-3 text-xs font-medium text-emerald-600">
-            ✅ {apiSuccess}
-          </div>
-        )}
+        {/* Heading */}
+        <h1 className="mb-1.5 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          Forgot Password
+        </h1>
+        <p className="mb-6 text-sm text-slate-500">
+          Enter your email and we will send you an OTP to reset your password.
+        </p>
 
-        <form onSubmit={handleSubmit(handleSendOtp)} className="space-y-4" noValidate>
+        {/* Alerts */}
+        <div className="min-h-12.5 empty:hidden text-left">
+          {apiError && (
+            <div className="animate-in fade-in zoom-in-95 text-danger border-danger/20 bg-danger/5 mb-5 flex items-start gap-2 rounded-sm border p-3 text-xs font-medium">
+              <span>⚠️</span> <span>{apiError}</span>
+            </div>
+          )}
+
+          {apiSuccess && (
+            <div className="animate-in fade-in zoom-in-95 text-success border-success/20 bg-success/5 mb-5 flex items-start gap-2 rounded-md border p-3 text-xs font-medium">
+              <span>✅</span> <span>{apiSuccess}</span>
+            </div>
+          )}
+        </div>
+
+        <form onSubmit={handleSubmit(handleSendOtp)} className="space-y-5 text-left" noValidate>
           <div>
-            <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-              Email <span className="text-red-400">*</span>
+            <label className="mb-2 block text-center text-xs font-bold tracking-wider text-slate-500 uppercase">
+              Enter Email <span className="text-red-400">*</span>
             </label>
             <div className="relative">
               <Mail
                 className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
-                size="{15}"
+                size={15}
               />
               <input
                 type="email"
                 disabled={isLoading}
                 {...register('email')}
-                placeholder="Enter your email"
+                placeholder="you@example.com"
                 autoComplete="email"
-                className={`focus:border-primary w-full rounded-sm border bg-[#F9FAFB] py-3.5 pr-10 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60 ${
+                className={`focus:border-primary w-full rounded-sm border bg-[#F9FAFB] py-3.5 pl-11 pr-4 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60 ${
                   errors.email ? 'border-red-300' : 'border-slate-200'
                 }`}
               />
-              {emailValue && (
-                <button
-                  type="button"
-                  onClick={() => setValue('email', '', { shouldValidate: true })}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                  tabIndex={-1}
-                >
-                  <X size="{14}" />
-                </button>
-              )}
             </div>
-            {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
+            {errors.email && <p className="mt-2 text-center text-xs text-red-500">{errors.email.message}</p>}
           </div>
 
           <button
@@ -140,7 +135,7 @@ const ForgotPasswordPage = () => {
           >
             {isLoading ? (
               <>
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                <RefreshCw size={16} className="animate-spin text-white" />
                 Sending OTP...
               </>
             ) : (
@@ -149,12 +144,12 @@ const ForgotPasswordPage = () => {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="border-t border-slate-100 mt-6 pt-5 text-center">
           <Link
             className="text-primary inline-flex items-center gap-1.5 text-xs font-bold hover:underline"
             href="/login"
           >
-            <ArrowLeft size="{14}" /> Back to Sign In
+            <ArrowLeft size={14} /> Back to Sign In
           </Link>
         </div>
       </div>
