@@ -64,6 +64,16 @@ export interface IBadgeRequestResponse {
   message: string;
 }
 
+export interface IChangePasswordPayload {
+  oldPassword: string;
+  newPassword: string;
+}
+
+export interface IChangePasswordResponse {
+  success: boolean;
+  message: string;
+}
+
 export const profileApi = apiClient.injectEndpoints({
   endpoints: (builder) => ({
     // 1. Fetch User Profile Dashboard
@@ -94,7 +104,16 @@ export const profileApi = apiClient.injectEndpoints({
       }),
       invalidatesTags: ['UserProfile'],
     }),
+
+    // 4. Change Password
+    changePassword: builder.mutation<IChangePasswordResponse, IChangePasswordPayload>({
+      query: (payload) => ({
+        url: '/auth/change-password',
+        method: 'PATCH',
+        body: payload,
+      }),
+    }),
   }),
 });
 
-export const { useGetProfileQuery, useUpdateProfileMutation, useRequestBadgeMutation } = profileApi;
+export const { useGetProfileQuery, useUpdateProfileMutation, useRequestBadgeMutation, useChangePasswordMutation } = profileApi;

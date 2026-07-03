@@ -1,9 +1,9 @@
 'use client';
 
+import PasswordSettings from '@/components/dashboard/Settings/PasswordSettings/PasswordSettings';
 import { Lock, Shield, User, Video } from 'lucide-react';
 import { useState } from 'react';
 import NotificationSettings from './_components/NotificationSettings/NotificationSettings';
-import PasswordSettings from './_components/PasswordSettings/PasswordSettings';
 import PrivacySettings from './_components/PrivacySettings/PrivacySettings';
 import ProfileSettings from './_components/ProfileSettings/ProfileSettings';
 import SettingsSidebar from './_components/SettingsSidebar/SettingsSidebar';
@@ -12,9 +12,6 @@ const InstructorSettingsPage = () => {
   const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'notifications' | 'privacy'>(
     'profile',
   );
-  const [showOld, setShowOld] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
   const [notifications, setNotifications] = useState({
     newEnrollment: true,
     newReview: true,
@@ -24,10 +21,10 @@ const InstructorSettingsPage = () => {
   });
 
   const tabs = [
-    { key: 'profile', label: 'Profile', icon: <User size={16} /> },
-    { key: 'password', label: 'Password', icon: <Lock size={16} /> },
-    { key: 'notifications', label: 'Notifications', icon: <Video size={16} /> },
-    { key: 'privacy', label: 'Privacy', icon: <Shield size={16} /> },
+    { key: 'profile', label: 'Profile Information', icon: <User size={16} /> },
+    { key: 'password', label: 'Password & Security', icon: <Lock size={16} /> },
+    { key: 'notifications', label: 'Notifications', icon: <Shield size={16} /> },
+    { key: 'privacy', label: 'Privacy', icon: <Video size={16} /> },
   ];
 
   return (
@@ -36,7 +33,7 @@ const InstructorSettingsPage = () => {
         <div>
           <h1 className="text-text-primary text-2xl font-black">Settings</h1>
           <p className="text-text-secondary mt-1 text-sm">
-            Manage your instructor profile and preferences.
+            Manage your instructor profile, security, and notification preferences.
           </p>
         </div>
 
@@ -48,16 +45,7 @@ const InstructorSettingsPage = () => {
           <div className="flex-1 rounded-md border border-slate-100 bg-white p-6 shadow-xs">
             {activeTab === 'profile' && <ProfileSettings />}
 
-            {activeTab === 'password' && (
-              <PasswordSettings
-                showOld={showOld}
-                setShowOld={setShowOld}
-                showNew={showNew}
-                setShowNew={setShowNew}
-                showConfirm={showConfirm}
-                setShowConfirm={setShowConfirm}
-              />
-            )}
+            {activeTab === 'password' && <PasswordSettings />}
 
             {activeTab === 'notifications' && (
               <NotificationSettings

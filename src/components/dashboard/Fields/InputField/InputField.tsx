@@ -3,7 +3,7 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
 
@@ -40,6 +40,7 @@ const InputField = <T extends FieldValues>({
   });
 
   const isPassword = type === 'password';
+  const isEmail = type === 'email';
   const isDate = type === 'date';
   const isTime = type === 'time';
   const isPickerField = isDate || isTime;
@@ -52,6 +53,12 @@ const InputField = <T extends FieldValues>({
       </Label>
 
       <div className="relative">
+        {(isPassword || isEmail) && (
+          <div className="text-text-placeholder absolute top-1/2 left-3 -translate-y-1/2 opacity-80">
+            {isPassword && <Lock className="h-4.5 w-4.5" />}
+            {isEmail && <Mail className="h-4.5 w-4.5" />}
+          </div>
+        )}
         <Input
           type={inputType}
           placeholder={placeholder}
@@ -75,6 +82,7 @@ const InputField = <T extends FieldValues>({
               'bg-[#F9FAFB]': !readOnly,
               'border-danger/50 focus-visible:border-danger focus-visible:ring-danger/10': error,
               'border-primary/10': !error,
+              'pl-10': isPassword || isEmail,
             },
           )}
         />

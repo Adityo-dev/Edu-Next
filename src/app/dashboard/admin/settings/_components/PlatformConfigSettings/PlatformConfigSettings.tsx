@@ -205,7 +205,7 @@ const PlatformConfigSettings = () => {
       const response = await updatePlatformConfig(payload).unwrap();
       if (response.success) {
         toast.success(response.message || 'Configuration saved successfully!');
-        
+
         // Revalidate Next.js cache so the layout reflects changes instantly
         const { revalidatePlatformConfig } = await import('@/actions/revalidate');
         await revalidatePlatformConfig();
@@ -290,7 +290,8 @@ const PlatformConfigSettings = () => {
         {/* OG Image */}
         <div className="rounded-sm border border-slate-200 bg-slate-50/50 p-4">
           <label className="mb-2 block text-xs font-semibold tracking-wider text-slate-500 uppercase">
-            Open Graph (OG) Image <span className="text-text-secondary text-[9px] lowercase normal-case ml-1">(Optional)</span>
+            Open Graph (OG) Image{' '}
+            <span className="text-text-secondary ml-1 text-[9px] lowercase">(Optional)</span>
           </label>
           <div className="flex items-center gap-4">
             <div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-sm border border-slate-200 bg-white">
