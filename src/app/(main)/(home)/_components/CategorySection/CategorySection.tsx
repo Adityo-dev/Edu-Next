@@ -129,8 +129,7 @@ const CategorySection = () => {
           </div>
         </div>
       </div>
-
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .cat-pagination-bar.swiper-pagination-progressbar {
           position: relative !important;
           width: 100% !important;
@@ -152,7 +151,7 @@ const CategorySection = () => {
           transform-origin: left center !important;
           transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
-      `}</style>
+      `}} />
     </section>
   );
 };

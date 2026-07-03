@@ -136,20 +136,6 @@ const HeroSection = () => {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes bounce-slow {
-          0%,
-          100% {
-            transform: translateY(0) rotate(-12deg);
-          }
-          50% {
-            transform: translateY(-20px) rotate(-12deg);
-          }
-        }
-        .animate-bounce-slow {
-          animation: bounce-slow 5s ease-in-out infinite;
-        }
-      `}</style>
     </section>
   );
 };

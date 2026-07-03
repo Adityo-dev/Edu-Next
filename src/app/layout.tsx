@@ -1,6 +1,8 @@
 import Providers from '@/providers/Providers';
+import { baseApi } from '@/services/root/baseApi';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { cache } from 'react';
 import './globals.css';
 
 const geistSans = Geist({
@@ -13,16 +15,15 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NODE_ENV === 'production'
-      ? 'https://edunext-six.vercel.app'
-      : 'http://localhost:3000',
-  ),
-  title: {
-    default: 'EduNext | The Next-Gen Learning Platform',
-    template: '%s | EduNext',
-  },
+const SITE_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://edunext-six.vercel.app'
+    : 'http://localhost:3000';
+
+// Fallback metadata
+const FALLBACK = {
+  siteName: 'EduNext',
+  title: 'EduNext | The Next-Gen Learning Platform',
   description:
     'EduNext is a multi-vendor e-learning marketplace where students can learn skills and industry experts can build, manage, and sell their courses with ease.',
   keywords: [
@@ -34,54 +35,96 @@ export const metadata: Metadata = {
     'Learn Coding',
     'Skill Development',
   ],
-  authors: [{ name: 'EduNext Team', url: 'https://edunext-six.vercel.app' }],
-  creator: 'EduNext Corporation',
-  publisher: 'EduNext Corporation',
-
-  icons: {
-    icon: '/favicon.svg',
-    shortcut: '/favicon.svg',
-    apple: '/apple-touch-icon.png',
-  },
-
-  openGraph: {
-    type: 'website',
-    locale: 'bn_BD',
-    url: 'https://edunext-six.vercel.app',
-    title: 'EduNext - Learn & Teach on the Next-Gen LMS Platform',
-    description: 'Enroll in top-tier courses or start your instructor journey today on EduNext.',
-    siteName: 'EduNext',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'EduNext Platform Preview',
-      },
-    ],
-  },
-  // twitter summary card
-  twitter: {
-    card: 'summary_large_image',
-    title: 'EduNext - Revolutionizing Online Education',
-    description: 'Join the most scalable and modular e-learning platform build with Next.js.',
-    images: ['/og-image.jpg'],
-  },
-
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
+  ogImage: '/og-image.jpg',
+  favicon: '/favicon.svg',
 };
 
-export default function RootLayout({
+const getPlatformConfig = cache(async () => {
+  try {
+    const res = await baseApi('/platform-config', {
+      revalidate: 3600,
+      tags: ['platform-config'],
+    });
+
+    if (res?.success && res?.data) {
+      return res.data;
+    }
+    return null;
+  } catch (error) {
+    console.error('Failed to fetch platform config in RootLayout:', error);
+    return null;
+  }
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await getPlatformConfig();
+
+  const siteName = config?.siteName || FALLBACK.siteName;
+  const description = config?.metaDescription || FALLBACK.description;
+  const keywords =
+    Array.isArray(config?.metaKeywords) && config.metaKeywords.length > 0
+      ? config.metaKeywords
+      : FALLBACK.keywords;
+  const ogImage = config?.ogImage || FALLBACK.ogImage;
+  const favicon = config?.favicon || FALLBACK.favicon;
+
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: {
+      default: `${siteName} | The Next-Gen Learning Platform`,
+      template: `%s | ${siteName}`,
+    },
+    description,
+    keywords,
+    authors: [{ name: `${siteName} Team`, url: SITE_URL }],
+    creator: `${siteName} Corporation`,
+    publisher: `${siteName} Corporation`,
+
+    icons: {
+      icon: favicon,
+      shortcut: favicon,
+      apple: '/apple-touch-icon.png',
+    },
+
+    openGraph: {
+      type: 'website',
+      locale: 'bn_BD',
+      url: SITE_URL,
+      title: `${siteName} - Learn & Teach on the Next-Gen LMS Platform`,
+      description,
+      siteName,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: `${siteName} Platform Preview`,
+        },
+      ],
+    },
+
+    twitter: {
+      card: 'summary_large_image',
+      title: `${siteName} - Revolutionizing Online Education`,
+      description,
+      images: [ogImage],
+    },
+
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

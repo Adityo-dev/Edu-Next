@@ -73,7 +73,7 @@ const NavbarAuthSection = () => {
             </Avatar>
             <div className="overflow-hidden">
               <p className="truncate text-sm font-semibold">
-                {user?.fullName.length >= 12 ? user?.firstName : user?.fullName}
+                {(user?.fullName?.length ?? 0) >= 12 ? user?.firstName : user?.fullName}
                 <span className="text-primary text-xs capitalize"> ({user?.role || 'User'})</span>
               </p>
 

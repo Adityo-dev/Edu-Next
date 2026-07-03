@@ -51,6 +51,7 @@ const platformConfigSchema = z.object({
   metaDescription: z.string().optional(),
   metaKeywords: z.array(z.string()),
   googleAnalyticsId: z.string().optional(),
+  ogImage: z.string().optional(),
   facebookUsername: z.string().optional(),
   youtubeUsername: z.string().optional(),
   linkedinUsername: z.string().optional(),
@@ -87,6 +88,7 @@ const PlatformConfigSettings = () => {
       metaDescription: '',
       metaKeywords: [],
       googleAnalyticsId: '',
+      ogImage: '',
       facebookUsername: '',
       youtubeUsername: '',
       linkedinUsername: '',
@@ -96,6 +98,7 @@ const PlatformConfigSettings = () => {
 
   const siteLogo = watch('siteLogo');
   const favicon = watch('favicon');
+  const ogImage = watch('ogImage');
   const maintenanceMode = watch('maintenanceMode');
   const contactPhone = watch('contactPhone');
 
@@ -120,6 +123,7 @@ const PlatformConfigSettings = () => {
         metaDescription: d.metaDescription || '',
         metaKeywords: Array.isArray(d.metaKeywords) ? d.metaKeywords : [],
         googleAnalyticsId: d.googleAnalyticsId || '',
+        ogImage: d.ogImage || '',
         facebookUsername: extractUsername(d.socialLinks?.facebook || '', SOCIAL_BASE_URLS.facebook),
         youtubeUsername: extractUsername(d.socialLinks?.youtube || '', SOCIAL_BASE_URLS.youtube),
         linkedinUsername: extractUsername(d.socialLinks?.linkedin || '', SOCIAL_BASE_URLS.linkedin),
@@ -138,7 +142,7 @@ const PlatformConfigSettings = () => {
 
   const handleMediaUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
-    field: 'siteLogo' | 'favicon',
+    field: 'siteLogo' | 'favicon' | 'ogImage',
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -157,7 +161,9 @@ const PlatformConfigSettings = () => {
 
       if (imageUrl) {
         setValue(field, imageUrl);
-        toast.success(`${field === 'siteLogo' ? 'Site Logo' : 'Favicon'} updated successfully!`);
+        toast.success(
+          `${field === 'siteLogo' ? 'Site Logo' : field === 'favicon' ? 'Favicon' : 'Open Graph Image'} updated successfully!`,
+        );
       }
     } catch {
       toast.error('Media upload failed. Please try again.');
@@ -179,6 +185,7 @@ const PlatformConfigSettings = () => {
         metaDescription: data.metaDescription,
         googleAnalyticsId: data.googleAnalyticsId,
         metaKeywords: data.metaKeywords,
+        ogImage: data.ogImage,
         socialLinks: {
           facebook: data.facebookUsername
             ? `${SOCIAL_BASE_URLS.facebook}${data.facebookUsername.trim()}`
@@ -198,6 +205,10 @@ const PlatformConfigSettings = () => {
       const response = await updatePlatformConfig(payload).unwrap();
       if (response.success) {
         toast.success(response.message || 'Configuration saved successfully!');
+        
+        // Revalidate Next.js cache so the layout reflects changes instantly
+        const { revalidatePlatformConfig } = await import('@/actions/revalidate');
+        await revalidatePlatformConfig();
       }
     } catch (error: any) {
       toast.error(error?.data?.message || 'Failed to update platform settings.');
@@ -216,8 +227,8 @@ const PlatformConfigSettings = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <h2 className="text-lg font-semibold">Platform Configuration</h2>
 
-      {/*  MEDIA UPLOAD SECTION (LOGO & FAVICON) */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      {/*  MEDIA UPLOAD SECTION (LOGO, FAVICON, OG IMAGE) */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {/* Site Logo */}
         <div className="rounded-sm border border-slate-200 bg-slate-50/50 p-4">
           <label className="mb-2 block text-xs font-semibold tracking-wider text-slate-500 uppercase">
@@ -273,6 +284,35 @@ const PlatformConfigSettings = () => {
           </div>
           {errors.favicon && (
             <p className="text-danger mt-1 text-xs font-medium">{errors.favicon.message}</p>
+          )}
+        </div>
+
+        {/* OG Image */}
+        <div className="rounded-sm border border-slate-200 bg-slate-50/50 p-4">
+          <label className="mb-2 block text-xs font-semibold tracking-wider text-slate-500 uppercase">
+            Open Graph (OG) Image <span className="text-text-secondary text-[9px] lowercase normal-case ml-1">(Optional)</span>
+          </label>
+          <div className="flex items-center gap-4">
+            <div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-sm border border-slate-200 bg-white">
+              {ogImage ? (
+                <Image src={ogImage} alt="OG Image" fill className="object-contain p-2" />
+              ) : (
+                <ImageIcon size={20} className="text-slate-300" />
+              )}
+            </div>
+            <label className="border-primary/20 flex cursor-pointer items-center gap-1.5 rounded-sm border bg-white px-3 py-2 text-xs font-semibold transition-all duration-300 hover:bg-slate-50">
+              <UploadCloud size={14} />
+              {isUploading ? 'Uploading...' : 'Upload OG Image'}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handleMediaUpload(e, 'ogImage')}
+              />
+            </label>
+          </div>
+          {errors.ogImage && (
+            <p className="text-danger mt-1 text-xs font-medium">{errors.ogImage.message}</p>
           )}
         </div>
       </div>
