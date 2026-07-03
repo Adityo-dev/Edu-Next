@@ -1,6 +1,7 @@
 'use client';
 
 import PasswordSettings from '@/components/dashboard/Settings/PasswordSettings/PasswordSettings';
+import ProfileSettings from '@/components/dashboard/Settings/ProfileSettings/ProfileSettings';
 import { Bell, Globe, Lock, Save, Shield } from 'lucide-react';
 import { useState } from 'react';
 import PlatformConfigSettings from './_components/PlatformConfigSettings/PlatformConfigSettings';
@@ -9,11 +10,6 @@ const AdminSettingsPage = () => {
   const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'platform' | 'security'>(
     'profile',
   );
-  const [profile, setProfile] = useState({
-    name: 'Super Admin',
-    email: 'admin@edunext.com.bd',
-    phone: '+880 1700-000000',
-  });
   const [security, setSecurity] = useState({
     twoFactor: true,
     loginAlerts: true,
@@ -57,53 +53,7 @@ const AdminSettingsPage = () => {
           {/* Content */}
           <div className="flex-1 rounded-md border border-slate-100 bg-white p-6 shadow-xs">
             {/* Profile */}
-            {activeTab === 'profile' && (
-              <div className="space-y-5">
-                <h2 className="text-lg font-bold">Admin Profile</h2>
-                <div className="flex items-center gap-4">
-                  <div className="bg-primary flex h-16 w-16 items-center justify-center rounded-full text-2xl font-black text-white shadow-sm">
-                    SA
-                  </div>
-                  <div>
-                    <p className="font-bold">{profile.name}</p>
-                    <p className="text-text-secondary text-xs">Super Administrator • Full Access</p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {[
-                    { label: 'Full Name', key: 'name' },
-                    { label: 'Phone', key: 'phone' },
-                  ].map((field) => (
-                    <div key={field.key}>
-                      <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-                        {field.label}
-                      </label>
-                      <input
-                        type="text"
-                        value={profile[field.key as keyof typeof profile]}
-                        onChange={(e) => setProfile({ ...profile, [field.key]: e.target.value })}
-                        className="focus:border-primary w-full rounded-sm border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-100"
-                      />
-                    </div>
-                  ))}
-                  <div className="sm:col-span-2">
-                    <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      value={profile.email}
-                      disabled
-                      className="w-full cursor-not-allowed rounded-sm border border-slate-100 bg-slate-100 px-4 py-3 text-sm text-slate-400"
-                    />
-                  </div>
-                </div>
-                <button className="bg-primary flex items-center gap-2 rounded-sm px-6 py-3 text-sm font-bold text-white hover:bg-[#2a6159]">
-                  <Save size={15} />
-                  Save Changes
-                </button>
-              </div>
-            )}
+            {activeTab === 'profile' && <ProfileSettings />}
 
             {/* Password */}
             {activeTab === 'password' && <PasswordSettings />}
