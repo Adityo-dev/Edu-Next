@@ -1,6 +1,5 @@
 import { apiClient } from '@/redux/apiClient/apiClient';
 
-// --- Types Definitions ---
 export interface IBadgeRequest {
   requestedBadge: string;
   status: string;
@@ -21,8 +20,9 @@ export interface IProfileUser {
   githubUrl: string;
   badge: string;
   areaOfExpertise: string[];
+  skills?: string[];
+  experienceYears: number;
   isEmailVerified: boolean;
-  isVerified: boolean;
   isSuspended: boolean;
   badgeRequest: IBadgeRequest;
   createdAt: string;
@@ -45,6 +45,7 @@ export interface IProfileUpdatePayload {
   linkedinUrl?: string;
   githubUrl?: string;
   skills?: string[];
+  areaOfExpertise?: string[];
 }
 
 export interface IProfileUpdateResponse {
@@ -55,7 +56,7 @@ export interface IProfileUpdateResponse {
 }
 
 export interface IBadgeRequestPayload {
-  targetBadge: 'bronze' | 'silver' | 'blue';
+  targetBadge: 'bronze' | 'silver' | 'blue' | string;
 }
 
 export interface IBadgeRequestResponse {
@@ -63,7 +64,6 @@ export interface IBadgeRequestResponse {
   message: string;
 }
 
-// --- RTK Query Profile API Slice ---
 export const profileApi = apiClient.injectEndpoints({
   endpoints: (builder) => ({
     // 1. Fetch User Profile Dashboard

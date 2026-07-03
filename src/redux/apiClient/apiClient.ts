@@ -37,5 +37,6 @@ export const apiClient = createApi({
     'AdminCourses',
     'CourseStats',
     'UserProfile',
+    'PlatformConfig',
   ],
 });

@@ -42,7 +42,7 @@ const InputField = <T extends FieldValues>({
   const isPassword = type === 'password';
   const isDate = type === 'date';
   const isTime = type === 'time';
-  const isPickerField = isDate || isTime; // Date অথবা Time ফিল্ড চেক করার জন্য
+  const isPickerField = isDate || isTime;
   const inputType = isPassword && showPassword ? 'text' : type;
 
   return (
@@ -65,7 +65,7 @@ const InputField = <T extends FieldValues>({
           }}
           onClick={() => !readOnly && isPickerField && inputRef.current?.showPicker()}
           className={cn(
-            'h-auto w-full resize-none rounded-md p-3 shadow-none transition-all',
+            'h-auto w-full resize-none rounded-sm p-3 shadow-none transition-all',
             'placeholder:text-text-placeholder border',
             'focus-visible:border-primary focus-visible:ring-emerald-100 focus-visible:focus:ring-2',
             'text-primary',

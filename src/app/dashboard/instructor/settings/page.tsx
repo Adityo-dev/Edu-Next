@@ -15,16 +15,6 @@ const InstructorSettingsPage = () => {
   const [showOld, setShowOld] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [profile, setProfile] = useState({
-    name: 'Md. Rafiqul Islam',
-    email: 'rafiq@example.com',
-    phone: '+880 1700-000000',
-    bio: 'Senior Web Developer with 8+ years of experience. Teaching on EduNext since 2022.',
-    expertise: 'Web Development',
-    language: 'বাংলা',
-    youtube: '',
-    linkedin: '',
-  });
   const [notifications, setNotifications] = useState({
     newEnrollment: true,
     newReview: true,
@@ -56,9 +46,7 @@ const InstructorSettingsPage = () => {
 
           {/* Content */}
           <div className="flex-1 rounded-md border border-slate-100 bg-white p-6 shadow-xs">
-            {activeTab === 'profile' && (
-              <ProfileSettings profile={profile} setProfile={setProfile} />
-            )}
+            {activeTab === 'profile' && <ProfileSettings />}
 
             {activeTab === 'password' && (
               <PasswordSettings

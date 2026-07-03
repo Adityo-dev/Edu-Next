@@ -1,21 +1,67 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import {
   useGetProfileQuery,
   useRequestBadgeMutation,
   useUpdateProfileMutation,
 } from '@/redux/features/settings/profileManagement/profileManagement.api';
 import { useUploadImageMutation } from '@/redux/features/upload/uploadApi';
-import { Award, CheckCircle, Clock, Image as ImageIcon, Loader2, Save } from 'lucide-react';
+import { Award, Clock, Image as ImageIcon, Loader2, Save, X } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-interface ProfileSettingsProps {
-  profile?: any;
-  setProfile?: (p: any) => void;
+interface IBadgeRequest {
+  requestedBadge: string;
+  status: string;
 }
+
+interface IProfileUser {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  fullName?: string;
+  email: string;
+  phone: string;
+  role: string;
+  avatar: string;
+  coverPhoto: string;
+  bio: string;
+  linkedinUrl: string;
+  githubUrl: string;
+  badge: string;
+  areaOfExpertise: string[];
+  experienceYears?: number;
+  isEmailVerified: boolean;
+  isSuspended: boolean;
+  badgeRequest: IBadgeRequest;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface IProfileResponse {
+  success: boolean;
+  profileProgress: string;
+  user: IProfileUser;
+}
+
+interface ProfileSettingsProps {
+  profile?: IProfileResponse | null;
+  // eslint-disable-next-line no-unused-vars
+  setProfile?: (p: IProfileResponse) => void;
+}
+
+const AVAILABLE_EXPERTISES = [
+  'Web Development',
+  'UI/UX Design',
+  'Digital Marketing',
+  'Freelancing',
+  'Graphic Design',
+  'Data Analytics',
+  'Mobile App Development',
+  'Cybersecurity',
+  'Machine Learning & AI',
+];
 
 const ProfileSettings = ({}: ProfileSettingsProps) => {
   const { data: profileData, isLoading: isProfileLoading } = useGetProfileQuery();
@@ -33,9 +79,10 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
     coverPhoto: '',
     linkedinUrl: '',
     githubUrl: '',
-    expertise: 'Web Development',
-    // Badge status logs
+    expertise: [] as string[], // মাল্টিপল সিলেক্টের জন্য অ্যারে করা হলো
+    experienceYears: 0,
     badge: 'none',
+    role: 'student',
     badgeRequest: {
       requestedBadge: 'none',
       status: 'none',
@@ -45,7 +92,6 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
   useEffect(() => {
     if (profileData?.user) {
       const u = profileData.user;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         firstName: u.firstName || '',
         lastName: u.lastName || '',
@@ -56,8 +102,10 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
         coverPhoto: u.coverPhoto || '',
         linkedinUrl: u.linkedinUrl || '',
         githubUrl: u.githubUrl || '',
-        expertise: u.areaOfExpertise?.[0] || 'Web Development',
+        expertise: Array.isArray(u.areaOfExpertise) ? u.areaOfExpertise : [],
+        experienceYears: u.experienceYears || 0,
         badge: u.badge || 'none',
+        role: u.role || 'student',
         badgeRequest: {
           requestedBadge: u.badgeRequest?.requestedBadge || 'none',
           status: u.badgeRequest?.status || 'none',
@@ -73,7 +121,7 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 2 * 1025 * 1024) {
+    if (file.size > 2 * 1024 * 1024) {
       toast.error('File size cannot exceed 2MB');
       return;
     }
@@ -96,19 +144,37 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
     }
   };
 
+  const handleExpertiseToggle = (item: string) => {
+    setFormData((prev) => {
+      const isExist = prev.expertise.includes(item);
+      const updated = isExist
+        ? prev.expertise.filter((i) => i !== item)
+        : [...prev.expertise, item];
+      return { ...prev, expertise: updated };
+    });
+  };
+
   const handleSaveChanges = async () => {
     try {
-      const payload = {
+      const payload: Record<string, any> = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         phone: formData.phone,
-        bio: formData.bio,
         avatar: formData.avatar,
-        coverPhoto: formData.coverPhoto,
+        bio: formData.bio,
         linkedinUrl: formData.linkedinUrl,
-        githubUrl: formData.githubUrl,
-        skills: [formData.expertise],
       };
+
+      if (formData.role === 'student') {
+        payload.githubUrl = formData.githubUrl;
+        payload.skills = formData.expertise;
+      }
+
+      if (formData.role === 'instructor') {
+        payload.coverPhoto = formData.coverPhoto;
+        payload.areaOfExpertise = formData.expertise;
+        payload.experienceYears = Number(formData.experienceYears);
+      }
 
       const response = await updateProfile(payload).unwrap();
       if (response.success) {
@@ -119,7 +185,6 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
     }
   };
 
-  // 🏅 Badge Application Request Handler
   const handleApplyBadge = async (tier: 'bronze' | 'silver' | 'blue') => {
     try {
       const response = await requestBadge({ targetBadge: tier }).unwrap();
@@ -139,6 +204,19 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
     );
   }
 
+  const getBadgeStyles = (badge: string) => {
+    switch (badge?.toLowerCase()) {
+      case 'bronze':
+        return 'border-amber-200 bg-amber-50 text-amber-700';
+      case 'silver':
+        return 'border-slate-300 bg-slate-100 text-slate-700';
+      case 'blue':
+        return 'border-blue-200 bg-blue-50 text-blue-600';
+      default:
+        return 'border-slate-200 bg-slate-50 text-slate-400';
+    }
+  };
+
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
@@ -150,7 +228,6 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
         )}
       </div>
 
-      {/* 🖼️ ─── COVER PHOTO SECTION ─── */}
       <div className="group relative h-40 w-full overflow-hidden rounded-sm border border-slate-200 bg-slate-100">
         {formData.coverPhoto ? (
           <Image src={formData.coverPhoto} alt="Cover" fill className="object-cover" />
@@ -171,31 +248,38 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
         </label>
       </div>
 
-      {/* 👤 ─── AVATAR PHOTO SECTION ─── */}
-      <div className="flex items-center gap-4">
-        <div className="relative h-18 w-18">
-          <Image
-            src={formData.avatar || 'https://i.pravatar.cc/150?u=fallback'}
-            alt="Profile"
-            fill
-            className="rounded-full border-4 border-emerald-50 object-cover shadow-sm"
-          />
-        </div>
-        <div>
-          <label className="bg-primary inline-block cursor-pointer rounded-sm px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#2a6159]">
-            {isUploading ? 'Uploading...' : 'Change Photo'}
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => handleImageUpload(e, 'avatar')}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+        <div className="flex items-center gap-4">
+          <div className="relative h-18 w-18">
+            <Image
+              src={formData.avatar || 'https://i.pravatar.cc/150?u=fallback'}
+              alt="Profile"
+              fill
+              className="rounded-full border-4 border-emerald-50 object-cover shadow-sm"
             />
-          </label>
-          <p className="text-text-secondary mt-1 text-xs">JPG, PNG max 2MB</p>
+          </div>
+          <div>
+            <label className="bg-primary inline-block cursor-pointer rounded-sm px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#2a6159]">
+              {isUploading ? 'Uploading...' : 'Change Photo'}
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => handleImageUpload(e, 'avatar')}
+              />
+            </label>
+            <p className="text-text-secondary mt-1 text-xs">JPG, PNG max 2MB</p>
+          </div>
+        </div>
+
+        <div
+          className={`flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-xs font-bold capitalize shadow-xs ${getBadgeStyles(formData.badge)}`}
+        >
+          <Award size={15} />
+          <span>{formData.badge === 'none' ? 'No Active Badge' : `${formData.badge} Tier`}</span>
         </div>
       </div>
 
-      {/* 📝 ─── FORM FIELDS INPUTS ─── */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* First Name */}
         <div>
@@ -249,46 +333,45 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
           />
         </div>
 
-        {/* Expertise Dropdown */}
-        <div>
+        {/* 🛠️ Expertise (Multifold / Multiple Select Badge System) */}
+        <div className="sm:col-span-2">
           <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-            Expertise
+            Areas of Expertise (Select Multiple)
           </label>
-          <select
-            value={formData.expertise}
-            onChange={(e) => setFormData({ ...formData, expertise: e.target.value })}
-            className="focus:border-primary w-full cursor-pointer rounded-sm border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-100"
-          >
-            {[
-              'Web Development',
-              'UI/UX Design',
-              'Digital Marketing',
-              'Freelancing',
-              'Graphic Design',
-              'Data Analytics',
-              'Mobile App Development',
-              'Cybersecurity',
-              'Machine Learning & AI',
-            ].map((o) => (
-              <option key={o} value={o}>
-                {o}
-              </option>
-            ))}
-          </select>
+          <div className="flex min-h-12.5 flex-wrap gap-2 rounded-sm border border-slate-200 bg-slate-50 p-3">
+            {AVAILABLE_EXPERTISES.map((item) => {
+              const isSelected = formData.expertise.includes(item);
+              return (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => handleExpertiseToggle(item)}
+                  className={`flex items-center gap-1 rounded-sm px-3 py-1.5 text-xs font-semibold transition-all ${
+                    isSelected
+                      ? 'bg-primary text-white'
+                      : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-100'
+                  }`}
+                >
+                  {item}
+                  {isSelected && <X size={12} className="ml-1" />}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Current Badge Status Display */}
-        <div>
+        {/* Experience Years */}
+        <div className="sm:col-span-2">
           <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-            Current Tier Badge
+            Experience (Years)
           </label>
-          <div className="flex items-center gap-2 rounded-sm border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700 capitalize">
-            <Award
-              size={18}
-              className={formData.badge !== 'none' ? 'text-amber-500' : 'text-slate-400'}
-            />
-            {formData.badge === 'none' ? 'No Badge Activated' : `${formData.badge} Tier`}
-          </div>
+          <input
+            type="number"
+            min="0"
+            value={formData.experienceYears}
+            onChange={(e) => setFormData({ ...formData, experienceYears: Number(e.target.value) })}
+            className="focus:border-primary w-full rounded-sm border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-100"
+          />
         </div>
 
         {/* Bio Textarea */}
@@ -342,26 +425,14 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
           </p>
         </div>
 
-        {formData.badgeRequest.status !== 'none' && formData.badgeRequest.status !== 'rejected' ? (
+        {formData.badgeRequest.status === 'pending' ? (
           <div className="flex items-center gap-2 rounded-sm border border-amber-100 bg-amber-50 p-3 text-xs font-medium text-amber-800">
-            {formData.badgeRequest.status === 'pending' ||
-            formData.badgeRequest.status === 'queued' ? (
-              <>
-                <Clock size={16} className="animate-pulse text-amber-600" />
-                <span>
-                  Your application for the{' '}
-                  <strong className="uppercase">{formData.badgeRequest.requestedBadge}</strong> tier
-                  badge is currently under admin review.
-                </span>
-              </>
-            ) : (
-              <>
-                <CheckCircle size={16} className="text-emerald-600" />
-                <span className="text-emerald-800">
-                  Your badge verification status is finalized.
-                </span>
-              </>
-            )}
+            <Clock size={16} className="animate-pulse text-amber-600" />
+            <span>
+              Your application for the{' '}
+              <strong className="uppercase">{formData.badgeRequest.requestedBadge}</strong> tier
+              badge is currently under admin review.
+            </span>
           </div>
         ) : (
           <div className="flex flex-wrap gap-2 pt-1">

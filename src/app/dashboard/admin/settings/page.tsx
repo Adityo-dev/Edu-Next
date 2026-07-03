@@ -2,6 +2,7 @@
 
 import { Bell, Eye, EyeOff, Globe, Lock, Save, Shield } from 'lucide-react';
 import { useState } from 'react';
+import PlatformConfigSettings from './_components/PlatformConfigSettings/PlatformConfigSettings';
 
 const AdminSettingsPage = () => {
   const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'platform' | 'security'>(
@@ -13,12 +14,6 @@ const AdminSettingsPage = () => {
     name: 'Super Admin',
     email: 'admin@edunext.com.bd',
     phone: '+880 1700-000000',
-  });
-  const [platform, setPlatform] = useState({
-    siteName: 'EduNext',
-    tagline: 'Learn & Grow',
-    supportEmail: 'support@edunext.com.bd',
-    maintenanceMode: false,
   });
   const [security, setSecurity] = useState({
     twoFactor: true,
@@ -151,55 +146,7 @@ const AdminSettingsPage = () => {
             )}
 
             {/* Platform */}
-            {activeTab === 'platform' && (
-              <div className="space-y-5">
-                <h2 className="text-lg font-bold">Platform Configuration</h2>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  {[
-                    { label: 'Site Name', key: 'siteName' },
-                    { label: 'Tagline', key: 'tagline' },
-                    { label: 'Support Email', key: 'supportEmail' },
-                  ].map((field) => (
-                    <div
-                      key={field.key}
-                      className={field.key === 'supportEmail' ? 'sm:col-span-2' : ''}
-                    >
-                      <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-                        {field.label}
-                      </label>
-                      <input
-                        type="text"
-                        value={platform[field.key as keyof typeof platform] as string}
-                        onChange={(e) => setPlatform({ ...platform, [field.key]: e.target.value })}
-                        className="focus:border-primary w-full rounded-sm border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-100"
-                      />
-                    </div>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between rounded-sm border border-red-100 bg-red-50 px-5 py-4">
-                  <div>
-                    <p className="text-sm font-bold text-red-600">Maintenance Mode</p>
-                    <p className="text-text-secondary text-xs">
-                      Temporarily disable access to the platform
-                    </p>
-                  </div>
-                  <button
-                    onClick={() =>
-                      setPlatform({ ...platform, maintenanceMode: !platform.maintenanceMode })
-                    }
-                    className={`relative h-6 w-11 rounded-full transition-all duration-300 ${platform.maintenanceMode ? 'bg-red-500' : 'bg-slate-200'}`}
-                  >
-                    <div
-                      className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-all duration-300 ${platform.maintenanceMode ? 'left-5' : 'left-0.5'}`}
-                    />
-                  </button>
-                </div>
-                <button className="bg-primary flex items-center gap-2 rounded-sm px-6 py-3 text-sm font-bold text-white hover:bg-[#2a6159]">
-                  <Save size={15} />
-                  Save Configuration
-                </button>
-              </div>
-            )}
+            {activeTab === 'platform' && <PlatformConfigSettings />}
 
             {/* Security */}
             {activeTab === 'security' && (
