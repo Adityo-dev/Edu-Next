@@ -20,6 +20,7 @@ import { ITableFilter } from '@/types/table-filter.types';
 import { TUserListItem, TUserRole, TUserStatus } from '@/types/userRole.types';
 import { FormatDateTime } from '@/utils/formatDateTime';
 import { GraduationCap, ShieldCheck, ShieldX, User, User2, UserStar } from 'lucide-react';
+import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -29,6 +30,7 @@ interface IUserRow {
   name: string;
   email: string;
   role: TUserRole;
+  avatar: string | null;
   status: TUserStatus;
   isVerified: boolean;
   joinDate: string;
@@ -40,6 +42,7 @@ const mapUserToRow = (user: TUserListItem): IUserRow => ({
   name: `${user.firstName} ${user.lastName}`.trim(),
   email: user.email,
   role: user.role,
+  avatar: user.avatar,
   status: user.isSuspended ? 'suspended' : 'active',
   isVerified: user.isVerified,
   joinDate: user.createdAt,
@@ -110,15 +113,29 @@ const UsersTable = () => {
       setActingRowId(null);
     }
   };
+  console.log(rows?.map((r) => r.avatar));
 
   const UsersTableConfig: TColumn<IUserRow>[] = [
     {
       header: 'USER',
       cell: (row) => (
         <div className="flex items-center gap-2.5">
-          <div className="bg-primary/10 text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
-            {row?.initial}
+          <div className="border-primary/50 rounded-full border">
+            {row?.avatar ? (
+              <Image
+                src={row?.avatar}
+                alt={row?.name}
+                width={150}
+                height={150}
+                className="h-10 w-10 rounded-full object-cover"
+              />
+            ) : (
+              <div className="bg-primary/10 text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                {row?.initial}
+              </div>
+            )}
           </div>
+
           <div className="flex flex-col">
             <span className="text-text-primary font-semibold">{row?.name}</span>
             <span className="text-text-secondary text-xs">{row?.email}</span>

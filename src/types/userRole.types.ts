@@ -10,6 +10,7 @@ export interface TUserListItem {
   email: string;
   phone: string;
   role: TUserRole;
+  avatar: string | null;
   isVerified: boolean;
   isSuspended: boolean;
   areaOfExpertise: string[];

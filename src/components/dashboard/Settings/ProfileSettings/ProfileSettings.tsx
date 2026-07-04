@@ -1,4 +1,5 @@
-﻿/* eslint-disable @typescript-eslint/no-explicit-any */
+﻿/* eslint-disable react-hooks/incompatible-library */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
@@ -42,8 +43,7 @@ const instructorSchema = baseSchema.extend({
 
 type AnyForm = z.infer<typeof instructorSchema> & z.infer<typeof studentSchema>;
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
+// ─── Component
 const ProfileSettings = () => {
   const { data: profileData, isLoading: isProfileLoading } = useGetProfileQuery();
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
@@ -175,7 +175,7 @@ const ProfileSettings = () => {
               className="rounded-full border-4 border-emerald-50 object-cover shadow-sm"
             />
           ) : (
-            <div className="bg-primary flex h-[72px] w-[72px] items-center justify-center rounded-full text-2xl font-black text-white shadow-sm">
+            <div className="bg-primary flex h-18 w-18 items-center justify-center rounded-full text-2xl font-black text-white shadow-sm">
               {user?.firstName?.[0]?.toUpperCase() ?? <User size={28} />}
             </div>
           )}
@@ -183,7 +183,7 @@ const ProfileSettings = () => {
             type="button"
             onClick={() => fileRef.current?.click()}
             disabled={isUploading}
-            className="bg-primary absolute -bottom-1 -right-1 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-white shadow transition-all hover:bg-[#2a6159] disabled:opacity-60"
+            className="bg-primary absolute -right-1 -bottom-1 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full text-white shadow transition-all hover:bg-[#2a6159] disabled:opacity-60"
           >
             {isUploading ? <Loader2 size={11} className="animate-spin" /> : <Camera size={11} />}
           </button>
