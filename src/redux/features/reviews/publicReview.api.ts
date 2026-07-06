@@ -1,9 +1,10 @@
 import { apiClient } from '@/redux/apiClient/apiClient';
 import { DefaultReviewResponse } from '@/types/review.types';
 
+// ─── PUBLIC REVIEW API ───
 export const publicReviewApi = apiClient.injectEndpoints({
   endpoints: (builder) => ({
-    // Get all public reviews for a specific course
+    // Get All Public Reviews for a Specific Course
     getCourseReviews: builder.query<DefaultReviewResponse, string>({
       query: (courseId) => ({
         url: `/reviews/course/${courseId}`,

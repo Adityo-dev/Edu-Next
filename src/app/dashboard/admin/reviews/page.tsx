@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import ReviewsFilter from './_components/ReviewsFilter/ReviewsFilter';
 import ReviewsList from './_components/ReviewsList/ReviewsList';
 import ReviewsStats from './_components/ReviewsStats/ReviewsStats';
 
@@ -64,10 +62,6 @@ const reviewsData = [
 ];
 
 const ReviewModerationPage = () => {
-  const [filter, setFilter] = useState('pending');
-
-  const filtered = reviewsData.filter((r) => filter === 'all' || r.status === filter);
-
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
       <div className="mx-auto space-y-6">
@@ -78,8 +72,7 @@ const ReviewModerationPage = () => {
           </p>
         </div>
         <ReviewsStats reviews={reviewsData} />
-        <ReviewsFilter filter={filter} onFilterChange={setFilter} />
-        <ReviewsList reviews={filtered} />
+        <ReviewsList />
       </div>
     </div>
   );
