@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unused-vars */
 'use client';
 
@@ -62,10 +63,16 @@ const ReviewCard = ({
     onClick: () => onDelete(review._id),
   });
 
-  const studentName = review.student
+  const isStudentObject = (student: any): student is import('@/types/review.types').ReviewUser => {
+    return student && typeof student !== 'string' && 'firstName' in student;
+  };
+
+  const studentName = isStudentObject(review.student)
     ? `${review.student.firstName} ${review.student.lastName}`
-    : 'Unknown Student (Account Deleted)';
-  const avatarSrc = review.student?.avatar || '/fallback-avatar.png';
+    : 'Unknown Student';
+  const avatarSrc = isStudentObject(review.student)
+    ? review.student.avatar
+    : '/fallback-avatar.png';
 
   return (
     <div

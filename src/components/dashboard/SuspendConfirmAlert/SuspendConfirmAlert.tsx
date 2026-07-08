@@ -1,45 +1,45 @@
 'use client';
 
 import { useModal } from '@/context/ModalContext';
-import { Trash2 } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 import { useState } from 'react';
 import DynamicActionButton from '../DynamicActionButton/DynamicActionButton';
 
-const DeleteConfirmAlert = () => {
+const SuspendConfirmAlert = () => {
   const { data, closeModal } = useModal();
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [reason, setReason] = useState('');
 
-  const displayName = data?.deleteItem || 'this item';
+  const displayName = data?.suspendItem || 'this item';
   const requireReason = data?.requireReason;
 
-  const title = data?.title || 'Confirm Deletion';
-  const actionLabel = data?.actionLabel || 'Delete Now';
-  const reasonLabel = data?.reasonLabel || 'Reason for deletion (Required)';
-  const reasonPlaceholder = data?.reasonPlaceholder || 'E.g. Inappropriate content, spam, etc.';
+  const title = data?.title || 'Confirm Action';
+  const actionLabel = data?.actionLabel || 'Suspend Now';
+  const reasonLabel = data?.reasonLabel || 'Reason (Required)';
+  const reasonPlaceholder = data?.reasonPlaceholder || 'E.g. Violation of terms, spam, etc.';
 
-  const handleDelete = async () => {
+  const handleAction = async () => {
     if (!data?.onConfirm) return;
     if (requireReason && !reason.trim()) return;
 
-    setIsDeleting(true);
+    setIsProcessing(true);
     try {
       await data?.onConfirm(reason);
       closeModal();
     } catch (error) {
       console.error('Action failed:', error);
     } finally {
-      setIsDeleting(false);
+      setIsProcessing(false);
     }
   };
 
   return (
     <div className="flex flex-col items-center py-4 text-center">
       <div className="relative mb-5">
-        <div className="bg-danger/10 absolute inset-0 animate-pulse rounded-full" />
-        <div className="border-danger/20 bg-danger/10 text-danger relative flex h-16 w-16 items-center justify-center rounded-full border">
-          <div className="bg-danger/5 flex h-11 w-11 items-center justify-center rounded-full">
-            <Trash2 size={22} />
+        <div className="absolute inset-0 animate-pulse rounded-full bg-yellow-500/10" />
+        <div className="relative flex h-16 w-16 items-center justify-center rounded-full border border-yellow-500/20 bg-yellow-500/10 text-yellow-600">
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-yellow-500/5">
+            <ShieldAlert size={22} />
           </div>
         </div>
       </div>
@@ -52,9 +52,9 @@ const DeleteConfirmAlert = () => {
             data.description
           ) : (
             <>
-              Are you sure you want to permanently delete
-              <span className="text-danger mx-1 font-semibold break-all">{`"${displayName}"`}</span>
-              ? This action cannot be undone.
+              Are you sure you want to suspend
+              <span className="mx-1 font-semibold break-all text-yellow-600">{`"${displayName}"`}</span>
+              ?
             </>
           )}
         </p>
@@ -69,7 +69,7 @@ const DeleteConfirmAlert = () => {
               onChange={(e) => setReason(e.target.value)}
               placeholder={reasonPlaceholder}
               rows={3}
-              className="focus:border-danger focus:ring-danger/10 w-full rounded-md border border-slate-200 bg-slate-50 p-2.5 text-sm transition-all outline-none focus:ring-4"
+              className="w-full rounded-md border border-slate-200 bg-slate-50 p-2.5 text-sm transition-all outline-none focus:border-yellow-500 focus:ring-4 focus:ring-yellow-500/10"
             />
           </div>
         )}
@@ -83,16 +83,16 @@ const DeleteConfirmAlert = () => {
           className="flex-1"
         />
 
-        <DynamicActionButton
-          variant="danger"
-          label={isDeleting ? 'Processing...' : actionLabel}
-          onClick={handleDelete}
-          disabled={isDeleting || (requireReason && !reason.trim())}
-          className="bg-danger hover:bg-danger/90 flex-1"
-        />
+        <button
+          onClick={handleAction}
+          disabled={isProcessing || (requireReason && !reason.trim())}
+          className="flex-1 rounded-sm bg-yellow-500 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isProcessing ? 'Processing...' : actionLabel}
+        </button>
       </div>
     </div>
   );
 };
 
-export default DeleteConfirmAlert;
+export default SuspendConfirmAlert;

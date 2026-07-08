@@ -2,6 +2,7 @@
 
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
 import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
+import { useModal } from '@/context/ModalContext';
 import {
   useDeleteReviewByAdminMutation,
   useGetAdminReviewsQuery,
@@ -16,6 +17,7 @@ import ReviewCard from './_components/ReviewCard/ReviewCard';
 
 const ReviewsList = () => {
   const { getQueryObject } = useSetSearchQueryInURL();
+  const { openModal } = useModal();
   const queryParams = getQueryObject();
 
   const currentPage = Number(queryParams.page) || 1;
@@ -42,25 +44,36 @@ const ReviewsList = () => {
     }
   };
 
-  const handleReject = async (id: string) => {
-    const reason = prompt('Enter rejection reason:');
-    if (!reason) return;
-    try {
-      await rejectReview({ reviewId: id, rejectionReason: reason }).unwrap();
-    } catch (error) {
-      console.error('Failed to reject review:', error);
-    }
+  const handleReject = (id: string) => {
+    openModal({
+      view: 'SUSPEND_CONFIRM',
+      data: {
+        suspendItem: 'student review',
+        title: 'Reject Review',
+        description:
+          'Are you sure you want to reject this review? It will be removed from pending and marked as rejected.',
+        actionLabel: 'Reject Now',
+        reasonLabel: 'Rejection Reason (Required)',
+        reasonPlaceholder: 'E.g. Inappropriate language, spam, etc.',
+        requireReason: true,
+        onConfirm: async (reason: string) => {
+          await rejectReview({ reviewId: id, rejectionReason: reason }).unwrap();
+        },
+      },
+    });
   };
 
-  const handleDelete = async (id: string) => {
-    const reason = prompt('Enter reason for deleting this review:');
-    if (!reason) return;
-    try {
-      await deleteReview({ reviewId: id, reason }).unwrap();
-      alert('Review deleted successfully.');
-    } catch (error) {
-      console.error('Failed to delete review:', error);
-    }
+  const handleDelete = (id: string) => {
+    openModal({
+      view: 'DELETE_CONFIRM',
+      data: {
+        deleteItem: 'student review',
+        requireReason: true,
+        onConfirm: async (reason: string) => {
+          await deleteReview({ reviewId: id, reason }).unwrap();
+        },
+      },
+    });
   };
 
   const filterFields: ITableFilter[] = [

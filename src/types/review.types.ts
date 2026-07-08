@@ -69,6 +69,7 @@ export interface AdminReviewStatsResponse {
   success: boolean;
   message: string;
   data: {
+    total: number;
     pending: number;
     published: number;
     rejected: number;
