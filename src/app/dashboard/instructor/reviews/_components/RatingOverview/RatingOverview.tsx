@@ -1,19 +1,27 @@
+'use client';
+
+import { useGetInstructorReviewStatsQuery } from '@/redux/features/reviews/instructorReview.api';
 import { Star } from 'lucide-react';
 
-const ratingBreakdown = [
-  { stars: 5, count: 142, percent: 77 },
-  { stars: 4, count: 28, percent: 15 },
-  { stars: 3, count: 10, percent: 5 },
-  { stars: 2, count: 3, percent: 2 },
-  { stars: 1, count: 2, percent: 1 },
-];
-
-const avgRating = (
-  ratingBreakdown.reduce((a, b) => a + b.stars * b.count, 0) /
-  ratingBreakdown.reduce((a, b) => a + b.count, 0)
-).toFixed(1);
-
 const RatingOverview = () => {
+  const { data, isLoading } = useGetInstructorReviewStatsQuery();
+
+  if (isLoading) {
+    return <div className="h-40 w-full animate-pulse rounded-xl bg-slate-200"></div>;
+  }
+
+  const stats = data?.data;
+  const avgRating = stats?.averageRating?.toFixed(1) || '0.0';
+  const totalReviews = stats?.totalReviews || 0;
+
+  const ratingBreakdown = [
+    { stars: 5, count: stats?.starDistribution?.['5'] || 0 },
+    { stars: 4, count: stats?.starDistribution?.['4'] || 0 },
+    { stars: 3, count: stats?.starDistribution?.['3'] || 0 },
+    { stars: 2, count: stats?.starDistribution?.['2'] || 0 },
+    { stars: 1, count: stats?.starDistribution?.['1'] || 0 },
+  ];
+
   return (
     <div className="dashboard-card-container p-4">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
@@ -32,7 +40,7 @@ const RatingOverview = () => {
               <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-slate-100">
                 <div
                   className="bg-warning h-full rounded-full"
-                  style={{ width: `${r.percent}%` }}
+                  style={{ width: `${totalReviews > 0 ? (r.count / totalReviews) * 100 : 0}%` }}
                 />
               </div>
               <div className="flex shrink-0 items-center gap-0.5">

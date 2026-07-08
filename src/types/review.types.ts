@@ -47,6 +47,8 @@ export interface AdminReviewQuery extends PaginationQuery {
 // Instructor API Query Parameter Interface
 export interface IInstructorReviewQuery extends PaginationQuery {
   courseId?: string;
+  search?: string;
+  rating?: number;
 }
 
 // Metadata details for paginated responses
@@ -81,6 +83,23 @@ export interface InstructorReviewsResponse extends PaginationMeta {
   success: boolean;
   message: string;
   data: IReview[];
+}
+
+// Instructor Review Stats Response
+export interface InstructorReviewStatsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    averageRating: number;
+    totalReviews: number;
+    starDistribution: {
+      '1': number;
+      '2': number;
+      '3': number;
+      '4': number;
+      '5': number;
+    };
+  };
 }
 
 // Student Review Stats Response

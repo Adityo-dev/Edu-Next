@@ -8,11 +8,7 @@ const InstructorReviewsPage = () => {
   return (
     <div className="space-y-6">
       <SectionHeader title="Reviews" description="See what your students are saying." />
-
-      {/* Rating Overview */}
       <RatingOverview />
-
-      {/* Reviews List */}
       <ReviewsList />
     </div>
   );

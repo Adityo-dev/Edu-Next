@@ -1,89 +1,119 @@
-import { Star, ThumbsUp } from 'lucide-react';
+'use client';
+
+import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
+import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
+import { useGetInstructorReviewsQuery } from '@/redux/features/reviews/instructorReview.api';
+import { ITableFilter } from '@/types/table-filter.types';
+import { FormatDateTime } from '@/utils/formatDateTime';
+import { Loader2, Star } from 'lucide-react';
 import Image from 'next/image';
 
-const reviewsData = [
-  {
-    id: 1,
-    student: 'Sumaiya Akter',
-    image: 'https://i.pravatar.cc/150?u=sumaiya',
-    course: 'Complete Web Development Bootcamp',
-    rating: 5,
-    text: 'This course completely changed my life! Best instructor on EduNext.',
-    date: 'Apr 12, 2025',
-    helpful: 12,
-  },
-  {
-    id: 2,
-    student: 'Nusrat Jahan',
-    image: 'https://i.pravatar.cc/150?u=nusrat',
-    course: 'Complete Web Development Bootcamp',
-    rating: 4,
-    text: 'Great course. Very detailed and practical. Would love more advanced content.',
-    date: 'Mar 8, 2025',
-    helpful: 8,
-  },
-  {
-    id: 3,
-    student: 'Arif Hossain',
-    image: 'https://i.pravatar.cc/150?u=arif',
-    course: 'React.js Advanced Masterclass',
-    rating: 5,
-    text: 'The best React course I have ever taken. Every concept is explained clearly.',
-    date: 'Feb 22, 2025',
-    helpful: 15,
-  },
-  {
-    id: 4,
-    student: 'Fatima Begum',
-    image: 'https://i.pravatar.cc/150?u=fatima',
-    course: 'JavaScript ES6+ Fundamentals',
-    rating: 5,
-    text: 'Excellent content. I now feel confident writing modern JavaScript.',
-    date: 'Jan 10, 2025',
-    helpful: 9,
-  },
-];
-
 const ReviewsList = () => {
+  const { getQueryObject } = useSetSearchQueryInURL();
+  const queryParams = getQueryObject();
+
+  const currentPage = Number(queryParams.page) || 1;
+  const ratingFilter =
+    queryParams.rating && queryParams.rating !== 'all' ? Number(queryParams.rating) : undefined;
+  const searchKeyword = queryParams.search || undefined;
+
+  const { data, isLoading, isFetching } = useGetInstructorReviewsQuery({
+    page: currentPage,
+    limit: 10,
+    rating: ratingFilter,
+    search: searchKeyword,
+  });
+
+  const filterFields: ITableFilter[] = [
+    {
+      name: 'rating',
+      type: 'select',
+      placeholder: 'Filter by Rating',
+      options: [
+        { label: 'All Ratings', value: 'all' },
+        { label: '5 Stars', value: '5' },
+        { label: '4 Stars', value: '4' },
+        { label: '3 Stars', value: '3' },
+        { label: '2 Stars', value: '2' },
+        { label: '1 Star', value: '1' },
+      ],
+    },
+    {
+      name: 'search',
+      type: 'search',
+      placeholder: 'Search by course...',
+    },
+  ];
+
   return (
     <div className="space-y-4">
-      {reviewsData.map((review) => (
-        <div key={review.id} className="dashboard-card-container p-4 shadow-none">
-          <div className="flex gap-4">
-            <Image
-              src={review.image}
-              alt={review.student}
-              width={44}
-              height={44}
-              className="h-11 w-11 shrink-0 rounded-full border-2 border-emerald-50"
-            />
-            <div className="flex-1">
-              <div className="mb-1 flex items-center justify-between">
-                <div>
-                  <h4 className="font-semibold">{review.student}</h4>
-                  <p className="text-text-secondary text-xs">{review.course}</p>
-                </div>
-                <span className="text-text-secondary text-xs">{review.date}</span>
-              </div>
-              <div className="mb-2 flex items-center gap-0.5">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    size={12}
-                    fill={i < review.rating ? '#ffc107' : 'none'}
-                    color="#ffc107"
-                  />
-                ))}
-              </div>
-              <p className="text-text-secondary mb-3 text-sm leading-relaxed">{review.text}</p>
-              <div className="flex items-center gap-1.5 text-xs text-slate-400">
-                <ThumbsUp size={12} />
-                <span>{review.helpful} found this helpful</span>
-              </div>
-            </div>
-          </div>
+      <DynamicTableFilterBar fields={filterFields} />
+
+      {isLoading || isFetching ? (
+        <div className="flex h-40 items-center justify-center">
+          <Loader2 className="text-primary animate-spin" size={32} />
         </div>
-      ))}
+      ) : data?.data && data.data.length > 0 ? (
+        <div className="space-y-4">
+          {data.data.map((review) => {
+            const studentName =
+              review.student && typeof review.student !== 'string'
+                ? `${review.student.firstName} ${review.student.lastName}`
+                : 'Unknown Student';
+            const avatarSrc =
+              review.student && typeof review.student !== 'string'
+                ? review.student.avatar
+                : '/fallback-avatar.png';
+
+            return (
+              <div key={review._id} className="dashboard-card-container p-4 shadow-none">
+                <div className="flex gap-4">
+                  <Image
+                    src={avatarSrc}
+                    alt={studentName}
+                    width={44}
+                    height={44}
+                    className="h-11 w-11 shrink-0 rounded-full border-2 border-emerald-50 object-cover"
+                  />
+                  <div className="flex-1">
+                    <div className="mb-1 flex items-center justify-between">
+                      <div>
+                        <h4 className="font-semibold">{studentName}</h4>
+                        <p className="text-text-secondary text-xs">
+                          {review.course?.title || 'Unknown Course'}
+                        </p>
+                      </div>
+                      <span className="text-text-secondary text-xs">
+                        {review.createdAt ? FormatDateTime(review.createdAt) : ''}
+                      </span>
+                    </div>
+                    <div className="mb-2 flex items-center gap-0.5">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          size={12}
+                          fill={i < review.rating ? '#ffc107' : 'none'}
+                          color="#ffc107"
+                        />
+                      ))}
+                    </div>
+                    <p className="text-text-secondary mb-3 text-sm leading-relaxed">
+                      {review.comment}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <EmptyState
+          title="No Reviews Found"
+          description="No reviews found matching your filters."
+          icon={Star}
+        />
+      )}
     </div>
   );
 };
