@@ -3,7 +3,7 @@
 
 import { baseApi } from '@/services/root/baseApi';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Mail, RefreshCw, LockKeyhole } from 'lucide-react';
+import { ArrowLeft, LockKeyhole, Mail, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -44,9 +44,7 @@ const ForgotPasswordPage = () => {
       });
 
       if (response?.success || response?.statusCode === 200) {
-        setApiSuccess(
-          response?.message || 'A verification code has been sent to your email.',
-        );
+        setApiSuccess(response?.message || 'A verification code has been sent to your email.');
         setTimeout(() => {
           router.push(`/forgot-password/verify-otp?email=${encodeURIComponent(data.email.trim())}`);
         }, 1200);
@@ -75,7 +73,7 @@ const ForgotPasswordPage = () => {
       <div className="bg-primary/5 pointer-events-none absolute top-1/4 left-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
       <div className="bg-primary/10 pointer-events-none absolute right-1/4 bottom-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
 
-      <div className="relative z-10 w-full max-w-sm rounded-xl border border-slate-100 bg-white p-6 text-center shadow-md shadow-slate-100/70 sm:p-8">
+      <div className="relative z-10 w-full max-w-110 rounded-xl border border-slate-100 bg-white p-6 text-center shadow-md shadow-slate-100/70">
         {/* Icon */}
         <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50/80 ring-8 ring-emerald-50/40">
           <LockKeyhole size={24} className="text-primary" />
@@ -90,7 +88,7 @@ const ForgotPasswordPage = () => {
         </p>
 
         {/* Alerts */}
-        <div className="min-h-12.5 empty:hidden text-left">
+        <div className="min-h-12.5 text-left empty:hidden">
           {apiError && (
             <div className="animate-in fade-in zoom-in-95 text-danger border-danger/20 bg-danger/5 mb-5 flex items-start gap-2 rounded-sm border p-3 text-xs font-medium">
               <span>⚠️</span> <span>{apiError}</span>
@@ -106,26 +104,23 @@ const ForgotPasswordPage = () => {
 
         <form onSubmit={handleSubmit(handleSendOtp)} className="space-y-5 text-left" noValidate>
           <div>
-            <label className="mb-2 block text-center text-xs font-bold tracking-wider text-slate-500 uppercase">
+            <label className="mb-2 block text-xs font-semibold tracking-wider text-slate-500 uppercase">
               Enter Email <span className="text-red-400">*</span>
             </label>
             <div className="relative">
-              <Mail
-                className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
-                size={15}
-              />
+              <Mail className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400" size={15} />
               <input
                 type="email"
                 disabled={isLoading}
                 {...register('email')}
                 placeholder="you@example.com"
                 autoComplete="email"
-                className={`focus:border-primary w-full rounded-sm border bg-[#F9FAFB] py-3.5 pl-11 pr-4 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60 ${
+                className={`focus:border-primary w-full rounded-sm border bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60 ${
                   errors.email ? 'border-red-300' : 'border-slate-200'
                 }`}
               />
             </div>
-            {errors.email && <p className="mt-2 text-center text-xs text-red-500">{errors.email.message}</p>}
+            {errors.email && <p className="mt-2 text-xs text-red-500">{errors.email.message}</p>}
           </div>
 
           <button
@@ -144,7 +139,7 @@ const ForgotPasswordPage = () => {
           </button>
         </form>
 
-        <div className="border-t border-slate-100 mt-6 pt-5 text-center">
+        <div className="mt-6 border-t border-slate-100 pt-5 text-center">
           <Link
             className="text-primary inline-flex items-center gap-1.5 text-xs font-bold hover:underline"
             href="/login"

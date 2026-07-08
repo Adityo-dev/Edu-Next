@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import OtpInput from '@/components/common/OtpInput';
 import { ROLE_DASHBOARD_HOME } from '@/components/dashboard/sidebar/sidebarRoutes';
 import { setAuth } from '@/redux/features/auth/authSlice';
 import { useAppDispatch } from '@/redux/hooks';
@@ -9,7 +10,6 @@ import { baseApi } from '@/services/root/baseApi';
 import { Mail, RefreshCw } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import OtpInput from './_components/OtpInput/OtpInput';
 
 const RESEND_COOLDOWN = 20;
 

@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import OtpInput from '@/components/common/OtpInput';
 import { baseApi } from '@/services/root/baseApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Eye, EyeOff, KeyRound, Lock, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import OtpInput from '@/app/(auth)/verify-otp/_components/VerifyOtpForm/_components/OtpInput/OtpInput';
 
 const resetSchema = z
   .object({
@@ -30,6 +30,7 @@ const ResetPasswordForm = () => {
   const email = searchParams.get('email') || '';
 
   const [step, setStep] = useState<1 | 2>(1);
+  const [resetToken, setResetToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -43,7 +44,6 @@ const ResetPasswordForm = () => {
     handleSubmit,
     control,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<ResetFormData>({
     resolver: zodResolver(resetSchema),
@@ -51,14 +51,13 @@ const ResetPasswordForm = () => {
     defaultValues: { otp: '', newPassword: '', confirmPassword: '' },
   });
 
-  const otpValue = watch('otp');
-
   const handleReset = async (data: ResetFormData) => {
-    if (!email) {
-      setApiError('Email is missing. Please request a new OTP from the forgot password page.');
+    if (!resetToken) {
+      setApiError('Reset token missing. Please verify your OTP again.');
+      setStep(1);
       return;
     }
-    
+
     setApiError(null);
     setApiSuccess(null);
     setIsLoading(true);
@@ -67,28 +66,24 @@ const ResetPasswordForm = () => {
       const response = await baseApi('/auth/reset-password', {
         method: 'POST',
         data: {
-          email,
-          otp: data.otp.trim(),
+          resetToken,
           newPassword: data.newPassword,
         },
       });
 
       if (response?.success || response?.statusCode === 200) {
-        setApiSuccess(response?.message || 'Your account password has been reset successfully. Proceed to login.');
+        setApiSuccess(
+          response?.message ||
+            'Your account password has been reset successfully. Proceed to login.',
+        );
         setTimeout(() => {
           router.push('/login');
         }, 1500);
       } else {
-        setApiError(response?.message || 'Invalid or expired OTP / Password too short');
-        setOtpKey((k) => k + 1);
-        setValue('otp', '');
-        setStep(1); // Go back to step 1 if OTP was wrong
+        setApiError(response?.message || 'Invalid or expired reset token / Password too short');
       }
     } catch (error: any) {
       setApiError(error.message || 'An unexpected network error occurred.');
-      setOtpKey((k) => k + 1);
-      setValue('otp', '');
-      setStep(1);
     } finally {
       setIsLoading(false);
     }
@@ -96,19 +91,49 @@ const ResetPasswordForm = () => {
 
   const handleOtpComplete = async (otp: string) => {
     setValue('otp', otp, { shouldValidate: true });
-    
-    // Simulate a brief verification delay for better UX
-    // Note: Actual DB verification of the OTP happens on final submit with the new password,
-    // because the backend endpoint /auth/reset-password requires both OTP and new password together.
+
+    if (!email) {
+      setApiError('Email is missing. Please request a new OTP from the forgot password page.');
+      return;
+    }
+
+    setApiError(null);
+    setApiSuccess(null);
     setIsVerifyingOtp(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
-    setIsVerifyingOtp(false);
-    
-    setStep(2); // Proceed to password fields
+
+    try {
+      const response = await baseApi('/auth/verify-reset-otp', {
+        method: 'POST',
+        data: {
+          email,
+          otp: otp.trim(),
+        },
+      });
+
+      if (response?.success || response?.statusCode === 200) {
+        setApiSuccess(response?.message || 'OTP verified successfully.');
+        setResetToken(response?.data?.resetToken || null);
+
+        setTimeout(() => {
+          setApiSuccess(null);
+          setStep(2);
+        }, 800);
+      } else {
+        setApiError(response?.message || 'Invalid or expired OTP');
+        setOtpKey((k) => k + 1);
+        setValue('otp', '');
+      }
+    } catch (error: any) {
+      setApiError(error.message || 'An unexpected network error occurred.');
+      setOtpKey((k) => k + 1);
+      setValue('otp', '');
+    } finally {
+      setIsVerifyingOtp(false);
+    }
   };
 
   return (
-    <div className="w-full rounded-xl border border-slate-100 bg-white p-6 text-center shadow-md shadow-slate-100/70 sm:p-8">
+    <div className="w-full rounded-xl border border-slate-100 bg-white p-6 text-center shadow-md shadow-slate-100/70">
       {/* Icon */}
       <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50/80 ring-8 ring-emerald-50/40">
         <KeyRound size={24} className="text-primary" />
@@ -118,7 +143,7 @@ const ResetPasswordForm = () => {
       <h1 className="mb-1.5 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
         Reset Password
       </h1>
-      
+
       {step === 1 ? (
         <>
           <p className="text-sm text-slate-500">We sent a 6-digit code to</p>
@@ -131,9 +156,7 @@ const ResetPasswordForm = () => {
           <div className="mx-auto mb-2 flex w-max items-center justify-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">
             <span>✅</span> Code Format Accepted
           </div>
-          <p className="text-sm text-slate-500">
-            Now enter your new password to verify and reset.
-          </p>
+          <p className="text-sm text-slate-500">Now enter your new password to verify and reset.</p>
         </div>
       )}
 
@@ -153,7 +176,6 @@ const ResetPasswordForm = () => {
       </div>
 
       <form onSubmit={handleSubmit(handleReset)} className="text-left" noValidate>
-        
         {/* Step 1: OTP Input */}
         {step === 1 && (
           <div className="animate-in fade-in slide-in-from-bottom-2 space-y-4">
@@ -165,7 +187,7 @@ const ResetPasswordForm = () => {
                 <Controller
                   name="otp"
                   control={control}
-                  render={({ field }) => (
+                  render={() => (
                     <OtpInput
                       key={otpKey}
                       length={6}
@@ -176,14 +198,16 @@ const ResetPasswordForm = () => {
                   )}
                 />
               </div>
-              
+
               {isVerifyingOtp ? (
                 <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-slate-500">
-                  <RefreshCw size={14} className="animate-spin text-primary" />
+                  <RefreshCw size={14} className="text-primary animate-spin" />
                   <span>Checking code...</span>
                 </div>
               ) : (
-                errors.otp && <p className="mt-2 text-center text-xs text-red-500">{errors.otp.message}</p>
+                errors.otp && (
+                  <p className="mt-2 text-center text-xs text-red-500">{errors.otp.message}</p>
+                )
               )}
             </div>
           </div>
@@ -198,7 +222,10 @@ const ResetPasswordForm = () => {
                 New Password <span className="text-red-400">*</span>
               </label>
               <div className="relative">
-                <Lock size={15} className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400" />
+                <Lock
+                  size={15}
+                  className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
+                />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   disabled={isLoading}
@@ -217,7 +244,9 @@ const ResetPasswordForm = () => {
                   {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
               </div>
-              {errors.newPassword && <p className="mt-1 text-xs text-red-500">{errors.newPassword.message}</p>}
+              {errors.newPassword && (
+                <p className="mt-1 text-xs text-red-500">{errors.newPassword.message}</p>
+              )}
             </div>
 
             {/* Confirm Password Input */}
@@ -226,7 +255,10 @@ const ResetPasswordForm = () => {
                 Confirm Password <span className="text-red-400">*</span>
               </label>
               <div className="relative">
-                <Lock size={15} className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400" />
+                <Lock
+                  size={15}
+                  className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
+                />
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   disabled={isLoading}
@@ -245,7 +277,9 @@ const ResetPasswordForm = () => {
                   {showConfirmPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                 </button>
               </div>
-              {errors.confirmPassword && <p className="mt-1 text-xs text-red-500">{errors.confirmPassword.message}</p>}
+              {errors.confirmPassword && (
+                <p className="mt-1 text-xs text-red-500">{errors.confirmPassword.message}</p>
+              )}
             </div>
 
             <button
@@ -262,24 +296,11 @@ const ResetPasswordForm = () => {
                 'Reset Password →'
               )}
             </button>
-            
-            <button
-              type="button"
-              onClick={() => {
-                setStep(1);
-                setOtpKey(k => k + 1);
-                setValue('otp', '');
-              }}
-              className="mt-2 w-full text-center text-xs font-semibold text-slate-500 hover:text-slate-700 hover:underline"
-              disabled={isLoading}
-            >
-              Change OTP code
-            </button>
           </div>
         )}
       </form>
 
-      <div className="border-t border-slate-100 mt-6 pt-5 text-center">
+      <div className="mt-6 border-t border-slate-100 pt-5 text-center">
         <Link
           className="text-primary inline-flex items-center gap-1.5 text-xs font-bold hover:underline"
           href="/login"
@@ -307,8 +328,8 @@ const ForgotPasswordVerifyOtpPage = () => {
       <div className="bg-primary/5 pointer-events-none absolute top-1/4 left-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
       <div className="bg-primary/10 pointer-events-none absolute right-1/4 bottom-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
 
-      <div className="relative z-10 w-full max-w-sm sm:max-w-md">
-        <Suspense fallback={<div className="text-slate-500 text-center">Loading...</div>}>
+      <div className="relative z-10 w-full max-w-110">
+        <Suspense fallback={<div className="text-center text-slate-500">Loading...</div>}>
           <ResetPasswordForm />
         </Suspense>
       </div>
