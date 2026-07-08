@@ -56,23 +56,23 @@ const course = {
   certificate: true,
   image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=1000',
 
-  whatYouLearn: [
-    'Build real-world websites from scratch using HTML & CSS',
-    'Master JavaScript fundamentals and ES6+ features',
-    'Develop modern web apps with React.js',
-    'Build backend APIs with Node.js and Express',
-    'Connect your app to a database using MongoDB',
-    'Deploy your projects live on the internet',
-    'Understand Git & GitHub for version control',
-    'Build a complete portfolio to get hired as a developer',
-  ],
+  whatYouLearn: `<ul>
+    <li>Build real-world websites from scratch using HTML & CSS</li>
+    <li>Master JavaScript fundamentals and ES6+ features</li>
+    <li>Develop modern web apps with React.js</li>
+    <li>Build backend APIs with Node.js and Express</li>
+    <li>Connect your app to a database using MongoDB</li>
+    <li>Deploy your projects live on the internet</li>
+    <li>Understand Git & GitHub for version control</li>
+    <li>Build a complete portfolio to get hired as a developer</li>
+  </ul>`,
 
-  requirements: [
-    'No prior programming experience needed — we start from zero',
-    'A computer with internet access (Windows, Mac, or Linux)',
-    'Willingness to learn and practice consistently',
-    'Basic computer skills (browsing, file management)',
-  ],
+  requirements: `<ul>
+    <li>No prior programming experience needed — we start from zero</li>
+    <li>A computer with internet access (Windows, Mac, or Linux)</li>
+    <li>Willingness to learn and practice consistently</li>
+    <li>Basic computer skills (browsing, file management)</li>
+  </ul>`,
 
   curriculum: [
     {
@@ -337,27 +337,19 @@ const CourseDetailsPage = () => {
             {/* What You'll Learn */}
             <div className="rounded-md border border-slate-100 bg-white p-8 shadow-xs">
               <h2 className="mb-6 text-2xl font-bold">What You Will Learn</h2>
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                {course.whatYouLearn.map((item, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <CheckCircle size={18} className="text-primary mt-0.5 shrink-0" />
-                    <span className="text-sm leading-relaxed text-slate-600">{item}</span>
-                  </div>
-                ))}
-              </div>
+              <div 
+                className="prose prose-emerald prose-p:my-1 max-w-none text-slate-600 prose-li:marker:text-primary"
+                dangerouslySetInnerHTML={{ __html: course.whatYouLearn }}
+              />
             </div>
 
             {/* Requirements */}
             <div className="rounded-md border border-slate-100 bg-white p-8 shadow-xs">
               <h2 className="mb-6 text-2xl font-bold">Requirements</h2>
-              <ul className="space-y-3">
-                {course.requirements.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm text-slate-600">
-                    <span className="bg-primary mt-1.5 h-2 w-2 shrink-0 rounded-full" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
+              <div 
+                className="prose prose-emerald prose-p:my-1 max-w-none text-slate-600 prose-li:marker:text-primary"
+                dangerouslySetInnerHTML={{ __html: course.requirements }}
+              />
             </div>
 
             {/* Curriculum */}

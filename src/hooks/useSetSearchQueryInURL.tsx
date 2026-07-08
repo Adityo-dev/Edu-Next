@@ -20,10 +20,15 @@ const useSetSearchQueryInURL = () => {
         }
       });
 
-      const queryString = params.toString();
-      const updatedPath = queryString ? `${pathname}?${queryString}` : pathname;
+      const currentQueryString = searchParams.toString();
+      const newQueryString = params.toString();
 
-      // router.push এর বদলে replace ব্যবহার করলে পেজ লোড স্মুথ হয়
+      if (currentQueryString === newQueryString) {
+        return;
+      }
+
+      const updatedPath = newQueryString ? `${pathname}?${newQueryString}` : pathname;
+
       router.replace(updatedPath, { scroll: false });
     },
     [searchParams, pathname, router],
