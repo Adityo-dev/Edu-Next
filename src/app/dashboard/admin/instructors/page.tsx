@@ -1,106 +1,80 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
 'use client';
 
 import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
-import { useState } from 'react';
+import { useGetBadgeRequestsQuery } from '@/redux/features/admin/instructorManagement/adminInstructor.api';
+import { TInstructorBadgeRequest } from '@/types/adminInstructor.types';
+import { ArrowLeft } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import InstructorDetail from './_components/InstructorDetail/InstructorDetail';
-import InstructorsFilter from './_components/InstructorsFilter/InstructorsFilter';
 import InstructorsList from './_components/InstructorsList/InstructorsList';
 import InstructorsStats from './_components/InstructorsStats/InstructorsStats';
 
-const instructorsData = [
-  {
-    id: 1,
-    name: 'Tanvir Ahmed',
-    email: 'tanvir@example.com',
-    expertise: 'Mobile App Development',
-    experience: '5 years',
-    courses: 3,
-    status: 'pending',
-    submittedDate: 'Apr 20, 2025',
-    image: 'https://i.pravatar.cc/150?u=tanvir',
-    bio: 'Experienced mobile developer with expertise in Flutter and React Native.',
-    youtube: 'https://youtube.com/@tanvir',
-  },
-  {
-    id: 2,
-    name: 'Mithila Rahman',
-    email: 'mithila@example.com',
-    expertise: 'Graphic Design',
-    experience: '4 years',
-    courses: 2,
-    status: 'pending',
-    submittedDate: 'Apr 18, 2025',
-    image: 'https://i.pravatar.cc/150?u=mithila',
-    bio: 'Professional graphic designer with portfolio spanning 100+ projects.',
-    youtube: '',
-  },
-  {
-    id: 3,
-    name: 'Md. Rafiqul Islam',
-    email: 'rafiq@example.com',
-    expertise: 'Web Development',
-    experience: '8 years',
-    courses: 8,
-    status: 'approved',
-    submittedDate: 'Oct 5, 2022',
-    image: 'https://i.pravatar.cc/150?u=rafiq',
-    bio: 'Senior web developer teaching since 2022.',
-    youtube: 'https://youtube.com/@rafiq',
-  },
-  {
-    id: 4,
-    name: 'Farhan Hossain',
-    email: 'farhan@example.com',
-    expertise: 'UI/UX Design',
-    experience: '6 years',
-    courses: 4,
-    status: 'approved',
-    submittedDate: 'Jan 10, 2023',
-    image: 'https://i.pravatar.cc/150?u=farhan',
-    bio: 'UI/UX designer with expertise in Figma and design systems.',
-    youtube: '',
-  },
-  {
-    id: 5,
-    name: 'Karim Molla',
-    email: 'karim@example.com',
-    expertise: 'Cybersecurity',
-    experience: '7 years',
-    courses: 0,
-    status: 'rejected',
-    submittedDate: 'Apr 10, 2025',
-    image: 'https://i.pravatar.cc/150?u=karim',
-    bio: 'Cybersecurity expert with CEH certification.',
-    youtube: '',
-  },
-];
+const InstructorBadgeRequestsPage = () => {
+  const { data, isLoading } = useGetBadgeRequestsQuery({ page: 1, limit: 10 });
+  const [selected, setSelected] = useState<TInstructorBadgeRequest | null>(null);
+  const [showMobileDetails, setShowMobileDetails] = useState(false);
 
-type Instructor = (typeof instructorsData)[0];
+  const instructors = data?.data?.instructors || [];
 
-const InstructorVerificationPage = () => {
-  const [filter, setFilter] = useState('all');
-  const [selected, setSelected] = useState<Instructor | null>(null);
+  useEffect(() => {
+    if (instructors.length > 0 && !selected) {
+      setSelected(instructors[0]);
+    }
+  }, [instructors, selected]);
 
-  const filtered = instructorsData.filter((i) => filter === 'all' || i.status === filter);
+  const handleSelect = (instructor: TInstructorBadgeRequest) => {
+    setSelected(instructor);
+    setShowMobileDetails(true);
+  };
+
+  const handleActionComplete = () => {
+    setSelected(null);
+    setShowMobileDetails(false);
+  };
 
   return (
     <div className="mx-auto space-y-5">
-      <SectionHeader
-        title="Instructor Verification"
-        description="Review and approve instructor applications."
-      />
-      <InstructorsStats instructors={instructorsData} />
-      <InstructorsFilter filter={filter} onFilterChange={setFilter} />
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <InstructorsList
-          instructors={filtered}
-          selectedId={selected?.id ?? null}
-          onSelect={setSelected}
+      <div className={showMobileDetails ? 'hidden lg:block' : 'block'}>
+        <SectionHeader
+          title="Instructor Badge Requests"
+          description="Review and approve instructor badge applications."
         />
-        <InstructorDetail instructor={selected} />
+        <div className="mt-5">
+          <InstructorsStats pendingCount={data?.data?.pagination?.total || instructors.length} />
+        </div>
       </div>
+
+      {isLoading ? (
+        <div className="flex items-center justify-center py-20 text-slate-400">
+          Loading requests...
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className={`lg:col-span-2 ${showMobileDetails ? 'hidden lg:block' : 'block'}`}>
+            <InstructorsList
+              instructors={instructors}
+              selectedId={selected?._id ?? null}
+              onSelect={handleSelect}
+            />
+          </div>
+
+          <div className={`${showMobileDetails ? 'block' : 'hidden lg:block'}`}>
+            {showMobileDetails && (
+              <button
+                onClick={() => setShowMobileDetails(false)}
+                className="hover:text-primary mb-4 flex items-center gap-2 text-sm font-semibold text-slate-600 lg:hidden"
+              >
+                <ArrowLeft size={16} /> Back to List
+              </button>
+            )}
+            <InstructorDetail instructor={selected} onActionComplete={handleActionComplete} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default InstructorVerificationPage;
+export default InstructorBadgeRequestsPage;

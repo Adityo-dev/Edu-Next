@@ -49,7 +49,7 @@ export const AdminRoutes = [
     icon: BookOpen,
   },
   {
-    title: 'Instructor Verification',
+    title: 'Badge Requests',
     url: '/dashboard/admin/instructors',
     icon: ShieldCheck,
   },

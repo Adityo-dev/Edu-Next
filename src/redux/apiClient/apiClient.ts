@@ -39,5 +39,7 @@ export const apiClient = createApi({
     'UserProfile',
     'PlatformConfig',
     'Reviews',
+    'InstructorBadgeRequests',
+    'InstructorProfile',
   ],
 });

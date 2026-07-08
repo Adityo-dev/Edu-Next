@@ -1,32 +1,18 @@
-interface Instructor {
-  status: string;
-}
-
 interface InstructorsStatsProps {
-  instructors: Instructor[];
+  pendingCount: number;
 }
 
-const InstructorsStats = ({ instructors }: InstructorsStatsProps) => {
+const InstructorsStats = ({ pendingCount }: InstructorsStatsProps) => {
   const stats = [
     {
-      label: 'Pending',
-      value: instructors.filter((i) => i.status === 'pending').length,
+      label: 'Pending Badge Requests',
+      value: pendingCount,
       color: 'text-yellow-600',
-    },
-    {
-      label: 'Approved',
-      value: instructors.filter((i) => i.status === 'approved').length,
-      color: 'text-primary',
-    },
-    {
-      label: 'Rejected',
-      value: instructors.filter((i) => i.status === 'rejected').length,
-      color: 'text-red-500',
     },
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {stats.map((stat, i) => (
         <div key={i} className="dashboard-card-container text-center">
           <p className={`text-3xl font-black ${stat.color}`}>{stat.value}</p>

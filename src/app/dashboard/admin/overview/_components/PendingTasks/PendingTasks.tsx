@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const pendingTasks = [
   {
-    label: '3 Instructor Verifications Pending',
+    label: '3 Badge Requests Pending',
     url: '/dashboard/admin/instructors',
     color: 'bg-yellow-50 text-yellow-600 border-yellow-100',
   },
