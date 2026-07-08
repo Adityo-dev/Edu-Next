@@ -10,32 +10,40 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Bell, ChevronDown, LogOut, Settings, User } from 'lucide-react';
-
-const user = {
-  name: 'Sumaiya Akter',
-  email: 'sumaiya@edunext.com.bd',
-  role: 'Super Admin',
-  image: 'https://i.pravatar.cc/150?u=sumaiya',
-};
+import { logout, useCurrentUser } from '@/redux/features/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { logoutUser } from '@/services/auth/auth.service';
+import { Bell, ChevronDown, LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function UserDropdown() {
-  const handleLogout = () => {};
+  const user = useAppSelector(useCurrentUser);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logoutUser();
+    dispatch(logout());
+    router.push('/login');
+  };
+
+  const userName = user?.fullName || 'User';
+  const userRole = user?.role || 'Guest';
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="group flex cursor-pointer items-center gap-2.5 rounded-sm border border-slate-200 bg-white px-3 py-2 transition-all outline-none hover:border-emerald-100 hover:bg-emerald-50">
           <Avatar className="h-7 w-7 border-2 border-emerald-100">
-            <AvatarImage src={user.image} />
+            <AvatarImage src={user?.avatar as string} />
             <AvatarFallback className="bg-primary text-xs font-black text-white">
-              {user.name.substring(0, 2).toUpperCase()}
+              {userName.substring(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <div className="hidden flex-col items-start md:flex">
-            <span className="text-text-primary text-sm leading-none font-bold">{user.name}</span>
+            <span className="text-text-primary text-sm leading-none font-bold">{userName}</span>
             <span className="text-text-secondary mt-0.5 text-[10px] font-semibold tracking-widest uppercase">
-              {user.role}
+              {userRole}
             </span>
           </div>
           <ChevronDown
@@ -54,14 +62,14 @@ export default function UserDropdown() {
         <DropdownMenuLabel className="px-3 py-2">
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9 border-2 border-emerald-50">
-              <AvatarImage src={user.image} />
+              <AvatarImage src={user?.avatar as string} />
               <AvatarFallback className="bg-primary text-xs font-black text-white">
-                {user.name.substring(0, 2).toUpperCase()}
+                {userName.substring(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <p className="text-text-primary text-sm font-bold">{user.name}</p>
-              <p className="text-text-secondary text-xs">{user.email}</p>
+            <div className="overflow-hidden">
+              <p className="text-text-primary truncate text-sm font-bold">{userName}</p>
+              <p className="text-text-secondary truncate text-xs">{user?.email || 'No email'}</p>
             </div>
           </div>
         </DropdownMenuLabel>
@@ -70,7 +78,7 @@ export default function UserDropdown() {
 
         <DropdownMenuGroup className="space-y-0.5 py-1">
           <DropdownMenuItem className="hover:text-primary! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-slate-600 transition-all outline-none hover:bg-emerald-50 focus:bg-emerald-50">
-            <User size={15} className="text-slate-400" />
+            <UserIcon size={15} className="text-slate-400" />
             Profile Settings
           </DropdownMenuItem>
           <DropdownMenuItem className="hover:text-primary! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-slate-600 transition-all outline-none hover:bg-emerald-50 focus:bg-emerald-50">
@@ -87,7 +95,7 @@ export default function UserDropdown() {
 
         <DropdownMenuItem
           onClick={handleLogout}
-          className="flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-bold text-red-500 transition-all outline-none hover:bg-red-50 focus:bg-red-50"
+          className="text-danger hover:text-danger/80! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-semibold transition-all outline-none hover:bg-red-50 focus:bg-red-50"
         >
           <LogOut size={15} />
           Logout Account

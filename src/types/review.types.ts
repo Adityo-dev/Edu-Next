@@ -22,7 +22,7 @@ export interface ReviewCourse {
 // Main Review Schema Interface
 export interface IReview {
   _id: string;
-  student: ReviewUser | null;
+  student: ReviewUser | string | null;
   course: ReviewCourse;
   rating: number;
   comment: string;

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 //Modal views type
-export type TModalView = 'DELETE_CONFIRM' | 'NONE';
+export type TModalView = 'DELETE_CONFIRM' | 'WRITE_REVIEW' | 'NONE';
 
 //Open Modal Props
 export interface IOpenModalProps {
