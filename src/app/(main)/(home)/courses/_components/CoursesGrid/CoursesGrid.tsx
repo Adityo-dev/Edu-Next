@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Filter } from 'lucide-react';
 import CourseCard from '../CourseCard/CourseCard';
@@ -90,16 +91,11 @@ export default function CoursesGrid({
 
   if (filtered.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-md border border-slate-100 bg-white py-24 text-center shadow-xs">
+      <div className="dashboard-card-container flex flex-col items-center justify-center py-24 shadow-none">
         <Filter size={40} className="mb-4 text-slate-300" />
-        <h3 className="mb-2 text-lg font-bold text-slate-500">No courses found</h3>
-        <p className="text-text-secondary mb-6 text-sm">Try adjusting your filters</p>
-        <button
-          onClick={clearFilters}
-          className="bg-primary rounded-sm px-6 py-2.5 text-sm font-bold text-white"
-        >
-          Clear Filters
-        </button>
+        <h3 className="mb-0.5 text-lg font-semibold">No courses found</h3>
+        <p className="text-text-secondary mb-4 text-sm">Try adjusting your filters</p>
+        <DynamicActionButton label="Clear Filters" onClick={clearFilters} />
       </div>
     );
   }

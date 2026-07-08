@@ -75,7 +75,7 @@ const CoursesPageContent = () => {
   const [selectedRating, setSelectedRating] = useState(Number(searchParams.get('rating')) || 0);
   const [priceRange, setPriceRange] = useState([
     Number(searchParams.get('minPrice')) || 0,
-    Number(searchParams.get('maxPrice')) || 5000,
+    Number(searchParams.get('maxPrice')) || 0,
   ]);
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'Most Popular');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -92,7 +92,7 @@ const CoursesPageContent = () => {
         level: selectedLevels.length > 0 ? selectedLevels.join(',') : null,
         language: selectedLanguages.length > 0 ? selectedLanguages.join(',') : null,
         minPrice: priceRange[0] > 0 ? priceRange[0] : null,
-        maxPrice: priceRange[1] < 5000 ? priceRange[1] : null,
+        maxPrice: priceRange[1] > 0 && priceRange[1] < 20000 ? priceRange[1] : null,
         rating: selectedRating > 0 ? selectedRating : null,
         certificate: certificateOnly ? 'true' : null,
         sort: sortBy !== 'Most Popular' ? sortBy : null,
@@ -121,7 +121,7 @@ const CoursesPageContent = () => {
     selectedLanguages.length > 0 ||
     selectedRating > 0 ||
     priceRange[0] > 0 ||
-    priceRange[1] < 5000 ||
+    priceRange[1] > 0 ||
     certificateOnly;
 
   const clearFilters = () => {
@@ -129,7 +129,7 @@ const CoursesPageContent = () => {
     setSelectedLevels([]);
     setSelectedLanguages([]);
     setSelectedRating(0);
-    setPriceRange([0, 5000]);
+    setPriceRange([0, 0]);
     setCertificateOnly(false);
     setSearch('');
   };
@@ -140,7 +140,7 @@ const CoursesPageContent = () => {
     level: selectedLevels.length > 0 ? selectedLevels.join(',') : undefined,
     language: selectedLanguages.length > 0 ? selectedLanguages.join(',') : undefined,
     minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
-    maxPrice: priceRange[1] < 5000 ? priceRange[1] : undefined,
+    maxPrice: priceRange[1] > 0 && priceRange[1] < 20000 ? priceRange[1] : undefined,
     rating: selectedRating > 0 ? selectedRating : undefined,
     certificate: certificateOnly ? true : undefined,
     sort: sortBy,
@@ -170,8 +170,10 @@ const CoursesPageContent = () => {
   }));
 
   const maxPriceData =
-    apiCourses.length > 0 ? Math.max(...apiCourses.map((c: any) => c.price), 5000) : 5000;
+    apiCourses.length > 0 ? Math.max(...apiCourses.map((c: any) => c.price), 20000) : 20000;
   const minPriceData = 0;
+
+  const effectivePriceRange = [priceRange[0], priceRange[1] || maxPriceData];
 
   return (
     <div className="min-h-screen pt-20">
@@ -226,7 +228,7 @@ const CoursesPageContent = () => {
                   setSelectedLanguages={setSelectedLanguages}
                   selectedRating={selectedRating}
                   setSelectedRating={setSelectedRating}
-                  priceRange={priceRange}
+                  priceRange={effectivePriceRange}
                   setPriceRange={setPriceRange}
                   certificateOnly={certificateOnly}
                   setCertificateOnly={setCertificateOnly}
@@ -347,7 +349,7 @@ const CoursesPageContent = () => {
           setSelectedLanguages={setSelectedLanguages}
           selectedRating={selectedRating}
           setSelectedRating={setSelectedRating}
-          priceRange={priceRange}
+          priceRange={effectivePriceRange}
           setPriceRange={setPriceRange}
           certificateOnly={certificateOnly}
           setCertificateOnly={setCertificateOnly}
