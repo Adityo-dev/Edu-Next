@@ -1,7 +1,9 @@
-import { Control, FieldErrors, useController, useFieldArray } from 'react-hook-form';
-import { CourseFormValues } from '../schema';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-unused-vars */
 import { GripVertical, Plus, Trash2, Video } from 'lucide-react';
+import { Control, FieldErrors, useController, useFieldArray } from 'react-hook-form';
 import { toast } from 'sonner';
+import { CourseFormValues } from '../schema';
 
 interface Step2CurriculumProps {
   control: Control<CourseFormValues>;

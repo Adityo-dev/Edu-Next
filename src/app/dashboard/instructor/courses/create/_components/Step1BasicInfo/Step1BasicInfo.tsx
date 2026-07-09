@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Control, FieldErrors } from 'react-hook-form';
 import { CATEGORY_OPTIONS, CourseFormValues, LANGUAGE_OPTIONS, LEVEL_OPTIONS } from '../schema';
 

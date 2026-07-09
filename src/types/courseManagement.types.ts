@@ -26,6 +26,11 @@ export interface IInstructor {
   firstName: string;
   lastName: string;
   email: string;
+  avatar?: string;
+  bio?: string;
+  totalCourses?: number;
+  totalStudents?: number;
+  rating?: number;
 }
 
 // --- Main Course Interface ---
@@ -55,8 +60,8 @@ export interface ICourse {
   rejectedReason: string | null;
   suspendedReason: string | null;
   badge: TCourseBadge;
-  requirements: string[];
-  whatYouLearn: string[];
+  requirements: string | string[];
+  whatYouLearn: string | string[];
   createdAt: string;
   updatedAt: string;
 }

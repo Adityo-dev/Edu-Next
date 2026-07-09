@@ -87,8 +87,8 @@ const Step4Publish = ({
         ))}
       </div>
       <div className="rounded-sm border border-yellow-100 bg-yellow-50 p-4 text-xs text-slate-600">
-        📋 After submission, your course will be reviewed by our admin team. You will be notified once
-        it is approved.
+        📋 After submission, your course will be reviewed by our admin team. You will be notified
+        once it is approved.
       </div>
     </div>
   );

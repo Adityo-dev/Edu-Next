@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 'use client';
@@ -6,7 +5,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
@@ -27,8 +26,7 @@ import Step2Curriculum from './_components/Step2Curriculum/Step2Curriculum';
 import Step3Pricing from './_components/Step3Pricing/Step3Pricing';
 import Step4Publish from './_components/Step4Publish/Step4Publish';
 
-// ─── Helpers ────────────────────────────────────────────────────────────────────
-
+// ─── Helpers
 const calcTotalDuration = (sections: CourseFormValues['sections']) => {
   let totalSeconds = 0;
   sections.forEach((s) =>
@@ -46,8 +44,7 @@ const calcTotalDuration = (sections: CourseFormValues['sections']) => {
 const formatDuration = (min: string, sec: string) =>
   `${min || '0'}:${(sec || '0').padStart(2, '0')}`;
 
-// ─── Component ─────────────────────────────────────────────────────────────────
-
+// ─── Component
 const CreateCoursePage = () => {
   const router = useRouter();
   const [createCourse, { isLoading: isCreating }] = useCreateCourseMutation();
@@ -85,12 +82,6 @@ const CreateCoursePage = () => {
     },
     mode: 'onTouched',
   });
-
-  const {
-    fields: sectionFields,
-    append: appendSection,
-    remove: removeSection,
-  } = useFieldArray({ control, name: 'sections' });
 
   const [step, setStep] = useState(0);
   const isLastStep = step === LAST_STEP_INDEX;
@@ -179,9 +170,8 @@ const CreateCoursePage = () => {
     }
   };
 
-  // ── Decoupled, explicit submit trigger — never fires implicitly ──
   const handlePublishClick = () => {
-    if (!isLastStep) return; // hard guard: can never fire unless actually on Publish step
+    if (!isLastStep) return;
     handleSubmit(onSubmit)();
   };
 

@@ -1,106 +1,147 @@
-'use client';
-
-import { BookOpen, Clock, GraduationCap, Star } from 'lucide-react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Award, BookOpen, Clock, Globe, Star, Users, Video } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
-const CourseDetailsHero = () => {
+export default function CourseDetailsHero({
+  course,
+  totalLessons,
+}: {
+  course: any;
+  totalLessons: number;
+}) {
   return (
-    <div className="relative flex h-full w-full items-center overflow-hidden py-20">
+    <div className="relative overflow-hidden pt-20">
+      {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
-        {/* 1. Subtle Dot Grid Pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.15]"
-          style={{
-            backgroundImage: `radial-gradient(#34796f 1.5px, transparent 1px)`,
-            backgroundSize: '30px 30px',
-          }}
-        />
+        <Image src={course.image} alt={course.title} fill className="object-cover" priority />
+        <div className="absolute inset-0 bg-linear-to-r from-[#0f2724]/95 via-[#0f2724]/85 to-[#0f2724]/60" />
       </div>
-      <div className="relative z-10 mx-auto w-full max-w-400 px-6">
-        <div className="flex flex-col items-center justify-between gap-16 lg:flex-row">
-          {/* Left Side: Info */}
-          <div className="w-full lg:w-1/2">
-            {/* Ratings */}
-            <div className="mb-6 flex items-center gap-2">
-              <div className="flex items-center gap-0.5">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <Star key={s} size={18} fill="#ffc107" color="#ffc107" />
-                ))}
-              </div>
-              <span className="text-text-primary text-sm font-semibold">(25 Review)</span>
-              <span className="text-text-secondary text-sm font-semibold">
-                | 450+ Student Enroll
-              </span>
-            </div>
 
-            {/* Dynamic Badges */}
-            <div className="text-text-secondary mb-6 flex flex-wrap items-center gap-6 text-sm font-medium">
-              <div className="flex items-center gap-2">
-                <Clock size={20} className="text-secondary" />
-                <span>40 Hours</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <BookOpen size={20} className="text-secondary" />
-                <span>Lesson 15 (Online)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <GraduationCap size={20} className="text-secondary" />
-                <span>05 Award</span>
-              </div>
-            </div>
-
-            {/* Title */}
-            <h1 className="mb-6 text-4xl leading-tight font-bold tracking-tight md:text-6xl">
-              UI/UX <span className="text-secondary">Design</span>
-            </h1>
-
-            <p className="text-text-secondary max-w-lg text-lg leading-relaxed">
-              Learn computer utility, UX basics, user research, wireframe, and professional
-              prototype design from high-class industry expert.
-            </p>
-
-            {/* Action Area */}
-            <div className="mt-10 flex max-w-md items-center justify-between gap-4">
-              <button className="bg-primary text-pure-white cursor-pointer rounded-sm px-10 py-4 font-bold shadow-2xl shadow-emerald-200 transition-all hover:bg-[#2a6159] active:scale-95">
-                Enroll Now
-              </button>
-              <span className="text-primary text-4xl font-black">$32.00</span>
-            </div>
+      {/* Content */}
+      <div className="relative z-10 mx-auto max-w-400 px-6 py-16">
+        <div className="max-w-3xl">
+          {/* Breadcrumb */}
+          <div className="mb-5 flex items-center gap-2 text-xs text-white/50">
+            <Link href="/" className="transition-colors hover:text-white">
+              Home
+            </Link>
+            <span>/</span>
+            <Link href="/courses" className="transition-colors hover:text-white">
+              Courses
+            </Link>
+            <span>/</span>
+            <Link href="/courses" className="transition-colors hover:text-white">
+              {course.category}
+            </Link>
+            <span>/</span>
+            <span className="line-clamp-1 text-white/80">{course.title}</span>
           </div>
 
-          {/* Right Side: Image with Badge */}
-          <div className="relative flex w-full justify-center lg:w-1/2">
-            <div className="relative w-full max-w-150">
-              {/* Image Frame */}
-              <div className="overflow-hidden rounded-t-[3rem] rounded-br-[3rem] rounded-bl-[8rem] border-[6px] border-white shadow-xl shadow-slate-100">
-                <Image
-                  src="/image1.jpg"
-                  alt="UI/UX Course"
-                  width={600}
-                  height={450}
-                  className="aspect-4/3 w-full object-cover"
-                />
-              </div>
+          {/* Badges Row */}
+          <div className="mb-5 flex flex-wrap items-center gap-2">
+            {course.badge && (
+              <span className="bg-secondary rounded-sm px-3 py-1 text-xs font-bold text-white">
+                {course.badge}
+              </span>
+            )}
+            <span className="rounded-sm bg-white/10 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+              {course.category}
+            </span>
+            <span className="rounded-sm bg-white/10 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+              {course.level}
+            </span>
+          </div>
 
-              {/* Rotating Badge */}
-              <div className="absolute -bottom-6 -left-6 z-20 rounded-full border-4 border-white bg-white p-1 shadow-xl">
-                <div className="relative flex h-24 w-24 items-center justify-center">
-                  <svg
-                    className="absolute inset-0 h-full w-full animate-[spin_15s_linear_infinite]"
-                    viewBox="0 0 100 100"
-                  >
-                    <defs>
-                      <path
-                        id="circlePath"
-                        d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0"
-                      />
-                    </defs>
-                    <text className="fill-slate-800 text-[10px] font-black tracking-widest uppercase">
-                      <textPath xlinkHref="#circlePath">• LEARN • EXPERT • UIUX</textPath>
-                    </text>
-                  </svg>
-                  <div className="text-secondary z-30 text-xl font-bold">★</div>
-                </div>
+          {/* Title */}
+          <h1 className="mb-4 text-3xl leading-tight font-black text-white md:text-4xl">
+            {course.title}
+          </h1>
+
+          {/* Subtitle */}
+          <p className="mb-7 max-w-2xl text-base leading-relaxed text-white/65">
+            {course.subtitle}
+          </p>
+
+          {/* Rating Bar */}
+          <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} size={15} fill="#ffc107" color="#ffc107" />
+                ))}
+              </div>
+              <span className="font-bold text-yellow-400">{course.rating}</span>
+              <span className="text-white/50">({course.totalReviews} reviews)</span>
+            </div>
+
+            <span className="text-white/25">•</span>
+
+            <span className="flex items-center gap-1.5 text-white/70">
+              <Users size={14} className="text-white/50" />
+              <span>
+                <span className="font-semibold text-white">{course.enrolled}</span> students
+                enrolled
+              </span>
+            </span>
+
+            <span className="text-white/25">•</span>
+
+            <span className="flex items-center gap-1.5 text-white/70">
+              <Clock size={14} className="text-white/50" />
+              <span>
+                <span className="font-semibold text-white">{course.duration}</span> total length
+              </span>
+            </span>
+          </div>
+
+          {/* Info Pills */}
+          <div className="mb-8 flex flex-wrap gap-2">
+            {[
+              { icon: <BookOpen size={13} />, text: `${totalLessons} Lessons` },
+              { icon: <Globe size={13} />, text: course.language },
+              { icon: <Video size={13} />, text: 'Live Sessions' },
+              { icon: <Award size={13} />, text: 'Certificate Included' },
+              { icon: <Clock size={13} />, text: `Updated ${course.lastUpdated}` },
+            ].map((pill, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-1.5 rounded-sm border border-white/10 bg-white/10 px-3 py-1.5 text-xs text-white/80 backdrop-blur-sm"
+              >
+                <span className="text-white/50">{pill.icon}</span>
+                {pill.text}
+              </div>
+            ))}
+          </div>
+
+          {/* Instructor */}
+          <div className="flex w-fit items-center gap-3 rounded-sm border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+            <div className="h-12 w-12 overflow-hidden rounded-full border-2 border-white/20">
+              <Image
+                src={course.instructor.image}
+                alt={course.instructor.name}
+                width={150}
+                height={150}
+                className="h-full w-full object-cover"
+              />
+            </div>
+            <div>
+              <p className="text-xs text-white/50">Your Instructor</p>
+              <p className="font-semibold text-white">{course.instructor.name}</p>
+              <p className="text-xs text-white/60">{course.instructor.title}</p>
+            </div>
+            <div className="ml-4 flex items-center gap-4 border-l border-white/10 pl-4">
+              <div className="text-center">
+                <p className="text-sm font-bold text-white">{course.instructor.rating}</p>
+                <p className="text-xs text-white/50">Rating</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-bold text-white">{course.instructor.students}</p>
+                <p className="text-xs text-white/50">Students</p>
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-bold text-white">{course.instructor.courses}</p>
+                <p className="text-xs text-white/50">Courses</p>
               </div>
             </div>
           </div>
@@ -108,6 +149,4 @@ const CourseDetailsHero = () => {
       </div>
     </div>
   );
-};
-
-export default CourseDetailsHero;
+}

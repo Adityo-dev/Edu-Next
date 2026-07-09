@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-// ─── Zod Schema ────────────────────────────────────────────────────────────────
-
+// ─── Zod Schema
 export const lessonSchema = z.object({
   title: z.string().min(1, 'Lesson title is required'),
   durationMin: z
@@ -49,8 +48,7 @@ export const courseSchema = z.object({
 
 export type CourseFormValues = z.infer<typeof courseSchema>;
 
-// ─── Constants ─────────────────────────────────────────────────────────────────
-
+// ─── Constants
 export const STEPS = ['Basic Info', 'Curriculum', 'Pricing', 'Publish'] as const;
 export const LAST_STEP_INDEX = STEPS.length - 1;
 

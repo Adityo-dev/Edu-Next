@@ -1,6 +1,6 @@
+import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import { Control, FieldErrors } from 'react-hook-form';
 import { CourseFormValues } from '../schema';
-import InputField from '@/components/dashboard/Fields/InputField/InputField';
 
 interface Step3PricingProps {
   control: Control<CourseFormValues>;
