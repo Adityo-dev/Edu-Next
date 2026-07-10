@@ -2,6 +2,7 @@
 
 import { Plus, Star } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const HeroSection = () => {
   return (
@@ -45,9 +46,12 @@ const HeroSection = () => {
             </p>
 
             <div className="mt-10">
-              <button className="bg-primary text-pure-white cursor-pointer rounded-sm px-10 py-4 font-bold shadow-2xl shadow-emerald-200 transition-all hover:bg-[#2a6159] active:scale-95">
+              <Link
+                href={'/courses'}
+                className="bg-primary text-pure-white cursor-pointer rounded-sm px-10 py-4 font-bold shadow-2xl shadow-emerald-200 transition-all hover:bg-[#2a6159] active:scale-95"
+              >
                 Explore Courses
-              </button>
+              </Link>
             </div>
 
             {/* Avatar Group */}
@@ -135,7 +139,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-
     </section>
   );
 };

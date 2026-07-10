@@ -90,39 +90,16 @@ const timeline = [
   },
 ];
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
+// ─── Component
 const AboutUsPage = () => {
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
-      {/* ── Hero ─────────────────────────────────────────────────────────────── */}
-      <div className="bg-primary relative overflow-hidden py-24">
-        {/* Dot Grid */}
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `radial-gradient(#ffffff 1.5px, transparent 1px)`,
-            backgroundSize: '28px 28px',
-          }}
-        />
-        {/* Glow */}
-        <div className="absolute -top-20 -right-20 h-72 w-72 rounded-full bg-white/5 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-white/5 blur-3xl" />
-
+      <div className="bg-primary mt-20 px-6 py-16 text-center">
         <div className="relative z-10 mx-auto max-w-400 px-6 text-center">
-          {/* Breadcrumb */}
-          <div className="mb-6 flex items-center justify-center gap-2 text-sm text-white/50">
-            <Link href="/" className="transition-colors hover:text-white">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="text-white/80">About Us</span>
-          </div>
-
-          <h1 className="mb-5 text-4xl leading-tight font-black text-white md:text-6xl">
+          <h1 className="mb-3 text-4xl font-bold text-white md:text-5xl">
             We Are <span className="text-yellow-400">EduNext</span>
           </h1>
-          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-white/70">
+          <p className="mx-auto max-w-2xl text-lg text-white/75">
             Bangladesh&apos;s growing online learning platform — connecting passionate students with
             verified instructors to build real, job-ready digital skills.
           </p>
@@ -354,26 +331,33 @@ const AboutUsPage = () => {
               </svg>
             </div>
 
-            <div className="relative z-10">
+            <div className="relative z-10 flex flex-col items-center">
+              {/* Badge */}
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-yellow-400" />
+                <span className="text-sm font-medium text-white">Join 5,000+ Students Today</span>
+              </div>
+
               <h2 className="mb-4 text-4xl font-bold text-white md:text-5xl">
                 Ready to Start <span className="text-yellow-400">Learning?</span>
               </h2>
               <p className="mx-auto mb-8 max-w-xl text-lg leading-relaxed text-white/70">
-                Join 5,000+ students who are already building their future with EduNext. Start your
-                journey today — it only takes a minute.
+                Start building your future with EduNext. Learn from verified instructors, earn
+                certificates, and unlock new career opportunities.
               </p>
+
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/courses"
-                  className="bg-secondary cursor-pointer rounded-sm px-10 py-4 text-lg font-bold text-white shadow-sm transition-all hover:bg-[#d98c0a] active:scale-95"
+                  className="bg-secondary cursor-pointer rounded-sm px-10 py-4 text-lg font-bold text-white shadow-sm shadow-orange-300/30 transition-all hover:scale-105 active:scale-95"
                 >
-                  Explore Courses
+                  Explore All Courses
                 </Link>
                 <Link
                   href="/register"
                   className="cursor-pointer rounded-sm border border-white/30 bg-white/10 px-10 py-4 text-lg font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20 active:scale-95"
                 >
-                  Create Free Account
+                  Register Now
                 </Link>
               </div>
             </div>

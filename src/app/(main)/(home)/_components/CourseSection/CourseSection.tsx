@@ -18,9 +18,12 @@ const CourseSection = () => {
               best learning experience.
             </p>
           </div>
-          <button className="bg-primary mt-6 cursor-pointer rounded-sm px-6 py-3 font-medium text-white transition-all hover:bg-[#2a6159] active:scale-95 md:mt-0">
+          <Link
+            href={'/courses'}
+            className="bg-primary mt-6 cursor-pointer rounded-sm px-6 py-3 font-medium text-white transition-all hover:bg-[#2a6159] active:scale-95 md:mt-0"
+          >
             All Courses
-          </button>
+          </Link>
         </div>
 
         {/* Course Grid */}

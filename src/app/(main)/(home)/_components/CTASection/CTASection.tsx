@@ -52,10 +52,10 @@ const CTASection = () => {
             </p>
 
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-              <button className="bg-secondary cursor-pointer rounded-sm px-10 py-4 text-lg font-bold text-white shadow-sm shadow-orange-300/30 transition-all hover:scale-105 active:scale-95">
-                Get Started for Free
+              <button className="bg-secondary cursor-pointer rounded-sm px-10 py-4 text-lg font-semibold text-white shadow-sm shadow-orange-300/30 transition-all active:scale-95">
+                Register Now
               </button>
-              <button className="cursor-pointer rounded-sm border border-white/30 bg-white/10 px-10 py-4 text-lg font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20 active:scale-95">
+              <button className="cursor-pointer rounded-sm border border-white/30 bg-white/10 px-10 py-4 text-lg font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20 active:scale-95">
                 Browse Courses
               </button>
             </div>
