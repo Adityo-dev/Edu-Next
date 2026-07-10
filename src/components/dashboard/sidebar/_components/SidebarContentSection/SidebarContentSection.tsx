@@ -40,7 +40,7 @@ function SidebarContentSection({ role }: { role: roleTypes }) {
                 className={`rounded-sm px-3 py-5 font-medium transition-all duration-200 ${
                   isActive
                     ? 'bg-primary! text-white!'
-                    : 'text-white/50! hover:bg-white/5! hover:text-white!'
+                    : 'hover:text-primary! text-slate-500! hover:bg-slate-100!'
                 }`}
               >
                 <Link
@@ -48,7 +48,9 @@ function SidebarContentSection({ role }: { role: roleTypes }) {
                   onClick={() => isMobile && setOpenMobile(false)}
                   className="flex items-center gap-3"
                 >
-                  {Icon && <Icon size={18} className={isActive ? 'text-white' : 'text-white/40'} />}
+                  {Icon && (
+                    <Icon size={18} className={isActive ? 'text-white' : 'text-slate-400'} />
+                  )}
                   {state !== 'collapsed' && <span className="text-sm">{item?.title}</span>}
                 </Link>
               </SidebarMenuButton>

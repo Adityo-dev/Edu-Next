@@ -1,12 +1,12 @@
 import Providers from '@/providers/Providers';
 import { baseApi } from '@/services/root/baseApi';
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Inter, Geist_Mono } from 'next/font/google';
 import { cache } from 'react';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
 });
 
@@ -138,7 +138,7 @@ export default async function RootLayout({
       */}
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} max-w-screen overflow-x-hidden antialiased`}
+        className={`${inter.variable} ${geistMono.variable} max-w-screen overflow-x-hidden font-sans antialiased`}
       >
         <Providers>{children}</Providers>
       </body>

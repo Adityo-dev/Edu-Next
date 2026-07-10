@@ -17,14 +17,12 @@ import {
 
 export type roleTypes = 'admin' | 'student' | 'instructor';
 
-// Route guard / role-check এর জন্য prefix matching
 export const ROLE_DASHBOARD_PREFIX: Record<roleTypes, string> = {
   admin: '/dashboard/admin',
   instructor: '/dashboard/instructor',
   student: '/dashboard/student',
 };
 
-// Login/Register/Navbar এর পর redirect করার জন্য exact landing page
 export const ROLE_DASHBOARD_HOME: Record<roleTypes, string> = {
   admin: '/dashboard/admin/overview',
   instructor: '/dashboard/instructor/overview',

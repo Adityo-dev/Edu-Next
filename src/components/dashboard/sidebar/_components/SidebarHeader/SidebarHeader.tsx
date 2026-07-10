@@ -18,10 +18,10 @@ function SidebarHeaderSection() {
         {/* Text — only when expanded */}
         {isExpanded && (
           <div className="flex flex-col leading-tight">
-            <span className="text-lg font-black text-white">
-              Edu<span className="text-yellow-400">Next</span>
+            <span className="text-lg font-black text-slate-800">
+              Edu<span className="text-primary">Next</span>
             </span>
-            <span className="text-[10px] font-semibold tracking-[0.15em] text-white/30 uppercase">
+            <span className="text-[10px] font-semibold tracking-[0.15em] text-slate-400 uppercase">
               Dashboard
             </span>
           </div>

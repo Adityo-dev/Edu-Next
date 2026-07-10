@@ -17,9 +17,9 @@ export default function SidebarFooterSection() {
       <SidebarMenu>
         <SidebarMenuItem>
           {isExpanded ? (
-            <div className="rounded-sm bg-white/5 px-3 py-3">
-              <p className="text-xs font-semibold text-white/30">© 2025 EduNext</p>
-              <p className="mt-0.5 text-[10px] text-white/20">All rights reserved.</p>
+            <div className="rounded-sm border border-slate-100 bg-slate-50 px-3 py-3">
+              <p className="text-xs font-semibold text-slate-500">© 2025 EduNext</p>
+              <p className="mt-0.5 text-[10px] text-slate-400">All rights reserved.</p>
             </div>
           ) : (
             <div className="flex justify-center">
