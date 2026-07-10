@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import { Separator } from '@/components/ui/separator';
-import { ArrowUpRight, Clock, Star, Users } from 'lucide-react';
+import { ArrowUpRight, Clock, Star, Users, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -10,6 +11,7 @@ interface CourseCardProps {
   viewMode: 'grid' | 'list';
   badgeColors: Record<string, string>;
   levelColors: Record<string, string>;
+  onRemove?: (id: string) => void;
 }
 
 export default function CourseCard({
@@ -17,6 +19,7 @@ export default function CourseCard({
   viewMode,
   badgeColors,
   levelColors,
+  onRemove,
 }: CourseCardProps) {
   if (viewMode === 'grid') {
     return (
@@ -44,6 +47,20 @@ export default function CourseCard({
               <ArrowUpRight size={20} strokeWidth={2.5} />
             </div>
           </div>
+
+          {/* Remove Button (if onRemove is passed) */}
+          {onRemove && (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onRemove(course.id);
+              }}
+              className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-400 shadow-sm backdrop-blur-md transition-all hover:bg-red-50 hover:text-red-500"
+            >
+              <Trash2 size={16} />
+            </button>
+          )}
         </div>
 
         {/* Body */}
@@ -123,6 +140,20 @@ export default function CourseCard({
             color={badgeColors[course.badge] || '#34796f'}
             className="absolute top-3 left-3 shadow-sm backdrop-blur-md"
           />
+        )}
+
+        {/* Remove Button (if onRemove is passed) */}
+        {onRemove && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onRemove(course.id);
+            }}
+            className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-400 shadow-sm backdrop-blur-md transition-all hover:bg-red-50 hover:text-red-500"
+          >
+            <Trash2 size={16} />
+          </button>
         )}
       </div>
       <div className="flex flex-1 flex-col justify-between p-5">
