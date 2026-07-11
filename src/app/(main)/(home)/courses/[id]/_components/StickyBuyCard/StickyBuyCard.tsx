@@ -15,7 +15,12 @@ import {
   Wifi,
 } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import {
+  useAddWishlistMutation,
+  useGetWishlistsQuery,
+  useRemoveWishlistMutation,
+} from '@/redux/features/wishlist/wishlist.api';
+import { toast } from 'sonner';
 
 export default function StickyBuyCard({
   course,
@@ -24,7 +29,26 @@ export default function StickyBuyCard({
   course: any;
   totalLessons: number;
 }) {
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { data: wishlistData } = useGetWishlistsQuery({ limit: 50 });
+  const [addWishlist, { isLoading: isAdding }] = useAddWishlistMutation();
+  const [removeWishlist, { isLoading: isRemoving }] = useRemoveWishlistMutation();
+
+  const isWishlisted =
+    wishlistData?.data?.wishlists?.some((w) => w.course?._id === course.id) || false;
+
+  const handleWishlistToggle = async () => {
+    try {
+      if (isWishlisted) {
+        await removeWishlist(course.id).unwrap();
+        toast.success('Removed from wishlist');
+      } else {
+        await addWishlist({ courseId: course.id }).unwrap();
+        toast.success('Added to wishlist');
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || 'Something went wrong');
+    }
+  };
 
   return (
     <aside className="w-full lg:sticky lg:top-24 lg:w-96 lg:shrink-0">
@@ -62,12 +86,13 @@ export default function StickyBuyCard({
           {/* Wishlist + Share */}
           <div className="mt-3 mb-6 flex gap-4">
             <button
-              onClick={() => setIsWishlisted(!isWishlisted)}
+              onClick={handleWishlistToggle}
+              disabled={isAdding || isRemoving}
               className={`flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-sm border py-3 text-sm font-semibold transition-all active:scale-95 ${
                 isWishlisted
                   ? 'border-red-200 bg-red-50 text-red-500'
                   : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-              }`}
+              } disabled:cursor-not-allowed disabled:opacity-70`}
             >
               <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} />
               {isWishlisted ? 'Wishlisted' : 'Wishlist'}

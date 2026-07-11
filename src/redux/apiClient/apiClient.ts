@@ -41,5 +41,6 @@ export const apiClient = createApi({
     'Reviews',
     'InstructorBadgeRequests',
     'InstructorProfile',
+    'Wishlist',
   ],
 });

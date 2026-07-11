@@ -8,7 +8,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { BookOpen, PlayCircle } from 'lucide-react';
+import { BookOpen, PlayCircle, Lock } from 'lucide-react';
 
 interface Lesson {
   title: string;
@@ -90,10 +90,11 @@ export default function CourseCurriculum({
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <PlayCircle
-                          size={16}
-                          className={lesson.free ? 'text-primary' : 'text-slate-300'}
-                        />
+                        {lesson.videoUrl ? (
+                          <PlayCircle size={16} className="text-primary" />
+                        ) : (
+                          <Lock size={16} className="text-slate-300" />
+                        )}
                         <span className="text-sm text-slate-600">{lesson.title}</span>
                         {lesson.free && (
                           <span className="text-primary rounded-sm bg-emerald-50 px-2 py-0.5 text-xs font-semibold">

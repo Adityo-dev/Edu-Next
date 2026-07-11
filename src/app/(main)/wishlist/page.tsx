@@ -1,44 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { Bookmark, Search } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
 import CourseCard from '../(home)/courses/_components/CourseCard/CourseCard';
-
-// Mock data to demonstrate the design
-const mockSavedCourses = [
-  {
-    id: '1',
-    title: 'Complete Web Development Course with Jhankar Mahbub',
-    instructor: 'Jhankar Mahbub',
-    instructorImage: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=100',
-    image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=500',
-    price: 4500,
-    rating: 4.8,
-    enrolled: 1200,
-    duration: '45h 30m',
-    category: 'Development',
-    level: 'Beginner',
-    language: 'Bangla',
-    badge: 'Bestseller',
-    certificate: true,
-  },
-  {
-    id: '2',
-    title: 'Advanced Figma UI/UX Design for Freelancing',
-    instructor: 'Ayman Sadiq',
-    instructorImage: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100',
-    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=500',
-    price: 3200,
-    rating: 4.9,
-    enrolled: 850,
-    duration: '22h 15m',
-    category: 'Design',
-    level: 'Intermediate',
-    language: 'Bangla',
-    certificate: true,
-  },
-];
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  useGetWishlistsQuery,
+  useRemoveWishlistMutation,
+} from '@/redux/features/wishlist/wishlist.api';
+import { toast } from 'sonner';
 
 const badgeColors: Record<string, string> = {
   Bestseller: '#f59e0b',
@@ -53,11 +24,35 @@ const levelColors: Record<string, string> = {
 };
 
 export default function WishlistPage() {
-  const [courses, setCourses] = useState(mockSavedCourses);
+  const { data, isLoading } = useGetWishlistsQuery({ limit: 50 });
+  const [removeWishlist] = useRemoveWishlistMutation();
 
-  const handleRemove = (id: string) => {
-    setCourses((prev) => prev.filter((course) => course.id !== id));
+  const handleRemove = async (id: string) => {
+    try {
+      await removeWishlist(id).unwrap();
+      toast.success('Removed from wishlist');
+    } catch (error: any) {
+      toast.error(error?.data?.message || 'Failed to remove from wishlist');
+    }
   };
+
+  const courses =
+    data?.data?.wishlists?.map((w) => ({
+      id: w.course._id,
+      title: w.course.title,
+      instructor: w.course.instructor?.fullName || 'Instructor',
+      instructorImage: w.course.instructor?.avatar || '',
+      image: w.course.thumbnail || '',
+      price: w.course.price,
+      rating: w.course.rating || 0,
+      enrolled: w.course.enrolledCount || 0,
+      duration: (w.course as any).totalDuration || '',
+      category: w.course.category || '',
+      level: w.course.level || '',
+      language: w.course.language || '',
+      badge: w.course.badge || '',
+      certificate: (w.course as any).hasCertificate || false,
+    })) || [];
 
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
@@ -88,7 +83,36 @@ export default function WishlistPage() {
             </Link>
           </div>
 
-          {courses.length > 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="overflow-hidden rounded-sm border border-slate-100 bg-white shadow-xs"
+                >
+                  <Skeleton className="h-48 w-full rounded-none" />
+                  <div className="p-4 pt-5">
+                    <div className="mb-3 flex gap-2">
+                      <Skeleton className="h-6 w-16" />
+                      <Skeleton className="h-6 w-20" />
+                      <Skeleton className="h-6 w-16" />
+                    </div>
+                    <Skeleton className="mb-2 h-5 w-full" />
+                    <Skeleton className="mb-4 h-5 w-3/4" />
+                    <div className="mb-3 flex items-center gap-2">
+                      <Skeleton className="h-6 w-6 rounded-full" />
+                      <Skeleton className="h-4 w-24" />
+                    </div>
+                    <Skeleton className="mb-4 h-4 w-full" />
+                    <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                      <Skeleton className="h-7 w-20" />
+                      <Skeleton className="h-6 w-24" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : courses.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {courses.map((course) => (
                 <CourseCard
