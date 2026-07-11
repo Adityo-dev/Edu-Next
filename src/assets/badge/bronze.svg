@@ -1,0 +1,24 @@
+<!-- components/badges/BronzeBadge.tsx -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <!-- প্রিমিয়াম মেটালিক ব্রোঞ্জ গ্রেডিয়েন্ট -->
+    <linearGradient id="bronzeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#CA8A04" /> <!-- Goldish Bronze -->
+      <stop offset="50%" stop-color="#A16207" />
+      <stop offset="100%" stop-color="#78350F" /> <!-- Deep Bronze -->
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- আউটার মেডেল শিল্ড -->
+  <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill="url(#bronzeGrad)" filter="url(#shadow)" />
+  <!-- ভেতরের স্মুথ বর্ডার -->
+  <polygon points="50,12 84,29 84,71 50,88 16,71 16,29" fill="#FFFFFF" opacity="0.9" />
+  
+  <!-- কোর স্টার এলিমেন্ট (লেভেল ইন্ডিকেটর) -->
+  <path d="M50,25 L55,38 L68,38 L58,47 L62,60 L50,52 L38,60 L42,47 L32,38 L45,38 Z" fill="url(#bronzeGrad)" />
+  <!-- বেসিক ভেরিফিকেশন টিক চিহ্ন -->
+  <path d="M40,72 L47,78 L60,65" fill="none" stroke="url(#bronzeGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

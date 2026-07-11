@@ -3,6 +3,7 @@
 import CourseDetailsHero from './_components/CourseDetailsHero/CourseDetailsHero';
 import ReviewsAndAbout from './_components/ReviewsAndAbout/ReviewsAndAbout';
 import SkillsAndTeacher from './_components/SkillsAndTeacher/SkillsAndTeacher';
+import CourseCurriculum from './_components/CourseCurriculum/CourseCurriculum';
 import StickyBuyCard from './_components/StickyBuyCard/StickyBuyCard';
 
 import { useGetCourseBySlugQuery } from '@/redux/features/courseManagement/publicCourse.api';
@@ -54,6 +55,7 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
       rating: apiCourse.instructor?.rating || 0,
       bio: apiCourse.instructor?.bio || '',
       badge: apiCourse.instructor?.badge || '',
+      experienceYears: apiCourse.instructor?.experienceYears || 0,
     },
     category: apiCourse.category || 'Course',
     level: apiCourse.level || 'Beginner',
@@ -84,13 +86,14 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
     curriculum: (apiCourse.sections || []).map(
       (sec: {
         title: string;
-        lessons: { title: string; duration: string; isFree: boolean }[];
+        lessons: { title: string; duration: string; isFree: boolean; videoUrl?: string }[];
       }) => ({
         section: sec.title || 'Section',
         lessons: (sec.lessons || []).map((lesson) => ({
           title: lesson.title || 'Lesson',
           duration: lesson.duration || '0:00',
           free: lesson.isFree || false,
+          videoUrl: lesson.videoUrl || '',
         })),
       }),
     ),
@@ -131,7 +134,12 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
         <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
           {/* ── Left: Course Content  */}
           <div className="min-w-0 flex-1 space-y-6">
-            <SkillsAndTeacher course={course} totalLessons={totalLessons} />
+            <SkillsAndTeacher course={course} />
+            <CourseCurriculum
+              curriculum={course.curriculum}
+              totalLessons={totalLessons}
+              duration={course.duration}
+            />
             <ReviewsAndAbout course={course} ratingBreakdown={ratingBreakdown} />
           </div>
 

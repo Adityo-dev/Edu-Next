@@ -1,0 +1,25 @@
+<!-- components/badges/SilverBadge.tsx -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <!-- মেটালিক ক্রিস্পি সিলভার গ্রেডিয়েন্ট -->
+    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E2E8F0" /> <!-- Light Slate/Silver -->
+      <stop offset="50%" stop-color="#94A3B8" />
+      <stop offset="100%" stop-color="#475569" /> <!-- Deep Silver -->
+    </linearGradient>
+  </defs>
+  
+  <!-- গ্লোবাল সার্কুলার রিবন গিয়ার শেপ -->
+  <circle cx="50" cy="50" r="45" fill="url(#silverGrad)" />
+  <circle cx="50" cy="50" r="38" fill="#1F2937" /> <!-- Contrast Dark Circle -->
+  <circle cx="50" cy="50" r="34" fill="url(#silverGrad)" opacity="0.85" />
+  
+  <!-- ২টি প্রফেশনাল মেডেল স্টার -->
+  <g fill="#1F2937">
+    <path d="M42,32 L44,40 L52,40 L46,45 L48,53 L42,48 L36,53 L38,45 L32,40 L40,40 Z" />
+    <path d="M58,32 L60,40 L68,40 L62,45 L64,53 L58,48 L52,53 L54,45 L48,40 L56,40 Z" />
+  </g>
+  
+  <!-- সলিড চেকমার্ক -->
+  <path d="M38,62 L46,69 L62,50" fill="none" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

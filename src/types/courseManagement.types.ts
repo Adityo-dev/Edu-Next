@@ -31,6 +31,7 @@ export interface IInstructor {
   totalStudents?: number;
   rating?: number;
   badge?: TCourseBadge;
+  experienceYears?: number;
 }
 
 // --- Main Course Interface ---
