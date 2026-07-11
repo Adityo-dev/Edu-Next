@@ -60,30 +60,30 @@ export default function ReviewsAndAbout({
         {/* Review Cards */}
         <div className="space-y-6">
           {course.reviews.map((review: any) => (
-            <div key={review.id} className="flex gap-4">
+            <div key={review?.id} className="flex gap-4">
               <Image
-                src={review.image}
-                alt={review.name}
+                src={review?.image}
+                alt={review?.name}
                 width={44}
                 height={44}
                 className="h-11 w-11 shrink-0 rounded-full border-2 border-emerald-50"
               />
               <div className="flex-1">
                 <div className="mb-1 flex items-center justify-between">
-                  <h4 className="font-semibold">{review.name}</h4>
-                  <span className="text-text-secondary text-xs">{review.date}</span>
+                  <h4 className="font-semibold">{review?.name}</h4>
+                  <span className="text-text-secondary text-xs">{review?.date}</span>
                 </div>
                 <div className="mb-2 flex items-center gap-0.5">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
                       key={i}
                       size={12}
-                      fill={i < review.rating ? '#ffc107' : 'none'}
+                      fill={i < review?.rating ? '#ffc107' : 'none'}
                       color="#ffc107"
                     />
                   ))}
                 </div>
-                <p className="text-text-secondary text-sm leading-relaxed">{review.text}</p>
+                <p className="text-text-secondary text-sm leading-relaxed">{review?.text}</p>
               </div>
             </div>
           ))}

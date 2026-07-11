@@ -41,21 +41,19 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
 
   const apiCourse = data.data;
 
-  // Shadow the global mock `course` variable with the real data
   const course = {
     id: apiCourse._id,
     title: apiCourse.title,
     subtitle: apiCourse.subtitle,
     instructor: {
-      name:
-        `${apiCourse.instructor?.firstName || ''} ${apiCourse.instructor?.lastName || ''}`.trim() ||
-        'Instructor',
+      name: apiCourse.instructor?.fullName || 'Instructor',
       title: apiCourse.instructor?.bio || 'Instructor',
       image: apiCourse.instructor?.avatar || 'https://i.pravatar.cc/150',
       students: apiCourse.instructor?.totalStudents?.toLocaleString() || '0',
       courses: apiCourse.instructor?.totalCourses || 0,
       rating: apiCourse.instructor?.rating || 0,
       bio: apiCourse.instructor?.bio || '',
+      badge: apiCourse.instructor?.badge || '',
     },
     category: apiCourse.category || 'Course',
     level: apiCourse.level || 'Beginner',

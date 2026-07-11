@@ -23,14 +23,14 @@ export interface ISection {
 
 export interface IInstructor {
   _id: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
   email: string;
   avatar?: string;
   bio?: string;
   totalCourses?: number;
   totalStudents?: number;
   rating?: number;
+  badge?: TCourseBadge;
 }
 
 // --- Main Course Interface ---
