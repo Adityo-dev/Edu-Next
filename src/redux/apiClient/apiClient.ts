@@ -42,5 +42,6 @@ export const apiClient = createApi({
     'InstructorBadgeRequests',
     'InstructorProfile',
     'Wishlist',
+    'Commission',
   ],
 });

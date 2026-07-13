@@ -2,7 +2,6 @@
 import { apiClient } from '@/redux/apiClient/apiClient';
 import { TUserListItem, TUserRole, TUserStats, TUserStatus } from '@/types/userRole.types';
 
-// সোয়াগার রেসপন্স অনুযায়ী আপডেট করা হলো
 export interface TGetUsersResponse {
   success: boolean;
   message: string;
@@ -17,7 +16,6 @@ export interface TGetUsersResponse {
   };
 }
 
-// সোয়াগার প্যারামিটার অনুযায়ী ইন্টারফেস
 export interface TGetUsersParams {
   search?: string;
   role?: TUserRole | 'all';
@@ -40,7 +38,6 @@ export interface TMutationResponse {
 
 export const userManagementApi = apiClient.injectEndpoints({
   endpoints: (builder) => ({
-    // GET /admin/users (সার্ভার-সাইড ফিল্টারিং ও পেজিনেশন সহ)
     getUsers: builder.query<TGetUsersResponse, TGetUsersParams | void>({
       query: (params) => {
         const queryParams: Record<string, any> = {};

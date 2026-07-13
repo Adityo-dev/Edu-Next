@@ -94,7 +94,7 @@ const CoursesGrid = ({ courses }: CoursesGridProps) => {
           </div>
 
           {/* Content */}
-          <div className="p-5">
+          <div className="pt-4">
             {/* Category */}
             <span className="text-primary mb-3 inline-block rounded-sm bg-emerald-50 px-2.5 py-1 text-xs font-semibold">
               {course.category}
