@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { logout, useCurrentUser } from '@/redux/features/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { apiClient } from '@/redux/apiClient/apiClient';
 import { logoutUser } from '@/services/auth/auth.service';
 import { Bell, ChevronDown, LogOut, Settings, User as UserIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -24,6 +25,7 @@ export default function UserDropdown() {
   const handleLogout = async () => {
     await logoutUser();
     dispatch(logout());
+    dispatch(apiClient.util.resetApiState());
     router.push('/login');
   };
 

@@ -21,6 +21,9 @@ import {
   useRemoveWishlistMutation,
 } from '@/redux/features/wishlist/wishlist.api';
 import { toast } from 'sonner';
+import { useAppSelector } from '@/redux/hooks';
+import { useIsAuthenticated } from '@/redux/features/auth/authSlice';
+import { useModal } from '@/context/ModalContext';
 
 export default function StickyBuyCard({
   course,
@@ -36,7 +39,15 @@ export default function StickyBuyCard({
   const isWishlisted =
     wishlistData?.data?.wishlists?.some((w) => w.course?._id === course.id) || false;
 
+  const isAuthenticated = useAppSelector(useIsAuthenticated);
+  const { openModal } = useModal();
+
   const handleWishlistToggle = async () => {
+    if (!isAuthenticated) {
+      openModal({ view: 'LOGIN_REQUIRED' });
+      return;
+    }
+
     try {
       if (isWishlisted) {
         await removeWishlist(course.id).unwrap();

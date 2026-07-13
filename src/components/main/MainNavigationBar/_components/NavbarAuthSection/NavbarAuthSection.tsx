@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ROLE_DASHBOARD_PATH } from '@/constants/dashboardRoutes';
 import { logout, useCurrentUser, useIsAuthenticated } from '@/redux/features/auth/authSlice';
+import { apiClient } from '@/redux/apiClient/apiClient';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { logoutUser } from '@/services/auth/auth.service';
 import { LayoutDashboard, LogOut } from 'lucide-react';
@@ -27,6 +28,7 @@ const NavbarAuthSection = () => {
   const handleLogout = async () => {
     await logoutUser();
     dispatch(logout());
+    dispatch(apiClient.util.resetApiState());
     router.push('/login');
   };
 

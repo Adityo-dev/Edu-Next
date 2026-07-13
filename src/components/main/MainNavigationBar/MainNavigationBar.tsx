@@ -11,6 +11,7 @@ import { logoutUser } from '@/services/auth/auth.service';
 import { ROLE_DASHBOARD_PATH } from '@/constants/dashboardRoutes';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useState } from 'react';
+import { apiClient } from '@/redux/apiClient/apiClient';
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -30,6 +31,7 @@ const MainNavigationBar = () => {
   const handleLogout = async () => {
     await logoutUser();
     dispatch(logout());
+    dispatch(apiClient.util.resetApiState());
     setOpen(false);
     router.push('/login');
   };

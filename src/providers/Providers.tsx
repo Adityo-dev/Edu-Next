@@ -2,6 +2,8 @@ import ReduxInitializer from '@/redux/apiClient/ReduxInitializer';
 import { cookies } from 'next/headers';
 import { Toaster } from 'sonner';
 import StoreProvider from './StoreProvider';
+import { ModalProvider } from '@/context/ModalContext';
+import ModalContainer from '@/constants/ModalContainer/ModalContainer';
 
 const Providers = async ({ children }: { children: React.ReactNode }) => {
   const cookieStore = await cookies();
@@ -18,7 +20,10 @@ const Providers = async ({ children }: { children: React.ReactNode }) => {
   return (
     <StoreProvider>
       <ReduxInitializer user={user} />
-      {children}
+      <ModalProvider>
+        {children}
+        <ModalContainer />
+      </ModalProvider>
       <Toaster position="top-right" toastOptions={{ duration: 3000 }} richColors />
     </StoreProvider>
   );

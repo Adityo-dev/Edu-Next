@@ -18,6 +18,7 @@ export const publicCourseApi = apiClient.injectEndpoints({
         method: 'GET',
         params,
       }),
+      providesTags: ['Courses'],
     }),
 
     // 2. Get a single published course details by slug
@@ -26,6 +27,7 @@ export const publicCourseApi = apiClient.injectEndpoints({
         url: `/courses/${slug}`,
         method: 'GET',
       }),
+      providesTags: ['Courses'],
     }),
   }),
 });

@@ -12,10 +12,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BadgeCheck, Eye, EyeOff, Lock, Mail, PlayCircle, ShieldCheck, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { apiClient } from '@/redux/apiClient/apiClient';
 
 const loginSchema = z.object({
   email: z.string().min(1, 'Email is required.').email('Please enter a valid email address.'),
@@ -32,6 +33,9 @@ const LoginPage = () => {
   const [apiError, setApiError] = useState<string | null>(null);
   const [apiSuccess, setApiSuccess] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get('redirect');
 
   const {
     register,
@@ -97,6 +101,7 @@ const LoginPage = () => {
 
         await setUserProfile(user, token);
         dispatch(setAuth({ user }));
+        dispatch(apiClient.util.invalidateTags(['Courses']));
 
         setApiSuccess('Login successful! Redirecting...');
 
@@ -104,7 +109,7 @@ const LoginPage = () => {
           ROLE_DASHBOARD_HOME[user.role as keyof typeof ROLE_DASHBOARD_HOME] ?? '/';
 
         setTimeout(() => {
-          router.push(dashboardPath);
+          router.push(redirectPath || dashboardPath);
         }, 500);
       } else {
         setApiError(response?.message || 'Invalid email or password.');
@@ -406,4 +411,14 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+const LoginPageWrapper = () => {
+  return (
+    <Suspense
+      fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}
+    >
+      <LoginPage />
+    </Suspense>
+  );
+};
+
+export default LoginPageWrapper;

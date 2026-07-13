@@ -1,7 +1,9 @@
+import ModalContainer from '@/constants/ModalContainer/ModalContainer';
+import { ModalProvider } from '@/context/ModalContext';
 import Providers from '@/providers/Providers';
 import { baseApi } from '@/services/root/baseApi';
 import type { Metadata } from 'next';
-import { Inter, Geist_Mono } from 'next/font/google';
+import { Geist_Mono, Inter } from 'next/font/google';
 import { cache } from 'react';
 import './globals.css';
 
@@ -140,7 +142,10 @@ export default async function RootLayout({
         suppressHydrationWarning
         className={`${inter.variable} ${geistMono.variable} max-w-screen overflow-x-hidden font-sans antialiased`}
       >
-        <Providers>{children}</Providers>
+        <ModalProvider>
+          <Providers>{children}</Providers>
+          <ModalContainer />
+        </ModalProvider>
       </body>
     </html>
   );
