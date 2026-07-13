@@ -14,11 +14,11 @@ import { useGetPublishedCoursesQuery } from '@/redux/features/courseManagement/p
 import { LayoutGrid, List, SlidersHorizontal } from 'lucide-react';
 import { Suspense, useEffect, useState } from 'react';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import CoursesGrid from './_components/CoursesGrid/CoursesGrid';
 import CoursesHeader from './_components/CoursesHeader/CoursesHeader';
 import CoursesSidebar from './_components/CoursesSidebar/CoursesSidebar';
 import MobileFilterDrawer from './_components/MobileFilterDrawer/MobileFilterDrawer';
-import { Skeleton } from '@/components/ui/skeleton';
 
 // ─── Data
 const categories = [
@@ -161,7 +161,7 @@ const CoursesPageContent = () => {
     level: c.level,
     language: c.language,
     instructor: c.instructor ? `${c.instructor.firstName} ${c.instructor.lastName}` : 'Unknown',
-    instructorImage: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
+    instructorImage: c.instructor?.avatar,
     rating: c.rating || 0,
     enrolled: c.enrolledCount || 0,
     duration: c.totalDuration || '1h 0m',
@@ -194,7 +194,7 @@ const CoursesPageContent = () => {
                       <Skeleton className="h-5 w-16" />
                     </div>
                   </div>
-                  <Skeleton className="mb-2 h-[1px] w-full rounded-none" />
+                  <Skeleton className="mb-2 h-px w-full rounded-none" />
 
                   {Array.from({ length: 4 }).map((_, i) => (
                     <div key={i} className="py-0">
@@ -210,7 +210,7 @@ const CoursesPageContent = () => {
                           </div>
                         ))}
                       </div>
-                      {i < 3 && <Skeleton className="h-[1px] w-full rounded-none" />}
+                      {i < 3 && <Skeleton className="h-px w-full rounded-none" />}
                     </div>
                   ))}
                 </div>
@@ -259,7 +259,7 @@ const CoursesPageContent = () => {
               <div className="flex items-center gap-3">
                 {/* Mobile Filter */}
                 {isLoading ? (
-                  <Skeleton className="h-[42px] w-24 rounded-sm lg:hidden" />
+                  <Skeleton className="h-10.5 w-24 rounded-sm lg:hidden" />
                 ) : (
                   <button
                     onClick={() => setMobileFilterOpen(true)}
@@ -279,7 +279,7 @@ const CoursesPageContent = () => {
 
                 {/* Sort */}
                 {isLoading ? (
-                  <Skeleton className="h-[42px] w-40 rounded-sm sm:w-48" />
+                  <Skeleton className="h-10.5 w-40 rounded-sm sm:w-48" />
                 ) : (
                   <div className="w-40 sm:w-48">
                     <Select value={sortBy} onValueChange={setSortBy}>
@@ -299,7 +299,7 @@ const CoursesPageContent = () => {
 
                 {/* View Toggle */}
                 {isLoading ? (
-                  <Skeleton className="hidden h-[42px] w-[82px] rounded-sm md:block" />
+                  <Skeleton className="hidden h-10.5 w-20.5 rounded-sm md:block" />
                 ) : (
                   <div className="hidden overflow-hidden rounded-sm border border-slate-200 bg-white shadow-xs md:flex">
                     <button

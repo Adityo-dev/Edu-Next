@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import { Separator } from '@/components/ui/separator';
-import { ArrowUpRight, Clock, Star, Users, Trash2 } from 'lucide-react';
+import { ArrowUpRight, Clock, Star, Trash2, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -33,7 +33,7 @@ export default function CourseCard({
             src={course?.image}
             alt={course?.title}
             fill
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            className="object-fill transition-transform duration-700 group-hover:scale-105"
           />
           {course.badge && (
             <DynamicBadge
@@ -56,7 +56,7 @@ export default function CourseCard({
                 e.stopPropagation();
                 onRemove(course.id);
               }}
-              className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-400 shadow-sm backdrop-blur-md transition-all hover:bg-red-50 hover:text-red-500"
+              className="hover:text-danger absolute top-3 right-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-slate-400 shadow-sm backdrop-blur-md transition-all hover:bg-red-50"
             >
               <Trash2 size={16} />
             </button>
@@ -150,7 +150,7 @@ export default function CourseCard({
               e.stopPropagation();
               onRemove(course.id);
             }}
-            className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-400 shadow-sm backdrop-blur-md transition-all hover:bg-red-50 hover:text-red-500"
+            className="hover:text-danger absolute top-3 right-3 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/90 text-slate-400 shadow-sm backdrop-blur-md transition-all hover:bg-red-50"
           >
             <Trash2 size={16} />
           </button>

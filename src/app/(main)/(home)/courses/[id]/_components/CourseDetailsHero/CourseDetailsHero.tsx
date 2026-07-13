@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Award, BookOpen, Clock, Globe, Star, Users, Video } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function CourseDetailsHero({
   course,
@@ -21,23 +20,6 @@ export default function CourseDetailsHero({
       {/* Content */}
       <div className="relative z-10 mx-auto max-w-400 px-6 py-16">
         <div className="max-w-3xl">
-          {/* Breadcrumb */}
-          <div className="mb-5 flex items-center gap-2 text-xs text-white/50">
-            <Link href="/" className="transition-colors hover:text-white">
-              Home
-            </Link>
-            <span>/</span>
-            <Link href="/courses" className="transition-colors hover:text-white">
-              Courses
-            </Link>
-            <span>/</span>
-            <Link href="/courses" className="transition-colors hover:text-white">
-              {course.category}
-            </Link>
-            <span>/</span>
-            <span className="line-clamp-1 text-white/80">{course.title}</span>
-          </div>
-
           {/* Badges Row */}
           <div className="mb-5 flex flex-wrap items-center gap-2">
             {course.badge && (

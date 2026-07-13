@@ -1,13 +1,13 @@
 'use client';
 
+import CourseCurriculum from './_components/CourseCurriculum/CourseCurriculum';
 import CourseDetailsHero from './_components/CourseDetailsHero/CourseDetailsHero';
 import ReviewsAndAbout from './_components/ReviewsAndAbout/ReviewsAndAbout';
 import SkillsAndTeacher from './_components/SkillsAndTeacher/SkillsAndTeacher';
-import CourseCurriculum from './_components/CourseCurriculum/CourseCurriculum';
 import StickyBuyCard from './_components/StickyBuyCard/StickyBuyCard';
 
-import { useGetCourseBySlugQuery } from '@/redux/features/courseManagement/publicCourse.api';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useGetCourseBySlugQuery } from '@/redux/features/courseManagement/publicCourse.api';
 
 import { use } from 'react';
 
@@ -33,17 +33,6 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
           <div className="absolute inset-0 z-0 bg-[#0f2724]" />
           <div className="relative z-10 mx-auto max-w-400 px-6 py-16">
             <div className="max-w-3xl">
-              {/* Breadcrumbs */}
-              <div className="mb-5 flex items-center gap-2">
-                <Skeleton className="h-3 w-10 bg-white/20" />
-                <span className="text-xs text-white/20">/</span>
-                <Skeleton className="h-3 w-14 bg-white/20" />
-                <span className="text-xs text-white/20">/</span>
-                <Skeleton className="h-3 w-16 bg-white/20" />
-                <span className="text-xs text-white/20">/</span>
-                <Skeleton className="h-3 w-24 bg-white/20" />
-              </div>
-
               {/* Badges */}
               <div className="mb-5 flex flex-wrap items-center gap-2">
                 <Skeleton className="h-6 w-20 rounded-sm bg-white/20" />
@@ -189,7 +178,7 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
                     <Skeleton className="h-11 flex-1 rounded-sm" />
                     <Skeleton className="h-11 flex-1 rounded-sm" />
                   </div>
-                  <Skeleton className="mb-5 h-[1px] w-full" />
+                  <Skeleton className="mb-5 h-px w-full" />
                   <Skeleton className="mb-4 h-5 w-40" />
                   <ul className="space-y-3">
                     <Skeleton className="h-5 w-full" />
@@ -199,7 +188,7 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
                     <Skeleton className="h-5 w-full" />
                     <Skeleton className="h-5 w-full" />
                   </ul>
-                  <Skeleton className="my-4 h-[1px] w-full" />
+                  <Skeleton className="my-4 h-px w-full" />
                   <Skeleton className="h-20 w-full rounded-sm" />
                 </div>
               </div>

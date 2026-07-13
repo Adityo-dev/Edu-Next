@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { Bookmark, Search } from 'lucide-react';
-import Link from 'next/link';
-import CourseCard from '../(home)/courses/_components/CourseCard/CourseCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   useGetWishlistsQuery,
   useRemoveWishlistMutation,
 } from '@/redux/features/wishlist/wishlist.api';
+import { Bookmark, Search } from 'lucide-react';
+import Link from 'next/link';
 import { toast } from 'sonner';
+import CourseCard from '../(home)/courses/_components/CourseCard/CourseCard';
 
 const badgeColors: Record<string, string> = {
   Bestseller: '#f59e0b',
