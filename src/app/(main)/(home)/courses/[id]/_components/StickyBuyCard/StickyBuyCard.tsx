@@ -61,6 +61,32 @@ export default function StickyBuyCard({
     }
   };
 
+  const handleShare = async () => {
+    const url = typeof window !== 'undefined' ? window.location.href : '';
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: course.title,
+          text: `Check out this course: ${course.title}`,
+          url: url,
+        });
+        return; // Share was successful
+      } catch (error: any) {
+        if (error.name === 'AbortError') return;
+        console.log('Native sharing failed, falling back to clipboard...');
+      }
+    }
+
+    // Fallback if navigator.share doesn't exist or fails
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success('Link copied to clipboard!');
+    } catch {
+      toast.error('Failed to copy link');
+    }
+  };
+
   return (
     <aside className="w-full lg:sticky lg:top-24 lg:w-96 lg:shrink-0">
       <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs">
@@ -108,7 +134,10 @@ export default function StickyBuyCard({
               <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} />
               {isWishlisted ? 'Wishlisted' : 'Wishlist'}
             </button>
-            <button className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-sm border border-slate-200 py-3 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 active:scale-95">
+            <button
+              onClick={handleShare}
+              className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-sm border border-slate-200 py-3 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 active:scale-95"
+            >
               <Share2 size={16} />
               Share
             </button>
