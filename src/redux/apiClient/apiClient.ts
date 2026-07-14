@@ -43,5 +43,6 @@ export const apiClient = createApi({
     'InstructorProfile',
     'Wishlist',
     'Commission',
+    'Payment',
   ],
 });
