@@ -2,6 +2,15 @@
 'use client';
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { Separator } from '@/components/ui/separator';
+import { useModal } from '@/context/ModalContext';
+import { useIsAuthenticated } from '@/redux/features/auth/authSlice';
+import { useInitiatePaymentMutation } from '@/redux/features/payment/paymentApi';
+import {
+  useAddWishlistMutation,
+  useGetWishlistsQuery,
+  useRemoveWishlistMutation,
+} from '@/redux/features/wishlist/wishlist.api';
+import { useAppSelector } from '@/redux/hooks';
 import {
   Award,
   BookOpen,
@@ -15,15 +24,7 @@ import {
   Wifi,
 } from 'lucide-react';
 import Image from 'next/image';
-import {
-  useAddWishlistMutation,
-  useGetWishlistsQuery,
-  useRemoveWishlistMutation,
-} from '@/redux/features/wishlist/wishlist.api';
 import { toast } from 'sonner';
-import { useAppSelector } from '@/redux/hooks';
-import { useIsAuthenticated } from '@/redux/features/auth/authSlice';
-import { useModal } from '@/context/ModalContext';
 
 export default function StickyBuyCard({
   course,
@@ -41,6 +42,25 @@ export default function StickyBuyCard({
 
   const isAuthenticated = useAppSelector(useIsAuthenticated);
   const { openModal } = useModal();
+  const [initiatePayment, { isLoading: isInitiatingPayment }] = useInitiatePaymentMutation();
+
+  const handleEnroll = async () => {
+    if (!isAuthenticated) {
+      openModal({ view: 'LOGIN_REQUIRED' });
+      return;
+    }
+
+    try {
+      const res = await initiatePayment(course.id).unwrap();
+      if (res.success && res.data?.paymentUrl) {
+        window.location.href = res.data.paymentUrl;
+      } else {
+        toast.error('Failed to initiate payment');
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || 'Something went wrong while initiating payment');
+    }
+  };
 
   const handleWishlistToggle = async () => {
     if (!isAuthenticated) {
@@ -71,7 +91,7 @@ export default function StickyBuyCard({
           text: `Check out this course: ${course.title}`,
           url: url,
         });
-        return; // Share was successful
+        return;
       } catch (error: any) {
         if (error.name === 'AbortError') return;
         console.log('Native sharing failed, falling back to clipboard...');
@@ -118,7 +138,13 @@ export default function StickyBuyCard({
           </div>
 
           {/* Enroll Button */}
-          <DynamicActionButton label="Enroll Now" className="w-full" />
+          <DynamicActionButton
+            label="Enroll Now"
+            className="w-full"
+            onClick={handleEnroll}
+            isLoading={isInitiatingPayment}
+            disabled={isInitiatingPayment}
+          />
 
           {/* Wishlist + Share */}
           <div className="mt-3 mb-6 flex gap-4">
