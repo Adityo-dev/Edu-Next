@@ -4,7 +4,10 @@ import DynamicActionButton from '@/components/dashboard/DynamicActionButton/Dyna
 import { Separator } from '@/components/ui/separator';
 import { useModal } from '@/context/ModalContext';
 import { useIsAuthenticated } from '@/redux/features/auth/authSlice';
-import { useInitiatePaymentMutation } from '@/redux/features/payment/paymentApi';
+import {
+  useGetMyPaymentsQuery,
+  useInitiatePaymentMutation,
+} from '@/redux/features/payment/paymentApi';
 import {
   useAddWishlistMutation,
   useGetWishlistsQuery,
@@ -43,6 +46,11 @@ export default function StickyBuyCard({
   const isAuthenticated = useAppSelector(useIsAuthenticated);
   const { openModal } = useModal();
   const [initiatePayment, { isLoading: isInitiatingPayment }] = useInitiatePaymentMutation();
+  const { data: paymentsData } = useGetMyPaymentsQuery(undefined, { skip: !isAuthenticated });
+
+  const isEnrolled = paymentsData?.data?.some(
+    (payment) => payment.course._id === course.id && payment.status === 'paid',
+  );
 
   const handleEnroll = async () => {
     if (!isAuthenticated) {
@@ -138,13 +146,21 @@ export default function StickyBuyCard({
           </div>
 
           {/* Enroll Button */}
-          <DynamicActionButton
-            label="Enroll Now"
-            className="w-full"
-            onClick={handleEnroll}
-            isLoading={isInitiatingPayment}
-            disabled={isInitiatingPayment}
-          />
+          {isEnrolled ? (
+            <DynamicActionButton
+              label="Continue Learning"
+              href="/dashboard/student/courses"
+              className="w-full"
+            />
+          ) : (
+            <DynamicActionButton
+              label="Enroll Now"
+              className="w-full"
+              onClick={handleEnroll}
+              isLoading={isInitiatingPayment}
+              disabled={isInitiatingPayment}
+            />
+          )}
 
           {/* Wishlist + Share */}
           <div className="mt-3 mb-6 flex gap-4">
