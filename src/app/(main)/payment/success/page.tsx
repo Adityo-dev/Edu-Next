@@ -33,7 +33,7 @@ export default async function PaymentSuccessPage({
         <div className="mt-8 flex flex-col gap-3">
           <DynamicActionButton
             label="Go to My Courses"
-            href="/dashboard/my-courses"
+            href="/dashboard/student/courses"
             className="w-full"
           />
           <DynamicActionButton label="Back to Home" href="/" variant="outline" className="w-full" />
