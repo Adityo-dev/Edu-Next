@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useGetQuickActionStatsQuery } from '@/redux/features/admin/dashboard/dashboard.api';
+import PendingTaskSkeleton from '@/components/dashboard/Skeletons/PendingTaskSkeleton';
 
 const PendingTasks = () => {
   const { data, isLoading } = useGetQuickActionStatsQuery();
@@ -11,22 +12,22 @@ const PendingTasks = () => {
     {
       label: `${stats?.pendingBadgeRequests ?? 0} Badge Requests Pending`,
       url: '/dashboard/admin/instructors',
-      color: 'bg-yellow-50 text-yellow-600 border-yellow-100',
+      color: '#eab308',
     },
     {
       label: `${stats?.pendingWithdrawals ?? 0} Withdrawal Requests Pending`,
       url: '/dashboard/admin/withdrawals',
-      color: 'bg-blue-50 text-blue-600 border-blue-100',
+      color: '#3b82f6',
     },
     {
       label: `${stats?.pendingReviews ?? 0} Reviews Awaiting Moderation`,
       url: '/dashboard/admin/reviews',
-      color: 'bg-orange-50 text-secondary border-orange-100',
+      color: '#f97316',
     },
     {
       label: `${stats?.pendingCourses ?? 0} Courses Pending Approval`,
       url: '/dashboard/admin/courses',
-      color: 'bg-red-50 text-red-500 border-red-100',
+      color: '#ef4444',
     },
   ];
 
@@ -34,7 +35,7 @@ const PendingTasks = () => {
     return (
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="h-14 animate-pulse rounded-sm border bg-slate-50" />
+          <PendingTaskSkeleton key={i} />
         ))}
       </div>
     );
@@ -46,7 +47,12 @@ const PendingTasks = () => {
         <Link
           key={i}
           href={task.url}
-          className={`flex items-center gap-3 rounded-sm border p-4 text-sm font-semibold transition-all hover:shadow-xs ${task.color}`}
+          className="flex items-center gap-3 rounded-sm border p-4 text-sm font-semibold transition-all hover:shadow-xs"
+          style={{
+            color: task.color,
+            backgroundColor: `${task.color}1A`,
+            borderColor: `${task.color}33`,
+          }}
         >
           <span className="h-2 w-2 shrink-0 rounded-full bg-current" />
           {task.label}
