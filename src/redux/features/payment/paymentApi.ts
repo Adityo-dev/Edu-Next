@@ -8,6 +8,7 @@ import {
   TProcessRefundRequest,
   TRefundRequest,
   TAdminRevenueOverview,
+  TInstructorWeeklyRevenue,
 } from '@/types/payment.types';
 
 export const paymentApi = apiClient.injectEndpoints({
@@ -84,6 +85,15 @@ export const paymentApi = apiClient.injectEndpoints({
       }),
       providesTags: ['Payment'],
     }),
+
+    // GET /payment/instructor/weekly-revenue
+    getInstructorWeeklyRevenue: builder.query<TResponseRedux<TInstructorWeeklyRevenue>, void>({
+      query: () => ({
+        url: '/payment/instructor/weekly-revenue',
+        method: 'GET',
+      }),
+      providesTags: ['Payment'],
+    }),
   }),
 });
 
@@ -95,4 +105,5 @@ export const {
   useProcessRefundMutation,
   useGetInstructorEarningsQuery,
   useGetAdminRevenueOverviewQuery,
+  useGetInstructorWeeklyRevenueQuery,
 } = paymentApi;

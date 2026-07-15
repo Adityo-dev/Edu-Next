@@ -85,3 +85,13 @@ export type TAdminRevenueOverview = {
   summary: TRevenueSummary;
   chartData: TRevenueChartData[];
 };
+
+export type TWeeklyRevenueChartData = {
+  day: string;
+  revenue: number;
+};
+
+export type TInstructorWeeklyRevenue = {
+  totalThisWeek: number;
+  chartData: TWeeklyRevenueChartData[];
+};

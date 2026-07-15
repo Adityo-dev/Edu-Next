@@ -3,11 +3,13 @@
 import { useGetInstructorReviewStatsQuery } from '@/redux/features/reviews/instructorReview.api';
 import { Star } from 'lucide-react';
 
+import { RatingOverviewSkeleton } from '@/components/dashboard/Skeletons/RatingOverviewSkeleton';
+
 const RatingOverview = () => {
   const { data, isLoading } = useGetInstructorReviewStatsQuery();
 
   if (isLoading) {
-    return <div className="h-40 w-full animate-pulse rounded-xl bg-slate-200"></div>;
+    return <RatingOverviewSkeleton />;
   }
 
   const stats = data?.data;
@@ -26,7 +28,7 @@ const RatingOverview = () => {
     <div className="dashboard-card-container p-4">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
         <div className="bg-primary/10 flex flex-col items-center justify-center rounded-md px-10 py-4 text-center">
-          <span className="text-primary text-6xl font-semibold">{avgRating}</span>
+          <span className="text-primary text-5xl font-semibold">{avgRating}</span>
           <div className="my-2 flex items-center gap-0.5">
             {Array.from({ length: 5 }).map((_, i) => (
               <Star key={i} size={16} fill="#ffc107" color="#ffc107" />
