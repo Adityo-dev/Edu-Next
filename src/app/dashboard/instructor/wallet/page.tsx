@@ -2,22 +2,29 @@
 
 import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import { useGetInstructorEarningsQuery } from '@/redux/features/payment/paymentApi';
+import { useGetInstructorCoursesQuery } from '@/redux/features/courseManagement/instructorCourse.api';
 import TransactionHistory from './_components/TransactionHistory/TransactionHistory';
 import WalletCard from './_components/WalletCard/WalletCard';
 import WalletStats from './_components/WalletStats/WalletStats';
+import { useSearchParams } from 'next/navigation';
 
 const InstructorWalletPage = () => {
-  const { data: response, isLoading } = useGetInstructorEarningsQuery();
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get('page')) || 1;
+  const courseId = searchParams.get('course') || undefined;
+  const status = searchParams.get('status') || undefined;
 
-  if (isLoading) {
-    return (
-      <div className="flex h-100 items-center justify-center">
-        <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
-      </div>
-    );
-  }
+  const { data: response, isLoading } = useGetInstructorEarningsQuery({
+    page,
+    limit: 10,
+    courseId,
+    status,
+  });
+  const { data: coursesData } = useGetInstructorCoursesQuery({ limit: 100 });
 
   const earnings = response?.data;
+  // IPaginatedData<ICourse> has 'courses' not 'data'
+  const courses = coursesData?.data?.courses || [];
 
   return (
     <div className="space-y-6">
@@ -25,13 +32,14 @@ const InstructorWalletPage = () => {
 
       <WalletCard balance={earnings?.available || 0} />
 
-      <WalletStats
-        totalEarned={earnings?.totalEarned || 0}
-        withdrawn={earnings?.withdrawn || 0}
-        pendingWithdrawal={earnings?.pendingWithdrawal || 0}
-      />
+      <WalletStats earnings={earnings} isLoading={isLoading} />
 
-      <TransactionHistory payments={earnings?.payments || []} />
+      <TransactionHistory
+        payments={earnings?.payments || []}
+        pagination={earnings?.pagination}
+        isLoading={isLoading}
+        courses={courses}
+      />
     </div>
   );
 };

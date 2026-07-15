@@ -7,6 +7,7 @@ export type TModalView =
   | 'WRITE_REVIEW'
   | 'SUSPEND_CONFIRM'
   | 'LOGIN_REQUIRED'
+  | 'REFUND_DETAILS'
   | 'NONE';
 
 //Open Modal Props

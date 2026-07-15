@@ -1,44 +1,66 @@
-import { ArrowUpRight, Clock, TrendingUp } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Clock, RefreshCcw, TrendingUp, Wallet } from 'lucide-react';
+import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
+import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleton';
+import { TInstructorEarnings } from '@/types/payment.types';
 
 interface WalletStatsProps {
-  totalEarned: number;
-  withdrawn: number;
-  pendingWithdrawal: number;
+  earnings?: TInstructorEarnings;
+  isLoading: boolean;
 }
 
-const WalletStats = ({ totalEarned, withdrawn, pendingWithdrawal }: WalletStatsProps) => {
+const WalletStats = ({ earnings, isLoading }: WalletStatsProps) => {
+  const stats = [
+    {
+      icon: TrendingUp,
+      label: 'Total Earned',
+      value: `৳${earnings?.totalEarned?.toLocaleString() ?? 0}`,
+      iconColor: '#34796f',
+    },
+    {
+      icon: Wallet,
+      label: 'Available',
+      value: `৳${earnings?.available?.toLocaleString() ?? 0}`,
+      iconColor: '#3b82f6',
+    },
+    {
+      icon: Clock,
+      label: 'Pending Clearance',
+      value: `৳${earnings?.pendingWithdrawal?.toLocaleString() ?? 0}`,
+      iconColor: '#f59e0b',
+    },
+    {
+      icon: ArrowDownLeft,
+      label: 'Holding',
+      value: `৳${earnings?.holding?.toLocaleString() ?? 0}`,
+      iconColor: '#8b5cf6',
+    },
+    {
+      icon: ArrowUpRight,
+      label: 'Total Withdrawn',
+      value: `৳${earnings?.withdrawn?.toLocaleString() ?? 0}`,
+      iconColor: '#f97316',
+    },
+    {
+      icon: RefreshCcw,
+      label: 'Total Refunded',
+      value: `৳${earnings?.totalRefunded?.toLocaleString() ?? 0}`,
+      iconColor: '#ef4444',
+    },
+  ];
+
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-      {[
-        {
-          icon: <TrendingUp size={20} />,
-          label: 'Total Earned',
-          value: `৳${totalEarned.toLocaleString()}`,
-          color: 'bg-emerald-50 text-primary',
-        },
-        {
-          icon: <ArrowUpRight size={20} />,
-          label: 'Total Withdrawn',
-          value: `৳${withdrawn.toLocaleString()}`,
-          color: 'bg-orange-50 text-secondary',
-        },
-        {
-          icon: <Clock size={20} />,
-          label: 'Pending Clearance',
-          value: `৳${pendingWithdrawal.toLocaleString()}`,
-          color: 'bg-blue-50 text-blue-600',
-        },
-      ].map((stat, i) => (
-        <div key={i} className="dashboard-card-container p-4">
-          <div
-            className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm ${stat.color}`}
-          >
-            {stat.icon}
-          </div>
-          <p className="text-text-primary text-2xl font-black">{stat.value}</p>
-          <p className="text-text-secondary text-sm">{stat.label}</p>
-        </div>
-      ))}
+    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+      {isLoading
+        ? [...Array(6)].map((_, i) => <StatsCardSkeleton key={i} />)
+        : stats.map((stat, i) => (
+            <StatsCard
+              key={i}
+              icon={stat.icon}
+              iconColor={stat.iconColor}
+              label={stat.label}
+              value={stat.value}
+            />
+          ))}
     </div>
   );
 };

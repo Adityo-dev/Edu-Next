@@ -4,6 +4,7 @@ import DeleteConfirmAlert from '@/components/dashboard/DeleteConfirmAlert/Delete
 import WriteReviewModal from '@/app/dashboard/student/reviews/_components/WriteReviewModal/WriteReviewModal';
 import SuspendConfirmAlert from '@/components/dashboard/SuspendConfirmAlert/SuspendConfirmAlert';
 import LoginRequiredModal from '@/components/common/LoginRequiredModal/LoginRequiredModal';
+import RefundDetailsModal from '@/app/dashboard/instructor/wallet/_components/TransactionHistory/_components/RefundDetailsModal/RefundDetailsModal';
 import { TModalView } from '@/types/customModal.types';
 
 export const MODAL_COMPONENTS: Record<TModalView, React.ReactNode> = {
@@ -11,5 +12,6 @@ export const MODAL_COMPONENTS: Record<TModalView, React.ReactNode> = {
   SUSPEND_CONFIRM: <SuspendConfirmAlert />,
   LOGIN_REQUIRED: <LoginRequiredModal />,
   WRITE_REVIEW: <WriteReviewModal />,
+  REFUND_DETAILS: <RefundDetailsModal />,
   NONE: null,
 };

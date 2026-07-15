@@ -11,6 +11,9 @@ export type TRefundStatus = {
   requestedAt?: string;
   processedAt?: string;
   adminNote?: string;
+  processedBy?: string;
+  refundRefId?: string;
+  refundedAmount?: number;
 };
 
 export type TPaymentItem = {
@@ -52,9 +55,17 @@ export type TProcessRefundRequest = {
 export type TInstructorEarnings = {
   totalEarned: number;
   available: number;
+  holding: number;
   pendingWithdrawal: number;
   withdrawn: number;
+  totalRefunded: number;
   payments: TPaymentItem[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 };
 
 export type TRevenueSummary = {

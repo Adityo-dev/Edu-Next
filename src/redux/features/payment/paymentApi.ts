@@ -65,10 +65,14 @@ export const paymentApi = apiClient.injectEndpoints({
     }),
 
     // GET /payment/instructor/earnings
-    getInstructorEarnings: builder.query<TResponseRedux<TInstructorEarnings>, void>({
-      query: () => ({
+    getInstructorEarnings: builder.query<
+      TResponseRedux<TInstructorEarnings>,
+      { page?: number; limit?: number; courseId?: string; status?: string } | void
+    >({
+      query: (params) => ({
         url: '/payment/instructor/earnings',
         method: 'GET',
+        params: params || {},
       }),
     }),
 
