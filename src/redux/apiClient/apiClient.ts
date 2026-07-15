@@ -44,5 +44,6 @@ export const apiClient = createApi({
     'Wishlist',
     'Commission',
     'Payment',
+    'AdminDashboard',
   ],
 });

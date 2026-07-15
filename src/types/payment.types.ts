@@ -56,3 +56,21 @@ export type TInstructorEarnings = {
   withdrawn: number;
   payments: TPaymentItem[];
 };
+
+export type TRevenueSummary = {
+  totalRevenue: number;
+  totalCommission: number;
+  totalInstructorEarnings: number;
+};
+
+export type TRevenueChartData = {
+  month: string;
+  totalRevenue: number;
+  commission: number;
+  instructorEarning: number;
+};
+
+export type TAdminRevenueOverview = {
+  summary: TRevenueSummary;
+  chartData: TRevenueChartData[];
+};

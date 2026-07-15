@@ -7,6 +7,7 @@ import {
   TPaymentItem,
   TProcessRefundRequest,
   TRefundRequest,
+  TAdminRevenueOverview,
 } from '@/types/payment.types';
 
 export const paymentApi = apiClient.injectEndpoints({
@@ -70,6 +71,15 @@ export const paymentApi = apiClient.injectEndpoints({
         method: 'GET',
       }),
     }),
+
+    // GET /payment/admin/revenue-overview
+    getAdminRevenueOverview: builder.query<TResponseRedux<TAdminRevenueOverview>, void>({
+      query: () => ({
+        url: '/payment/admin/revenue-overview',
+        method: 'GET',
+      }),
+      providesTags: ['Payment'],
+    }),
   }),
 });
 
@@ -80,4 +90,5 @@ export const {
   useGetRefundRequestsQuery,
   useProcessRefundMutation,
   useGetInstructorEarningsQuery,
+  useGetAdminRevenueOverviewQuery,
 } = paymentApi;
