@@ -1,34 +1,37 @@
 'use client';
 
 import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
+import { useGetInstructorEarningsQuery } from '@/redux/features/payment/paymentApi';
 import TransactionHistory from './_components/TransactionHistory/TransactionHistory';
 import WalletCard from './_components/WalletCard/WalletCard';
 import WalletStats from './_components/WalletStats/WalletStats';
 
-const transactions = [
-  { id: 1, type: 'credit', amount: 1200 },
-  { id: 2, type: 'credit', amount: 1440 },
-  { id: 3, type: 'debit', amount: 8000 },
-  { id: 4, type: 'credit', amount: 1200 },
-  { id: 5, type: 'credit', amount: 720 },
-  { id: 6, type: 'credit', amount: 1440 },
-  { id: 7, type: 'debit', amount: 5000 },
-];
-
 const InstructorWalletPage = () => {
-  const credits = transactions.filter((t) => t.type === 'credit').reduce((a, b) => a + b.amount, 0);
-  const debits = transactions.filter((t) => t.type === 'debit').reduce((a, b) => a + b.amount, 0);
-  const balance = credits - debits;
+  const { data: response, isLoading } = useGetInstructorEarningsQuery();
+
+  if (isLoading) {
+    return (
+      <div className="flex h-100 items-center justify-center">
+        <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent" />
+      </div>
+    );
+  }
+
+  const earnings = response?.data;
 
   return (
-    <div className="mx-auto space-y-6">
+    <div className="space-y-6">
       <SectionHeader title="My Wallet" description="Track your earnings and transaction history." />
 
-      <WalletCard balance={balance} />
+      <WalletCard balance={earnings?.available || 0} />
 
-      <WalletStats credits={credits} debits={debits} />
+      <WalletStats
+        totalEarned={earnings?.totalEarned || 0}
+        withdrawn={earnings?.withdrawn || 0}
+        pendingWithdrawal={earnings?.pendingWithdrawal || 0}
+      />
 
-      <TransactionHistory />
+      <TransactionHistory payments={earnings?.payments || []} />
     </div>
   );
 };

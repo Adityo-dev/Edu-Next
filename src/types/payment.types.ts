@@ -50,6 +50,9 @@ export type TProcessRefundRequest = {
 };
 
 export type TInstructorEarnings = {
-  totalEarnings?: number;
-  availableForPayout?: number;
+  totalEarned: number;
+  available: number;
+  pendingWithdrawal: number;
+  withdrawn: number;
+  payments: TPaymentItem[];
 };

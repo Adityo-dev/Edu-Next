@@ -1,94 +1,50 @@
-import { ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { TPaymentItem } from '@/types/payment.types';
+import { FormatDateTime } from '@/utils/formatDateTime';
+import { ArrowDownLeft } from 'lucide-react';
 
-const transactions = [
-  {
-    id: 1,
-    type: 'credit',
-    desc: 'Sale: Web Development Bootcamp',
-    amount: 1200,
-    date: 'Apr 22, 2025',
-    student: 'Sumaiya Akter',
-  },
-  {
-    id: 2,
-    type: 'credit',
-    desc: 'Sale: React.js Masterclass',
-    amount: 1440,
-    date: 'Apr 21, 2025',
-    student: 'Nusrat Jahan',
-  },
-  {
-    id: 3,
-    type: 'debit',
-    desc: 'Withdrawal to bKash',
-    amount: 8000,
-    date: 'Apr 20, 2025',
-    student: null,
-  },
-  {
-    id: 4,
-    type: 'credit',
-    desc: 'Sale: Web Development Bootcamp',
-    amount: 1200,
-    date: 'Apr 19, 2025',
-    student: 'Arif Hossain',
-  },
-  {
-    id: 5,
-    type: 'credit',
-    desc: 'Sale: JavaScript ES6+',
-    amount: 720,
-    date: 'Apr 18, 2025',
-    student: 'Rakib Ahmed',
-  },
-  {
-    id: 6,
-    type: 'credit',
-    desc: 'Sale: React.js Masterclass',
-    amount: 1440,
-    date: 'Apr 17, 2025',
-    student: 'Fatima Begum',
-  },
-  {
-    id: 7,
-    type: 'debit',
-    desc: 'Withdrawal to bKash',
-    amount: 5000,
-    date: 'Apr 1, 2025',
-    student: null,
-  },
-];
+interface TransactionHistoryProps {
+  payments: TPaymentItem[];
+}
 
-const TransactionHistory = () => {
+const TransactionHistory = ({ payments }: TransactionHistoryProps) => {
   return (
     <div className="dashboard-card-container p-0">
-      <div className="border-b border-slate-100 px-6 py-4">
+      <div className="border-b border-slate-100 px-4 py-4 sm:px-6">
         <h2 className="text-lg font-semibold">Transaction History</h2>
       </div>
       <div className="divide-primary/8 divide-y">
-        {transactions.map((tx) => (
-          <div key={tx.id} className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-4">
-              <div
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${tx.type === 'credit' ? 'text-primary bg-primary/8' : 'text-secondary bg-secondary/8'}`}
-              >
-                {tx.type === 'credit' ? <ArrowDownLeft size={18} /> : <ArrowUpRight size={18} />}
+        {payments.map((tx) => (
+          <div
+            key={tx._id}
+            className="flex items-start justify-between gap-2 px-4 py-4 sm:items-center sm:gap-4 sm:px-6"
+          >
+            <div className="flex min-w-0 items-start gap-3 sm:items-center sm:gap-4">
+              <div className="text-primary bg-primary/8 mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full sm:mt-0">
+                <ArrowDownLeft size={18} />
               </div>
-              <div>
-                <p className="text-sm font-semibold">{tx.desc}</p>
-                <p className="text-text-secondary mt-0.5 text-xs">
-                  {tx.date}
-                  {tx.student && ` • ${tx.student}`}
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold sm:line-clamp-2 sm:whitespace-normal">
+                  Sale: {tx.course?.title || 'Course Sale'}
                 </p>
+                <div className="text-text-secondary mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+                  <span>{FormatDateTime(tx.createdAt)}</span>
+                  <span className="hidden sm:block">•</span>
+                  <span>
+                    {tx.commissionRate}% Commission (-৳{tx.commissionAmount?.toLocaleString() || 0})
+                  </span>
+                </div>
               </div>
             </div>
-            <span
-              className={`text-base font-bold ${tx.type === 'credit' ? 'text-primary' : 'text-secondary'}`}
-            >
-              {tx.type === 'credit' ? '+' : '-'}৳{tx.amount.toLocaleString()}
+            <span className="text-primary mt-0.5 shrink-0 text-base font-bold sm:mt-0">
+              +৳{tx.instructorEarning?.toLocaleString() || 0}
             </span>
           </div>
         ))}
+        {payments.length === 0 && (
+          <div className="px-4 py-8 text-center text-sm text-gray-500 sm:px-6">
+            No transactions found.
+          </div>
+        )}
       </div>
     </div>
   );

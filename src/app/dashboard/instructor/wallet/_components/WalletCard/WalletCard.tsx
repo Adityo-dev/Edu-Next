@@ -23,7 +23,6 @@ const WalletCard = ({ balance }: WalletCardProps) => {
             <span className="text-sm text-white/60">Available Balance</span>
           </div>
           <p className="py-2 text-5xl font-black text-white">৳{balance.toLocaleString()}</p>
-          <p className="mt-2 text-sm text-white/60">After 20% platform commission deducted</p>
         </div>
         <Link
           href="/dashboard/instructor/withdrawal"

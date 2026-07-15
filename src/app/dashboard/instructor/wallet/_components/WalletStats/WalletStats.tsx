@@ -1,34 +1,35 @@
 import { ArrowUpRight, Clock, TrendingUp } from 'lucide-react';
 
 interface WalletStatsProps {
-  credits: number;
-  debits: number;
+  totalEarned: number;
+  withdrawn: number;
+  pendingWithdrawal: number;
 }
 
-const WalletStats = ({ credits, debits }: WalletStatsProps) => {
+const WalletStats = ({ totalEarned, withdrawn, pendingWithdrawal }: WalletStatsProps) => {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
       {[
         {
           icon: <TrendingUp size={20} />,
           label: 'Total Earned',
-          value: `৳${credits.toLocaleString()}`,
+          value: `৳${totalEarned.toLocaleString()}`,
           color: 'bg-emerald-50 text-primary',
         },
         {
           icon: <ArrowUpRight size={20} />,
           label: 'Total Withdrawn',
-          value: `৳${debits.toLocaleString()}`,
+          value: `৳${withdrawn.toLocaleString()}`,
           color: 'bg-orange-50 text-secondary',
         },
         {
           icon: <Clock size={20} />,
           label: 'Pending Clearance',
-          value: '৳0',
+          value: `৳${pendingWithdrawal.toLocaleString()}`,
           color: 'bg-blue-50 text-blue-600',
         },
       ].map((stat, i) => (
-        <div key={i} className="dashboard-card-container">
+        <div key={i} className="dashboard-card-container p-4">
           <div
             className={`mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm ${stat.color}`}
           >
