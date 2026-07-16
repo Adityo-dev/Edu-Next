@@ -5,8 +5,8 @@ import {
   useMarkLessonAsCompleteMutation,
 } from '@/redux/features/courseManagement/studentCourse.api';
 import { ILesson } from '@/types/courseManagement.types';
-import { Loader2 } from 'lucide-react';
 import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import CoursePlayerSkeleton from '@/components/dashboard/Skeletons/CoursePlayerSkeleton';
 import CourseContentSidebar, {
   ICourseSection,
 } from './_components/CourseContentSidebar/CourseContentSidebar';
@@ -106,11 +106,7 @@ export default function CoursePlayerPage({ params }: { params: Promise<{ id: str
   };
 
   if (isLoading) {
-    return (
-      <div className="bg-section-slate flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <Loader2 className="text-primary h-10 w-10 animate-spin" />
-      </div>
-    );
+    return <CoursePlayerSkeleton />;
   }
 
   if (!courseData) {

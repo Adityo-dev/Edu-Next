@@ -1,6 +1,4 @@
 /* eslint-disable no-unused-vars */
-import { useState } from 'react';
-import { Search, CheckCircle, PlayCircle, ChevronDown, BookOpen } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -8,6 +6,8 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { ILesson } from '@/types/courseManagement.types';
+import { BookOpen, CheckCircle, ChevronDown, PlayCircle, Search } from 'lucide-react';
+import { useState } from 'react';
 
 export interface ICourseSection {
   _id?: string;
@@ -70,7 +70,7 @@ export default function CourseContentSidebar({
 
   return (
     <div
-      className={`bg-pure-white text-text-primary z-10 flex w-full shrink-0 flex-col shadow-xs lg:h-full lg:w-[420px] xl:w-[450px] ${isMobile ? 'border-subtle border-b' : 'border-subtle border-l'}`}
+      className={`bg-pure-white text-text-primary z-10 flex w-full shrink-0 flex-col shadow-xs lg:h-full lg:w-105 xl:w-112.5 ${isMobile ? 'border-subtle border-b' : 'border-subtle border-l'}`}
     >
       {/* Mobile Toggle Button */}
       {isMobile && (
@@ -170,7 +170,7 @@ export default function CourseContentSidebar({
                           <button
                             key={lesson._id}
                             onClick={() => onSelectLesson(lesson)}
-                            className={`flex items-start gap-3 border-l-2 px-5 py-3 text-left transition-colors duration-200 ${
+                            className={`flex cursor-pointer items-start gap-3 border-l-2 px-5 py-3 text-left transition-colors duration-200 ${
                               isActive
                                 ? 'border-primary bg-primary/10'
                                 : 'hover:bg-section-slate border-transparent'
