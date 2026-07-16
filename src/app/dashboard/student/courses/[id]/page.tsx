@@ -1,17 +1,17 @@
 'use client';
 
-import { Loader2 } from 'lucide-react';
-import { use, useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import {
   useGetCoursePlaybackDataQuery,
   useMarkLessonAsCompleteMutation,
 } from '@/redux/features/courseManagement/studentCourse.api';
 import { ILesson } from '@/types/courseManagement.types';
-import VideoPlayer from './_components/VideoPlayer/VideoPlayer';
-import LessonInfoTabs from './_components/LessonInfoTabs/LessonInfoTabs';
+import { Loader2 } from 'lucide-react';
+import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CourseContentSidebar, {
   ICourseSection,
 } from './_components/CourseContentSidebar/CourseContentSidebar';
+import LessonInfoTabs from './_components/LessonInfoTabs/LessonInfoTabs';
+import VideoPlayer from './_components/VideoPlayer/VideoPlayer';
 
 export default function CoursePlayerPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -107,28 +107,29 @@ export default function CoursePlayerPage({ params }: { params: Promise<{ id: str
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-slate-50">
-        <Loader2 className="h-10 w-10 animate-spin text-emerald-500" />
+      <div className="bg-section-slate flex min-h-[calc(100vh-4rem)] items-center justify-center">
+        <Loader2 className="text-primary h-10 w-10 animate-spin" />
       </div>
     );
   }
 
   if (!courseData) {
     return (
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-slate-50">
-        <p className="text-lg font-medium text-slate-500">Course not found or access denied.</p>
+      <div className="bg-section-slate flex min-h-[calc(100vh-4rem)] items-center justify-center">
+        <p className="text-text-secondary text-lg font-medium">
+          Course not found or access denied.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-slate-50 lg:flex-row">
-      {/* Left Side on Desktop: Video Player & Tabs */}
+    <div className="bg-section-slate flex min-h-[calc(100vh-4rem)] flex-col gap-6 lg:flex-row">
       <div className="flex w-full flex-col overflow-hidden lg:flex-1">
         {/* Video Player Container */}
         <div
           id="video-player-container"
-          className="relative aspect-video w-full bg-slate-950 shadow-md"
+          className="bg-primary-dark relative aspect-video w-full shadow-md"
         >
           <VideoPlayer
             videoUrl={currentLesson?.videoUrl || ''}

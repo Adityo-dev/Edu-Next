@@ -70,25 +70,25 @@ export default function CourseContentSidebar({
 
   return (
     <div
-      className={`z-10 flex w-full shrink-0 flex-col bg-white text-slate-900 shadow-xs lg:h-full lg:w-[420px] xl:w-[450px] ${isMobile ? 'border-b border-slate-200' : 'border-l border-slate-200'}`}
+      className={`bg-pure-white text-text-primary z-10 flex w-full shrink-0 flex-col shadow-xs lg:h-full lg:w-[420px] xl:w-[450px] ${isMobile ? 'border-subtle border-b' : 'border-subtle border-l'}`}
     >
       {/* Mobile Toggle Button */}
       {isMobile && (
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="flex w-full items-center justify-between bg-slate-50 p-4 transition-colors hover:bg-slate-100"
+          className="bg-section-slate hover:bg-teal-accent flex w-full items-center justify-between p-4 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <BookOpen size={18} className="text-emerald-600" />
-            <span className="font-semibold text-slate-800">Course Curriculum</span>
+            <BookOpen size={18} className="text-primary" />
+            <span className="text-text-primary font-semibold">Course Curriculum</span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-500">
+            <span className="border-subtle bg-pure-white text-text-secondary rounded-md border px-2 py-1 text-xs font-medium">
               {completedLessons}/{totalLessons}
             </span>
             <ChevronDown
               size={18}
-              className={`text-slate-500 transition-transform duration-200 ${
+              className={`text-text-secondary transition-transform duration-200 ${
                 isMobileOpen ? 'rotate-180' : ''
               }`}
             />
@@ -101,7 +101,7 @@ export default function CourseContentSidebar({
         className={`${isMobile ? (isMobileOpen ? 'flex' : 'hidden') : 'flex'} flex-1 flex-col overflow-hidden`}
       >
         {/* Sidebar Header: Search & Progress */}
-        <div className="sticky top-0 z-20 border-b border-slate-200 bg-white p-5 pb-4 shadow-sm">
+        <div className="border-subtle bg-pure-white sticky top-0 z-20 border-b p-5 pb-4 shadow-sm">
           <div className="relative mb-4">
             <Search className="absolute top-1/2 left-3 -translate-y-1/2 text-slate-400" size={16} />
             <input
@@ -109,19 +109,21 @@ export default function CourseContentSidebar({
               placeholder="Search course lessons..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-md border border-slate-200 bg-slate-50 py-2 pr-4 pl-9 text-sm text-slate-900 transition-colors placeholder:text-slate-400 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
+              className="focus:border-primary focus:ring-primary border-subtle bg-section-slate text-text-primary placeholder:text-text-placeholder w-full rounded-md border py-2 pr-4 pl-9 text-sm transition-colors focus:ring-1 focus:outline-none"
             />
           </div>
 
           <div>
-            <h3 className="mb-1 text-sm font-semibold text-slate-900">
+            <h3 className="text-text-primary mb-1 text-sm font-semibold">
               {completedLessons} / {totalLessons} lessons completed • Progress{' '}
               {Math.round(progressPercentage)}%
             </h3>
-            <p className="mb-2 text-xs text-slate-500">Complete all lessons to get certificate</p>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
+            <p className="text-text-secondary mb-2 text-xs">
+              Complete all lessons to get certificate
+            </p>
+            <div className="bg-teal-accent h-1.5 w-full overflow-hidden rounded-full">
               <div
-                className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                className="bg-primary h-full rounded-full transition-all duration-500"
                 style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>
@@ -131,7 +133,7 @@ export default function CourseContentSidebar({
         {/* Accordion Modules */}
         <div className="custom-scrollbar max-h-[60vh] flex-1 overflow-y-auto lg:max-h-none">
           {filteredSections.length === 0 ? (
-            <div className="p-6 text-center text-sm text-slate-500">No lessons found.</div>
+            <div className="text-text-secondary p-6 text-center text-sm">No lessons found.</div>
           ) : (
             <Accordion
               type="multiple"
@@ -144,18 +146,20 @@ export default function CourseContentSidebar({
                 <AccordionItem
                   key={section._id || si}
                   value={`section-${si}`}
-                  className="border-b border-slate-200"
+                  className="border-subtle border-b"
                 >
-                  <AccordionTrigger className="bg-slate-50 px-5 py-4 transition-colors hover:bg-slate-100 hover:no-underline data-[state=open]:bg-white">
+                  <AccordionTrigger className="bg-section-slate hover:bg-teal-accent data-[state=open]:bg-pure-white px-5 py-4 transition-colors hover:no-underline">
                     <div className="flex w-full flex-col items-start gap-1 pr-4 text-left">
-                      <span className="text-sm font-semibold text-slate-800">{section.title}</span>
-                      <span className="text-xs font-normal text-slate-500">
+                      <span className="text-text-primary text-sm font-semibold">
+                        {section.title}
+                      </span>
+                      <span className="text-text-secondary text-xs font-normal">
                         {section.lessons.length} lessons
                       </span>
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="bg-white pt-0 pb-0">
-                    <div className="flex flex-col divide-y divide-slate-100">
+                  <AccordionContent className="bg-pure-white pt-0 pb-0">
+                    <div className="divide-subtle flex flex-col divide-y">
                       {section.lessons.map((lesson: ILesson) => {
                         const isActive = currentLessonId === lesson._id;
                         const isCompleted = progressData?.completedLessons?.includes(
@@ -168,32 +172,26 @@ export default function CourseContentSidebar({
                             onClick={() => onSelectLesson(lesson)}
                             className={`flex items-start gap-3 border-l-2 px-5 py-3 text-left transition-colors duration-200 ${
                               isActive
-                                ? 'border-emerald-500 bg-emerald-50/60'
-                                : 'border-transparent hover:bg-slate-50'
+                                ? 'border-primary bg-primary/10'
+                                : 'hover:bg-section-slate border-transparent'
                             }`}
                           >
                             <div className="mt-0.5 shrink-0">
                               {isCompleted ? (
-                                <CheckCircle
-                                  size={16}
-                                  className="text-emerald-500 drop-shadow-sm"
-                                />
+                                <CheckCircle size={16} className="text-primary drop-shadow-sm" />
                               ) : isActive ? (
-                                <PlayCircle
-                                  size={16}
-                                  className="fill-emerald-100 text-emerald-600"
-                                />
+                                <PlayCircle size={16} className="fill-primary/20 text-primary" />
                               ) : (
                                 <PlayCircle
                                   size={16}
-                                  className="text-slate-300 transition-colors hover:text-slate-400"
+                                  className="text-text-placeholder hover:text-text-secondary transition-colors"
                                 />
                               )}
                             </div>
                             <div className="flex flex-1 flex-col">
                               <span
                                 className={`text-sm ${
-                                  isActive ? 'font-semibold text-emerald-900' : 'text-slate-700'
+                                  isActive ? 'text-primary font-semibold' : 'text-text-secondary'
                                 }`}
                               >
                                 {lesson.title}

@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { Maximize, ArrowLeft, ArrowRight } from 'lucide-react';
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { ILesson } from '@/types/courseManagement.types';
+import { ArrowLeft, ArrowRight, Maximize } from 'lucide-react';
+import { useState } from 'react';
 
 interface LessonInfoTabsProps {
   currentLesson: ILesson | null;
@@ -22,56 +23,54 @@ export default function LessonInfoTabs({
   const [activeTab, setActiveTab] = useState<'description' | 'reference' | 'quiz'>('description');
 
   return (
-    <div className="flex w-full flex-col border-t border-slate-200 bg-white text-slate-600">
+    <div className="border-subtle bg-pure-white text-text-secondary flex w-full flex-col border-t">
       {/* Navigation Bar */}
-      <div className="flex items-center justify-between gap-2 border-b border-slate-200 px-3 py-4 md:px-6">
-        <button
+      <div className="border-subtle flex items-center justify-between gap-2 border-b px-3 py-4 md:px-6">
+        <DynamicActionButton
+          label="Prev"
+          icon={ArrowLeft}
+          showIcon
           onClick={onPrevLesson}
           disabled={!hasPrev}
-          className={`flex shrink-0 items-center justify-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium whitespace-nowrap transition-colors sm:px-4 sm:py-2 sm:text-sm ${
-            hasPrev
-              ? 'bg-emerald-500 text-white hover:bg-emerald-600'
-              : 'cursor-not-allowed bg-slate-100 text-slate-400'
+          className={`h-9! ${
+            !hasPrev
+              ? 'bg-teal-accent! text-text-placeholder! pointer-events-none border-transparent!'
+              : ''
           }`}
-        >
-          <ArrowLeft size={16} className="shrink-0" />
-          <span className="hidden sm:inline">Previous Lesson</span>
-          <span className="sm:hidden">Prev</span>
-        </button>
+        />
 
         <button
           onClick={onFullScreen}
-          className="flex shrink-0 items-center justify-center gap-1.5 rounded-md p-2 text-xs font-medium whitespace-nowrap text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 sm:px-3 sm:py-2 sm:text-sm"
+          className="text-text-secondary hover:bg-teal-accent hover:text-text-primary flex shrink-0 items-center justify-center gap-1.5 rounded-md p-2 text-xs font-medium whitespace-nowrap transition-colors sm:px-3 sm:py-2 sm:text-sm"
           title="Full Screen"
         >
           <Maximize size={18} className="shrink-0" />
           <span className="hidden sm:inline">Full Screen</span>
         </button>
 
-        <button
+        <DynamicActionButton
+          label="Next"
+          icon={ArrowRight}
+          showIcon
           onClick={onNextLesson}
           disabled={!hasNext}
-          className={`flex shrink-0 items-center justify-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium whitespace-nowrap transition-colors sm:px-4 sm:py-2 sm:text-sm ${
-            hasNext
-              ? 'bg-emerald-500 text-white hover:bg-emerald-600'
-              : 'cursor-not-allowed bg-slate-100 text-slate-400'
+          className={`h-9! ${
+            !hasNext
+              ? 'bg-teal-accent! text-text-placeholder! pointer-events-none border-transparent!'
+              : ''
           }`}
-        >
-          <span className="hidden sm:inline">Next Lesson</span>
-          <span className="sm:hidden">Next</span>
-          <ArrowRight size={16} className="shrink-0" />
-        </button>
+        />
       </div>
 
       {/* Tabs */}
-      <div className="custom-scrollbar overflow-x-auto bg-slate-50 px-4 pt-4 md:px-6">
-        <div className="flex min-w-max items-center gap-4 border-b border-slate-200 sm:gap-6">
+      <div className="custom-scrollbar bg-section-slate overflow-x-auto px-4 pt-4 md:px-6">
+        <div className="border-subtle flex min-w-max items-center gap-4 border-b sm:gap-6">
           <button
             onClick={() => setActiveTab('description')}
             className={`px-3 py-2 text-sm font-semibold whitespace-nowrap transition-colors sm:px-4 ${
               activeTab === 'description'
-                ? 'border-b-2 border-emerald-500 bg-white text-emerald-600'
-                : 'text-slate-500 hover:text-slate-700'
+                ? 'border-primary bg-pure-white text-primary border-b-2'
+                : 'text-text-secondary hover:text-text-primary'
             }`}
           >
             Video Description
@@ -80,8 +79,8 @@ export default function LessonInfoTabs({
             onClick={() => setActiveTab('reference')}
             className={`px-3 py-2 text-sm font-semibold whitespace-nowrap transition-colors sm:px-4 ${
               activeTab === 'reference'
-                ? 'border-b-2 border-emerald-500 bg-white text-emerald-600'
-                : 'text-slate-500 hover:text-slate-700'
+                ? 'border-primary bg-pure-white text-primary border-b-2'
+                : 'text-text-secondary hover:text-text-primary'
             }`}
           >
             References
@@ -90,8 +89,8 @@ export default function LessonInfoTabs({
             onClick={() => setActiveTab('quiz')}
             className={`px-3 py-2 text-sm font-semibold whitespace-nowrap transition-colors sm:px-4 ${
               activeTab === 'quiz'
-                ? 'border-b-2 border-emerald-500 bg-white text-emerald-600'
-                : 'text-slate-500 hover:text-slate-700'
+                ? 'border-primary bg-pure-white text-primary border-b-2'
+                : 'text-text-secondary hover:text-text-primary'
             }`}
           >
             Quiz
@@ -100,17 +99,17 @@ export default function LessonInfoTabs({
       </div>
 
       {/* Lesson Details Content */}
-      <div className="mb-8 bg-white p-4 md:p-6">
-        <h1 className="mb-1 text-xl font-bold text-slate-900 md:text-2xl">
+      <div className="bg-pure-white mb-8 p-4 md:p-6">
+        <h1 className="text-text-primary mb-1 text-xl font-bold md:text-2xl">
           {currentLesson?.title || 'Lesson Title'}
         </h1>
         {currentLesson && (
-          <p className="mb-6 text-sm font-medium text-slate-500">
+          <p className="text-text-secondary mb-6 text-sm font-medium">
             Duration: {currentLesson.duration}
           </p>
         )}
 
-        <div className="prose max-w-none text-slate-600">
+        <div className="prose text-text-secondary max-w-none">
           {activeTab === 'description' && (
             <p className="leading-relaxed">
               Welcome to this lesson on <strong>{currentLesson?.title}</strong>. In this video, we
@@ -122,7 +121,7 @@ export default function LessonInfoTabs({
             <p className="leading-relaxed">No references available for this lesson.</p>
           )}
           {activeTab === 'quiz' && (
-            <p className="leading-relaxed text-slate-500 italic">
+            <p className="text-text-placeholder leading-relaxed italic">
               No quiz available for this lesson yet.
             </p>
           )}
