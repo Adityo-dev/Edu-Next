@@ -126,3 +126,56 @@ export interface IUpdateStatusPayload {
   suspendedReason?: string | null;
   badge?: TCourseBadge;
 }
+
+// --- Student Enrollment Types ---
+export interface IStudentStats {
+  totalEnrolled: number;
+  inProgress: number;
+  completed: number;
+  certificates: number;
+}
+
+export interface IEnrolledCourse {
+  enrollmentId: string;
+  enrolledAt: string;
+  course: {
+    _id: string;
+    title: string;
+    thumbnail: string;
+    category: string;
+    lessonsCount: number;
+    totalDuration: string;
+    rating: number;
+    instructor: {
+      _id: string;
+      firstName: string;
+      lastName: string;
+      avatar: string;
+    };
+  };
+  progress: {
+    completedLessonsCount: number;
+    percentage: number;
+    isCourseCompleted: boolean;
+    status: string;
+    lastActivityAt: string;
+  };
+}
+
+export interface ICoursePlaybackData {
+  course: {
+    _id: string;
+    title: string;
+    slug: string;
+    totalDuration: string;
+    lessonsCount: number;
+    hasCertificate: boolean;
+    sections: ISection[];
+  };
+  progress: {
+    completedLessons: string[];
+    completedLessonsCount: number;
+    percentage: number;
+    isCourseCompleted: boolean;
+  };
+}

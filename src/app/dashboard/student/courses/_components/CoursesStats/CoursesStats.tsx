@@ -1,60 +1,55 @@
 'use client';
 
+import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleton';
+import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
+import { useGetMyStatsQuery } from '@/redux/features/courseManagement/studentCourse.api';
 import { Award, BookOpen, Play, Star } from 'lucide-react';
 
-interface CoursesStatsProps {
-  totalCourses: number;
-  totalInProgress: number;
-  totalCompleted: number;
-  totalCertificates: number;
-}
+const CoursesStats = () => {
+  const { data, isLoading } = useGetMyStatsQuery();
+  const statsData = data?.data;
+  console.log(statsData, 'stats data ');
 
-const CoursesStats = ({
-  totalCourses,
-  totalInProgress,
-  totalCompleted,
-  totalCertificates,
-}: CoursesStatsProps) => {
   const stats = [
     {
       label: 'Total Enrolled',
-      value: totalCourses,
-      icon: <BookOpen size={18} />,
-      color: 'bg-emerald-50 text-primary',
+      value: statsData?.totalEnrolled ?? 0,
+      icon: BookOpen,
+      iconColor: '#10b981',
     },
     {
       label: 'In Progress',
-      value: totalInProgress,
-      icon: <Play size={18} />,
-      color: 'bg-blue-50 text-blue-600',
+      value: statsData?.inProgress ?? 0,
+      icon: Play,
+      iconColor: '#3b82f6',
     },
     {
       label: 'Completed',
-      value: totalCompleted,
-      icon: <Star size={18} />,
-      color: 'bg-yellow-50 text-yellow-600',
+      value: statsData?.completed ?? 0,
+      icon: Star,
+      iconColor: '#eab308',
     },
     {
       label: 'Certificates',
-      value: totalCertificates,
-      icon: <Award size={18} />,
-      color: 'bg-orange-50 text-secondary',
+      value: statsData?.certificates ?? 0,
+      icon: Award,
+      iconColor: '#f97316',
     },
   ];
 
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-      {stats.map((stat, i) => (
-        <div key={i} className="dashboard-card-container">
-          <div
-            className={`mb-3 inline-flex h-9 w-9 items-center justify-center rounded-sm ${stat.color}`}
-          >
-            {stat.icon}
-          </div>
-          <p className="text-text-primary text-2xl font-black">{stat.value}</p>
-          <p className="text-text-secondary text-sm">{stat.label}</p>
-        </div>
-      ))}
+      {isLoading
+        ? [...Array(4)].map((_, i) => <StatsCardSkeleton key={i} />)
+        : stats.map((stat, i) => (
+            <StatsCard
+              key={i}
+              icon={stat?.icon}
+              iconColor={stat?.iconColor}
+              label={stat?.label}
+              value={stat?.value}
+            />
+          ))}
     </div>
   );
 };
