@@ -61,6 +61,7 @@ const EditCoursePage = () => {
     category: course.category || '',
     level: course.level || '',
     language: course.language || '',
+    hasCertificate: course.hasCertificate || false,
     description: course.description || '',
     tags: course.tags || [],
     requirements: Array.isArray(course.requirements)
