@@ -6,7 +6,6 @@ import ImageUploadField from '@/components/dashboard/Fields/ImageUploadField/Ima
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import KeywordInputField from '@/components/dashboard/Fields/KeywordInputField/KeywordInputField';
 import SelectField from '@/components/dashboard/Fields/SelectField/SelectField';
-import TextAreaField from '@/components/dashboard/Fields/TextAreaField/TextAreaField';
 import TiptapEditor from '@/components/dashboard/Fields/TiptapEditor/TiptapEditor';
 
 interface Step1BasicInfoProps {
@@ -35,8 +34,8 @@ const Step1BasicInfo = ({
         onChange={handleThumbnailChange}
         error={isUploading ? undefined : errors.thumbnail?.message}
         required
+        isUploading={isUploading}
       />
-      {isUploading && <p className="text-primary text-xs font-medium">Uploading thumbnail...</p>}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
@@ -92,14 +91,12 @@ const Step1BasicInfo = ({
         />
 
         <div className="sm:col-span-2">
-          <TextAreaField
+          <TiptapEditor
             label="Description"
             name="description"
             control={control}
             placeholder="Describe what students will learn in this course..."
             required
-            rows={5}
-            error={errors.description?.message}
           />
         </div>
 

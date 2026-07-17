@@ -21,6 +21,7 @@ import { TColumn } from '@/types/custom-table.types';
 import { ITableFilter } from '@/types/table-filter.types';
 import { AlertTriangle, BookOpen, CheckCircle, HelpCircle, Star, XCircle } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -59,6 +60,7 @@ const mapCourseToRow = (course: ICourse): IInstructorCourseRow => ({
 });
 
 const CourseManagementTable = () => {
+  const router = useRouter();
   const { getQueryObject } = useSetSearchQueryInURL();
   const [actingRowId, setActingRowId] = useState<string | null>(null);
 
@@ -252,7 +254,7 @@ const CourseManagementTable = () => {
             {
               type: 'edit',
               onClick: () => {
-                console.log('Editing course:', row?.id);
+                router.push(`/dashboard/instructor/courses/edit/${row?.slug}`);
               },
             },
             {
@@ -278,7 +280,7 @@ const CourseManagementTable = () => {
           tableActions.push({
             type: 'edit',
             onClick: () => {
-              console.log('Editing live content for course:', row?.id);
+              router.push(`/dashboard/instructor/courses/edit/${row?.slug}`);
             },
           });
         }

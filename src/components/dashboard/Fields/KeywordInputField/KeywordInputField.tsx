@@ -32,14 +32,21 @@ const KeywordInputField = <T extends FieldValues>({
   const [input, setInput] = useState('');
   const keywordsArray: string[] = Array.isArray(value) ? value : [];
 
+  const addKeyword = () => {
+    const trimmedValue = input.trim().replace(/,$/, '');
+    if (trimmedValue && !keywordsArray.includes(trimmedValue)) {
+      onChange([...keywordsArray, trimmedValue]);
+      setInput('');
+    } else if (trimmedValue) {
+      setInput(''); // Clear duplicate input
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
-      const trimmedValue = input.trim().replace(/,$/, '');
-      if (trimmedValue && !keywordsArray.includes(trimmedValue)) {
-        onChange([...keywordsArray, trimmedValue]);
-        setInput('');
-      }
+      e.stopPropagation(); // prevent parent forms from capturing Enter
+      addKeyword();
     }
   };
 
@@ -86,9 +93,22 @@ const KeywordInputField = <T extends FieldValues>({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
+          onBlur={addKeyword}
           placeholder={keywordsArray.length === 0 ? placeholder : 'Add more...'}
           className="text-primary placeholder:text-text-placeholder flex-1 border-none bg-transparent p-0.5 text-sm outline-none"
         />
+        {input.trim() && (
+          <button
+            type="button"
+            onMouseDown={(e) => {
+              e.preventDefault(); // prevent input blur before adding
+              addKeyword();
+            }}
+            className="text-primary rounded bg-emerald-100 px-2 py-0.5 text-xs font-semibold transition-colors hover:bg-emerald-200"
+          >
+            Add
+          </button>
+        )}
       </div>
 
       {error && <p className="text-danger mt-1 text-xs font-medium">{error.message}</p>}

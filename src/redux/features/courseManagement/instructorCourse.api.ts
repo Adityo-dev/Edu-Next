@@ -37,7 +37,15 @@ export const instructorCourseApi = apiClient.injectEndpoints({
       }),
     }),
 
-    // 3. Update course content or lessons
+    // 3. Get single course by slug for instructor
+    getInstructorCourseBySlug: builder.query<ICommonResponse<ICourse>, string>({
+      query: (slug) => ({
+        url: `/courses/${slug}`,
+        method: 'GET',
+      }),
+    }),
+
+    // 4. Update course content or lessons
     updateCourseContent: builder.mutation<
       ICommonResponse<ICourse>,
       { id: string; payload: Partial<ICourse> }
@@ -49,7 +57,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
       }),
     }),
 
-    // 4. Request admin review to publish a draft or rejected course
+    // 5. Request admin review to publish a draft or rejected course
     submitPublishRequest: builder.mutation<ICommonResponse<ICourse>, string>({
       query: (id) => ({
         url: `/courses/${id}/publish-request`,
@@ -57,7 +65,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
       }),
     }),
 
-    // 5. Delete a course entirely (Only allowed if no enrollments & draft/rejected)
+    // 6. Delete a course entirely (Only allowed if no enrollments & draft/rejected)
     deleteCourse: builder.mutation<ICommonResponse<null>, string>({
       query: (id) => ({
         url: `/courses/${id}`,
@@ -126,6 +134,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
 export const {
   useCreateCourseMutation,
   useGetInstructorCoursesQuery,
+  useGetInstructorCourseBySlugQuery,
   useUpdateCourseContentMutation,
   useSubmitPublishRequestMutation,
   useDeleteCourseMutation,

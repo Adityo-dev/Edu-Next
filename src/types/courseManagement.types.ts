@@ -1,7 +1,7 @@
 // --- Core Enums & Primitive Types ---
 export type TCourseStatus = 'draft' | 'pending' | 'published' | 'rejected' | 'suspended';
 export type TCourseLevel = 'Beginner' | 'Intermediate' | 'Advanced';
-export type TCourseLanguage = 'বাংলা' | 'English';
+export type TCourseLanguage = 'বাংলা' | 'English' | 'Hindi';
 export type TCourseBadge = 'New' | 'Bestseller' | 'Trending' | null;
 
 // --- Sub-Structures (Curriculum) ---

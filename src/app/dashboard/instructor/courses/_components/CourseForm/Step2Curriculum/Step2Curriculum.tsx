@@ -46,7 +46,16 @@ const Step2Curriculum = ({ control, errors, trigger, getValues }: Step2Curriculu
         onClick={() =>
           appendSection({
             title: '',
-            lessons: [{ title: '', durationMin: '', durationSec: '', videoUrl: '', free: false }],
+            lessons: [
+              {
+                title: '',
+                durationHr: '',
+                durationMin: '',
+                durationSec: '',
+                videoUrl: '',
+                free: false,
+              },
+            ],
           })
         }
         className="hover:border-primary hover:text-primary flex w-full items-center justify-center gap-2 rounded-sm border border-dashed border-slate-300 py-3.5 text-sm font-semibold text-slate-500 transition-all"
@@ -102,6 +111,7 @@ const SectionBlock = ({
     const lastIdx = lessonFields.length - 1;
     const fieldNames = [
       `sections.${sectionIndex}.lessons.${lastIdx}.title`,
+      `sections.${sectionIndex}.lessons.${lastIdx}.durationHr`,
       `sections.${sectionIndex}.lessons.${lastIdx}.durationMin`,
       `sections.${sectionIndex}.lessons.${lastIdx}.durationSec`,
       `sections.${sectionIndex}.lessons.${lastIdx}.videoUrl`,
@@ -120,7 +130,14 @@ const SectionBlock = ({
       return;
     }
 
-    appendLesson({ title: '', durationMin: '', durationSec: '', videoUrl: '', free: false });
+    appendLesson({
+      title: '',
+      durationHr: '',
+      durationMin: '',
+      durationSec: '',
+      videoUrl: '',
+      free: false,
+    });
   };
 
   return (
@@ -203,6 +220,13 @@ const LessonRow = ({
   });
 
   const {
+    field: { value: durationHr, onChange: onDurationHrChange },
+  } = useController({
+    control,
+    name: `sections.${sectionIndex}.lessons.${lessonIndex}.durationHr`,
+  });
+
+  const {
     field: { value: durationMin, onChange: onDurationMinChange },
   } = useController({
     control,
@@ -231,7 +255,11 @@ const LessonRow = ({
   });
 
   const lessonErrors = errors.sections?.[sectionIndex]?.lessons?.[lessonIndex];
-  const hasDurationError = !!(lessonErrors?.durationMin || lessonErrors?.durationSec);
+  const hasDurationError = !!(
+    lessonErrors?.durationHr ||
+    lessonErrors?.durationMin ||
+    lessonErrors?.durationSec
+  );
 
   return (
     <div className="space-y-1 pt-2">
@@ -275,12 +303,27 @@ const LessonRow = ({
           >
             <input
               type="text"
-              value={durationMin}
+              value={durationHr}
               onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, '').slice(0, 3);
-                onDurationMinChange(val);
+                const val = e.target.value.replace(/\D/g, '').slice(0, 2);
+                onDurationHrChange(val);
               }}
               placeholder="0"
+              className="w-6 bg-transparent text-center text-xs font-medium text-slate-700 outline-none placeholder:font-normal placeholder:text-slate-400"
+            />
+            <span className="text-[10px] font-bold text-slate-400">h</span>
+
+            <div className="mx-0.5 h-3 w-px bg-slate-300" />
+
+            <input
+              type="text"
+              value={durationMin}
+              onChange={(e) => {
+                let val = e.target.value.replace(/\D/g, '').slice(0, 2);
+                if (parseInt(val) > 59) val = '59';
+                onDurationMinChange(val);
+              }}
+              placeholder="00"
               className="w-6 bg-transparent text-center text-xs font-medium text-slate-700 outline-none placeholder:font-normal placeholder:text-slate-400"
             />
             <span className="text-[10px] font-bold text-slate-400">m</span>
@@ -327,7 +370,7 @@ const LessonRow = ({
           {lessonErrors?.videoUrl && (
             <p className="text-xs text-red-500">Video: {lessonErrors.videoUrl.message}</p>
           )}
-          {hasDurationError && <p className="text-xs text-red-500">Duration: select mm:ss</p>}
+          {hasDurationError && <p className="text-xs text-red-500">Duration: select hh:mm:ss</p>}
         </div>
       )}
     </div>

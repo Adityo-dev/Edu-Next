@@ -3,10 +3,14 @@ import { z } from 'zod';
 // ─── Zod Schema
 export const lessonSchema = z.object({
   title: z.string().min(1, 'Lesson title is required'),
+  durationHr: z
+    .string()
+    .min(1, 'Required')
+    .regex(/^\d{1,2}$/, 'Invalid'),
   durationMin: z
     .string()
     .min(1, 'Required')
-    .regex(/^\d{1,3}$/, 'Invalid'),
+    .regex(/^\d{1,2}$/, 'Invalid'),
   durationSec: z
     .string()
     .min(1, 'Required')
@@ -73,6 +77,7 @@ export const LEVEL_OPTIONS = [
 export const LANGUAGE_OPTIONS = [
   { value: 'বাংলা', label: 'বাংলা' },
   { value: 'English', label: 'English' },
+  { value: 'Hindi', label: 'Hindi' },
 ];
 
 export const STEP_FIELDS: Record<number, (keyof CourseFormValues)[]> = {
