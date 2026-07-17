@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Control, FieldErrors } from 'react-hook-form';
+import { Control, FieldErrors, useController } from 'react-hook-form';
 import { CATEGORY_OPTIONS, CourseFormValues, LANGUAGE_OPTIONS, LEVEL_OPTIONS } from '../schema';
 
 import ImageUploadField from '@/components/dashboard/Fields/ImageUploadField/ImageUploadField';
@@ -7,6 +7,7 @@ import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import KeywordInputField from '@/components/dashboard/Fields/KeywordInputField/KeywordInputField';
 import SelectField from '@/components/dashboard/Fields/SelectField/SelectField';
 import TiptapEditor from '@/components/dashboard/Fields/TiptapEditor/TiptapEditor';
+import { Label } from '@/components/ui/label';
 
 interface Step1BasicInfoProps {
   control: Control<CourseFormValues>;
@@ -23,6 +24,13 @@ const Step1BasicInfo = ({
   isUploading,
   handleThumbnailChange,
 }: Step1BasicInfoProps) => {
+  const {
+    field: { value: hasCertificate, onChange: onHasCertificateChange },
+  } = useController({
+    control,
+    name: 'hasCertificate',
+  });
+
   return (
     <div className="space-y-5">
       <h2 className="text-lg font-bold">Basic Information</h2>
@@ -89,6 +97,22 @@ const Step1BasicInfo = ({
           required
           error={errors.language?.message}
         />
+
+        <div className="space-y-2 sm:col-span-1">
+          <Label className="block font-medium">Certificate</Label>
+          <div className="border-primary/10 focus-within:border-primary hover:border-primary/20 flex h-auto w-full items-center gap-3 rounded-sm border bg-[#F9FAFB] p-3 shadow-none transition-all focus-within:ring-2 focus-within:ring-emerald-100">
+            <input
+              type="checkbox"
+              checked={hasCertificate}
+              onChange={(e) => onHasCertificateChange(e.target.checked)}
+              className="accent-primary h-4 w-4 cursor-pointer"
+              id="hasCertificate"
+            />
+            <label htmlFor="hasCertificate" className="text-primary cursor-pointer text-sm">
+              Provide Certificate on Completion
+            </label>
+          </div>
+        </div>
 
         <div className="sm:col-span-2">
           <TiptapEditor
