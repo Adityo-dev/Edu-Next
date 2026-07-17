@@ -24,8 +24,8 @@ const Step4Publish = ({
   watchedPrice,
 }: Step4PublishProps) => {
   return (
-    <div className="space-y-5">
-      <h2 className="text-lg font-bold">Ready to Publish</h2>
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Ready to Publish</h2>
       <div className="space-y-3">
         {[
           {
@@ -74,19 +74,19 @@ const Step4Publish = ({
           >
             <div className="flex items-center gap-3">
               <div
-                className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
-                  item.done ? 'bg-primary text-white' : 'bg-red-100 text-red-500'
+                className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ${
+                  item.done ? 'bg-primary text-white' : 'text-danger bg-red-100'
                 }`}
               >
                 {item.done ? '✓' : '!'}
               </div>
               <span className="text-sm font-semibold">{item.label}</span>
             </div>
-            <span className="text-xs text-slate-500">{item.value}</span>
+            <span className="text-text-secondary text-xs">{item.value}</span>
           </div>
         ))}
       </div>
-      <div className="rounded-sm border border-yellow-100 bg-yellow-50 p-4 text-xs text-slate-600">
+      <div className="rounded-sm border border-yellow-100 bg-yellow-50 p-4 text-xs">
         📋 After submission, your course will be reviewed by our admin team. You will be notified
         once it is approved.
       </div>

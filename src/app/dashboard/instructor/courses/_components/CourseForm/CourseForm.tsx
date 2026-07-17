@@ -253,7 +253,7 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
   };
 
   return (
-    <div className="mx-auto space-y-6">
+    <section className="space-y-5">
       <SectionHeader
         title={mode === 'create' ? 'Create New Course' : 'Edit Course'}
         description={
@@ -271,17 +271,21 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
               <button
                 type="button"
                 onClick={() => setStep(i)}
-                className={`flex items-center gap-2 text-sm font-semibold transition-all ${
-                  i === step ? 'text-primary' : i < step ? 'text-slate-400' : 'text-slate-300'
+                className={`flex cursor-pointer items-center gap-2 text-sm font-semibold transition-all ${
+                  i === step
+                    ? 'text-primary'
+                    : i < step
+                      ? 'text-text-secondary'
+                      : 'text-text-secondary'
                 }`}
               >
                 <div
-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-black ${
+                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${
                     i === step
                       ? 'bg-primary text-white'
                       : i < step
                         ? 'text-primary bg-emerald-100'
-                        : 'bg-slate-100 text-slate-400'
+                        : 'text-text-secondary bg-slate-100'
                   }`}
                 >
                   {i < step ? '✓' : i + 1}
@@ -289,93 +293,91 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
                 <span className="hidden sm:block">{s}</span>
               </button>
               {i < STEPS.length - 1 && (
-                <ChevronRight size={16} className="mx-2 flex-1 text-slate-200" />
+                <ChevronRight size={16} className="text-text-secondary/50 mx-2 flex-1" />
               )}
             </div>
           ))}
         </div>
       </div>
 
-      <div>
-        <div className="rounded-md border border-slate-100 bg-white p-6 shadow-xs">
-          {/* ── Step 1: Basic Info ── */}
-          {step === 0 && (
-            <Step1BasicInfo
-              control={control}
-              errors={errors}
-              watchedThumbnail={watchedThumbnail}
-              isUploading={isUploading}
-              handleThumbnailChange={handleThumbnailChange}
-            />
-          )}
+      <div className="dashboard-card-container">
+        {/* Step 1: Basic Info */}
+        {step === 0 && (
+          <Step1BasicInfo
+            control={control}
+            errors={errors}
+            watchedThumbnail={watchedThumbnail}
+            isUploading={isUploading}
+            handleThumbnailChange={handleThumbnailChange}
+          />
+        )}
 
-          {/* ── Step 2: Curriculum ── */}
-          {step === 1 && (
-            <Step2Curriculum
-              control={control}
-              errors={errors}
-              trigger={trigger}
-              getValues={getValues}
-            />
-          )}
+        {/* Step 2: Curriculum */}
+        {step === 1 && (
+          <Step2Curriculum
+            control={control}
+            errors={errors}
+            trigger={trigger}
+            getValues={getValues}
+          />
+        )}
 
-          {/* ── Step 3: Pricing ── */}
-          {step === 2 && (
-            <Step3Pricing
-              control={control}
-              errors={errors}
-              watchedPrice={watchedPrice}
-              watchedEstimatedPrice={watchedEstimatedPrice}
-            />
-          )}
+        {/* Step 3: Pricing */}
+        {step === 2 && (
+          <Step3Pricing
+            control={control}
+            errors={errors}
+            watchedPrice={watchedPrice}
+            watchedEstimatedPrice={watchedEstimatedPrice}
+          />
+        )}
 
-          {/* ── Step 4: Publish ── */}
-          {step === 3 && (
-            <Step4Publish
-              watchedThumbnail={watchedThumbnail}
-              watchedTitle={watchedTitle}
-              watchedCategory={watchedCategory}
-              watchedLevel={watchedLevel}
-              watchedTags={watchedTags}
-              watchedRequirements={watchedRequirements}
-              watchedWhatYouLearn={watchedWhatYouLearn}
-              watchedSections={watchedSections}
-              watchedPrice={watchedPrice}
-            />
-          )}
+        {/* Step 4: Publish */}
+        {step === 3 && (
+          <Step4Publish
+            watchedThumbnail={watchedThumbnail}
+            watchedTitle={watchedTitle}
+            watchedCategory={watchedCategory}
+            watchedLevel={watchedLevel}
+            watchedTags={watchedTags}
+            watchedRequirements={watchedRequirements}
+            watchedWhatYouLearn={watchedWhatYouLearn}
+            watchedSections={watchedSections}
+            watchedPrice={watchedPrice}
+          />
+        )}
 
-          {/* ── Navigation ── */}
-          <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-5">
+        {/* Navigation */}
+        <div className="border-border mt-6 flex items-center justify-between border-t pt-4">
+          <button
+            type="button"
+            onClick={() => setStep(Math.max(0, step - 1))}
+            disabled={step === 0}
+            className="cursor-pointer rounded-sm border border-slate-200 px-6 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+          >
+            ← Previous
+          </button>
+          {!isLastStep ? (
             <button
               type="button"
-              onClick={() => setStep(Math.max(0, step - 1))}
-              disabled={step === 0}
-              className="rounded-sm border border-slate-200 px-6 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+              onClick={handleNext}
+              className="bg-primary cursor-pointer rounded-sm px-6 py-2.5 text-sm font-bold text-white hover:bg-[#2a6159]"
             >
-              ← Previous
+              Next →
             </button>
-            {!isLastStep ? (
-              <button
-                type="button"
-                onClick={handleNext}
-                className="bg-primary rounded-sm px-6 py-2.5 text-sm font-bold text-white hover:bg-[#2a6159]"
-              >
-                Next →
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSaveClick}
-                disabled={isSaving}
-                className="bg-secondary rounded-sm px-8 py-2.5 text-sm font-bold text-white hover:bg-[#d98c0a] disabled:opacity-50"
-              >
-                {isSaving ? 'Saving...' : mode === 'create' ? 'Save as Draft' : 'Save Changes'}
-              </button>
-            )}
-          </div>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSaveClick}
+              disabled={isSaving}
+              className="bg-secondary cursor-pointer rounded-sm px-8 py-2.5 text-sm font-bold text-white hover:bg-[#d98c0a] disabled:cursor-none disabled:opacity-50"
+            >
+              {isSaving ? 'Saving...' : mode === 'create' ? 'Save as Draft' : 'Save Changes'}
+            </button>
+          )}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

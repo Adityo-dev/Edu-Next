@@ -32,7 +32,7 @@ const EditCoursePage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex h-[400px] items-center justify-center">
+      <div className="flex h-100 items-center justify-center">
         <div className="border-t-primary h-8 w-8 animate-spin rounded-full border-4 border-slate-200"></div>
       </div>
     );
@@ -40,7 +40,7 @@ const EditCoursePage = () => {
 
   if (isError || !response?.data) {
     return (
-      <div className="flex h-[400px] flex-col items-center justify-center text-slate-500">
+      <div className="flex h-100 flex-col items-center justify-center text-slate-500">
         <p className="text-lg font-semibold text-slate-700">Course not found</p>
         <p>The course you are trying to edit does not exist or you do not have permission.</p>
         {error && (

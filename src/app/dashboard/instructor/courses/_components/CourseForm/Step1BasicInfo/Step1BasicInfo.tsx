@@ -32,8 +32,8 @@ const Step1BasicInfo = ({
   });
 
   return (
-    <div className="space-y-5">
-      <h2 className="text-lg font-bold">Basic Information</h2>
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold">Basic Information</h2>
 
       <ImageUploadField
         label="Course Thumbnail"
@@ -51,7 +51,7 @@ const Step1BasicInfo = ({
             label="Course Title"
             name="title"
             control={control}
-            placeholder="e.g. Complete Web Development Bootcamp"
+            placeholder="Enter course title"
             required
             error={errors.title?.message}
           />
@@ -62,7 +62,7 @@ const Step1BasicInfo = ({
             label="Subtitle"
             name="subtitle"
             control={control}
-            placeholder="Brief description of your course"
+            placeholder="Enter course subtitle"
             required
             error={errors.subtitle?.message}
           />

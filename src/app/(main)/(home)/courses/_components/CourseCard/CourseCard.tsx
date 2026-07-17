@@ -33,7 +33,7 @@ export default function CourseCard({
             src={course?.image}
             alt={course?.title}
             fill
-            className="object-fill transition-transform duration-700 group-hover:scale-105"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
           {course.badge && (
             <DynamicBadge

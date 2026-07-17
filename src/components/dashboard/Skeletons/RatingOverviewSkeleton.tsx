@@ -6,7 +6,7 @@ export const RatingOverviewSkeleton = () => {
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
         {/* Left: Average Rating Box Skeleton */}
         <div className="bg-primary/10 flex flex-col items-center justify-center rounded-md px-10 py-4 text-center">
-          <Skeleton className="h-[48px] w-20 bg-slate-200" />
+          <Skeleton className="h-12 w-20 bg-slate-200" />
           <div className="my-2 flex items-center gap-0.5">
             {Array.from({ length: 5 }).map((_, i) => (
               <Skeleton key={i} className="h-4 w-4 rounded-sm bg-slate-200" />
@@ -22,7 +22,7 @@ export const RatingOverviewSkeleton = () => {
               <Skeleton className="h-2.5 flex-1 rounded-full bg-slate-200" />
               <div className="flex shrink-0 items-center gap-0.5">
                 {Array.from({ length: 5 }).map((_, j) => (
-                  <Skeleton key={j} className="h-[11px] w-[11px] rounded-sm bg-slate-200" />
+                  <Skeleton key={j} className="h-2.75 w-2.75 rounded-sm bg-slate-200" />
                 ))}
               </div>
               <Skeleton className="h-4 w-12 rounded bg-slate-200" />
