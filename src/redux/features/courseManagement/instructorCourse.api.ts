@@ -2,7 +2,12 @@ import { apiClient } from '@/redux/apiClient/apiClient';
 import {
   ICommonResponse,
   ICourse,
+  IInstructorAnalyticsGrowth,
+  IInstructorAnalyticsStats,
+  IInstructorCoursePerformanceData,
+  IInstructorCoursePerformanceQueryParams,
   IInstructorCoursesQueryParams,
+  IInstructorRevenueOverview,
   IInstructorStudentsData,
   IInstructorStudentsQueryParams,
   IInstructorStudentStats,
@@ -79,6 +84,42 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         params,
       }),
     }),
+
+    // 8. Get instructor analytics stats (Cards)
+    getInstructorAnalyticsStats: builder.query<ICommonResponse<IInstructorAnalyticsStats>, void>({
+      query: () => ({
+        url: '/courses/instructor/analytics/stats',
+        method: 'GET',
+      }),
+    }),
+
+    // 9. Get instructor analytics growth
+    getInstructorAnalyticsGrowth: builder.query<ICommonResponse<IInstructorAnalyticsGrowth>, void>({
+      query: () => ({
+        url: '/courses/instructor/analytics/growth',
+        method: 'GET',
+      }),
+    }),
+
+    // 10. Get instructor revenue overview (Chart)
+    getInstructorRevenueOverview: builder.query<ICommonResponse<IInstructorRevenueOverview>, void>({
+      query: () => ({
+        url: '/courses/instructor/analytics/revenue-overview',
+        method: 'GET',
+      }),
+    }),
+
+    // 11. Get instructor course performance (Table)
+    getInstructorCoursePerformance: builder.query<
+      ICommonResponse<IInstructorCoursePerformanceData>,
+      IInstructorCoursePerformanceQueryParams | undefined
+    >({
+      query: (params) => ({
+        url: '/courses/instructor/analytics/performance',
+        method: 'GET',
+        params,
+      }),
+    }),
   }),
 });
 
@@ -90,4 +131,8 @@ export const {
   useDeleteCourseMutation,
   useGetInstructorStudentsStatsQuery,
   useGetInstructorStudentsQuery,
+  useGetInstructorAnalyticsStatsQuery,
+  useGetInstructorAnalyticsGrowthQuery,
+  useGetInstructorRevenueOverviewQuery,
+  useGetInstructorCoursePerformanceQuery,
 } = instructorCourseApi;

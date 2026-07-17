@@ -220,3 +220,58 @@ export interface IInstructorStudentsQueryParams {
   page?: number;
   limit?: number;
 }
+
+export interface IInstructorAnalyticsStats {
+  revenue: { total: number; thisMonth: number };
+  students: { total: number; thisMonth: number };
+  views: { total: number; thisMonth: number };
+  rating: { average: number; totalReviews: number };
+}
+
+export interface IInstructorAnalyticsGrowth {
+  revenueGrowth: number;
+  studentGrowth: number;
+  viewGrowth: number;
+  ratingChange: number;
+}
+
+export interface IRevenueChartData {
+  month: string;
+  revenue: number;
+  students: number;
+}
+
+export interface IInstructorRevenueOverview {
+  totalRevenue: number;
+  totalStudents: number;
+  chartData: IRevenueChartData[];
+}
+
+export interface ICoursePerformance {
+  _id: string;
+  title: string;
+  price: number;
+  thumbnail: string;
+  rating: number;
+  studentsCount: number;
+  totalViews?: number;
+  revenue: number;
+  completionRate: number;
+}
+
+export interface IInstructorCoursePerformanceData {
+  courses: ICoursePerformance[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface IInstructorCoursePerformanceQueryParams {
+  courseId?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}
