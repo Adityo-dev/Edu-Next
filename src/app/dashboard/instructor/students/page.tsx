@@ -1,16 +1,19 @@
 'use client';
 
-import StudentsHeader from './_components/StudentsHeader/StudentsHeader';
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import StudentsStats from './_components/StudentsStats/StudentsStats';
 import StudentsTable from './_components/StudentsTable/StudentsTable';
 
 const InstructorStudentsPage = () => {
   return (
-    <div className="mx-auto space-y-6">
-      <StudentsHeader />
+    <section className="space-y-6">
+      <SectionHeader
+        title="Students"
+        description="View and manage students enrolled in your courses."
+      />
       <StudentsStats />
       <StudentsTable />
-    </div>
+    </section>
   );
 };
 

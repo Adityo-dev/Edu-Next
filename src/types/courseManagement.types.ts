@@ -179,3 +179,44 @@ export interface ICoursePlaybackData {
     isCourseCompleted: boolean;
   };
 }
+
+export interface IInstructorStudentStats {
+  totalStudents: number;
+  activeThisWeek: number;
+  completed: number;
+  withReviews: number;
+}
+
+export interface IInstructorStudent {
+  _id: string;
+  student: {
+    _id: string;
+    name: string;
+    email: string;
+    avatar: string;
+  };
+  course: {
+    _id: string;
+    title: string;
+  };
+  progress: number;
+  rating: number;
+  lastActive: string;
+}
+
+export interface IInstructorStudentsData {
+  students: IInstructorStudent[];
+  pagination: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface IInstructorStudentsQueryParams {
+  courseId?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+}

@@ -3,6 +3,9 @@ import {
   ICommonResponse,
   ICourse,
   IInstructorCoursesQueryParams,
+  IInstructorStudentsData,
+  IInstructorStudentsQueryParams,
+  IInstructorStudentStats,
   IPaginatedData,
 } from '@/types/courseManagement.types';
 
@@ -56,6 +59,26 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         method: 'DELETE',
       }),
     }),
+
+    // 6. Get instructor students stats
+    getInstructorStudentsStats: builder.query<ICommonResponse<IInstructorStudentStats>, void>({
+      query: () => ({
+        url: '/enrollments/instructor/students/stats',
+        method: 'GET',
+      }),
+    }),
+
+    // 7. Get instructor students
+    getInstructorStudents: builder.query<
+      ICommonResponse<IInstructorStudentsData>,
+      IInstructorStudentsQueryParams | undefined
+    >({
+      query: (params) => ({
+        url: '/enrollments/instructor/students',
+        method: 'GET',
+        params,
+      }),
+    }),
   }),
 });
 
@@ -65,4 +88,6 @@ export const {
   useUpdateCourseContentMutation,
   useSubmitPublishRequestMutation,
   useDeleteCourseMutation,
+  useGetInstructorStudentsStatsQuery,
+  useGetInstructorStudentsQuery,
 } = instructorCourseApi;

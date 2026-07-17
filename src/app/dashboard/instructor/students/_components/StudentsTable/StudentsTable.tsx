@@ -1,135 +1,82 @@
 'use client';
 
+import CustomPagination from '@/components/dashboard/CustomPagination/CustomPagination';
 import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
 import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
-import { useState } from 'react';
+import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
+import TableSkeleton from '@/components/dashboard/Skeletons/TableSkeleton';
+import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
+import {
+  useGetInstructorCoursesQuery,
+  useGetInstructorStudentsQuery,
+} from '@/redux/features/courseManagement/instructorCourse.api';
+import { IInstructorStudent } from '@/types/courseManagement.types';
 
 import { Progress } from '@/components/ui/progress';
 import { TColumn } from '@/types/custom-table.types';
 import { ITableFilter } from '@/types/table-filter.types';
-import { Star } from 'lucide-react';
+import { GetRelativeTime } from '@/utils/formatDateTime';
+import { Star, Users } from 'lucide-react';
 import Image from 'next/image';
-
-export interface IStudentMember {
-  id: number;
-  name: string;
-  email: string;
-  image: string;
-  course: string;
-  progress: number;
-  rating: number;
-  enrolledDate: string;
-  lastActive: string;
-}
+import { useMemo } from 'react';
 
 const InstructorStudentsPage = () => {
-  // Table Filter state
-  const [filter] = useState('all');
-  const [search] = useState('');
+  const { getQueryObject } = useSetSearchQueryInURL();
+  const queryParams = getQueryObject();
 
-  const studentsData: IStudentMember[] = [
-    {
-      id: 1,
-      name: 'Sumaiya Akter',
-      email: 'sumaiya@example.com',
-      image: 'https://i.pravatar.cc/150?u=sumaiya',
-      course: 'Complete Web Development Bootcamp',
-      progress: 72,
-      rating: 5,
-      enrolledDate: 'Jan 15, 2025',
-      lastActive: '2 hours ago',
-    },
-    {
-      id: 2,
-      name: 'Nusrat Jahan',
-      email: 'nusrat@example.com',
-      image: 'https://i.pravatar.cc/150?u=nusrat',
-      course: 'Complete Web Development Bootcamp',
-      progress: 45,
-      rating: 4,
-      enrolledDate: 'Feb 2, 2025',
-      lastActive: 'Yesterday',
-    },
-    {
-      id: 3,
-      name: 'Arif Hossain',
-      email: 'arif@example.com',
-      image: 'https://i.pravatar.cc/150?u=arif',
-      course: 'React.js Advanced Masterclass',
-      progress: 88,
-      rating: 5,
-      enrolledDate: 'Feb 10, 2025',
-      lastActive: '3 days ago',
-    },
-    {
-      id: 4,
-      name: 'Rakib Ahmed',
-      email: 'rakib@example.com',
-      image: 'https://i.pravatar.cc/150?u=rakib2',
-      course: 'React.js Advanced Masterclass',
-      progress: 30,
-      rating: 0,
-      enrolledDate: 'Mar 1, 2025',
-      lastActive: '1 week ago',
-    },
-    {
-      id: 5,
-      name: 'Fatima Begum',
-      email: 'fatima@example.com',
-      image: 'https://i.pravatar.cc/150?u=fatima',
-      course: 'JavaScript ES6+ Fundamentals',
-      progress: 100,
-      rating: 5,
-      enrolledDate: 'Nov 5, 2024',
-      lastActive: '2 weeks ago',
-    },
-    {
-      id: 6,
-      name: 'Tanvir Islam',
-      email: 'tanvir2@example.com',
-      image: 'https://i.pravatar.cc/150?u=tanvir2',
-      course: 'Complete Web Development Bootcamp',
-      progress: 15,
-      rating: 0,
-      enrolledDate: 'Apr 10, 2025',
-      lastActive: 'Today',
-    },
-  ];
+  // 1. Reading URL Query States
+  const currentSearchUrl = queryParams.search || '';
+  const currentCourse = queryParams.course || 'all';
+  const currentPage = Number(queryParams.page) || 1;
+  const currentLimit = Number(queryParams.limit) || 10;
 
-  // handle search log
-  const handleSearchStudents = (val: string) => {
-    console.log('Searching for student:', val);
-  };
+  // 2. Fetch courses for the filter options
+  const { data: coursesData } = useGetInstructorCoursesQuery({ limit: 100 });
+  const courseOptions = useMemo(() => {
+    const courses = coursesData?.data?.courses || [];
+    return [
+      { label: 'All Courses', value: 'all' },
+      ...courses.map((c) => ({ label: c.title, value: c._id })),
+    ];
+  }, [coursesData]);
 
-  // handle filter log
-  const handleSelectCourse = (val: string) => {
-    console.log('Course Filter updated:', val);
-  };
+  // 3. RTK Query Hook for Students
+  const { data, isLoading, isError, refetch } = useGetInstructorStudentsQuery({
+    page: currentPage,
+    limit: currentLimit,
+    search: currentSearchUrl,
+    courseId: currentCourse === 'all' ? undefined : currentCourse,
+  });
+
+  const students = data?.data?.students || [];
+  const pagination = data?.data?.pagination;
 
   // Table column configuration
-  const StudentsTableConfig: TColumn<IStudentMember>[] = [
+  const StudentsTableConfig: TColumn<IInstructorStudent>[] = [
     {
       header: 'STUDENT',
       cell: (row) => (
         <div className="flex items-center gap-3 py-1">
-          <Image
-            src={row?.image}
-            alt={row?.name}
-            width={36}
-            height={36}
-            className="border-primary rounded-full border-2 object-cover"
-          />
+          <div className="border-primary relative h-9 w-9 shrink-0 overflow-hidden rounded-full border-2">
+            <Image
+              src={row?.student?.avatar || 'https://placeholder.com/150'}
+              alt={row?.student?.name}
+              fill
+              className="object-cover"
+            />
+          </div>
           <div className="flex flex-col">
-            <span className="text-text-primary text-sm font-semibold">{row?.name}</span>
-            <span className="text-text-secondary text-xs">{row?.email}</span>
+            <span className="text-text-primary text-sm font-semibold">{row?.student?.name}</span>
+            <span className="text-text-secondary text-xs">{row?.student?.email}</span>
           </div>
         </div>
       ),
     },
     {
       header: 'COURSE',
-      cell: (row) => <span className="line-clamp-1 max-w-xs">{row?.course}</span>,
+      cell: (row) => <span className="line-clamp-1 max-w-xs">{row?.course?.title}</span>,
     },
     {
       header: 'PROGRESS',
@@ -166,14 +113,17 @@ const InstructorStudentsPage = () => {
               ))}
             </div>
           ) : (
-            <span>No review</span>
+            <span className="text-text-secondary text-xs">No review</span>
           )}
         </>
       ),
     },
     {
       header: 'LAST ACTIVE',
-      accessor: 'lastActive',
+      cell: (row) => {
+        if (!row.lastActive) return <span className="text-text-secondary text-xs">N/A</span>;
+        return <span>{GetRelativeTime(row.lastActive)}</span>;
+      },
     },
     {
       header: 'ACTION',
@@ -183,7 +133,7 @@ const InstructorStudentsPage = () => {
             {
               type: 'message',
               onClick: () => {
-                console.log('Messaging student:', row?.id);
+                console.log('Messaging student:', row?.student?._id);
               },
             },
           ]}
@@ -192,46 +142,54 @@ const InstructorStudentsPage = () => {
     },
   ];
 
-  const dynamicCourseOptions = [
-    { label: 'All Courses', value: 'all' },
-    ...Array.from(new Set(studentsData.map((s) => s.course))).map((course) => ({
-      label: course,
-      value: course,
-    })),
-  ];
-
   // Table filter configuration
   const StudentFilters: ITableFilter[] = [
     {
       type: 'select',
-      name: 'course-filter',
+      name: 'course',
       placeholder: 'Course',
-      options: dynamicCourseOptions,
-      onChange: handleSelectCourse,
-      value: filter,
+      options: courseOptions,
     },
     {
       type: 'search',
       name: 'search',
       placeholder: 'Search students...',
-      onChange: handleSearchStudents,
-      value: search,
     },
   ];
 
-  const filteredStudents = studentsData.filter((s) => {
-    const matchSearch =
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.email.toLowerCase().includes(search.toLowerCase());
-    const matchCourse = filter === 'all' || s.course === filter;
-    return matchSearch && matchCourse;
-  });
-
   return (
-    <div className="space-y-6">
+    <div className="dashboard-card-container space-y-4 p-3">
       <DynamicTableFilterBar fields={StudentFilters} />
 
-      <CustomTable columns={StudentsTableConfig} data={filteredStudents} />
+      {isError ? (
+        <ErrorState
+          title="Failed to load your students"
+          message="We couldn't load your enrolled students from the server. Please check your network connection and retry."
+          onRetry={refetch}
+        />
+      ) : isLoading ? (
+        <TableSkeleton />
+      ) : students.length === 0 ? (
+        <EmptyState
+          title="No Students Found"
+          icon={Users}
+          description="You don't have any enrolled students matching these parameters yet."
+        />
+      ) : (
+        <>
+          <CustomTable columns={StudentsTableConfig} data={students} />
+          {pagination && (
+            <CustomPagination
+              meta={{
+                total: pagination.total,
+                page: pagination.page,
+                limit: pagination.limit,
+                totalPages: pagination.totalPages,
+              }}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 };
