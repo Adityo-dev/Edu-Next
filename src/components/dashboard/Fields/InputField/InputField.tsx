@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
 
 interface InputFieldProps<T extends FieldValues> {
@@ -46,6 +46,14 @@ const InputField = <T extends FieldValues>({
   const isPickerField = isDate || isTime;
   const inputType = isPassword && showPassword ? 'text' : type;
 
+  const handleRef = useCallback(
+    (e: HTMLInputElement | null) => {
+      controllerRef(e);
+      inputRef.current = e;
+    },
+    [controllerRef],
+  );
+
   return (
     <div className="space-y-2">
       <Label className="block font-medium">
@@ -66,10 +74,7 @@ const InputField = <T extends FieldValues>({
           onChange={onChange}
           onBlur={onBlur}
           value={value ?? ''}
-          ref={(e) => {
-            controllerRef(e);
-            inputRef.current = e;
-          }}
+          ref={handleRef}
           onClick={() => !readOnly && isPickerField && inputRef.current?.showPicker()}
           className={cn(
             'h-auto w-full resize-none rounded-sm p-3 shadow-none transition-all',
