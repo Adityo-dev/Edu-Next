@@ -2,7 +2,7 @@
 
 import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import AnalyticsStats from './_components/AnalyticsStats/AnalyticsStats';
-import CoursePerformance from './_components/CoursePerformance/CoursePerformance';
+import CoursePerformanceTable from './_components/CoursePerformanceTable/CoursePerformanceTable';
 import GrowthRate from './_components/GrowthRate/GrowthRate';
 import RevenueOverview from './_components/RevenueOverview/RevenueOverview';
 
@@ -17,7 +17,7 @@ const InstructorAnalyticsPage = () => {
         <GrowthRate />
       </div>
 
-      <CoursePerformance />
+      <CoursePerformanceTable />
     </section>
   );
 };
