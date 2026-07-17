@@ -1,5 +1,6 @@
 'use client';
 
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -11,8 +12,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ROLE_DASHBOARD_PATH } from '@/constants/dashboardRoutes';
-import { logout, useCurrentUser, useIsAuthenticated } from '@/redux/features/auth/authSlice';
 import { apiClient } from '@/redux/apiClient/apiClient';
+import { logout, useCurrentUser, useIsAuthenticated } from '@/redux/features/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { logoutUser } from '@/services/auth/auth.service';
 import { LayoutDashboard, LogOut } from 'lucide-react';
@@ -34,12 +35,7 @@ const NavbarAuthSection = () => {
 
   if (!isAuthenticated || !user) {
     return (
-      <Link
-        href="/login"
-        className="bg-secondary hover:bg-secondary/80 hidden rounded-sm px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-100 transition-all active:scale-95 md:block"
-      >
-        Sign In
-      </Link>
+      <DynamicActionButton label="Sign In" href="/login" className="hidden sm:h-11! lg:block" />
     );
   }
 
@@ -50,7 +46,6 @@ const NavbarAuthSection = () => {
       <DropdownMenuTrigger asChild>
         <button className="flex cursor-pointer items-center justify-center rounded-full border-2 border-slate-200 p-0.5 transition-all outline-none hover:border-emerald-400 hover:bg-emerald-50 active:scale-95">
           <Avatar className="h-9 w-9">
-            {/* <AvatarImage src={user?.avatar} alt={user?.fullName} /> */}
             <AvatarFallback className="bg-primary text-sm font-semibold text-white">
               {user?.fullName?.charAt(0).toUpperCase() ?? 'U'}
             </AvatarFallback>

@@ -25,10 +25,10 @@ export default function CourseCard({
     return (
       <Link
         href={`/courses/${course?.id}`}
-        className="group dashboard-card-container overflow-hidden rounded-sm p-4! transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-sm hover:shadow-emerald-100/40"
+        className="group dashboard-card-container flex h-full flex-col overflow-hidden rounded-sm p-4! transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-sm hover:shadow-emerald-100/40"
       >
         {/* Image */}
-        <div className="relative h-48 w-full overflow-hidden rounded-sm">
+        <div className="relative h-54 w-full shrink-0 overflow-hidden rounded-sm">
           <Image
             src={course?.image}
             alt={course?.title}
@@ -64,7 +64,8 @@ export default function CourseCard({
         </div>
 
         {/* Body */}
-        <div className="pt-4">
+        {/* Body */}
+        <div className="flex flex-1 flex-col pt-4">
           {/* Tags */}
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <DynamicBadge text={course?.category} color="#34796f" />
@@ -73,7 +74,7 @@ export default function CourseCard({
           </div>
 
           {/* Title */}
-          <h3 className="group-hover:text-primary mb-2 line-clamp-2 text-base leading-snug font-semibold transition-colors duration-300">
+          <h3 className="group-hover:text-primary mb-2 line-clamp-2 min-h-[44px] text-base leading-snug font-semibold transition-colors duration-300">
             {course?.title}
           </h3>
 
@@ -91,30 +92,33 @@ export default function CourseCard({
             </p>
           </div>
 
-          {/* Stats Row */}
-          <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-            <span className="flex items-center gap-1">
-              <Star size={11} fill="#ffc107" color="#ffc107" />
-              <span className="font-bold text-slate-700">{course?.rating}</span>
-            </span>
-            <span className="text-slate-300">|</span>
-            <span className="flex items-center gap-1">
-              <Users size={11} /> {course?.enrolled} students
-            </span>
-            <span className="text-slate-300">|</span>
-            <span className="flex items-center gap-1">
-              <Clock size={11} /> {course?.duration}
-            </span>
-          </div>
+          {/* Bottom Section */}
+          <div className="mt-auto flex flex-col pt-1">
+            {/* Stats Row */}
+            <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+              <span className="flex items-center gap-1">
+                <Star size={11} fill="#ffc107" color="#ffc107" />
+                <span className="font-bold text-slate-700">{course?.rating}</span>
+              </span>
+              <span className="text-slate-300">|</span>
+              <span className="flex items-center gap-1">
+                <Users size={11} /> {course?.enrolled} students
+              </span>
+              <span className="text-slate-300">|</span>
+              <span className="flex items-center gap-1">
+                <Clock size={11} /> {course?.duration}
+              </span>
+            </div>
 
-          <Separator className="mb-4" />
+            <Separator className="mb-4" />
 
-          {/* Price */}
-          <div className="flex items-center justify-between">
-            <span className="text-primary text-xl font-black">
-              ৳{course?.price.toLocaleString()}
-            </span>
-            {course?.certificate && <DynamicBadge text="🎓 Certificate" color="#34796f" />}
+            {/* Price */}
+            <div className="flex items-center justify-between">
+              <span className="text-primary text-xl font-black">
+                ৳{course?.price.toLocaleString()}
+              </span>
+              {course?.certificate && <DynamicBadge text="🎓 Certificate" color="#34796f" />}
+            </div>
           </div>
         </div>
       </Link>

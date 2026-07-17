@@ -1,17 +1,18 @@
 'use client';
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'; // Shadcn Sheet imports
-import { Bookmark, Menu, Search, LogOut, LayoutDashboard, LogIn, UserPlus } from 'lucide-react';
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { ROLE_DASHBOARD_PATH } from '@/constants/dashboardRoutes';
+import { apiClient } from '@/redux/apiClient/apiClient';
+import { logout, useCurrentUser, useIsAuthenticated } from '@/redux/features/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { logoutUser } from '@/services/auth/auth.service';
+import { Bookmark, LayoutDashboard, LogIn, LogOut, Menu, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import NavbarAuthSection from './_components/NavbarAuthSection/NavbarAuthSection';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { logout, useCurrentUser, useIsAuthenticated } from '@/redux/features/auth/authSlice';
-import { logoutUser } from '@/services/auth/auth.service';
-import { ROLE_DASHBOARD_PATH } from '@/constants/dashboardRoutes';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useState } from 'react';
-import { apiClient } from '@/redux/apiClient/apiClient';
+import NavbarAuthSection from './_components/NavbarAuthSection/NavbarAuthSection';
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -42,7 +43,7 @@ const MainNavigationBar = () => {
     <nav className="bg-subtle fixed top-0 z-50 w-full border-b border-slate-100 backdrop-blur-lg">
       <div className="mx-auto flex max-w-400 items-center justify-between px-6 py-4">
         {/* Left Section: Logo */}
-        <div className="group flex cursor-pointer items-center gap-3">
+        <Link href={'/'} className="group flex cursor-pointer items-center gap-3">
           <div className="bg-primary relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-sm text-white shadow-sm transition-transform duration-300">
             <svg
               viewBox="0 0 24 24"
@@ -71,10 +72,10 @@ const MainNavigationBar = () => {
               Learn the Future
             </span>
           </div>
-        </div>
+        </Link>
 
         {/* Middle Section: Navigation */}
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -92,33 +93,29 @@ const MainNavigationBar = () => {
         </div>
 
         {/* Right Section: Icons & Sign In */}
-        <div className="flex items-center gap-5">
-          <button className="hidden h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm transition-all hover:bg-slate-50 active:scale-95 sm:flex">
-            <Search size={20} className="text-slate-600" />
-          </button>
-
+        <div className="flex items-center gap-3.5">
           <Link
             href="/wishlist"
-            className="hidden h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm transition-all hover:bg-slate-50 active:scale-95 sm:flex"
+            className="bg-primary/10 hidden h-10 w-10 items-center justify-center rounded-full transition-all hover:bg-slate-50 active:scale-95 lg:flex"
           >
-            <Bookmark size={20} className="text-slate-600" />
+            <Bookmark size={20} className="text-primary" />
           </Link>
 
           <NavbarAuthSection />
 
           {/* Shadcn Sheet (Drawer) for Mobile */}
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
-                <button className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50 text-slate-600 transition-all active:scale-90">
-                  <Menu size={24} />
+                <button className="bg-primary/4 text-primary flex h-10 w-10 items-center justify-center rounded-md transition-all active:scale-90">
+                  <Menu size={22} />
                 </button>
               </SheetTrigger>
               <SheetContent
                 side="right"
-                className="flex w-[85vw] flex-col border-l-slate-100 p-0 sm:w-[350px]"
+                className="flex w-[85vw] flex-col border-l-slate-100 p-0 sm:w-87.5"
               >
-                <div className="p-6 pb-2">
+                <div className="pb-2">
                   <SheetHeader className="mb-6 text-left">
                     <SheetTitle className="text-primary flex items-center gap-2 text-2xl font-black tracking-tight">
                       <span className="text-primary">Edu</span>
@@ -128,47 +125,46 @@ const MainNavigationBar = () => {
 
                   {/* User Profile Quick Action / Authentication */}
                   {isAuthenticated && user ? (
-                    <div className="mb-6 flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4">
-                      <Avatar className="h-12 w-12 border-2 border-white shadow-sm">
-                        <AvatarFallback className="bg-primary text-lg font-bold text-white">
+                    <div className="border-border/50 bg-primary/7 flex items-center gap-3 rounded-sm border p-2.5">
+                      <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
+                        <AvatarFallback className="bg-primary font-semibold text-white">
                           {user?.fullName?.charAt(0).toUpperCase() ?? 'U'}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
-                        <span className="line-clamp-1 font-bold text-slate-800">
-                          {user?.fullName}
-                        </span>
-                        <span className="text-xs text-slate-500">{user?.email}</span>
+                        <span className="line-clamp-1 text-sm font-semibold">{user?.fullName}</span>
+                        <span className="text-text-secondary text-xs">{user?.email}</span>
                       </div>
                     </div>
                   ) : (
-                    <div className="mb-6 flex flex-col gap-3">
-                      <p className="mb-1 text-sm font-medium text-slate-500">Get started with us</p>
+                    <div className="mb-3 flex flex-col gap-3 px-4">
+                      <p className="text-text-secondary mb-1 text-sm">Get started with us</p>
                       <div className="grid grid-cols-2 gap-3">
-                        <Link
+                        <DynamicActionButton
+                          label="Login"
+                          showIcon
+                          icon={LogIn}
                           href="/login"
                           onClick={() => setOpen(false)}
-                          className="bg-secondary hover:bg-secondary/90 flex items-center justify-center gap-2 rounded-lg py-2.5 font-semibold text-white shadow-sm transition-all active:scale-95"
-                        >
-                          <LogIn size={18} />
-                          Login
-                        </Link>
-                        <Link
+                          className="w-full"
+                        />
+                        <DynamicActionButton
+                          label="Register"
+                          showIcon
+                          icon={UserPlus}
                           href="/register"
                           onClick={() => setOpen(false)}
-                          className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white py-2.5 font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50 active:scale-95"
-                        >
-                          <UserPlus size={18} />
-                          Register
-                        </Link>
+                          className="w-full"
+                          variant="secondary"
+                        />
                       </div>
                     </div>
                   )}
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-6 pt-2">
+                <div className="flex-1 overflow-y-auto px-4">
                   <div className="flex flex-col gap-2">
-                    <p className="mb-2 text-xs font-bold tracking-wider text-slate-400 uppercase">
+                    <p className="text-text-secondary text-xs font-semibold tracking-wider uppercase">
                       Navigation
                     </p>
                     {navLinks.map((link) => (
@@ -176,10 +172,10 @@ const MainNavigationBar = () => {
                         key={link.name}
                         href={link.href}
                         onClick={() => setOpen(false)}
-                        className={`flex items-center rounded-lg px-4 py-3 text-base font-medium transition-all ${
+                        className={`flex items-center rounded-sm px-4 py-2.5 text-sm font-medium transition-all ${
                           pathname === link.href
-                            ? 'bg-primary/5 text-primary font-bold'
-                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                            ? 'bg-primary/5 text-primary font-semibold'
+                            : 'hover:text-primary-dark text-slate-600 hover:bg-slate-50'
                         }`}
                       >
                         {link.name}
@@ -187,19 +183,16 @@ const MainNavigationBar = () => {
                     ))}
                   </div>
 
-                  <hr className="my-6 border-slate-100" />
+                  <hr className="border-border/50 my-4" />
 
                   <div className="flex flex-col gap-2">
-                    <p className="mb-2 text-xs font-bold tracking-wider text-slate-400 uppercase">
+                    <p className="text-text-secondary mb-2 text-xs font-semibold tracking-wider uppercase">
                       Quick Links
                     </p>
-                    <button className="flex items-center gap-3 rounded-lg px-4 py-3 text-left font-medium text-slate-600 transition-all hover:bg-slate-50 hover:text-slate-900">
-                      <Search size={20} className="text-slate-400" /> Search
-                    </button>
                     <Link
                       href="/wishlist"
                       onClick={() => setOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-4 py-3 text-left font-medium text-slate-600 transition-all hover:bg-slate-50 hover:text-slate-900"
+                      className="hover:text-primary-dark flex items-center gap-3 rounded-md px-4 py-2.5 text-left text-sm font-medium text-slate-600 transition-all hover:bg-slate-50"
                     >
                       <Bookmark size={20} className="text-slate-400" /> Bookmark
                     </Link>
@@ -208,19 +201,19 @@ const MainNavigationBar = () => {
 
                 {/* Footer Section of Drawer */}
                 {isAuthenticated && user && (
-                  <div className="border-t border-slate-100 bg-white p-6">
+                  <div className="border-border/50 border-t bg-white p-4">
                     <div className="flex flex-col gap-2">
                       <Link
                         href={dashboardPath}
                         onClick={() => setOpen(false)}
-                        className="bg-primary/10 text-primary hover:bg-primary/20 flex w-full items-center gap-3 rounded-lg px-4 py-3 font-bold transition-all"
+                        className="bg-primary/10 text-primary hover:bg-primary/20 flex w-full items-center gap-3 rounded-md px-4 py-2.5 font-semibold transition-all"
                       >
                         <LayoutDashboard size={20} />
                         Dashboard
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="text-danger flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left font-bold transition-all hover:bg-red-50"
+                        className="text-danger flex w-full items-center gap-3 rounded-md px-4 py-2.5 text-left font-semibold transition-all hover:bg-red-50"
                       >
                         <LogOut size={20} />
                         Logout
