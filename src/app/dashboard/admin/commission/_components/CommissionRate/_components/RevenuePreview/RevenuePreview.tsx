@@ -16,7 +16,7 @@ const RevenuePreview = ({
   instructorEarning,
 }: RevenuePreviewProps) => {
   return (
-    <div className="dashboard-card-container p-4">
+    <div className="dashboard-card-container">
       <h2 className="mb-5 text-lg font-semibold">Revenue Preview</h2>
       <div className="mb-4">
         <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">

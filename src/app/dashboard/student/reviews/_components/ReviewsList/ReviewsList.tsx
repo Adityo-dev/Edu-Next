@@ -49,7 +49,7 @@ const ReviewsList = () => {
       <h2 className="mb-3 text-lg font-semibold">Submitted Reviews</h2>
       <div className="space-y-4">
         {reviews.map((review) => (
-          <div key={review._id} className="dashboard-card-container p-4">
+          <div key={review._id} className="dashboard-card-container">
             <div className="flex gap-4">
               <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-sm">
                 <Image

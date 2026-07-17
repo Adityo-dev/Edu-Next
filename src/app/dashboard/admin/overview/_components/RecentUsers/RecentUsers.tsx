@@ -12,7 +12,7 @@ const RecentUsers = () => {
   const recentUsers = data?.data?.users || [];
 
   return (
-    <div className="dashboard-card-container p-4">
+    <div className="dashboard-card-container">
       <div className="mb-5 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Recent Users</h2>
         <Link

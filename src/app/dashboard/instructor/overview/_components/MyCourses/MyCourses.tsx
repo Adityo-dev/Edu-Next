@@ -10,7 +10,7 @@ const MyCourses = () => {
   console.log(data?.data?.courses, 'data');
 
   return (
-    <div className="dashboard-card-container p-4">
+    <div className="dashboard-card-container">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-lg font-semibold">My Courses</h2>
         <Link

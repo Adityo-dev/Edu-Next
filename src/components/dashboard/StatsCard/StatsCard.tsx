@@ -22,7 +22,7 @@ const StatsCard = ({
 
   return (
     <div
-      className={`dashboard-card-container p-4 transition-all hover:border-emerald-100 hover:shadow-sm ${className}`}
+      className={`dashboard-card-container transition-all hover:border-emerald-100 hover:shadow-sm ${className}`}
     >
       <div
         className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm"

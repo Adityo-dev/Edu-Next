@@ -120,10 +120,10 @@ const CoursePerformanceTable = () => {
   ];
 
   return (
-    <div className="dashboard-card-container space-y-4 p-3">
-      <div className="mb-2 flex flex-col gap-4 px-2 pt-2 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-lg font-semibold">Course Performance</h2>
-        <div className="w-full sm:w-[500px]">
+    <div className="dashboard-card-container">
+      <div className="flex flex-col gap-4 pb-4 lg:flex-row lg:items-center lg:justify-between">
+        <h2 className="shrink-0 text-lg font-semibold">Course Performance</h2>
+        <div className="w-full lg:w-auto">
           <DynamicTableFilterBar
             fields={[
               {
@@ -149,7 +149,7 @@ const CoursePerformanceTable = () => {
           onRetry={refetch}
         />
       ) : isLoading ? (
-        <TableSkeleton />
+        <TableSkeleton rows={6} />
       ) : courses.length === 0 ? (
         <EmptyState
           title="No Courses Found"

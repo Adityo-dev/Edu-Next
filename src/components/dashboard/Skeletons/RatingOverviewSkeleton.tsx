@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export const RatingOverviewSkeleton = () => {
   return (
-    <div className="dashboard-card-container p-4">
+    <div className="dashboard-card-container">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
         {/* Left: Average Rating Box Skeleton */}
         <div className="bg-primary/10 flex flex-col items-center justify-center rounded-md px-10 py-4 text-center">

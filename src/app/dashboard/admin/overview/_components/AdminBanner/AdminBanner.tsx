@@ -1,6 +1,6 @@
 const AdminBanner = () => {
   return (
-    <div className="bg-primary dashboard-card-container p-4 sm:p-6">
+    <div className="bg-primary dashboard-card-container sm:p-6">
       <div
         className="absolute inset-0 opacity-10"
         style={{

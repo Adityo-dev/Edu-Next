@@ -67,7 +67,7 @@ const ReviewsList = () => {
                 : '/fallback-avatar.png';
 
             return (
-              <div key={review._id} className="dashboard-card-container p-4 shadow-none">
+              <div key={review._id} className="dashboard-card-container shadow-none">
                 <div className="flex gap-4">
                   <Image
                     src={avatarSrc}

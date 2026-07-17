@@ -158,7 +158,7 @@
     @apply bg-background text-primary-dark!;
   }
   .dashboard-card-container {
-    @apply relative overflow-hidden rounded-md border border-slate-200 bg-white p-5 shadow-xs;
+    @apply relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs;
   }
 }
 

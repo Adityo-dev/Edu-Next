@@ -7,7 +7,7 @@ interface ChangeHistoryProps {
 
 const ChangeHistory = ({ isLoading, history }: ChangeHistoryProps) => {
   return (
-    <div className="dashboard-card-container p-4">
+    <div className="dashboard-card-container">
       <h2 className="mb-4 text-lg font-semibold">Change History</h2>
       <div className="space-y-3">
         {isLoading ? (

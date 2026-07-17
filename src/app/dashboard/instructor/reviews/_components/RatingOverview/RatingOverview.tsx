@@ -25,7 +25,7 @@ const RatingOverview = () => {
   ];
 
   return (
-    <div className="dashboard-card-container p-4">
+    <div className="dashboard-card-container">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
         <div className="bg-primary/10 flex flex-col items-center justify-center rounded-md px-10 py-4 text-center">
           <span className="text-primary text-5xl font-semibold">{avgRating}</span>

@@ -100,7 +100,7 @@ const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
   };
 
   return (
-    <div className="dashboard-card-container p-4!">
+    <div className="dashboard-card-container!">
       <h2 className="mb-5 text-lg font-semibold text-gray-900">Schedule New Session</h2>
 
       <form onSubmit={handleSubmit(onSubmitForm)}>
