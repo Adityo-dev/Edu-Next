@@ -111,12 +111,18 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
       if (savedDraft) {
         try {
           const parsed = JSON.parse(savedDraft);
-          reset(parsed);
+          reset({
+            ...defaultValues,
+            ...parsed,
+            sections: parsed.sections?.length ? parsed.sections : defaultValues.sections,
+          });
         } catch (e) {
           console.error('Failed to parse course draft', e);
+          localStorage.removeItem(LOCAL_STORAGE_KEY);
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, reset]);
 
   // Re-populate if initialData changes (useful for edit mode if fetched asynchronously)
