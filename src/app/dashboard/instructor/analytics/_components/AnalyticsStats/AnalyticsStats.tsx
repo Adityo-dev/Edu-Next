@@ -1,43 +1,59 @@
+'use client';
+
 import { CircleDollarSign, Eye, Star, Users } from 'lucide-react';
+import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
+import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleton';
+import { useGetInstructorAnalyticsStatsQuery } from '@/redux/features/courseManagement/instructorCourse.api';
 
 const AnalyticsStats = () => {
+  const { data: response, isLoading } = useGetInstructorAnalyticsStatsQuery();
+  const statsData = response?.data;
+
+  const stats = [
+    {
+      icon: CircleDollarSign,
+      label: 'Total Revenue',
+      value: `৳${statsData?.revenue?.total?.toLocaleString() ?? 0}`,
+      sub: `+৳${statsData?.revenue?.thisMonth?.toLocaleString() ?? 0} this month`,
+      iconColor: '#10b981',
+    },
+    {
+      icon: Users,
+      label: 'Total Students',
+      value: statsData?.students?.total?.toLocaleString() ?? '0',
+      sub: `+${statsData?.students?.thisMonth?.toLocaleString() ?? 0} this month`,
+      iconColor: '#3b82f6',
+    },
+    {
+      icon: Eye,
+      label: 'Course Views',
+      value: statsData?.views?.total?.toLocaleString() ?? '0',
+      sub: `+${statsData?.views?.thisMonth?.toLocaleString() ?? 0} this month`,
+      iconColor: '#8b5cf6',
+    },
+    {
+      icon: Star,
+      label: 'Avg Rating',
+      value: statsData?.rating?.average?.toFixed(1) ?? '0.0',
+      sub: `Based on ${statsData?.rating?.totalReviews ?? 0} reviews`,
+      iconColor: '#f59e0b',
+    },
+  ];
+
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-      {[
-        {
-          icon: <CircleDollarSign size={20} />,
-          label: 'Total Revenue',
-          value: '৳48,500',
-          sub: '+৳6,300 this month',
-        },
-        {
-          icon: <Users size={20} />,
-          label: 'Total Students',
-          value: '1,240',
-          sub: '+104 this month',
-        },
-        {
-          icon: <Eye size={20} />,
-          label: 'Course Views',
-          value: '8,400',
-          sub: '+1,200 this month',
-        },
-        {
-          icon: <Star size={20} />,
-          label: 'Avg Rating',
-          value: '4.8',
-          sub: 'Based on 185 reviews',
-        },
-      ].map((stat, i) => (
-        <div key={i} className="dashboard-card-container">
-          <div className="text-primary mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm bg-emerald-50">
-            {stat.icon}
-          </div>
-          <p className="text-text-primary text-2xl font-black">{stat.value}</p>
-          <p className="text-sm font-semibold text-slate-600">{stat.label}</p>
-          <p className="text-text-secondary mt-1 text-xs">{stat.sub}</p>
-        </div>
-      ))}
+      {isLoading
+        ? [...Array(4)].map((_, i) => <StatsCardSkeleton key={i} hasSub />)
+        : stats.map((stat, i) => (
+            <StatsCard
+              key={i}
+              icon={stat.icon}
+              iconColor={stat.iconColor}
+              label={stat.label}
+              value={stat.value}
+              sub={stat.sub}
+            />
+          ))}
     </div>
   );
 };
