@@ -20,6 +20,7 @@ export const adminCourseApi = apiClient.injectEndpoints({
         method: 'GET',
         params,
       }),
+      providesTags: ['AdminCourses'],
     }),
 
     // 2. Get course management overview stats
@@ -28,6 +29,7 @@ export const adminCourseApi = apiClient.injectEndpoints({
         url: '/courses/admin/course-stats',
         method: 'GET',
       }),
+      providesTags: ['CourseStats'],
     }),
 
     // 3. Approve, reject, suspend, or change course status
@@ -40,6 +42,7 @@ export const adminCourseApi = apiClient.injectEndpoints({
         method: 'PATCH',
         body: payload,
       }),
+      invalidatesTags: ['AdminCourses', 'CourseStats', 'Courses', 'InstructorCourses'],
     }),
   }),
 });

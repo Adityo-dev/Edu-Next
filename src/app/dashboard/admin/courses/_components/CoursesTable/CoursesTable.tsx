@@ -8,6 +8,7 @@ import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
 import TableSkeleton from '@/components/dashboard/Skeletons/TableSkeleton';
+import { useModal } from '@/context/ModalContext';
 import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
 import {
   useGetAdminCoursesQuery,
@@ -61,6 +62,7 @@ const mapCourseToRow = (course: ICourse): ICourseRow => ({
 
 const CourseManagementTable = () => {
   const { getQueryObject } = useSetSearchQueryInURL();
+  const { openModal } = useModal();
   const [actingRowId, setActingRowId] = useState<string | null>(null);
 
   // 1. Reading current query data from the URL
@@ -85,48 +87,131 @@ const CourseManagementTable = () => {
     return (data?.data?.courses ?? []).map(mapCourseToRow);
   }, [data]);
 
-  // Fixed: Expanded type union to include 'suspended' and mapped corresponding reason structures
-  const handleStatusUpdate = async (
-    row: ICourseRow,
-    status: 'published' | 'rejected' | 'suspended',
-    reason?: string,
-  ) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to change this course status to ${status}?`,
-    );
-    if (!confirmed) return;
-
-    try {
-      setActingRowId(row?.id);
-      const payload = {
-        status,
-        ...(status === 'rejected' && reason && { rejectedReason: reason }),
-        ...(status === 'suspended' && reason && { suspendedReason: reason }),
-      };
-      await updateCourseStatus({ id: row?.id, payload }).unwrap();
-      toast.success(`Course status updated to ${status} successfully.`);
-    } catch {
-      toast.error('Failed to update course status. Please try again.');
-    } finally {
-      setActingRowId(null);
-    }
+  const handlePublish = (row: ICourseRow) => {
+    openModal({
+      view: 'STATUS_MANAGE',
+      data: {
+        suspendItem: 'course',
+        title: 'Publish Course',
+        variant: 'success',
+        description: (
+          <>
+            Are you sure you want to publish{' '}
+            <span className="font-semibold text-emerald-600">&quot;{row?.title}&quot;</span>?
+          </>
+        ),
+        actionLabel: 'Publish Now',
+        requireReason: false,
+        onConfirm: async () => {
+          setActingRowId(row?.id);
+          try {
+            const payload = { status: 'published' as const };
+            await updateCourseStatus({ id: row?.id, payload }).unwrap();
+            toast.success('Course published successfully.');
+          } catch {
+            toast.error('Failed to publish course. Please try again.');
+          } finally {
+            setActingRowId(null);
+          }
+        },
+      },
+    });
   };
 
-  const handleDelete = async (row: ICourseRow) => {
-    const confirmed = window.confirm(
-      `Permanently delete "${row?.title}"? This action cannot be undone.`,
-    );
-    if (!confirmed) return;
+  const handleSuspend = (row: ICourseRow) => {
+    openModal({
+      view: 'STATUS_MANAGE',
+      data: {
+        suspendItem: 'course',
+        title: 'Suspend Course',
+        variant: 'warning',
+        description: (
+          <>
+            Are you sure you want to suspend the course{' '}
+            <span className="font-semibold text-yellow-600">&quot;{row?.title}&quot;</span>?
+          </>
+        ),
+        actionLabel: 'Suspend Now',
+        reasonLabel: 'Reason for suspension (Required)',
+        reasonPlaceholder: 'E.g. Violation of terms, outdated content, etc.',
+        requireReason: true,
+        onConfirm: async (reason: string) => {
+          setActingRowId(row?.id);
+          try {
+            const payload = { status: 'suspended' as const, suspendedReason: reason };
+            await updateCourseStatus({ id: row?.id, payload }).unwrap();
+            toast.success('Course has been suspended successfully.');
+          } catch {
+            toast.error('Failed to suspend course. Please try again.');
+          } finally {
+            setActingRowId(null);
+          }
+        },
+      },
+    });
+  };
 
-    try {
-      setActingRowId(row?.id);
-      await deleteCourse(row?.id).unwrap();
-      toast.success('Course has been successfully removed from the system.');
-    } catch {
-      toast.error('Failed to delete course. Please try again.');
-    } finally {
-      setActingRowId(null);
-    }
+  const handleReject = (row: ICourseRow) => {
+    openModal({
+      view: 'STATUS_MANAGE',
+      data: {
+        suspendItem: 'course',
+        title: 'Reject Course',
+        variant: 'danger',
+        description: (
+          <>
+            Are you sure you want to reject the course{' '}
+            <span className="font-semibold text-red-600">&quot;{row?.title}&quot;</span>?
+          </>
+        ),
+        actionLabel: 'Reject Now',
+        reasonLabel: 'Reason for rejection (Required)',
+        reasonPlaceholder: 'E.g. Incomplete content, guidelines not met, etc.',
+        requireReason: true,
+        onConfirm: async (reason: string) => {
+          setActingRowId(row?.id);
+          try {
+            const payload = { status: 'rejected' as const, rejectedReason: reason };
+            await updateCourseStatus({ id: row?.id, payload }).unwrap();
+            toast.success('Course has been rejected successfully.');
+          } catch {
+            toast.error('Failed to reject course. Please try again.');
+          } finally {
+            setActingRowId(null);
+          }
+        },
+      },
+    });
+  };
+
+  const handleDelete = (row: ICourseRow) => {
+    openModal({
+      view: 'DELETE_CONFIRM',
+      data: {
+        deleteItem: 'course',
+        title: 'Delete Course',
+        description: (
+          <>
+            Permanently delete{' '}
+            <span className="text-danger font-semibold">&quot;{row?.title}&quot;</span>? This action
+            cannot be undone.
+          </>
+        ),
+        actionLabel: 'Delete Now',
+        requireReason: false,
+        onConfirm: async () => {
+          setActingRowId(row?.id);
+          try {
+            await deleteCourse(row?.id).unwrap();
+            toast.success('Course has been successfully removed from the system.');
+          } catch {
+            toast.error('Failed to delete course. Please try again.');
+          } finally {
+            setActingRowId(null);
+          }
+        },
+      },
+    });
   };
 
   const CourseTableConfig: TColumn<ICourseRow>[] = [
@@ -233,6 +318,7 @@ const CourseManagementTable = () => {
       cell: (row) => {
         const tableActions: {
           type: 'view' | 'save' | 'close' | 'delete' | 'suspend';
+          label?: string;
           onClick: () => void;
           isLoading?: boolean;
         }[] = [
@@ -248,36 +334,39 @@ const CourseManagementTable = () => {
           tableActions.push(
             {
               type: 'save',
-              onClick: () => {
-                handleStatusUpdate(row, 'published');
-              },
+              onClick: () => handlePublish(row),
               isLoading: actingRowId === row?.id && isUpdatingStatus,
             },
             {
               type: 'close',
-              onClick: () => {
-                const reason = prompt('Enter rejection reason:');
-                if (reason) handleStatusUpdate(row, 'rejected', reason);
-              },
+              onClick: () => handleReject(row),
               isLoading: actingRowId === row?.id && isUpdatingStatus,
             },
           );
         } else if (row?.status === 'published') {
           tableActions.push({
             type: 'suspend',
-            onClick: () => {
-              const reason = prompt('Enter reason for suspension:');
-              // Fixed: Correctly passes 'suspended' instead of 'rejected' string literal
-              if (reason) handleStatusUpdate(row, 'suspended', reason);
-            },
+            onClick: () => handleSuspend(row),
             isLoading: actingRowId === row?.id && isUpdatingStatus,
           });
+        } else if (row?.status === 'suspended') {
+          tableActions.push(
+            {
+              type: 'save',
+              label: 'Unsuspend',
+              onClick: () => handlePublish(row),
+              isLoading: actingRowId === row?.id && isUpdatingStatus,
+            },
+            {
+              type: 'delete',
+              onClick: () => handleDelete(row),
+              isLoading: actingRowId === row?.id && isDeleting,
+            },
+          );
         } else {
           tableActions.push({
             type: 'delete',
-            onClick: () => {
-              handleDelete(row);
-            },
+            onClick: () => handleDelete(row),
             isLoading: actingRowId === row?.id && isDeleting,
           });
         }
@@ -298,7 +387,7 @@ const CourseManagementTable = () => {
         { label: 'Pending', value: 'pending' },
         { label: 'Draft', value: 'draft' },
         { label: 'Rejected', value: 'rejected' },
-        { label: 'Suspended', value: 'suspended' }, // Added to filter bar options
+        { label: 'Suspended', value: 'suspended' },
       ],
     },
     {

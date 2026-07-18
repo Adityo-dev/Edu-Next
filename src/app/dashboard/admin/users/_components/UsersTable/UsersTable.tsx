@@ -9,6 +9,7 @@ import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
 import TableSkeleton from '@/components/dashboard/Skeletons/TableSkeleton';
 import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
+import { useModal } from '@/context/ModalContext';
 
 import {
   useDeleteUserMutation,
@@ -50,6 +51,7 @@ const mapUserToRow = (user: TUserListItem): IUserRow => ({
 
 const UsersTable = () => {
   const { getQueryObject } = useSetSearchQueryInURL();
+  const { openModal } = useModal();
   const [actingRowId, setActingRowId] = useState<string | null>(null);
 
   // 1. Reading current query data from the URL (to pass directly to RTK Query)
@@ -76,42 +78,72 @@ const UsersTable = () => {
     return (data?.data?.users ?? []).map(mapUserToRow);
   }, [data]);
 
-  const handleToggleStatus = async (row: IUserRow) => {
+  const handleToggleStatus = (row: IUserRow) => {
     const nextStatus: TUserStatus = row?.status === 'active' ? 'suspended' : 'active';
+    const isSuspending = nextStatus === 'suspended';
 
-    const confirmed = window.confirm(
-      nextStatus === 'suspended'
-        ? `Suspend ${row?.name}'s account? They won't be able to log in.`
-        : `Activate ${row?.name}'s account again?`,
-    );
-    if (!confirmed) return;
-
-    try {
-      setActingRowId(row?.id);
-      await updateUserStatus({ id: row?.id, status: nextStatus }).unwrap();
-      toast.success(`${row?.name}'s account is now ${nextStatus}.`);
-    } catch {
-      toast.error('Failed to update user status. Please try again.');
-    } finally {
-      setActingRowId(null);
-    }
+    openModal({
+      view: 'STATUS_MANAGE',
+      data: {
+        suspendItem: 'user account',
+        title: isSuspending ? 'Suspend User' : 'Activate User',
+        variant: isSuspending ? 'warning' : 'success',
+        description: isSuspending ? (
+          <>
+            Are you sure you want to suspend{' '}
+            <span className="font-semibold text-yellow-600">{row?.name}&apos;s</span> account? They
+            won&apos;t be able to log in.
+          </>
+        ) : (
+          <>
+            Are you sure you want to activate{' '}
+            <span className="font-semibold text-green-600">{row?.name}&apos;s</span> account again?
+          </>
+        ),
+        actionLabel: isSuspending ? 'Suspend Now' : 'Activate Now',
+        requireReason: false,
+        onConfirm: async () => {
+          setActingRowId(row?.id);
+          try {
+            await updateUserStatus({ id: row?.id, status: nextStatus }).unwrap();
+            toast.success(`${row?.name}'s account is now ${nextStatus}.`);
+          } catch {
+            toast.error('Failed to update user status. Please try again.');
+          } finally {
+            setActingRowId(null);
+          }
+        },
+      },
+    });
   };
 
-  const handleDelete = async (row: IUserRow) => {
-    const confirmed = window.confirm(
-      `Permanently delete ${row?.name}'s account? This cannot be undone.`,
-    );
-    if (!confirmed) return;
-
-    try {
-      setActingRowId(row?.id);
-      await deleteUser(row?.id).unwrap();
-      toast.success(`${row?.name}'s account has been deleted.`);
-    } catch {
-      toast.error('Failed to delete user. Please try again.');
-    } finally {
-      setActingRowId(null);
-    }
+  const handleDelete = (row: IUserRow) => {
+    openModal({
+      view: 'DELETE_CONFIRM',
+      data: {
+        deleteItem: 'user account',
+        title: 'Delete User Account',
+        description: (
+          <>
+            Permanently delete <span className="text-danger font-semibold">{row?.name}&apos;s</span>{' '}
+            account? This cannot be undone.
+          </>
+        ),
+        actionLabel: 'Delete Now',
+        requireReason: false,
+        onConfirm: async () => {
+          setActingRowId(row?.id);
+          try {
+            await deleteUser(row?.id).unwrap();
+            toast.success(`${row?.name}'s account has been deleted.`);
+          } catch {
+            toast.error('Failed to delete user. Please try again.');
+          } finally {
+            setActingRowId(null);
+          }
+        },
+      },
+    });
   };
   console.log(rows?.map((r) => r.avatar));
 

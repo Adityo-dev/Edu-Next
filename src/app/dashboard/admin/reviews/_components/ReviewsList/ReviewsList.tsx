@@ -46,8 +46,9 @@ const ReviewsList = () => {
 
   const handleReject = (id: string) => {
     openModal({
-      view: 'SUSPEND_CONFIRM',
+      view: 'STATUS_MANAGE',
       data: {
+        variant: 'warning',
         suspendItem: 'student review',
         title: 'Reject Review',
         description:

@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React, { useState } from 'react';
-import { toast } from 'sonner';
+import CommissionSettingsSkeleton from '@/components/dashboard/Skeletons/admin/CommissionSettingsSkeleton';
 import {
   useGetCommissionQuery,
   useUpdateCommissionMutation,
 } from '@/redux/features/admin/commission/commission.api';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import ChangeHistory from './_components/ChangeHistory/ChangeHistory';
 import CommissionEditor from './_components/CommissionEditor/CommissionEditor';
 import RevenuePreview from './_components/RevenuePreview/RevenuePreview';
-import ChangeHistory from './_components/ChangeHistory/ChangeHistory';
-import CommissionRateSkeleton from './CommissionRateSkeleton';
 
 const CommissionRate = () => {
   const { data, isLoading, refetch } = useGetCommissionQuery();
@@ -25,7 +25,7 @@ const CommissionRate = () => {
   const platformEarning = preview * (commission / 100);
 
   if (isLoading) {
-    return <CommissionRateSkeleton />;
+    return <CommissionSettingsSkeleton />;
   }
 
   const handleSave = async () => {

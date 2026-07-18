@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { Save } from 'lucide-react';
 
 interface CommissionEditorProps {
@@ -15,7 +16,7 @@ const CommissionEditor = ({
   handleSave,
 }: CommissionEditorProps) => {
   return (
-    <div className="dashboard-card-container h-fit p-4">
+    <div className="dashboard-card-container h-fit">
       <h2 className="mb-4 text-lg font-semibold">Set Commission Rate</h2>
 
       {/* Big Display */}
@@ -49,21 +50,21 @@ const CommissionEditor = ({
           <button
             key={v}
             onClick={() => setCommission(v)}
-            className={`rounded-sm border py-2.5 text-sm font-bold transition-all ${commission === v ? 'border-primary text-primary bg-emerald-50' : 'border-slate-200 text-slate-500 hover:border-slate-300'}`}
+            className={`cursor-pointer rounded-sm border py-2.5 text-sm font-bold transition-all ${commission === v ? 'border-primary text-primary bg-emerald-50' : 'border-slate-200 text-slate-500 hover:border-slate-300'}`}
           >
             {v}%
           </button>
         ))}
       </div>
 
-      <button
+      <DynamicActionButton
         onClick={handleSave}
         disabled={isUpdating}
-        className={`flex w-full items-center justify-center gap-2 rounded-sm py-3.5 text-sm font-bold text-white transition-all ${isUpdating ? 'cursor-not-allowed bg-emerald-400 opacity-70' : 'bg-primary hover:bg-[#2a6159]'}`}
-      >
-        <Save size={15} />
-        {isUpdating ? 'Saving...' : 'Save Commission Rate'}
-      </button>
+        label={isUpdating ? 'Saving...' : 'Save Commission Rate'}
+        showIcon
+        icon={Save}
+        className="w-full"
+      />
     </div>
   );
 };

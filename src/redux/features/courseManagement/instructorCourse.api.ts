@@ -23,6 +23,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         method: 'POST',
         body: courseData,
       }),
+      invalidatesTags: ['InstructorCourses', 'CourseStats', 'AdminCourses'],
     }),
 
     // 2. Get instructor's own dashboard courses
@@ -35,6 +36,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         method: 'GET',
         params,
       }),
+      providesTags: ['InstructorCourses'],
     }),
 
     // 3. Get single course by slug for instructor
@@ -43,6 +45,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         url: `/courses/${slug}`,
         method: 'GET',
       }),
+      providesTags: (result, error, slug) => [{ type: 'InstructorCourses', id: slug }],
     }),
 
     // 4. Update course content or lessons
@@ -55,6 +58,11 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         method: 'PATCH',
         body: payload,
       }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'InstructorCourses', id },
+        'InstructorCourses',
+        'Courses',
+      ],
     }),
 
     // 5. Request admin review to publish a draft or rejected course
@@ -63,6 +71,11 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         url: `/courses/${id}/publish-request`,
         method: 'POST',
       }),
+      invalidatesTags: (result, error, id) => [
+        { type: 'InstructorCourses', id },
+        'InstructorCourses',
+        'AdminCourses',
+      ],
     }),
 
     // 6. Delete a course entirely (Only allowed if no enrollments & draft/rejected)
@@ -71,6 +84,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         url: `/courses/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['InstructorCourses', 'CourseStats', 'AdminCourses'],
     }),
 
     // 6. Get instructor students stats
@@ -79,6 +93,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         url: '/enrollments/instructor/students/stats',
         method: 'GET',
       }),
+      providesTags: ['CourseStats'],
     }),
 
     // 7. Get instructor students
@@ -91,6 +106,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         method: 'GET',
         params,
       }),
+      providesTags: ['CourseStats'],
     }),
 
     // 8. Get instructor analytics stats (Cards)
@@ -99,6 +115,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         url: '/courses/instructor/analytics/stats',
         method: 'GET',
       }),
+      providesTags: ['CourseStats'],
     }),
 
     // 9. Get instructor analytics growth
@@ -107,6 +124,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         url: '/courses/instructor/analytics/growth',
         method: 'GET',
       }),
+      providesTags: ['CourseStats'],
     }),
 
     // 10. Get instructor revenue overview (Chart)
@@ -115,6 +133,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         url: '/courses/instructor/analytics/revenue-overview',
         method: 'GET',
       }),
+      providesTags: ['CourseStats'],
     }),
 
     // 11. Get instructor course performance (Table)
@@ -127,6 +146,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         method: 'GET',
         params,
       }),
+      providesTags: ['CourseStats'],
     }),
   }),
 });

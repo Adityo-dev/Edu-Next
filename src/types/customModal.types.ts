@@ -5,7 +5,7 @@
 export type TModalView =
   | 'DELETE_CONFIRM'
   | 'WRITE_REVIEW'
-  | 'SUSPEND_CONFIRM'
+  | 'STATUS_MANAGE'
   | 'LOGIN_REQUIRED'
   | 'REFUND_DETAILS'
   | 'NONE';
