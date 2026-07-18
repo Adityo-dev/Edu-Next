@@ -98,6 +98,15 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
             {/* Left Content */}
             <div className="min-w-0 flex-1 space-y-6">
+              {/* Description */}
+              <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs">
+                <Skeleton className="mb-4 h-6 w-48" />
+                <Skeleton className="mb-2 h-4 w-full" />
+                <Skeleton className="mb-2 h-4 w-full" />
+                <Skeleton className="mb-2 h-4 w-3/4" />
+                <Skeleton className="mb-2 h-4 w-5/6" />
+              </div>
+
               {/* Skills/What you'll learn */}
               <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs">
                 <Skeleton className="mb-4 h-6 w-48" />
@@ -213,6 +222,7 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
     id: apiCourse._id,
     title: apiCourse.title,
     subtitle: apiCourse.subtitle,
+    description: apiCourse.description || '',
     instructor: {
       name: apiCourse.instructor?.fullName || 'Instructor',
       title: apiCourse.instructor?.bio || 'Instructor',
@@ -293,12 +303,12 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   );
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <section>
       <CourseDetailsHero course={course} totalLessons={totalLessons} />
 
       {/* ── Main Content  */}
-      <div className="mx-auto max-w-400 px-6 py-10">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+      <div className="mx-auto max-w-400 px-4 py-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
           {/* ── Left: Course Content  */}
           <div className="min-w-0 flex-1 space-y-6">
             <SkillsAndTeacher course={course} />
@@ -314,7 +324,7 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
           <StickyBuyCard course={course} totalLessons={totalLessons} />
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
