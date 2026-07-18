@@ -76,7 +76,7 @@ export const LEVEL_OPTIONS = [
 ];
 
 export const LANGUAGE_OPTIONS = [
-  { value: 'বাংলা', label: 'বাংলা' },
+  { value: 'Bangla', label: 'Bangla' },
   { value: 'English', label: 'English' },
   { value: 'Hindi', label: 'Hindi' },
 ];

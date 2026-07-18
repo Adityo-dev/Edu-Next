@@ -10,7 +10,7 @@ const ProfileSettings = () => {
     email: 'sumaiya@example.com',
     phone: '+880 1700-000000',
     bio: 'Passionate learner from Dhaka, Bangladesh.',
-    language: 'বাংলা',
+    language: 'Bangla',
   });
 
   return (
@@ -93,8 +93,9 @@ const ProfileSettings = () => {
             onChange={(e) => setProfile({ ...profile, language: e.target.value })}
             className="focus:border-primary w-full cursor-pointer rounded-sm border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-100"
           >
-            <option>বাংলা</option>
+            <option>Bangla</option>
             <option>English</option>
+            <option>Hindi</option>
           </select>
         </div>
       </div>

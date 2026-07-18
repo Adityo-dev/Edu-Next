@@ -37,7 +37,7 @@ const categories = [
 ];
 
 const levels = ['Beginner', 'Intermediate', 'Advanced'];
-const languages = ['বাংলা', 'English'];
+const languages = ['Bangla', 'English', 'Hindi'];
 const ratings = [4.5, 4.0, 3.5, 3.0];
 const sortOptions = [
   'Most Popular',
