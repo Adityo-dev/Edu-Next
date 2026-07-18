@@ -1,6 +1,10 @@
 'use client';
 
-import { useGetMyEnrolledCoursesQuery } from '@/redux/features/courseManagement/studentCourse.api';
+import { useDebounce } from '@/hooks/useDebounce';
+import {
+  useGetMyEnrolledCoursesQuery,
+  useGetMyStatsQuery,
+} from '@/redux/features/courseManagement/studentCourse.api';
 import { IEnrolledCourse } from '@/types/courseManagement.types';
 import { Filter } from 'lucide-react';
 import { useState } from 'react';
@@ -8,37 +12,37 @@ import CoursesFilter from '../CoursesFilter/CoursesFilter';
 import MyCourseCard from './_components/MyCourseCard/MyCourseCard';
 
 const MyCourse = () => {
-  const { data, isLoading } = useGetMyEnrolledCoursesQuery();
-  const enrolledCourses = data?.data || [];
-  console.log(data);
-
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 500);
   const [filter, setFilter] = useState<'all' | 'in-progress' | 'completed'>('all');
 
-  const totalCourses = enrolledCourses.length;
-  const totalInProgress = enrolledCourses.filter(
-    (c: IEnrolledCourse) => c.progress?.status === 'In Progress',
-  ).length;
-  const totalCompleted = enrolledCourses.filter(
-    (c: IEnrolledCourse) => c.progress?.status === 'Completed',
-  ).length;
+  // Fetch stats for the filter bar
+  const { data: statsData } = useGetMyStatsQuery();
+  const totalCourses = statsData?.data?.totalEnrolled || 0;
+  const totalInProgress = statsData?.data?.inProgress || 0;
+  const totalCompleted = statsData?.data?.completed || 0;
 
-  const filteredCourses = enrolledCourses.filter((c: IEnrolledCourse) => {
-    const title = c.course?.title?.toLowerCase() || '';
-    const category = c.course?.category?.toLowerCase() || '';
-    const searchTerm = search?.toLowerCase() || '';
-
-    const matchSearch = title.includes(searchTerm) || category.includes(searchTerm);
-
-    let matchFilter = true;
-    if (filter === 'in-progress') {
-      matchFilter = c.progress?.status === 'In Progress';
-    } else if (filter === 'completed') {
-      matchFilter = c.progress?.status === 'Completed';
-    }
-
-    return matchSearch && matchFilter;
+  // Fetch paginated/filtered enrolled courses
+  const { data, isLoading } = useGetMyEnrolledCoursesQuery({
+    search: debouncedSearch || undefined,
+    stats: filter === 'all' ? undefined : filter,
+    page: 1,
+    limit: 100, // Fetch a large number if pagination UI isn't ready
   });
+
+  const rawData = data?.data as
+    | { result?: IEnrolledCourse[]; courses?: IEnrolledCourse[]; data?: IEnrolledCourse[] }
+    | IEnrolledCourse[]
+    | undefined;
+  const enrolledCourses: IEnrolledCourse[] = Array.isArray(rawData)
+    ? rawData
+    : Array.isArray(rawData?.result)
+      ? rawData.result
+      : Array.isArray(rawData?.courses)
+        ? rawData.courses
+        : Array.isArray(rawData?.data)
+          ? rawData.data
+          : [];
 
   return (
     <div className="space-y-6">
@@ -56,7 +60,7 @@ const MyCourse = () => {
         <div className="flex justify-center py-12">
           <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
         </div>
-      ) : filteredCourses.length === 0 ? (
+      ) : enrolledCourses.length === 0 ? (
         <div className="dashboard-card-container flex flex-col items-center justify-center py-24 text-center">
           <Filter size={40} className="mb-4 text-slate-300" />
           <h3 className="mb-2 text-lg font-bold text-slate-500">No courses found</h3>
@@ -64,7 +68,7 @@ const MyCourse = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredCourses.map((enrolledCourse: IEnrolledCourse) => (
+          {enrolledCourses.map((enrolledCourse: IEnrolledCourse) => (
             <MyCourseCard key={enrolledCourse.enrollmentId} enrolledCourse={enrolledCourse} />
           ))}
         </div>

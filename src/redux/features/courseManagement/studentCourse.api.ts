@@ -2,17 +2,19 @@ import { apiClient } from '@/redux/apiClient/apiClient';
 import {
   ICommonResponse,
   ICoursePlaybackData,
-  IEnrolledCourse,
   IStudentStats,
 } from '@/types/courseManagement.types';
 
 export const studentCourseApi = apiClient.injectEndpoints({
   endpoints: (builder) => ({
-    // 1. Get student enrolled courses with progress
-    getMyEnrolledCourses: builder.query<ICommonResponse<IEnrolledCourse[]>, void>({
-      query: () => ({
+    getMyEnrolledCourses: builder.query<
+      ICommonResponse<unknown>,
+      { search?: string; stats?: string; page?: number; limit?: number } | void
+    >({
+      query: (params) => ({
         url: '/enrollments/my-enrolled',
         method: 'GET',
+        params: params || {},
       }),
       providesTags: ['Courses'],
     }),
