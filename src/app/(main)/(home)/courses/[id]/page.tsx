@@ -11,15 +11,6 @@ import { useGetCourseBySlugQuery } from '@/redux/features/courseManagement/publi
 
 import { use } from 'react';
 
-// ─── Mock Data
-const ratingBreakdown = [
-  { stars: 5, percent: 72 },
-  { stars: 4, percent: 18 },
-  { stars: 3, percent: 6 },
-  { stars: 2, percent: 3 },
-  { stars: 1, percent: 1 },
-];
-
 // ─── Component
 const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
@@ -317,7 +308,7 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
               totalLessons={totalLessons}
               duration={course.duration}
             />
-            <ReviewsAndAbout course={course} ratingBreakdown={ratingBreakdown} />
+            <ReviewsAndAbout course={course} />
           </div>
 
           {/* ── Right: Sticky Buy Card  */}

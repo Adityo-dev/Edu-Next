@@ -99,6 +99,13 @@ export interface InstructorReviewStatsResponse {
       '4': number;
       '5': number;
     };
+    starPercentage: {
+      '1': number;
+      '2': number;
+      '3': number;
+      '4': number;
+      '5': number;
+    };
   };
 }
 
@@ -134,9 +141,30 @@ export interface ReviewActionResponse {
   data: Partial<IReview>;
 }
 
-// Public/Student General Response Interface
-export interface DefaultReviewResponse {
+// Public Course Reviews Response Interface
+export interface CourseReviewsResponse {
   success: boolean;
   message: string;
-  data: IReview[];
+  data: {
+    stats: {
+      averageRating: number;
+      totalReviews: number;
+      starDistribution: {
+        '1': number;
+        '2': number;
+        '3': number;
+        '4': number;
+        '5': number;
+      };
+      starPercentage: {
+        '1': number;
+        '2': number;
+        '3': number;
+        '4': number;
+        '5': number;
+      };
+    };
+    reviews: IReview[];
+    total: number;
+  };
 }
