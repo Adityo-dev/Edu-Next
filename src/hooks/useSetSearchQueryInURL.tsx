@@ -48,7 +48,7 @@ const useSetSearchQueryInURL = () => {
     [setMultipleQueries],
   );
 
-  const getQueryObject = () => {
+  const getQueryObject = (): Record<string, string> => {
     return Object.fromEntries(searchParams.entries());
   };
 
