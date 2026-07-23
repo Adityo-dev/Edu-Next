@@ -1,9 +1,9 @@
 'use client';
 
-import { CircleDollarSign, Eye, Star, Users } from 'lucide-react';
-import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
 import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleton';
+import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
 import { useGetInstructorAnalyticsStatsQuery } from '@/redux/features/courseManagement/instructorCourse.api';
+import { CircleDollarSign, Eye, Star, Users } from 'lucide-react';
 
 const AnalyticsStats = () => {
   const { data: response, isLoading } = useGetInstructorAnalyticsStatsQuery();

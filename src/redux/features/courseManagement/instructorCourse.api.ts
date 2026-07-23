@@ -112,7 +112,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
     // 8. Get instructor analytics stats (Cards)
     getInstructorAnalyticsStats: builder.query<ICommonResponse<IInstructorAnalyticsStats>, void>({
       query: () => ({
-        url: '/courses/instructor/analytics/stats',
+        url: '/analytics/instructor/stats',
         method: 'GET',
       }),
       providesTags: ['CourseStats'],
@@ -121,7 +121,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
     // 9. Get instructor analytics growth
     getInstructorAnalyticsGrowth: builder.query<ICommonResponse<IInstructorAnalyticsGrowth>, void>({
       query: () => ({
-        url: '/courses/instructor/analytics/growth',
+        url: '/analytics/instructor/growth',
         method: 'GET',
       }),
       providesTags: ['CourseStats'],
@@ -130,7 +130,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
     // 10. Get instructor revenue overview (Chart)
     getInstructorRevenueOverview: builder.query<ICommonResponse<IInstructorRevenueOverview>, void>({
       query: () => ({
-        url: '/courses/instructor/analytics/revenue-overview',
+        url: '/analytics/instructor/revenue-overview',
         method: 'GET',
       }),
       providesTags: ['CourseStats'],
@@ -142,7 +142,7 @@ export const instructorCourseApi = apiClient.injectEndpoints({
       IInstructorCoursePerformanceQueryParams | undefined
     >({
       query: (params) => ({
-        url: '/courses/instructor/analytics/performance',
+        url: '/analytics/instructor/performance',
         method: 'GET',
         params,
       }),
