@@ -13,6 +13,7 @@ import {
   Users,
   Video,
   Wallet,
+  Layers,
 } from 'lucide-react';
 
 export type roleTypes = 'admin' | 'student' | 'instructor';
@@ -80,6 +81,11 @@ export const AdminRoutes = [
     title: 'Notifications',
     url: '/dashboard/admin/notifications',
     icon: Bell,
+  },
+  {
+    title: 'Content Management',
+    url: '/dashboard/admin/dynamic-content',
+    icon: Layers,
   },
   {
     title: 'Settings',

@@ -45,5 +45,6 @@ export const apiClient = createApi({
     'Commission',
     'Payment',
     'AdminDashboard',
+    'Categories',
   ],
 });
