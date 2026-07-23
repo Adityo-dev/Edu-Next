@@ -54,7 +54,7 @@ const GrowthRate = () => {
   ];
 
   return (
-    <div className="dashboard-card-container">
+    <div className="dashboard-card-container h-fit">
       <h2 className="mb-5 text-lg font-semibold">Growth Rate</h2>
       <div className="space-y-3">
         {isLoading

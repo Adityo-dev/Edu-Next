@@ -1,3 +1,5 @@
+import { Skeleton } from '@/components/ui/skeleton';
+
 interface StatsCardSkeletonProps {
   hasSub?: boolean;
 }
@@ -5,13 +7,10 @@ interface StatsCardSkeletonProps {
 const StatsCardSkeleton = ({ hasSub = false }: StatsCardSkeletonProps) => {
   return (
     <div className="dashboard-card-container">
-      <div className="mb-3 h-10 w-10 animate-pulse rounded bg-slate-200"></div>
-
-      <div className="mb-1 h-8 w-24 animate-pulse rounded bg-slate-200"></div>
-
-      <div className="mb-2 h-4 w-28 animate-pulse rounded bg-slate-200"></div>
-
-      {hasSub && <div className="h-3 w-32 animate-pulse rounded bg-slate-200"></div>}
+      <Skeleton className="mb-3 h-10 w-10" />
+      <Skeleton className="mb-1 h-8 w-24" />
+      <Skeleton className="mb-2 h-4 w-28" />
+      {hasSub && <Skeleton className="h-3 w-32" />}
     </div>
   );
 };

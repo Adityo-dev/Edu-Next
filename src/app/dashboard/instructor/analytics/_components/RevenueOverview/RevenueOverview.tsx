@@ -3,9 +3,10 @@
 
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import RevenueOverviewSkeleton from '@/components/dashboard/Skeletons/RevenueOverviewSkeleton';
-import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
+import { ChartContainer, ChartTooltip, type ChartConfig } from '@/components/ui/chart';
 import { useGetInstructorRevenueOverviewQuery } from '@/redux/features/courseManagement/instructorCourse.api';
-import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
+import { TrendingUp } from 'lucide-react';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 const chartConfig = {
   revenue: {
@@ -18,29 +19,33 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const CustomTooltip = ({ active, payload }: any) => {
+const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div className="flex flex-col gap-1.5 rounded-sm border border-slate-100 bg-white/90 p-2.5 shadow-md backdrop-blur-md">
-        <p className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
-          {data.month}
-        </p>
-        <div className="flex items-center gap-2">
-          <span
-            className="h-2 w-2 rounded-full"
-            style={{ backgroundColor: chartConfig.revenue.color }}
-          />
-          <p className="text-text-primary text-sm font-semibold">
-            ৳{data.revenue?.toLocaleString() || 0}
-          </p>
+      <div className="border-border bg-card rounded-md border p-4 shadow-xs">
+        <div className="mb-3 flex items-center justify-between gap-6">
+          <span className="text-primary font-semibold">{label}</span>
+          <span className="flex items-center gap-1 text-xs font-medium text-emerald-500">
+            <TrendingUp size={14} /> <span className="text-secondary-text">Trend</span>
+          </span>
         </div>
-        <div className="flex items-center gap-2">
-          <span
-            className="h-2 w-2 rounded-full"
-            style={{ backgroundColor: chartConfig.students.color }}
-          />
-          <p className="text-text-secondary text-xs font-semibold">{data.students || 0} students</p>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-8">
+            <div className="flex flex-col">
+              <span className="text-secondary-text text-xs font-medium">Revenue</span>
+              <span className="text-primary-text text-xl font-bold">
+                ৳{Number(data.revenue).toLocaleString()}
+              </span>
+            </div>
+
+            <div className="bg-border h-8 w-px"></div>
+
+            <div className="flex flex-col">
+              <span className="text-secondary-text text-xs font-medium">Students</span>
+              <span className="text-primary-text text-xl font-bold">{data.students}</span>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -48,10 +53,10 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null;
 };
 
-const RevenueOverview = () => {
+export default function RevenueOverview() {
   const { data: response, isLoading } = useGetInstructorRevenueOverviewQuery();
   const overviewData = response?.data;
-  const monthlyData = overviewData?.chartData || [];
+  const chartData = overviewData?.chartData || [];
 
   return (
     <div className="dashboard-card-container flex flex-col lg:col-span-2">
@@ -64,68 +69,81 @@ const RevenueOverview = () => {
         <RevenueOverviewSkeleton />
       ) : (
         <div className="flex flex-1 flex-col justify-between">
-          {/* Area Chart with Gradients */}
-          <div className="h-45 w-full">
-            <ChartContainer config={chartConfig} className="h-full w-full">
-              <AreaChart
-                accessibilityLayer
-                data={monthlyData}
-                margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
-              >
-                <defs>
-                  <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--color-revenue)" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="var(--color-revenue)" stopOpacity={0} />
-                  </linearGradient>
-                  <linearGradient id="fillStudents" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="var(--color-students)" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="var(--color-students)" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-
-                <CartesianGrid vertical={false} strokeDasharray="3 3" opacity={0.4} />
-
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  className="text-text-secondary text-[10px]"
-                />
-
-                <YAxis yAxisId="left" orientation="left" hide />
-                <YAxis yAxisId="right" orientation="right" hide />
-
-                <Tooltip
-                  content={<CustomTooltip />}
-                  cursor={{
-                    stroke: 'rgba(52, 121, 111, 0.2)',
-                    strokeWidth: 2,
-                    strokeDasharray: '4 4',
+          <div>
+            <header className="flex flex-row items-center justify-between pb-6">
+              <div></div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#34796f]"></span>
+                  <span className="text-secondary-text text-xs font-medium">Revenue</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-[#f59e0b]"></span>
+                  <span className="text-secondary-text text-xs font-medium">Students</span>
+                </div>
+              </div>
+            </header>
+            <div>
+              <ChartContainer config={chartConfig} className="h-80 w-full">
+                <AreaChart
+                  accessibilityLayer
+                  data={chartData}
+                  margin={{
+                    left: -20,
+                    right: 12,
+                    top: 10,
+                    bottom: 10,
                   }}
-                  animationDuration={200}
-                />
+                >
+                  <defs>
+                    <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--color-revenue)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="var(--color-revenue)" stopOpacity={0.0} />
+                    </linearGradient>
+                    <linearGradient id="fillStudents" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="var(--color-students)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="var(--color-students)" stopOpacity={0.0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-border" />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={12}
+                    className="text-secondary-text text-xs"
+                  />
+                  <YAxis
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={12}
+                    tickCount={6}
+                    className="text-secondary-text text-xs"
+                  />
+                  <ChartTooltip cursor={false} content={<CustomTooltip />} />
 
-                <Area
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="var(--color-revenue)"
-                  strokeWidth={3}
-                  fill="url(#fillRevenue)"
-                  activeDot={{ r: 6 }}
-                />
-                <Area
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="students"
-                  stroke="var(--color-students)"
-                  strokeWidth={3}
-                  fill="url(#fillStudents)"
-                  activeDot={{ r: 6 }}
-                />
-              </AreaChart>
-            </ChartContainer>
+                  <Area
+                    dataKey="revenue"
+                    type="linear"
+                    fill="url(#fillRevenue)"
+                    stroke="var(--color-revenue)"
+                    strokeWidth={2}
+                    activeDot={{ r: 6, fill: 'var(--color-revenue)', strokeWidth: 0 }}
+                    dot={{ r: 4, fill: 'var(--color-revenue)', strokeWidth: 0 }}
+                  />
+
+                  <Area
+                    dataKey="students"
+                    type="linear"
+                    fill="url(#fillStudents)"
+                    stroke="var(--color-students)"
+                    strokeWidth={2}
+                    activeDot={{ r: 6, fill: 'var(--color-students)', strokeWidth: 0 }}
+                    dot={{ r: 4, fill: 'var(--color-students)', strokeWidth: 0 }}
+                  />
+                </AreaChart>
+              </ChartContainer>
+            </div>
           </div>
 
           <div className="mt-5 grid grid-cols-2 gap-4 border-t border-slate-100 pt-5">
@@ -146,6 +164,4 @@ const RevenueOverview = () => {
       )}
     </div>
   );
-};
-
-export default RevenueOverview;
+}
