@@ -1,6 +1,6 @@
 import BlogSection from './_components/BlogSection/BlogSection';
 import CategorySection from './_components/CategorySection/CategorySection';
-import CourseSection from './_components/CourseSection/CourseSection';
+import TopRatedCourses from './_components/TopRatedCourses/TopRatedCourses';
 import CTASection from './_components/CTASection/CTASection';
 import FAQSection from './_components/FAQSection/FAQSection';
 import HeroSection from './_components/HeroSection/HeroSection';
@@ -13,7 +13,7 @@ function LendingHomePage() {
       <HeroSection />
       <HowItWorksSection />
       <CategorySection />
-      <CourseSection />
+      <TopRatedCourses />
       <TestimonialSection />
       <BlogSection />
       <FAQSection />

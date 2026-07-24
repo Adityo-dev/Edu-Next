@@ -166,6 +166,7 @@ const CoursesPageContent = () => {
     enrolled: c.enrolledCount || 0,
     duration: c.totalDuration || '1h 0m',
     price: c.price,
+    estimatedPrice: c.estimatedPrice,
     certificate: c.hasCertificate,
   }));
 

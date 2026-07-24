@@ -114,9 +114,16 @@ export default function CourseCard({
 
             {/* Price */}
             <div className="flex items-center justify-between">
-              <span className="text-primary text-xl font-black">
-                ৳{course?.price.toLocaleString()}
-              </span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-primary text-xl font-black">
+                  ৳{course?.price?.toLocaleString() || 0}
+                </span>
+                {course?.estimatedPrice && course.estimatedPrice > course.price && (
+                  <span className="text-sm font-medium text-slate-400 line-through">
+                    ৳{course?.estimatedPrice?.toLocaleString()}
+                  </span>
+                )}
+              </div>
               {course?.certificate && <DynamicBadge text="🎓 Certificate" color="#34796f" />}
             </div>
           </div>
@@ -198,7 +205,16 @@ export default function CourseCard({
           </div>
         </div>
         <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
-          <span className="text-primary text-xl font-black">৳{course?.price.toLocaleString()}</span>
+          <div className="flex items-baseline gap-2">
+            <span className="text-primary text-xl font-black">
+              ৳{course?.price?.toLocaleString() || 0}
+            </span>
+            {course?.estimatedPrice && course.estimatedPrice > course.price && (
+              <span className="text-sm font-medium text-slate-400 line-through">
+                ৳{course?.estimatedPrice?.toLocaleString()}
+              </span>
+            )}
+          </div>
           {course?.certificate && <DynamicBadge text="🎓 Certificate" color="#34796f" />}
         </div>
       </div>

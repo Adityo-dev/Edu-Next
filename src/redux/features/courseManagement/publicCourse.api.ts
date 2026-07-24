@@ -30,7 +30,17 @@ export const publicCourseApi = apiClient.injectEndpoints({
       }),
       providesTags: ['Courses'],
     }),
+
+    // 3. Get top rated courses
+    getTopRatedCourses: builder.query<ICommonResponse<{ courses: ICourseListItem[] }>, void>({
+      query: () => ({
+        url: '/courses/top-rated',
+        method: 'GET',
+      }),
+      providesTags: ['Courses'],
+    }),
   }),
 });
 
-export const { useGetPublishedCoursesQuery, useGetCourseBySlugQuery } = publicCourseApi;
+export const { useGetPublishedCoursesQuery, useGetCourseBySlugQuery, useGetTopRatedCoursesQuery } =
+  publicCourseApi;

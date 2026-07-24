@@ -67,7 +67,7 @@ export interface ICourse {
   updatedAt: string;
 }
 
-// --- List View Course Interface ---
+// --- CourseListItem Interface ---
 export interface ICourseListItem {
   _id: string;
   title: string;
