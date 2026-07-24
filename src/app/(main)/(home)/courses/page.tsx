@@ -160,7 +160,7 @@ const CoursesPageContent = () => {
     category: c.category,
     level: c.level,
     language: c.language,
-    instructor: c.instructor ? `${c.instructor.firstName} ${c.instructor.lastName}` : 'Unknown',
+    instructor: c.instructor ? c.instructor.fullName : 'Unknown',
     instructorImage: c.instructor?.avatar,
     rating: c.rating || 0,
     enrolled: c.enrolledCount || 0,

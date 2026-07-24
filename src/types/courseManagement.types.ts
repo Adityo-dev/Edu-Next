@@ -2,7 +2,7 @@
 export type TCourseStatus = 'draft' | 'pending' | 'published' | 'rejected' | 'suspended';
 export type TCourseLevel = 'Beginner' | 'Intermediate' | 'Advanced';
 export type TCourseLanguage = 'Bangla' | 'English' | 'Hindi';
-export type TCourseBadge = 'New' | 'Bestseller' | 'Trending' | null;
+export type TCourseBadge = 'New' | 'Bestseller' | 'Trending' | 'none' | null;
 
 // --- Sub-Structures (Curriculum) ---
 export interface ILesson {
@@ -24,13 +24,13 @@ export interface ISection {
 export interface IInstructor {
   _id: string;
   fullName: string;
-  email: string;
+  email?: string;
   avatar?: string;
   bio?: string;
   totalCourses?: number;
   totalStudents?: number;
   rating?: number;
-  badge?: TCourseBadge;
+  badge?: string;
   experienceYears?: number;
 }
 
@@ -58,13 +58,35 @@ export interface ICourse {
   totalReviews: number;
   hasCertificate: boolean;
   status: TCourseStatus;
-  rejectedReason: string | null;
-  suspendedReason: string | null;
+  rejectedReason?: string | null;
+  suspendedReason?: string | null;
   badge: TCourseBadge;
   requirements: string | string[];
   whatYouLearn: string | string[];
   createdAt: string;
   updatedAt: string;
+}
+
+// --- List View Course Interface ---
+export interface ICourseListItem {
+  _id: string;
+  title: string;
+  slug: string;
+  thumbnail: string;
+  category: string;
+  level: TCourseLevel;
+  language: TCourseLanguage;
+  rating: number;
+  enrolledCount: number;
+  totalDuration: string;
+  price: number;
+  estimatedPrice: number;
+  hasCertificate: boolean;
+  instructor: {
+    _id: string;
+    fullName: string;
+    avatar?: string;
+  };
 }
 
 // --- Generic & Common API Responses ---

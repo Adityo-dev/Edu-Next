@@ -2,6 +2,7 @@ import { apiClient } from '@/redux/apiClient/apiClient';
 import {
   ICommonResponse,
   ICourse,
+  ICourseListItem,
   IGetCoursesQueryParams,
   IPaginatedData,
 } from '@/types/courseManagement.types';
@@ -10,7 +11,7 @@ export const publicCourseApi = apiClient.injectEndpoints({
   endpoints: (builder) => ({
     // 1. Get all published courses with advanced filtering
     getPublishedCourses: builder.query<
-      ICommonResponse<IPaginatedData<ICourse>>,
+      ICommonResponse<IPaginatedData<ICourseListItem>>,
       IGetCoursesQueryParams
     >({
       query: (params) => ({
