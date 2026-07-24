@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { Calendar, Clock, ExternalLink, Trash2, Video, VideoOff } from 'lucide-react';
+import { VideoOff } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
-import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
-import TableSkeleton from '@/components/dashboard/Skeletons/TableSkeleton';
 
 import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
 import {
@@ -21,18 +18,8 @@ import {
 import { IInstructorLiveSession } from '@/types/liveSessions.types';
 import { ITableFilter } from '@/types/table-filter.types';
 
-interface ILiveSessionRow {
-  id: string;
-  title: string;
-  course: string;
-  platform: string;
-  link: string;
-  date: string;
-  time: string;
-  duration: string;
-  students: number;
-  status: 'live' | 'upcoming' | 'completed';
-}
+import LiveSessionCardSkeleton from '@/components/dashboard/Skeletons/LiveSessionCardSkeleton';
+import LiveSessionCard, { ILiveSessionRow } from './_components/LiveSessionCard';
 
 const mapSessionToRow = (session: IInstructorLiveSession): ILiveSessionRow => {
   const startDateTime = new Date(session.startTime);
@@ -84,16 +71,36 @@ const LiveSessionsList = () => {
     );
   }, [rows, currentSearchUrl]);
 
-  const handleDeleteSession = async (row: ILiveSessionRow) => {
-    const confirmed = window.confirm(`Are you sure you want to cancel the session "${row.title}"?`);
+  // End Session Handler
+  const handleEndSession = async (row: ILiveSessionRow) => {
+    const isLive = row.status === 'live';
+    const actionText = isLive ? 'end' : 'cancel';
+
+    const confirmed = window.confirm(
+      `Are you sure you want to ${actionText} the session "${row.title}"?`,
+    );
     if (!confirmed) return;
 
     try {
       setActingRowId(row.id);
       await updateLiveSession({ sessionId: row.id, payload: { status: 'completed' } }).unwrap();
-      toast.success('Session closed successfully.');
+      toast.success(`Session ${actionText}ed successfully.`);
     } catch (err: any) {
-      toast.error(err?.data?.message || 'Failed to complete session.');
+      toast.error(err?.data?.message || `Failed to ${actionText} session.`);
+    } finally {
+      setActingRowId(null);
+    }
+  };
+
+  // Go Live Handler
+  const handleGoLive = async (row: ILiveSessionRow) => {
+    try {
+      setActingRowId(row.id);
+      await updateLiveSession({ sessionId: row.id, payload: { status: 'live' } }).unwrap();
+      toast.success('Session is now live!');
+      window.open(row.link, '_blank');
+    } catch (err: any) {
+      toast.error(err?.data?.message || 'Failed to start live session.');
     } finally {
       setActingRowId(null);
     }
@@ -135,7 +142,11 @@ const LiveSessionsList = () => {
           onRetry={refetch}
         />
       ) : isLoading ? (
-        <TableSkeleton />
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <LiveSessionCardSkeleton key={i} />
+          ))}
+        </div>
       ) : filteredRows.length === 0 ? (
         <EmptyState
           title="No Sessions Found"
@@ -144,75 +155,16 @@ const LiveSessionsList = () => {
         />
       ) : (
         <div className="space-y-4">
-          {filteredRows.map((session) => {
-            const config = statusConfig[session.status] || {
-              label: session.status,
-              color: '#64748b',
-            };
-            const isLive = session.status === 'live';
-            const isCompleted = session.status === 'completed';
-
-            return (
-              <div
-                key={session.id}
-                className={`rounded-sm border bg-white p-5 shadow-xs transition-colors duration-200 ${
-                  isLive
-                    ? 'border-red-100 bg-red-50/10'
-                    : 'border-slate-200 hover:border-emerald-100'
-                }`}
-              >
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                  <div className="flex-1">
-                    <div className="mb-2 flex items-center gap-2">
-                      <DynamicBadge text={config.label} color={config.color} />
-                      <DynamicBadge text={session.platform} color="#6b7280" />
-                    </div>
-                    <h3 className="mb-1 text-base font-bold text-gray-900">{session.title}</h3>
-                    <p className="text-text-secondary mb-3 text-sm">{session.course}</p>
-
-                    <div className="text-text-secondary flex flex-wrap items-center gap-4 text-xs">
-                      <span className="flex items-center gap-1.5">
-                        <Calendar size={12} />
-                        {session.date} • {session.time}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <Clock size={12} />
-                        {session.duration}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <Video size={12} />
-                        {session.students.toLocaleString()} students registered
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex shrink-0 items-center gap-2">
-                    {!isCompleted && (
-                      <DynamicActionButton
-                        label={isLive ? 'Start Now' : 'Open Link'}
-                        showIcon
-                        icon={ExternalLink}
-                        className="sm:h-10"
-                        href={session.link}
-                        variant={isLive ? 'danger' : 'default'}
-                      />
-                    )}
-
-                    {!isLive && (
-                      <button
-                        onClick={() => handleDeleteSession(session)}
-                        disabled={actingRowId === session.id}
-                        className="text-danger border-danger/20 flex h-10 w-10 cursor-pointer items-center justify-center rounded-sm border transition-colors hover:bg-red-50 disabled:opacity-50"
-                        title="Cancel Session"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {filteredRows.map((session) => (
+            <LiveSessionCard
+              key={session?.id}
+              session={session}
+              actingRowId={actingRowId}
+              onGoLive={handleGoLive}
+              onEndSession={handleEndSession}
+              statusConfig={statusConfig}
+            />
+          ))}
         </div>
       )}
     </div>

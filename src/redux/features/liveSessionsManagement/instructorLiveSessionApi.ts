@@ -27,7 +27,10 @@ export const instructorLiveSessionApi = apiClient.injectEndpoints({
       providesTags: ['InstructorLiveSessions'],
     }),
 
-    scheduleLiveSession: builder.mutation<any, IScheduleSessionPayload>({
+    scheduleLiveSession: builder.mutation<
+      { success: boolean; message: string; data?: any },
+      IScheduleSessionPayload
+    >({
       query: (payload) => ({ url: '/live-sessions', method: 'POST', body: payload }),
       invalidatesTags: ['InstructorLiveSessions', 'InstructorLiveSessionStats'],
     }),
@@ -37,20 +40,21 @@ export const instructorLiveSessionApi = apiClient.injectEndpoints({
       providesTags: ['CourseLiveSessions'],
     }),
 
-    updateLiveSession: builder.mutation<any, { sessionId: string; payload: IUpdateSessionPayload }>(
-      {
-        query: ({ sessionId, payload }) => ({
-          url: `/live-sessions/${sessionId}`,
-          method: 'PATCH',
-          body: payload,
-        }),
-        invalidatesTags: [
-          'InstructorLiveSessions',
-          'InstructorLiveSessionStats',
-          'CourseLiveSessions',
-        ],
-      },
-    ),
+    updateLiveSession: builder.mutation<
+      { success: boolean; message: string; data?: any },
+      { sessionId: string; payload: IUpdateSessionPayload }
+    >({
+      query: ({ sessionId, payload }) => ({
+        url: `/live-sessions/${sessionId}`,
+        method: 'PATCH',
+        body: payload,
+      }),
+      invalidatesTags: [
+        'InstructorLiveSessions',
+        'InstructorLiveSessionStats',
+        'CourseLiveSessions',
+      ],
+    }),
   }),
 });
 

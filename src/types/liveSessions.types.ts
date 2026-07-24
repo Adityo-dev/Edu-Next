@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export interface ICourseBrief {
   _id: string;
   title: string;
@@ -99,5 +97,5 @@ export interface IUpdateSessionPayload {
 export interface ICourseSessionsResponse {
   success: boolean;
   message: string;
-  data: any[];
+  data: (IInstructorLiveSession | IStudentLiveSession)[];
 }

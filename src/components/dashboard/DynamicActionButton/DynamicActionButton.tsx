@@ -16,6 +16,7 @@ interface DynamicButtonProps {
   isLoading?: boolean;
   icon?: LucideIcon | null;
   showIcon?: boolean;
+  target?: string;
 }
 
 const DynamicActionButton = ({
@@ -29,6 +30,7 @@ const DynamicActionButton = ({
   isLoading = false,
   icon: Icon = Plus,
   showIcon = false,
+  target,
 }: DynamicButtonProps) => {
   const variantStyles = {
     default: 'bg-primary text-white border-primary hover:bg-primary/90',
@@ -57,7 +59,12 @@ const DynamicActionButton = ({
   if (href && !disabled) {
     return (
       <Button asChild className={combinedClasses}>
-        <Link href={href} className="flex items-center">
+        <Link
+          href={href}
+          className="flex items-center"
+          target={target}
+          rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+        >
           {buttonContent}
         </Link>
       </Button>

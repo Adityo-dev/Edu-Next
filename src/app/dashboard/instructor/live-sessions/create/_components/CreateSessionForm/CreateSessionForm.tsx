@@ -1,7 +1,7 @@
-/* eslint-disable no-unused-vars */
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -30,11 +30,9 @@ const sessionSchema = z.object({
 
 type TSessionFormValues = z.infer<typeof sessionSchema>;
 
-interface CreateSessionFormProps {
-  setShowCreate: (show: boolean) => void;
-}
+const CreateSessionForm = () => {
+  const router = useRouter();
 
-const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
   // 1. Fetch Dynamic Instructor Courses
   const { data: coursesData, isLoading: isCoursesLoading } = useGetInstructorCoursesQuery({
     status: 'published',
@@ -93,15 +91,15 @@ const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
       await scheduleLiveSession(requestBody).unwrap();
 
       reset();
-      setShowCreate(false);
+      router.push('/dashboard/instructor/live-sessions');
     } catch (error) {
       console.error('Failed to schedule session:', error);
     }
   };
 
   return (
-    <div className="dashboard-card-container!">
-      <h2 className="mb-5 text-lg font-semibold text-gray-900">Schedule New Session</h2>
+    <div className="dashboard-card-container">
+      <h2 className="mb-5 text-lg font-semibold">Schedule New Session</h2>
 
       <form onSubmit={handleSubmit(onSubmitForm)}>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -200,7 +198,7 @@ const CreateSessionForm = ({ setShowCreate }: CreateSessionFormProps) => {
             type="button"
             className="h-11!"
             disabled={isScheduling}
-            onClick={() => setShowCreate(false)}
+            onClick={() => router.push('/dashboard/instructor/live-sessions')}
           />
         </div>
       </form>
