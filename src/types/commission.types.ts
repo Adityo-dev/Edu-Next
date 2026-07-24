@@ -33,3 +33,13 @@ export interface TUpdateCommissionResponse {
     changeHistory: TCommissionHistory[];
   };
 }
+
+export interface TGetCommissionStatsResponse {
+  success: boolean;
+  message: string;
+  data: {
+    currentRate: number;
+    commissionEarned: number;
+    totalRevenue: number;
+  };
+}

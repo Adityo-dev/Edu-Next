@@ -3,6 +3,7 @@ import {
   TGetCommissionResponse,
   TGetCurrentCommissionResponse,
   TUpdateCommissionResponse,
+  TGetCommissionStatsResponse,
 } from '@/types/commission.types';
 
 export const commissionApi = apiClient.injectEndpoints({
@@ -25,6 +26,15 @@ export const commissionApi = apiClient.injectEndpoints({
       providesTags: ['Commission'],
     }),
 
+    // GET /commission/stats
+    getCommissionStats: builder.query<TGetCommissionStatsResponse, void>({
+      query: () => ({
+        url: '/commission/stats',
+        method: 'GET',
+      }),
+      providesTags: ['Commission'],
+    }),
+
     // PUT /commission
     updateCommission: builder.mutation<TUpdateCommissionResponse, { newRate: number }>({
       query: (body) => ({
@@ -37,5 +47,9 @@ export const commissionApi = apiClient.injectEndpoints({
   }),
 });
 
-export const { useGetCommissionQuery, useGetCurrentCommissionQuery, useUpdateCommissionMutation } =
-  commissionApi;
+export const {
+  useGetCommissionQuery,
+  useGetCurrentCommissionQuery,
+  useGetCommissionStatsQuery,
+  useUpdateCommissionMutation,
+} = commissionApi;

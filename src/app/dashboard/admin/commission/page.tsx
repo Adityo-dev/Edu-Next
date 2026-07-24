@@ -12,7 +12,7 @@ const CommissionSettingsPage = () => {
         description="Set the platform commission rate for all course sales."
       />
 
-      <CommissionStat commission={20} />
+      <CommissionStat />
       <CommissionRate />
     </section>
   );
