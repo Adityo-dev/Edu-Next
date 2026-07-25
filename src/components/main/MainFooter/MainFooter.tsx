@@ -1,7 +1,38 @@
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from 'lucide-react';
+import { Facebook, Github, Linkedin, Mail, MapPin, Phone, Youtube } from 'lucide-react';
 import Link from 'next/link';
+import { baseApi } from '@/services/root/baseApi';
+import { SiteLogo } from '@/components/common/SiteLogo/SiteLogo';
 
-const MainFooter = () => {
+const MainFooter = async () => {
+  let config = null;
+  try {
+    const res = await baseApi('/platform-config', {
+      revalidate: 3600,
+      tags: ['platform-config'],
+    });
+    if (res?.success) config = res.data;
+  } catch (error) {
+    console.error('Failed to fetch platform config in MainFooter:', error);
+  }
+
+  const siteLogo = config?.siteLogo;
+  const siteName = config?.siteName || 'Edu Next';
+  const tagline =
+    config?.tagline ||
+    'Our e-learning platform offers expertly crafted courses to help you gain skills and achieve.';
+  const contactPhone = config?.contactPhone || '+021-6516-1124';
+  const supportEmail = config?.supportEmail || 'educ@gmail.com';
+  const socialLinks = config?.socialLinks || {};
+  const copyrightText =
+    config?.copyrightText || `© ${new Date().getFullYear()} ${siteName}. All rights reserved.`;
+
+  const hasSocialLinks = !!(
+    socialLinks?.facebook ||
+    socialLinks?.youtube ||
+    socialLinks?.linkedin ||
+    socialLinks?.github
+  );
+
   return (
     <footer className="bg-[#F8F9FA] pt-20 pb-10">
       <div className="mx-auto max-w-400 px-6">
@@ -10,16 +41,14 @@ const MainFooter = () => {
           {/* Logo & Info */}
           <div className="max-w-xs">
             <div className="mb-6 flex items-center gap-2">
-              {/* Replace with your actual Logo SVG or Image */}
-              <div className="bg-primary flex h-10 w-10 items-center justify-center rounded-lg font-bold text-white">
-                E
-              </div>
-              <span className="text-secondary text-3xl font-bold">Educ</span>
+              <SiteLogo
+                siteLogo={siteLogo}
+                siteName={siteName}
+                showTagline={false}
+                className="h-20 w-72"
+              />
             </div>
-            <p className="leading-relaxed text-slate-500">
-              Our e-learning platform offers expertly crafted courses to help you gain skills and
-              achieve.
-            </p>
+            <p className="line-clamp-3 leading-relaxed text-slate-500">{tagline}</p>
           </div>
 
           {/* Page Links */}
@@ -82,11 +111,11 @@ const MainFooter = () => {
             <ul className="space-y-5 text-slate-500">
               <li className="flex items-center gap-3">
                 <Phone size={20} className="text-[#2D3134]" />
-                <span>+021-6516-1124</span>
+                <span>{contactPhone}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={20} className="text-[#2D3134]" />
-                <span>educ@gmail.com</span>
+                <span>{supportEmail}</span>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin size={24} className="shrink-0 text-[#2D3134]" />
@@ -99,39 +128,62 @@ const MainFooter = () => {
         </div>
 
         {/* Bottom Section: Social Media Bar */}
-        <div className="flex flex-col items-center justify-between gap-6 rounded-md bg-[#EEF5F5] px-8 py-6 md:flex-row">
-          <h3 className="text-2xl font-bold text-[#2D3134]">Support for Social Medias :</h3>
+        {hasSocialLinks && (
+          <div className="flex flex-col items-center justify-between gap-6 rounded-md bg-[#EEF5F5] px-8 py-6 md:flex-row">
+            <h3 className="text-2xl font-bold text-[#2D3134]">Support for Social Medias :</h3>
 
-          <div className="flex items-center gap-4">
-            {/* Facebook */}
-            <a
-              href="#"
-              className="bg-secondary flex h-12 w-12 items-center justify-center rounded-full text-white shadow-orange-200 transition-transform hover:scale-110"
-            >
-              <Facebook size={22} fill="currentColor" />
-            </a>
-            {/* Instagram */}
-            <a
-              href="#"
-              className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-            >
-              <Instagram size={22} />
-            </a>
-            {/* Linkedin */}
-            <a
-              href="#"
-              className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-            >
-              <Linkedin size={22} fill="currentColor" />
-            </a>
-            {/* X (Twitter) */}
-            <a
-              href="#"
-              className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-            >
-              <Twitter size={22} fill="currentColor" />
-            </a>
+            <div className="flex items-center gap-4">
+              {/* Facebook */}
+              {socialLinks.facebook && (
+                <a
+                  href={socialLinks.facebook}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-secondary flex h-12 w-12 items-center justify-center rounded-full text-white shadow-orange-200 transition-transform hover:scale-110"
+                >
+                  <Facebook size={22} fill="currentColor" />
+                </a>
+              )}
+              {/* YouTube */}
+              {socialLinks.youtube && (
+                <a
+                  href={socialLinks.youtube}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
+                >
+                  <Youtube size={22} fill="currentColor" />
+                </a>
+              )}
+              {/* Linkedin */}
+              {socialLinks.linkedin && (
+                <a
+                  href={socialLinks.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
+                >
+                  <Linkedin size={22} fill="currentColor" />
+                </a>
+              )}
+              {/* Github */}
+              {socialLinks.github && (
+                <a
+                  href={socialLinks.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
+                >
+                  <Github size={22} fill="currentColor" />
+                </a>
+              )}
+            </div>
           </div>
+        )}
+
+        {/* Copyright Section */}
+        <div className="mt-8 border-t border-slate-200 pt-8 text-center text-slate-500">
+          <p>{copyrightText}</p>
         </div>
       </div>
     </footer>

@@ -1,11 +1,13 @@
 'use client';
 
+import { SiteLogo } from '@/components/common/SiteLogo/SiteLogo';
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { ROLE_DASHBOARD_PATH } from '@/constants/dashboardRoutes';
 import { apiClient } from '@/redux/apiClient/apiClient';
 import { logout, useCurrentUser, useIsAuthenticated } from '@/redux/features/auth/authSlice';
+import { useGetPlatformConfigQuery } from '@/redux/features/settings/admin/platformConfigManagement/platformConfig.api';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { logoutUser } from '@/services/auth/auth.service';
 import { Bookmark, LayoutDashboard, LogIn, LogOut, Menu, UserPlus } from 'lucide-react';
@@ -13,7 +15,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import NavbarAuthSection from './_components/NavbarAuthSection/NavbarAuthSection';
-
 const navLinks = [
   { name: 'Home', href: '/' },
   { name: 'About Us', href: '/about' },
@@ -21,13 +22,26 @@ const navLinks = [
   { name: 'Blog', href: '/blog' },
 ];
 
-const MainNavigationBar = () => {
+interface PlatformConfig {
+  siteLogo?: string;
+  siteName?: string;
+  tagline?: string;
+}
+
+interface MainNavigationBarProps {
+  initialConfig?: PlatformConfig;
+}
+
+const MainNavigationBar = ({ initialConfig }: MainNavigationBarProps) => {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const user = useAppSelector(useCurrentUser);
   const isAuthenticated = useAppSelector(useIsAuthenticated);
   const [open, setOpen] = useState(false);
+
+  const { data: configData } = useGetPlatformConfigQuery();
+  const config = configData?.data || initialConfig;
 
   const handleLogout = async () => {
     await logoutUser();
@@ -41,37 +55,14 @@ const MainNavigationBar = () => {
 
   return (
     <nav className="bg-subtle fixed top-0 z-50 w-full border-b border-slate-100 backdrop-blur-lg">
-      <div className="mx-auto flex max-w-400 items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-400 items-center justify-between py-2 md:px-6">
         {/* Left Section: Logo */}
         <Link href={'/'} className="group flex cursor-pointer items-center gap-3">
-          <div className="bg-primary relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-sm text-white shadow-sm transition-transform duration-300">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-7 w-7"
-            >
-              <path d="M9.5 2A5 5 0 0 1 12 4a5 5 0 0 1 2.5-2 5 5 0 0 1 5 5 5 5 0 0 1-2.5 4.3" />
-              <path d="M5 7.3A5 5 0 0 1 7.5 2" />
-              <path d="M12 12v10" />
-              <path d="M8 17l4 4 4-4" />
-              <circle cx="12" cy="12" r="3" fill="currentColor" fillOpacity="0.3" />
-            </svg>
-            <div className="absolute -top-2 -right-2 h-8 w-8 rounded-full bg-white/20 blur-md" />
-          </div>
-
-          <div className="flex flex-col leading-tight">
-            <h1 className="text-2xl font-black tracking-tighter">
-              <span className="text-primary">Edu</span>
-              <span className="text-secondary"> Next</span>
-            </h1>
-            <span className="text-xs font-semibold tracking-[0.2em] text-slate-400 uppercase">
-              Learn the Future
-            </span>
-          </div>
+          <SiteLogo
+            siteLogo={config?.siteLogo}
+            siteName={config?.siteName}
+            tagline={config?.tagline}
+          />
         </Link>
 
         {/* Middle Section: Navigation */}
@@ -118,8 +109,13 @@ const MainNavigationBar = () => {
                 <div className="pb-2">
                   <SheetHeader className="mb-6 text-left">
                     <SheetTitle className="text-primary flex items-center gap-2 text-2xl font-black tracking-tight">
-                      <span className="text-primary">Edu</span>
-                      <span className="text-secondary"> Next</span>
+                      <SiteLogo
+                        siteLogo={config?.siteLogo}
+                        siteName={config?.siteName}
+                        tagline={config?.tagline}
+                        showTagline={false}
+                        className="h-12.5 w-50"
+                      />
                     </SheetTitle>
                   </SheetHeader>
 
