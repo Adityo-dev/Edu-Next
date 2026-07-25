@@ -37,7 +37,7 @@ const MainFooter = async () => {
     <footer className="bg-[#F8F9FA] pt-20 pb-10">
       <div className="mx-auto max-w-400 px-6">
         {/* Top Section: Logo and Links */}
-        <div className="mb-16 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-4 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Logo & Info */}
           <div className="max-w-xs">
             <div className="mb-6 flex items-center gap-2">
@@ -53,7 +53,7 @@ const MainFooter = async () => {
 
           {/* Page Links */}
           <div>
-            <h4 className="mb-6 text-xl font-bold text-[#2D3134]">Page</h4>
+            <h4 className="mb-6 text-xl font-semibold text-[#2D3134]">Page</h4>
             <ul className="space-y-4 text-slate-500">
               <li>
                 <Link href="/" className="hover:text-primary transition-colors">
@@ -80,7 +80,7 @@ const MainFooter = async () => {
 
           {/* Company Links */}
           <div>
-            <h4 className="mb-6 text-xl font-bold text-[#2D3134]">Company</h4>
+            <h4 className="mb-6 text-xl font-semibold text-[#2D3134]">Company</h4>
             <ul className="space-y-4 text-slate-500">
               <li>
                 <Link href="/style-guide" className="hover:text-primary transition-colors">
@@ -107,21 +107,23 @@ const MainFooter = async () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="mb-6 text-xl font-bold text-[#2D3134]">Contact</h4>
+            <h4 className="mb-6 text-xl font-semibold text-[#2D3134]">Contact</h4>
             <ul className="space-y-5 text-slate-500">
               <li className="flex items-center gap-3">
                 <Phone size={20} className="text-[#2D3134]" />
-                <span>{contactPhone}</span>
+                <a href={`tel:${contactPhone}`} className="hover:text-primary transition-colors">
+                  {contactPhone}
+                </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={20} className="text-[#2D3134]" />
-                <span>{supportEmail}</span>
+                <a href={`mailto:${supportEmail}`} className="hover:text-primary transition-colors">
+                  {supportEmail}
+                </a>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin size={24} className="shrink-0 text-[#2D3134]" />
-                <span>
-                  2912 Meadowbrook Road, <br /> Los Angeles, CA 90017
-                </span>
+                <span>Dhaka, Bangladesh</span>
               </li>
             </ul>
           </div>
@@ -130,7 +132,7 @@ const MainFooter = async () => {
         {/* Bottom Section: Social Media Bar */}
         {hasSocialLinks && (
           <div className="flex flex-col items-center justify-between gap-6 rounded-md bg-[#EEF5F5] px-8 py-6 md:flex-row">
-            <h3 className="text-2xl font-bold text-[#2D3134]">Support for Social Medias :</h3>
+            <h3 className="text-2xl font-semibold text-[#2D3134]">Support for Social Medias :</h3>
 
             <div className="flex items-center gap-4">
               {/* Facebook */}
