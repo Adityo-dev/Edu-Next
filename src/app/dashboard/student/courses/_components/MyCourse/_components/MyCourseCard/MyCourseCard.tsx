@@ -23,7 +23,7 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
         className="relative block h-44 overflow-hidden bg-slate-100"
       >
         <Image
-          src={course?.thumbnail || 'https://placehold.co/600x400/EEE/31343C'}
+          src={course?.thumbnail}
           alt={course?.title || 'Course Thumbnail'}
           fill
           priority
@@ -33,7 +33,7 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
 
         {/* Status Badge */}
         <span
-          className={`absolute top-3 left-3 rounded-sm px-2.5 py-1 text-xs font-bold shadow-sm ${
+          className={`absolute top-3 left-3 rounded-sm px-2.5 py-1 text-xs font-semibold shadow-sm ${
             statusColors[progress?.status] || 'bg-slate-100 text-slate-700'
           }`}
         >
@@ -42,13 +42,13 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
 
         {/* Certificate Badge */}
         {progress?.isCourseCompleted && (
-          <span className="absolute top-3 right-3 rounded-sm bg-yellow-400 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+          <span className="absolute top-3 right-3 rounded-sm bg-yellow-400 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
             🎓 Certified
           </span>
         )}
 
         {/* Progress Overlay */}
-        <div className="absolute right-0 bottom-0 left-0 bg-linear-to-t from-black/60 to-transparent p-3">
+        <div className="absolute right-0 bottom-0 left-0 bg-linear-to-t from-black/60 to-transparent p-2.5">
           <div className="flex items-center gap-2">
             <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/30">
               <div
@@ -58,7 +58,7 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
                 style={{ width: `${progress?.percentage || 0}%` }}
               />
             </div>
-            <span className="text-xs font-bold text-white">{progress?.percentage || 0}%</span>
+            <span className="text-xs font-semibold text-white">{progress?.percentage || 0}%</span>
           </div>
         </div>
       </Link>
@@ -72,7 +72,7 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
 
         {/* Title */}
         <Link href={`/dashboard/student/courses/${course?._id}`}>
-          <h3 className="group-hover:text-primary mb-2 line-clamp-2 text-base leading-snug font-bold transition-colors duration-300">
+          <h3 className="group-hover:text-primary mb-2 line-clamp-2 text-base leading-snug font-semibold transition-colors duration-300">
             {course?.title}
           </h3>
         </Link>
@@ -81,14 +81,12 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
         <div className="mb-3 flex items-center gap-2">
           <Image
             src={course?.instructor?.avatar || 'https://placehold.co/150x150/EEE/31343C'}
-            alt={`${course?.instructor?.firstName || 'Instructor'} ${course?.instructor?.lastName || ''}`}
+            alt={`${course?.instructor?.fullName || 'Instructor'}`}
             width={20}
             height={20}
             className="rounded-full border border-emerald-100"
           />
-          <span className="text-text-secondary text-xs">
-            {course?.instructor?.firstName} {course?.instructor?.lastName}
-          </span>
+          <span className="text-text-secondary text-xs">{course?.instructor?.fullName}</span>
         </div>
 
         {/* Stats Row */}
@@ -121,14 +119,14 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
 
           {progress?.isCourseCompleted ? (
             <div className="flex items-center gap-2">
-              <button className="text-primary text-xs font-bold hover:underline">
+              <button className="text-primary text-xs font-semibold hover:underline">
                 Download Certificate
               </button>
             </div>
           ) : (
             <Link
               href={`/dashboard/student/courses/${course?._id}`}
-              className="bg-primary flex items-center gap-1.5 rounded-sm px-4 py-2 text-xs font-bold text-white transition-all hover:bg-[#2a6159] active:scale-95"
+              className="bg-primary flex items-center gap-1.5 rounded-sm px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-[#2a6159] active:scale-95"
             >
               <Play size={11} fill="white" />
               Continue

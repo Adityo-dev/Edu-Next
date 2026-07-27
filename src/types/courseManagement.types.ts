@@ -170,8 +170,7 @@ export interface IEnrolledCourse {
     rating: number;
     instructor: {
       _id: string;
-      firstName: string;
-      lastName: string;
+      fullName: string;
       avatar: string;
     };
   };

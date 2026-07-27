@@ -2,13 +2,12 @@
 
 import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleton';
 import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
-import { useGetMyStatsQuery } from '@/redux/features/courseManagement/studentCourse.api';
+import { useGetMyBasicStatsQuery } from '@/redux/features/courseManagement/studentCourse.api';
 import { Award, BookOpen, Play, Star } from 'lucide-react';
 
 const CoursesStats = () => {
-  const { data, isLoading } = useGetMyStatsQuery();
+  const { data, isLoading } = useGetMyBasicStatsQuery();
   const statsData = data?.data;
-  console.log(statsData, 'stats data ');
 
   const stats = [
     {

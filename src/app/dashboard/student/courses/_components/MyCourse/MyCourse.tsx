@@ -1,31 +1,36 @@
 'use client';
 
-import { useDebounce } from '@/hooks/useDebounce';
+import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
+import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
 import {
-  useGetMyEnrolledCoursesQuery,
-  useGetMyStatsQuery,
+  useGetMyBasicStatsQuery,
+  useGetMyCoursesQuery,
 } from '@/redux/features/courseManagement/studentCourse.api';
 import { IEnrolledCourse } from '@/types/courseManagement.types';
-import { Filter } from 'lucide-react';
-import { useState } from 'react';
-import CoursesFilter from '../CoursesFilter/CoursesFilter';
+import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
+import MyCourseCardSkeleton from '@/components/dashboard/Skeletons/MyCourseCardSkeleton';
+import { ITableFilter } from '@/types/table-filter.types';
+import { BookOpen } from 'lucide-react';
 import MyCourseCard from './_components/MyCourseCard/MyCourseCard';
 
 const MyCourse = () => {
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 500);
-  const [filter, setFilter] = useState<'all' | 'in-progress' | 'completed'>('all');
+  const { getQueryObject } = useSetSearchQueryInURL();
+  const queryParams = getQueryObject();
+
+  const currentStatus = (queryParams.status as 'all' | 'in-progress' | 'completed') || 'all';
+  const currentSearchUrl = queryParams.search || '';
 
   // Fetch stats for the filter bar
-  const { data: statsData } = useGetMyStatsQuery();
+  const { data: statsData } = useGetMyBasicStatsQuery();
   const totalCourses = statsData?.data?.totalEnrolled || 0;
   const totalInProgress = statsData?.data?.inProgress || 0;
   const totalCompleted = statsData?.data?.completed || 0;
 
   // Fetch paginated/filtered enrolled courses
-  const { data, isLoading } = useGetMyEnrolledCoursesQuery({
-    search: debouncedSearch || undefined,
-    stats: filter === 'all' ? undefined : filter,
+  const { data, isLoading, isError, refetch } = useGetMyCoursesQuery({
+    search: currentSearchUrl || undefined,
+    stats: currentStatus === 'all' ? undefined : currentStatus,
     page: 1,
     limit: 100, // Fetch a large number if pagination UI isn't ready
   });
@@ -44,28 +49,45 @@ const MyCourse = () => {
           ? rawData.data
           : [];
 
+  const CourseFilters: ITableFilter[] = [
+    {
+      type: 'tabs',
+      name: 'status-filter',
+      options: [
+        { label: `All (${totalCourses})`, value: 'all' },
+        { label: `In Progress (${totalInProgress})`, value: 'in-progress' },
+        { label: `Completed (${totalCompleted})`, value: 'completed' },
+      ],
+    },
+    {
+      type: 'search',
+      name: 'search',
+      placeholder: 'Search your courses...',
+    },
+  ];
+
   return (
     <div className="space-y-6">
-      <CoursesFilter
-        filter={filter}
-        setFilter={setFilter}
-        search={search}
-        setSearch={setSearch}
-        totalCourses={totalCourses}
-        totalInProgress={totalInProgress}
-        totalCompleted={totalCompleted}
-      />
+      <DynamicTableFilterBar fields={CourseFilters} />
 
-      {isLoading ? (
-        <div className="flex justify-center py-12">
-          <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
+      {isError ? (
+        <ErrorState
+          title="Failed to load your courses"
+          message="We couldn't load your enrolled courses from the server. Please check your network connection and retry."
+          onRetry={refetch}
+        />
+      ) : isLoading ? (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {[...Array(8)].map((_, i) => (
+            <MyCourseCardSkeleton key={i} />
+          ))}
         </div>
       ) : enrolledCourses.length === 0 ? (
-        <div className="dashboard-card-container flex flex-col items-center justify-center py-24 text-center">
-          <Filter size={40} className="mb-4 text-slate-300" />
-          <h3 className="mb-2 text-lg font-bold text-slate-500">No courses found</h3>
-          <p className="text-text-secondary text-sm">Try adjusting your search or filter</p>
-        </div>
+        <EmptyState
+          title="No Courses Found"
+          icon={BookOpen}
+          description="You haven't enrolled in any courses matching these parameters yet."
+        />
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {enrolledCourses.map((enrolledCourse: IEnrolledCourse) => (

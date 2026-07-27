@@ -7,12 +7,12 @@ import {
 
 export const studentCourseApi = apiClient.injectEndpoints({
   endpoints: (builder) => ({
-    getMyEnrolledCourses: builder.query<
+    getMyCourses: builder.query<
       ICommonResponse<unknown>,
       { search?: string; stats?: string; page?: number; limit?: number } | void
     >({
       query: (params) => ({
-        url: '/enrollments/my-enrolled',
+        url: '/enrollments/my-courses',
         method: 'GET',
         params: params || {},
       }),
@@ -20,9 +20,9 @@ export const studentCourseApi = apiClient.injectEndpoints({
     }),
 
     // 2. Get student course statistics
-    getMyStats: builder.query<ICommonResponse<IStudentStats>, void>({
+    getMyBasicStats: builder.query<ICommonResponse<IStudentStats>, void>({
       query: () => ({
-        url: '/enrollments/my-stats',
+        url: '/enrollments/my-basic-stats',
         method: 'GET',
       }),
       providesTags: ['CourseStats'],
@@ -56,8 +56,8 @@ export const studentCourseApi = apiClient.injectEndpoints({
 });
 
 export const {
-  useGetMyEnrolledCoursesQuery,
-  useGetMyStatsQuery,
+  useGetMyCoursesQuery,
+  useGetMyBasicStatsQuery,
   useGetCoursePlaybackDataQuery,
   useMarkLessonAsCompleteMutation,
 } = studentCourseApi;
