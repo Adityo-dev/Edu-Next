@@ -1,15 +1,15 @@
 'use client';
 
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
+import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
+import MyCourseCardSkeleton from '@/components/dashboard/Skeletons/MyCourseCardSkeleton';
 import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
 import {
   useGetMyBasicStatsQuery,
   useGetMyCoursesQuery,
 } from '@/redux/features/courseManagement/studentCourse.api';
 import { IEnrolledCourse } from '@/types/courseManagement.types';
-import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
-import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
-import MyCourseCardSkeleton from '@/components/dashboard/Skeletons/MyCourseCardSkeleton';
 import { ITableFilter } from '@/types/table-filter.types';
 import { BookOpen } from 'lucide-react';
 import MyCourseCard from './_components/MyCourseCard/MyCourseCard';
@@ -32,7 +32,7 @@ const MyCourse = () => {
     search: currentSearchUrl || undefined,
     stats: currentStatus === 'all' ? undefined : currentStatus,
     page: 1,
-    limit: 100, // Fetch a large number if pagination UI isn't ready
+    limit: 100,
   });
 
   const rawData = data?.data as
@@ -78,7 +78,7 @@ const MyCourse = () => {
         />
       ) : isLoading ? (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {[...Array(8)].map((_, i) => (
+          {[...Array(4)].map((_, i) => (
             <MyCourseCardSkeleton key={i} />
           ))}
         </div>
