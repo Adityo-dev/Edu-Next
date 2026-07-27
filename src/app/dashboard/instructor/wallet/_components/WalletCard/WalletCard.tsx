@@ -3,9 +3,10 @@ import Link from 'next/link';
 
 interface WalletCardProps {
   balance: number;
+  isLoading?: boolean;
 }
 
-const WalletCard = ({ balance }: WalletCardProps) => {
+const WalletCard = ({ balance, isLoading }: WalletCardProps) => {
   return (
     <div className="bg-primary dashboard-card-container p-6">
       <div
@@ -22,7 +23,11 @@ const WalletCard = ({ balance }: WalletCardProps) => {
             <Wallet size={20} className="text-white/70" />
             <span className="text-sm text-white/60">Available Balance</span>
           </div>
-          <p className="py-2 text-5xl font-black text-white">৳{balance.toLocaleString()}</p>
+          {isLoading ? (
+            <div className="my-2 h-[48px] w-48 animate-pulse rounded-sm bg-white/20" />
+          ) : (
+            <p className="py-2 text-5xl font-black text-white">৳{balance.toLocaleString()}</p>
+          )}
         </div>
         <Link
           href="/dashboard/instructor/withdrawal"

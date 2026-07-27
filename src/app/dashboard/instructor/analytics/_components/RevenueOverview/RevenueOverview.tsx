@@ -114,15 +114,23 @@ export default function RevenueOverview() {
                     className="text-secondary-text text-xs"
                   />
                   <YAxis
+                    yAxisId="left"
                     tickLine={false}
                     axisLine={false}
                     tickMargin={12}
                     tickCount={6}
                     className="text-secondary-text text-xs"
                   />
+                  <YAxis
+                    hide={true}
+                    yAxisId="right"
+                    orientation="right"
+                    domain={[0, 'dataMax + 2']}
+                  />
                   <ChartTooltip cursor={false} content={<CustomTooltip />} />
 
                   <Area
+                    yAxisId="left"
                     dataKey="revenue"
                     type="linear"
                     fill="url(#fillRevenue)"
@@ -133,6 +141,7 @@ export default function RevenueOverview() {
                   />
 
                   <Area
+                    yAxisId="right"
                     dataKey="students"
                     type="linear"
                     fill="url(#fillStudents)"

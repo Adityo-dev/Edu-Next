@@ -59,7 +59,7 @@ const FAQSection = () => {
         <div className="flex flex-col gap-16 lg:flex-row lg:items-start">
           {/* Left Sticky Side */}
           <div className="top-24 w-full lg:sticky lg:w-2/5">
-            <h2 className="mb-4 text-4xl leading-tight font-bold tracking-tight md:text-5xl">
+            <h2 className="mb-4 text-4xl leading-tight font-semibold tracking-tight md:text-5xl">
               Got <span className="text-primary">Questions?</span> <br /> We Have Answers.
             </h2>
 
@@ -86,7 +86,7 @@ const FAQSection = () => {
               </div>
             </div>
 
-            <button className="bg-secondary cursor-pointer rounded-sm px-8 py-3 font-bold text-white shadow-md shadow-orange-100 transition-all hover:bg-[#d98c0a] active:scale-95">
+            <button className="bg-secondary cursor-pointer rounded-sm px-8 py-3 font-semibold text-white shadow-md shadow-orange-100 transition-all hover:bg-[#d98c0a] active:scale-95">
               Contact Support
             </button>
           </div>
