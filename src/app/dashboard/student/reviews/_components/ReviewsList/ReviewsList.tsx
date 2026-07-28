@@ -44,7 +44,12 @@ const ReviewsList = () => {
   const reviews = reviewsData?.data || [];
 
   if (isReviewsLoading) {
-    return <ReviewsListSkeleton />;
+    return (
+      <div>
+        <h2 className="mb-3 text-lg font-semibold">Submitted Reviews</h2>
+        <ReviewsListSkeleton />
+      </div>
+    );
   }
 
   if (reviews.length === 0) return null;

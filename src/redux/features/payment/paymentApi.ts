@@ -2,13 +2,13 @@
 import { apiClient } from '@/redux/apiClient/apiClient';
 import { TResponseRedux } from '@/types/apiResponse.types';
 import {
+  TAdminRevenueOverview,
   TInitiatePaymentResponse,
   TInstructorEarnings,
+  TInstructorWeeklyRevenue,
   TPaymentItem,
   TProcessRefundRequest,
   TRefundRequest,
-  TAdminRevenueOverview,
-  TInstructorWeeklyRevenue,
 } from '@/types/payment.types';
 
 export const paymentApi = apiClient.injectEndpoints({

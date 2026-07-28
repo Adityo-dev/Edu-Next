@@ -19,6 +19,7 @@ const LeaveReview = () => {
   });
 
   const courses = unreviewedData?.data || [];
+  console.log(courses);
 
   if (isLoading) {
     return (
@@ -34,10 +35,7 @@ const LeaveReview = () => {
     <div>
       <h2 className="mb-3 text-lg font-semibold">Leave a Review</h2>
       {courses.map((course) => (
-        <div
-          key={course?._id}
-          className="dashboard-card-container border-emerald-100 bg-emerald-50/50 p-4"
-        >
+        <div key={course?._id} className="dashboard-card-container">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-4">
               <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-sm">
