@@ -1,59 +1,60 @@
 'use client';
 
 import { Award, BookOpen, Clock, TrendingUp } from 'lucide-react';
-
-const stats = [
-  {
-    icon: <BookOpen size={22} />,
-    label: 'Enrolled Courses',
-    value: '6',
-    sub: '+2 this month',
-    trend: 'up',
-  },
-  {
-    icon: <TrendingUp size={22} />,
-    label: 'Completed',
-    value: '3',
-    sub: '50% completion rate',
-    trend: 'up',
-  },
-  {
-    icon: <Award size={22} />,
-    label: 'Certificates',
-    value: '3',
-    sub: 'Download anytime',
-    trend: 'up',
-  },
-  {
-    icon: <Clock size={22} />,
-    label: 'Hours Learned',
-    value: '48h',
-    sub: '4h this week',
-    trend: 'up',
-  },
-];
+import { useGetMyCourseStatsQuery } from '@/redux/features/courseManagement/studentCourse.api';
+import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleton';
+import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
 
 const StudentStats = () => {
+  const { data, isLoading } = useGetMyCourseStatsQuery();
+  const overviewStats = data?.data;
+
+  const stats = [
+    {
+      icon: BookOpen,
+      label: 'Enrolled Courses',
+      value: overviewStats?.enrolledCourses?.total || 0,
+      sub: `+${overviewStats?.enrolledCourses?.thisMonth || 0} this month`,
+    },
+    {
+      icon: TrendingUp,
+      label: 'Completed',
+      value: overviewStats?.completed?.total || 0,
+      sub: `${overviewStats?.completed?.completionRate || 0}% completion rate`,
+    },
+    {
+      icon: Award,
+      label: 'Certificates',
+      value: overviewStats?.certificates?.total || 0,
+      sub: overviewStats?.certificates?.text || 'Download anytime',
+    },
+    {
+      icon: Clock,
+      label: 'Hours Learned',
+      value: overviewStats?.hoursLearned?.total || '0h',
+      sub: `${overviewStats?.hoursLearned?.thisWeek || '0h'} this week`,
+    },
+  ];
+
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-      {stats.map((stat, i) => (
-        <div
-          key={i}
-          className="dashboard-card-container transition-all duration-300 hover:border-emerald-100 hover:shadow-sm"
-        >
-          <div className="mb-4 flex items-center justify-between">
-            <div className="text-primary flex h-10 w-10 items-center justify-center rounded-sm bg-emerald-50">
-              {stat.icon}
-            </div>
-            <span className="text-success bg-success/10 rounded-full px-2 py-0.5 text-xs font-semibold">
-              ↑
-            </span>
-          </div>
-          <p className="text-text-primary text-2xl font-black">{stat.value}</p>
-          <p className="text-text-secondary mt-0.5 text-sm font-medium">{stat.label}</p>
-          <p className="text-text-secondary mt-1 text-xs">{stat.sub}</p>
-        </div>
-      ))}
+      {isLoading ? (
+        <>
+          {[...Array(4)].map((_, i) => (
+            <StatsCardSkeleton key={i} />
+          ))}
+        </>
+      ) : (
+        stats.map((stat, i) => (
+          <StatsCard
+            key={i}
+            icon={stat.icon}
+            label={stat.label}
+            value={stat.value}
+            sub={stat.sub}
+          />
+        ))
+      )}
     </div>
   );
 };

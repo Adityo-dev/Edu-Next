@@ -157,6 +157,13 @@ export interface IStudentStats {
   certificates: number;
 }
 
+export interface IStudentCourseOverviewStats {
+  enrolledCourses: { total: number; thisMonth: number };
+  completed: { total: number; completionRate: number };
+  certificates: { total: number; text: string };
+  hoursLearned: { total: string; thisWeek: string };
+}
+
 export interface IEnrolledCourse {
   enrollmentId: string;
   enrolledAt: string;

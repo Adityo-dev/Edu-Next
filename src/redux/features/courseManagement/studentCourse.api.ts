@@ -3,6 +3,7 @@ import {
   ICommonResponse,
   ICoursePlaybackData,
   IStudentStats,
+  IStudentCourseOverviewStats,
 } from '@/types/courseManagement.types';
 
 export const studentCourseApi = apiClient.injectEndpoints({
@@ -23,6 +24,15 @@ export const studentCourseApi = apiClient.injectEndpoints({
     getMyBasicStats: builder.query<ICommonResponse<IStudentStats>, void>({
       query: () => ({
         url: '/enrollments/my-basic-stats',
+        method: 'GET',
+      }),
+      providesTags: ['CourseStats'],
+    }),
+
+    // 2.5 Get student course overview stats (detailed)
+    getMyCourseStats: builder.query<ICommonResponse<IStudentCourseOverviewStats>, void>({
+      query: () => ({
+        url: '/enrollments/my-course-stats',
         method: 'GET',
       }),
       providesTags: ['CourseStats'],
@@ -58,6 +68,7 @@ export const studentCourseApi = apiClient.injectEndpoints({
 export const {
   useGetMyCoursesQuery,
   useGetMyBasicStatsQuery,
+  useGetMyCourseStatsQuery,
   useGetCoursePlaybackDataQuery,
   useMarkLessonAsCompleteMutation,
 } = studentCourseApi;
