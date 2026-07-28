@@ -15,6 +15,7 @@ import { use } from 'react';
 const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
   const { data, isLoading, isError } = useGetCourseBySlugQuery(id);
+  console.log(data);
 
   if (isLoading) {
     return (
@@ -240,6 +241,7 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
         })
       : 'Recently',
     price: apiCourse.price || 0,
+    estimatedPrice: apiCourse.estimatedPrice || null,
     badge: apiCourse.badge || '',
     certificate: apiCourse.hasCertificate,
     image:
@@ -294,7 +296,7 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   );
 
   return (
-    <section>
+    <section className="pb-24 lg:pb-0">
       <CourseDetailsHero course={course} totalLessons={totalLessons} />
 
       {/* ── Main Content  */}

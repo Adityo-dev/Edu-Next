@@ -116,109 +116,156 @@ export default function StickyBuyCard({
   };
 
   return (
-    <aside className="w-full lg:sticky lg:top-24 lg:w-96 lg:shrink-0">
-      <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs">
-        {/* Course Thumbnail */}
-        <div className="relative h-48 w-full overflow-hidden">
-          <Image
-            src={course.image}
-            alt={course.title}
-            fill
-            className="overflow-hidden rounded-sm object-cover"
-          />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-            <div className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-white/90 shadow-lg transition-all hover:scale-105">
-              <PlayCircle size={28} className="text-primary ml-0.5" />
+    <>
+      <aside className="w-full lg:sticky lg:top-24 lg:w-96 lg:shrink-0">
+        <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs">
+          {/* Course Thumbnail */}
+          <div className="relative h-48 w-full overflow-hidden">
+            <Image
+              src={course.image}
+              alt={course.title}
+              fill
+              className="overflow-hidden rounded-sm object-cover"
+            />
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+              <div className="flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-white/90 shadow-lg transition-all hover:scale-105">
+                <PlayCircle size={28} className="text-primary ml-0.5" />
+              </div>
             </div>
-          </div>
-          <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-sm bg-black/70 px-3 py-1 text-xs font-medium text-white">
-            Preview this course
-          </span>
-        </div>
-
-        {/* Price & Actions */}
-        <div className="pt-4">
-          {/* Price */}
-          <div className="mb-5">
-            <span className="text-primary text-3xl font-black">
-              ৳{course.price.toLocaleString()}
+            <span className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-sm bg-black/70 px-3 py-1 text-xs font-medium text-white">
+              Preview this course
             </span>
           </div>
 
-          {/* Enroll Button */}
-          {isEnrolled ? (
-            <DynamicActionButton
-              label="Continue Learning"
-              href="/dashboard/student/courses"
-              className="w-full"
-            />
-          ) : (
-            <DynamicActionButton
-              label="Enroll Now"
-              className="w-full"
-              onClick={handleEnroll}
-              isLoading={isInitiatingPayment}
-              disabled={isInitiatingPayment}
-            />
-          )}
+          {/* Price & Actions */}
+          <div className="pt-4">
+            {/* Price */}
+            <div className="mb-5 flex items-end gap-2">
+              <span className="text-primary text-3xl font-black">
+                ৳{course.price.toLocaleString()}
+              </span>
+              {course.estimatedPrice && course.estimatedPrice > course.price && (
+                <span className="mb-1 text-lg font-semibold text-slate-400 line-through">
+                  ৳{course.estimatedPrice.toLocaleString()}
+                </span>
+              )}
+            </div>
 
-          {/* Wishlist + Share */}
-          <div className="mt-3 mb-6 flex gap-4">
-            <button
-              onClick={handleWishlistToggle}
-              disabled={isAdding || isRemoving}
-              className={`flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-sm border py-3 text-sm font-semibold transition-all active:scale-95 ${
-                isWishlisted
-                  ? 'border-red-200 bg-red-50 text-red-500'
-                  : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-              } disabled:cursor-not-allowed disabled:opacity-70`}
-            >
-              <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} />
-              {isWishlisted ? 'Wishlisted' : 'Wishlist'}
-            </button>
-            <button
-              onClick={handleShare}
-              className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-sm border border-slate-200 py-3 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 active:scale-95"
-            >
-              <Share2 size={16} />
-              Share
-            </button>
-          </div>
+            {/* Enroll Button */}
+            {isEnrolled ? (
+              <DynamicActionButton
+                label="Continue Learning"
+                href="/dashboard/student/courses"
+                className="w-full"
+              />
+            ) : (
+              <DynamicActionButton
+                label="Enroll Now"
+                className="w-full"
+                onClick={handleEnroll}
+                isLoading={isInitiatingPayment}
+                disabled={isInitiatingPayment}
+              />
+            )}
 
-          <Separator className="mb-5" />
+            {/* Wishlist + Share */}
+            <div className="mt-3 mb-6 flex gap-4">
+              <button
+                onClick={handleWishlistToggle}
+                disabled={isAdding || isRemoving}
+                className={`flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-sm border py-3 text-sm font-semibold transition-all active:scale-95 ${
+                  isWishlisted
+                    ? 'border-red-200 bg-red-50 text-red-500'
+                    : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                } disabled:cursor-not-allowed disabled:opacity-70`}
+              >
+                <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} />
+                {isWishlisted ? 'Wishlisted' : 'Wishlist'}
+              </button>
+              <button
+                onClick={handleShare}
+                className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-sm border border-slate-200 py-3 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 active:scale-95"
+              >
+                <Share2 size={16} />
+                Share
+              </button>
+            </div>
 
-          {/* Course Includes */}
-          <h4 className="mb-4 text-sm font-semibold">This Course Includes:</h4>
-          <ul className="space-y-3">
-            {[
-              { icon: <MonitorPlay size={16} />, text: `${course.duration} on-demand video` },
-              { icon: <BookOpen size={16} />, text: `${totalLessons} lessons` },
-              { icon: <Video size={16} />, text: 'Live sessions via Zoom' },
-              { icon: <Wifi size={16} />, text: 'Full lifetime access' },
-              { icon: <Globe size={16} />, text: `Language: ${course.language}` },
-              { icon: <Award size={16} />, text: 'Certificate of completion' },
-            ].map((item, i) => (
-              <li key={i} className="flex items-center gap-3 text-sm text-slate-600">
-                <span className="text-primary">{item.icon}</span>
-                {item.text}
-              </li>
-            ))}
-          </ul>
+            <Separator className="mb-5" />
 
-          <Separator className="my-4" />
+            {/* Course Includes */}
+            <h4 className="mb-4 text-sm font-semibold">This Course Includes:</h4>
+            <ul className="space-y-3">
+              {[
+                { icon: <MonitorPlay size={16} />, text: `${course.duration} on-demand video` },
+                { icon: <BookOpen size={16} />, text: `${totalLessons} lessons` },
+                { icon: <Video size={16} />, text: 'Live sessions via Zoom' },
+                { icon: <Wifi size={16} />, text: 'Full lifetime access' },
+                { icon: <Globe size={16} />, text: `Language: ${course.language}` },
+                course.certificate
+                  ? { icon: <Award size={16} />, text: 'Certificate of completion' }
+                  : null,
+              ]
+                .filter(Boolean)
+                .map((item: any, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm text-slate-600">
+                    <span className="text-primary">{item.icon}</span>
+                    {item.text}
+                  </li>
+                ))}
+            </ul>
 
-          {/* Money Back */}
-          <div className="flex items-start gap-3 rounded-sm bg-emerald-50 p-4">
-            <CheckCircle size={18} className="text-primary mt-0.5 shrink-0" />
-            <div>
-              <p className="text-primary text-sm font-semibold">7-Day Money-Back Guarantee</p>
-              <p className="text-text-secondary mt-0.5 text-xs leading-relaxed">
-                Not satisfied? Get a full refund within 7 days — no questions asked.
-              </p>
+            <Separator className="my-4" />
+
+            {/* Money Back */}
+            <div className="flex items-start gap-3 rounded-sm bg-emerald-50 p-4">
+              <CheckCircle size={18} className="text-primary mt-0.5 shrink-0" />
+              <div>
+                <p className="text-primary text-sm font-semibold">7-Day Money-Back Guarantee</p>
+                <p className="text-text-secondary mt-0.5 text-xs leading-relaxed">
+                  Not satisfied? Get a full refund within 7 days — no questions asked.
+                </p>
+              </div>
             </div>
           </div>
         </div>
+      </aside>
+
+      {/* Mobile Sticky Bottom Bar */}
+      <div className="fixed right-0 bottom-0 left-0 z-50 border-t border-slate-200 bg-white p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] lg:hidden">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col">
+            <span className="text-xs font-medium text-slate-500">Total Price</span>
+            <div className="flex items-end gap-1.5">
+              <span className="text-primary text-xl font-black">
+                ৳{course.price.toLocaleString()}
+              </span>
+              {course.estimatedPrice && course.estimatedPrice > course.price && (
+                <span className="mb-0.5 text-sm font-semibold text-slate-400 line-through">
+                  ৳{course.estimatedPrice.toLocaleString()}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex-1">
+            {isEnrolled ? (
+              <DynamicActionButton
+                label="Continue Learning"
+                href="/dashboard/student/courses"
+                className="w-full"
+              />
+            ) : (
+              <DynamicActionButton
+                label="Enroll Now"
+                className="w-full"
+                onClick={handleEnroll}
+                isLoading={isInitiatingPayment}
+                disabled={isInitiatingPayment}
+              />
+            )}
+          </div>
+        </div>
       </div>
-    </aside>
+    </>
   );
 }

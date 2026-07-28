@@ -83,17 +83,21 @@ export default function CourseDetailsHero({
               { icon: <BookOpen size={13} />, text: `${totalLessons} Lessons` },
               { icon: <Globe size={13} />, text: course.language },
               { icon: <Video size={13} />, text: 'Live Sessions' },
-              { icon: <Award size={13} />, text: 'Certificate Included' },
+              course.certificate
+                ? { icon: <Award size={13} />, text: 'Certificate Included' }
+                : null,
               { icon: <Clock size={13} />, text: `Updated ${course.lastUpdated}` },
-            ].map((pill, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-1.5 rounded-sm border border-white/10 bg-white/10 px-3 py-1.5 text-[11px] text-white/80 backdrop-blur-sm sm:text-xs"
-              >
-                <span className="text-white/50">{pill.icon}</span>
-                {pill.text}
-              </div>
-            ))}
+            ]
+              .filter(Boolean)
+              .map((pill: any, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-1.5 rounded-sm border border-white/10 bg-white/10 px-3 py-1.5 text-[11px] text-white/80 backdrop-blur-sm sm:text-xs"
+                >
+                  <span className="text-white/50">{pill.icon}</span>
+                  {pill.text}
+                </div>
+              ))}
           </div>
 
           {/* Instructor */}

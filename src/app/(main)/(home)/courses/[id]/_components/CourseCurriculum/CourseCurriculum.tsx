@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { BookOpen, PlayCircle, Lock } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { BookOpen, Lock, PlayCircle, X } from 'lucide-react';
+import { useState } from 'react';
 
 interface Lesson {
   title: string;
@@ -121,20 +121,32 @@ export default function CourseCurriculum({
       </div>
 
       <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
-        <DialogContent className="overflow-hidden border-none bg-black p-0 sm:max-w-3xl">
-          <DialogHeader className="bg-slate-900 p-4 text-white">
-            <DialogTitle className="text-white">{videoTitle}</DialogTitle>
-          </DialogHeader>
-          <div className="aspect-video w-full bg-black">
+        <DialogContent
+          showCloseButton={false}
+          className="w-[95vw] max-w-5xl gap-0 overflow-hidden rounded-md border border-slate-800 bg-black p-0 shadow-2xl xl:max-w-6xl"
+        >
+          <div className="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
+            <DialogTitle className="flex items-center gap-2.5 text-base leading-none font-semibold text-white sm:text-lg">
+              <PlayCircle className="text-primary h-5 w-5 shrink-0" />
+              <span className="line-clamp-1">{videoTitle}</span>
+            </DialogTitle>
+            <button
+              onClick={() => setSelectedVideo(null)}
+              className="hover:bg-danger cursor-pointer rounded-full bg-white/10 p-2 text-white/70 transition-all outline-none hover:text-white"
+            >
+              <X size={18} strokeWidth={2.5} />
+            </button>
+          </div>
+          <div className="relative aspect-video w-full">
             {selectedVideo && (
               <iframe
                 width="100%"
                 height="100%"
-                src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`}
+                src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1&rel=0&modestbranding=1`}
                 title={videoTitle}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                className="border-none"
+                className="absolute inset-0 h-full w-full border-none"
               ></iframe>
             )}
           </div>
