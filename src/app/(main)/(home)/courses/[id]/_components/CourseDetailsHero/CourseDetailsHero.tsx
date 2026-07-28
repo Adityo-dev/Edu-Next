@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Award, BookOpen, Clock, Globe, Star, Users, Video } from 'lucide-react';
+import { Award, BookOpen, Clock, Globe, Users, Video } from 'lucide-react';
 import Image from 'next/image';
+import RenderStars from '@/components/shared/RenderStars/RenderStars';
 
 export default function CourseDetailsHero({
   course,
@@ -55,15 +56,7 @@ export default function CourseDetailsHero({
           <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-3 text-xs sm:text-sm">
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-0.5">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star
-                    key={i}
-                    size={14}
-                    fill="#ffc107"
-                    color="#ffc107"
-                    className="sm:h-[15px] sm:w-[15px]"
-                  />
-                ))}
+                <RenderStars rating={course.rating} size={14} />
               </div>
               <span className="font-bold text-yellow-400">{course.rating}</span>
               <span className="text-white/50">({course.totalReviews} reviews)</span>

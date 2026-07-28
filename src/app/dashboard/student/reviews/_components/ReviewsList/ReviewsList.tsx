@@ -3,12 +3,13 @@
 import CustomPagination from '@/components/dashboard/CustomPagination/CustomPagination';
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import ReviewsListSkeleton from '@/components/dashboard/Skeletons/ReviewsListSkeleton';
+import RenderStars from '@/components/shared/RenderStars/RenderStars';
 import {
   useGetStudentSubmittedReviewsQuery,
   useUpdateStudentReviewMutation,
 } from '@/redux/features/reviews/studentReview.api';
 import { FormatDateTime } from '@/utils/formatDateTime';
-import { Edit, Star } from 'lucide-react';
+import { Edit } from 'lucide-react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
@@ -41,26 +42,6 @@ const ReviewsList = () => {
   };
 
   const reviews = reviewsData?.data || [];
-
-  const renderStars = (rating: number, size = 14) => {
-    return Array.from({ length: 5 }).map((_, i) => {
-      const isFull = rating >= i + 1;
-      const isHalf = !isFull && rating >= i + 0.5;
-      return (
-        <div key={i} className="relative">
-          <Star size={size} fill="none" color="#ffc107" />
-          {(isFull || isHalf) && (
-            <div
-              className="absolute top-0 left-0 overflow-hidden"
-              style={{ width: isHalf ? '50%' : '100%' }}
-            >
-              <Star size={size} fill="#ffc107" color="#ffc107" />
-            </div>
-          )}
-        </div>
-      );
-    });
-  };
 
   if (isReviewsLoading) {
     return <ReviewsListSkeleton />;
@@ -101,7 +82,7 @@ const ReviewsList = () => {
                 {/* Stars & Dates */}
                 <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
                   <div className="flex items-center gap-0.5">
-                    {renderStars(review?.rating || 0)}
+                    <RenderStars rating={review?.rating || 0} />
                   </div>
                   <div className="text-text-secondary flex flex-col gap-1 text-[11px] font-medium sm:flex-row sm:items-center sm:gap-2 sm:text-xs">
                     <span className="hidden text-slate-300 sm:inline">•</span>
@@ -121,7 +102,9 @@ const ReviewsList = () => {
                 {editId === review?._id ? (
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1">{renderStars(newRating, 20)}</div>
+                      <div className="flex items-center gap-1">
+                        <RenderStars rating={newRating} size={20} />
+                      </div>
                       <input
                         type="number"
                         min="1"

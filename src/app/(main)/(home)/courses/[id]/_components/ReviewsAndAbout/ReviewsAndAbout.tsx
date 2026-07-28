@@ -1,9 +1,11 @@
+import RenderStars from '@/components/shared/RenderStars/RenderStars';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useGetCourseReviewsQuery } from '@/redux/features/reviews/publicReview.api';
+import { IReview } from '@/types/review.types';
+import { FormatDateTime } from '@/utils/formatDateTime';
 import { Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useGetCourseReviewsQuery } from '@/redux/features/reviews/publicReview.api';
-import { Skeleton } from '@/components/ui/skeleton';
-import { IReview } from '@/types/review.types';
 
 interface RelatedCourse {
   id: string | number;
@@ -55,14 +57,7 @@ export default function ReviewsAndAbout({ course }: { course: CourseData }) {
           <div className="flex flex-col items-center justify-center rounded-md bg-[#F9FAFB] px-8 py-6 text-center">
             <span className="text-primary text-6xl font-black">{averageRating}</span>
             <div className="my-2 flex items-center gap-0.5">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  size={16}
-                  fill={i < averageRating ? '#ffc107' : 'none'}
-                  color="#ffc107"
-                />
-              ))}
+              <RenderStars rating={averageRating} size={16} />
             </div>
             <span className="text-text-secondary text-sm">Course Rating</span>
           </div>
@@ -78,14 +73,7 @@ export default function ReviewsAndAbout({ course }: { course: CourseData }) {
                   />
                 </div>
                 <div className="flex shrink-0 items-center gap-1">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      size={11}
-                      fill={i < r.stars ? '#ffc107' : 'none'}
-                      color="#ffc107"
-                    />
-                  ))}
+                  <RenderStars rating={r.stars} size={12} />
                 </div>
                 <span className="text-text-secondary w-8 text-right text-xs">{r.percent}%</span>
               </div>
@@ -118,11 +106,6 @@ export default function ReviewsAndAbout({ course }: { course: CourseData }) {
                 typeof review.student === 'object' && review.student?.avatar
                   ? review.student.avatar
                   : 'https://i.pravatar.cc/150';
-              const formattedDate = new Date(review.createdAt).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              });
 
               return (
                 <div key={review?._id} className="flex gap-4">
@@ -136,19 +119,21 @@ export default function ReviewsAndAbout({ course }: { course: CourseData }) {
                   <div className="flex-1">
                     <div className="mb-1 flex items-center justify-between">
                       <h4 className="font-semibold">{studentName}</h4>
-                      <span className="text-text-secondary text-xs">{formattedDate}</span>
+                      <span className="text-text-secondary text-xs">
+                        {FormatDateTime(review?.createdAt)}
+                      </span>
                     </div>
                     <div className="mb-2 flex items-center gap-0.5">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          size={12}
-                          fill={i < review?.rating ? '#ffc107' : 'none'}
-                          color="#ffc107"
-                        />
+                      <RenderStars rating={review?.rating || 0} size={13} />
+                    </div>
+
+                    <div className="text-text-secondary mb-3 text-sm leading-relaxed wrap-break-word">
+                      {review?.comment?.split(/\n\s*\n/).map((paragraph: string, index: number) => (
+                        <p key={index} className="mb-1.5 whitespace-pre-wrap last:mb-0">
+                          {paragraph}
+                        </p>
                       ))}
                     </div>
-                    <p className="text-text-secondary text-sm leading-relaxed">{review?.comment}</p>
                   </div>
                 </div>
               );
