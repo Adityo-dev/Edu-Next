@@ -31,7 +31,7 @@ export const studentCourseApi = apiClient.injectEndpoints({
     // 3. Get course playback data
     getCoursePlaybackData: builder.query<ICommonResponse<ICoursePlaybackData>, string>({
       query: (id) => ({
-        url: `/courses/${id}/play`,
+        url: `/player/courses/${id}/play`,
         method: 'GET',
       }),
       providesTags: (result, error, id) => [{ type: 'Courses', id }],

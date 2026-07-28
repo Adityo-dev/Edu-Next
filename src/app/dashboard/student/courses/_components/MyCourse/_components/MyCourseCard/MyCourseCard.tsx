@@ -1,7 +1,7 @@
+import { IEnrolledCourse } from '@/types/courseManagement.types';
 import { BookOpen, Clock, Play, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { IEnrolledCourse } from '@/types/courseManagement.types';
 
 interface MyCourseCardProps {
   enrolledCourse: IEnrolledCourse;
