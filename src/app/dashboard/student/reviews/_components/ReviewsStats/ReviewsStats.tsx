@@ -1,28 +1,53 @@
 'use client';
 
+import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleton';
+import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
 import { useGetStudentReviewStatsQuery } from '@/redux/features/reviews/studentReview.api';
+import { CheckCircle, Clock, MessageSquare } from 'lucide-react';
 
 const ReviewsStats = () => {
   const { data: statsData, isLoading } = useGetStudentReviewStatsQuery();
 
   const stats = [
-    { label: 'Total Reviews', value: statsData?.data?.total || 0 },
-    { label: 'Published', value: statsData?.data?.published || 0 },
-    { label: 'Pending', value: statsData?.data?.pending || 0 },
+    {
+      icon: MessageSquare,
+      label: 'Total Reviews',
+      value: statsData?.data?.total || 0,
+      sub: 'Across all courses',
+    },
+    {
+      icon: CheckCircle,
+      label: 'Published',
+      value: statsData?.data?.published || 0,
+      sub: 'Visible on courses',
+    },
+    {
+      icon: Clock,
+      label: 'Pending',
+      value: statsData?.data?.pending || 0,
+      sub: 'Awaiting moderation',
+    },
   ];
 
-  if (isLoading) {
-    return <div className="h-28 w-full animate-pulse rounded-xl bg-slate-200"></div>;
-  }
-
   return (
-    <div className="grid grid-cols-3 gap-4">
-      {stats.map((stat, i) => (
-        <div key={i} className="dashboard-card-container text-center">
-          <p className="text-primary text-3xl font-black">{stat.value}</p>
-          <p className="text-text-secondary text-sm">{stat.label}</p>
-        </div>
-      ))}
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {isLoading ? (
+        <>
+          {[...Array(3)].map((_, i) => (
+            <StatsCardSkeleton key={i} hasSub />
+          ))}
+        </>
+      ) : (
+        stats.map((stat, i) => (
+          <StatsCard
+            key={i}
+            icon={stat.icon}
+            label={stat.label}
+            value={stat.value}
+            sub={stat.sub}
+          />
+        ))
+      )}
     </div>
   );
 };

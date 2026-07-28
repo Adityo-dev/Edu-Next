@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import OtpInput from '@/components/common/OtpInput';
+import OtpInput from '@/components/shared/OtpInput';
 import { ROLE_DASHBOARD_HOME } from '@/components/dashboard/sidebar/sidebarRoutes';
 import { setAuth } from '@/redux/features/auth/authSlice';
 import { useAppDispatch } from '@/redux/hooks';

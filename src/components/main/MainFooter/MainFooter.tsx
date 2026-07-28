@@ -1,7 +1,7 @@
 import { Facebook, Github, Linkedin, Mail, MapPin, Phone, Youtube } from 'lucide-react';
 import Link from 'next/link';
 import { baseApi } from '@/services/root/baseApi';
-import { SiteLogo } from '@/components/common/SiteLogo/SiteLogo';
+import { SiteLogo } from '@/components/shared/SiteLogo/SiteLogo';
 
 const MainFooter = async () => {
   let config = null;

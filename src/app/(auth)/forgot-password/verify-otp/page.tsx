@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import OtpInput from '@/components/common/OtpInput';
+import OtpInput from '@/components/shared/OtpInput';
 import { baseApi } from '@/services/root/baseApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowLeft, Eye, EyeOff, KeyRound, Lock, RefreshCw } from 'lucide-react';

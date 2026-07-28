@@ -1,6 +1,6 @@
 'use client';
 
-import { SiteLogo } from '@/components/common/SiteLogo/SiteLogo';
+import { SiteLogo } from '@/components/shared/SiteLogo/SiteLogo';
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
