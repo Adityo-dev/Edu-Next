@@ -1,12 +1,12 @@
 'use client';
 
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import ContinueLearningSkeleton from '@/components/dashboard/Skeletons/ContinueLearningSkeleton';
 import { useGetMyCoursesQuery } from '@/redux/features/courseManagement/studentCourse.api';
 import { IEnrolledCourse } from '@/types/courseManagement.types';
 import { BookOpen, Play } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import ContinueLearningSkeleton from '@/components/dashboard/Skeletons/ContinueLearningSkeleton';
 
 const ContinueLearning = () => {
   const { data, isLoading } = useGetMyCoursesQuery({

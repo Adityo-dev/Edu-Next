@@ -22,7 +22,7 @@ const StatsCard = ({
 
   return (
     <div
-      className={`dashboard-card-container transition-all hover:border-emerald-100 hover:shadow-sm ${className}`}
+      className={`dashboard-card-container p-4 transition-all hover:border-emerald-100 hover:shadow-sm ${className}`}
     >
       <div
         className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-sm"
@@ -30,9 +30,13 @@ const StatsCard = ({
       >
         <Icon size={20} />
       </div>
-      <p className="text-2xl font-black">{value}</p>
-      <p className="text-sm font-semibold text-slate-600">{label}</p>
-      {sub && <p className="text-text-secondary mt-0.5 text-xs font-medium">{sub}</p>}
+      <p className="text-xl font-black break-words sm:text-2xl">{value}</p>
+      <p className="text-xs font-semibold break-words text-slate-600 sm:text-sm">{label}</p>
+      {sub && (
+        <p className="text-text-secondary mt-0.5 text-[10px] font-medium break-words sm:text-xs">
+          {sub}
+        </p>
+      )}
     </div>
   );
 };

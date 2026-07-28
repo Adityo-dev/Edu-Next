@@ -8,7 +8,7 @@ import { IStudentLiveSession } from '@/types/liveSessions.types';
 
 interface LiveSessionCardProps {
   session: IStudentLiveSession;
-  statusConfig: Record<string, { label: string; color: string; dot?: string }>;
+  statusConfig: Record<string, { label: string; color: string }>;
 }
 
 const LiveSessionCard = ({ session, statusConfig }: LiveSessionCardProps) => {
@@ -43,12 +43,7 @@ const LiveSessionCard = ({ session, statusConfig }: LiveSessionCardProps) => {
         {/* Left */}
         <div className="flex-1">
           <div className="mb-2 flex items-center gap-2">
-            <span
-              className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${config.color}`}
-            >
-              {config.dot && <span className={`h-1.5 w-1.5 rounded-full ${config.dot}`} />}
-              {config.label}
-            </span>
+            <DynamicBadge text={config.label} color={config.color} size="sm" />
             <DynamicBadge text={platform} color="#6b7280" />
           </div>
 

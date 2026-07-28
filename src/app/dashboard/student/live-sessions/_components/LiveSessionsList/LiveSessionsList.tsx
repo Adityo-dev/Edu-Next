@@ -11,10 +11,10 @@ import { VideoOff } from 'lucide-react';
 import { useMemo } from 'react';
 import LiveSessionCard from './_components/LiveSessionCard';
 
-const statusConfig: Record<string, { label: string; color: string; dot?: string }> = {
-  live: { label: 'Live Now', color: '#dc3545', dot: 'bg-red-500 animate-pulse' },
-  upcoming: { label: 'Upcoming', color: '#e96600', dot: 'bg-blue-500' },
-  completed: { label: 'Completed', color: '#34796f', dot: 'bg-primary' },
+const statusConfig: Record<string, { label: string; color: string }> = {
+  live: { label: 'Live Now', color: '#dc2626' },
+  upcoming: { label: 'Upcoming', color: '#ea580c' },
+  completed: { label: 'Completed', color: '#16a34a' },
 };
 
 const LiveSessionsList = () => {

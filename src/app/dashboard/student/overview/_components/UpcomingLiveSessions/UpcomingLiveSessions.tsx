@@ -1,11 +1,19 @@
 'use client';
 
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
+import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import { useGetStudentDashboardSessionsQuery } from '@/redux/features/liveSessionsManagement/studentLiveSession.api';
 import { FormatDateTime } from '@/utils/formatDateTime';
-import { ExternalLink, Video, VideoOff } from 'lucide-react';
+import { Calendar, Clock, ExternalLink, Video, VideoOff } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import UpcomingLiveSessionCardSkeleton from '../../../../../../components/dashboard/Skeletons/UpcomingLiveSessionCardSkeleton';
+
+const statusConfig: Record<string, { label: string; color: string }> = {
+  live: { label: 'Live Now', color: '#dc2626' }, // red-600
+  upcoming: { label: 'Upcoming', color: '#ea580c' }, // orange-600
+};
 
 const UpcomingLiveSessions = () => {
   const { data, isLoading } = useGetStudentDashboardSessionsQuery({ status: 'all' });
@@ -36,74 +44,91 @@ const UpcomingLiveSessions = () => {
 
       <div className="space-y-4">
         {isLoading ? (
-          <div className="flex animate-pulse flex-col gap-4">
+          <div className="flex flex-col gap-4">
             {[1, 2].map((i) => (
-              <div key={i} className="h-32 rounded-sm bg-slate-100"></div>
+              <UpcomingLiveSessionCardSkeleton key={i} />
             ))}
           </div>
         ) : displaySessions.length > 0 ? (
           displaySessions.map((session) => {
-            const formatted = FormatDateTime(session.startTime);
-            const [dateStr, timeStr] = formatted.split(', ');
             const isLive = session.status === 'live';
+            const isUpcoming = session.status === 'upcoming';
+            const config = isLive ? statusConfig.live : statusConfig.upcoming;
+
+            const formatted = FormatDateTime(session.startTime);
+            const [dateFormatted, timeFormatted] = formatted.split(', ');
+
+            const courseTitle = session.course?.title || 'Unknown Course';
+            const platform = session.meetingPlatform || 'Zoom';
+            const duration = `${session.durationInMins || 0} Mins`;
+
+            const instructorName = session.instructor
+              ? `${session.instructor.firstName} ${session.instructor.lastName}`
+              : 'Unknown Instructor';
+            const instructorImage = session.instructor?.avatar || 'https://i.pravatar.cc/150';
 
             return (
-              <div
-                key={session._id}
-                className="rounded-sm border border-slate-100 p-4 transition-all hover:border-emerald-100"
-              >
-                {/* Date Badge */}
-                <div className="mb-3 flex items-center justify-between">
-                  <span
-                    className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-                      isLive
-                        ? 'animate-pulse bg-red-50 text-red-600'
-                        : 'bg-slate-100 text-slate-500'
-                    }`}
-                  >
-                    {isLive ? 'Live Now' : `${dateStr} • ${timeStr}`}
-                  </span>
-                  <span className="rounded-sm bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
-                    {session.meetingPlatform}
-                  </span>
+              <div key={session._id} className="dashboard-card-container p-3">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                  {/* Left */}
+                  <div className="flex-1">
+                    <div className="mb-2 flex items-center gap-2">
+                      <DynamicBadge text={config.label} color={config.color} />
+                      <DynamicBadge text={platform} color="#6b7280" />
+                    </div>
+
+                    <h3 className="mb-1 text-sm font-semibold">{session.title}</h3>
+                    <p className="text-text-secondary mb-3 text-xs">{courseTitle}</p>
+
+                    <div className="text-text-secondary flex items-center gap-3 text-xs">
+                      <span className="flex items-center gap-1.5">
+                        <Image
+                          src={instructorImage}
+                          alt={instructorName}
+                          width={20}
+                          height={20}
+                          className="rounded-full"
+                        />
+                        {instructorName}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Calendar size={12} />
+                        {dateFormatted} • {timeFormatted}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Clock size={12} />
+                        {duration}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  <div className="flex shrink-0 items-center gap-2">
+                    {isLive && (
+                      <DynamicActionButton
+                        label="Join Now"
+                        showIcon
+                        icon={Video}
+                        className="h-10! w-full justify-center sm:w-auto"
+                        href={session.meetingLink}
+                        target="_blank"
+                        variant="danger"
+                      />
+                    )}
+
+                    {isUpcoming && (
+                      <DynamicActionButton
+                        label="Add to Calendar"
+                        showIcon
+                        icon={ExternalLink}
+                        className="h-10! w-full justify-center sm:w-auto"
+                        href={session.meetingLink}
+                        target="_blank"
+                        variant="default"
+                      />
+                    )}
+                  </div>
                 </div>
-
-                <h4 className="mb-2 text-sm font-semibold">{session.title}</h4>
-
-                <div className="mb-3 flex items-center gap-2">
-                  <Image
-                    src={session.instructor?.avatar || 'https://placehold.co/150x150/EEE/31343C'}
-                    alt={`${session.instructor?.firstName || 'Unknown'} ${session.instructor?.lastName || ''}`}
-                    width={20}
-                    height={20}
-                    className="rounded-full"
-                  />
-                  <span className="text-text-secondary text-xs">
-                    {session.instructor?.firstName} {session.instructor?.lastName}
-                  </span>
-                </div>
-
-                {isLive ? (
-                  <Link
-                    href={session.meetingLink || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-primary flex w-full items-center justify-center gap-2 rounded-sm py-2.5 text-xs font-semibold text-white transition-all hover:bg-[#2a6159] active:scale-95"
-                  >
-                    <Video size={13} />
-                    Join Now
-                  </Link>
-                ) : (
-                  <Link
-                    href={session.meetingLink || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center gap-2 rounded-sm border border-slate-200 py-2.5 text-xs font-semibold text-slate-600 transition-all hover:bg-slate-50 active:scale-95"
-                  >
-                    <ExternalLink size={13} />
-                    Add to Calendar
-                  </Link>
-                )}
               </div>
             );
           })
