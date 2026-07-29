@@ -7,23 +7,38 @@ import TextAreaField from '@/components/dashboard/Fields/TextAreaField/TextAreaF
 import { useModal } from '@/context/ModalContext';
 import { useCreateTicketMutation } from '@/redux/features/tickets/ticketsApi';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-const createTicketSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  category: z.string().min(1, 'Category is required'),
-  targetRole: z.string().min(1, 'Target Support is required'),
-  priority: z.string().min(1, 'Priority is required'),
-  message: z.string().min(1, 'Message is required'),
-});
+const createTicketSchema = z
+  .object({
+    title: z.string().min(3, 'Title must be at least 3 characters'),
+    category: z.string().min(1, 'Category is required'),
+    targetRole: z.string().min(1, 'Target Support is required'),
+    courseId: z.string().optional(),
+    priority: z.string().min(1, 'Priority is required'),
+    message: z.string().min(10, 'Message must be at least 10 characters'),
+  })
+  .refine(
+    (data) => {
+      if (data.targetRole === 'instructor' && !data.courseId) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'Please select a course for Instructor Support',
+      path: ['courseId'],
+    },
+  );
 
 type CreateTicketFormValues = z.infer<typeof createTicketSchema>;
 
 export default function CreateTicketModal() {
   const { data, closeModal } = useModal();
-  const role = data?.role as 'student' | 'instructor' | 'admin';
+  const role = (data?.role as 'student' | 'instructor' | 'admin') || 'student';
+  const enrolledCourses = data?.enrolledCourses || [];
 
   const [createTicket, { isLoading }] = useCreateTicketMutation();
 
@@ -35,48 +50,71 @@ export default function CreateTicketModal() {
     resolver: zodResolver(createTicketSchema),
     defaultValues: {
       title: '',
-      category: 'Payment Issue',
+      category: role === 'instructor' ? 'EARNINGS_ISSUE' : 'COURSE_DOUBT',
       targetRole: 'admin',
       priority: 'medium',
+      courseId: '',
       message: '',
     },
   });
 
+  const selectedTargetRole = useWatch({ control, name: 'targetRole' });
+
+  const getCategoryOptions = () => {
+    if (role === 'instructor') {
+      return [
+        { label: 'Earnings & Payout Issue', value: 'EARNINGS_ISSUE' },
+        { label: 'Course Upload Technical Issue', value: 'COURSE_UPLOAD_ISSUE' },
+        { label: 'Platform & Account Issue', value: 'ACCOUNT_ISSUE' },
+        { label: 'Other Support', value: 'OTHER' },
+      ];
+    }
+
+    return [
+      { label: 'Course & Lesson Doubt', value: 'COURSE_DOUBT' },
+      { label: 'Payment & Refund Issue', value: 'PAYMENT_ISSUE' },
+      { label: 'Technical & Platform Issue', value: 'TECH_ISSUE' },
+      { label: 'Certificate Issue', value: 'CERTIFICATE_ISSUE' },
+      { label: 'Other', value: 'OTHER' },
+    ];
+  };
+
   const onSubmit = async (values: CreateTicketFormValues) => {
     try {
       await createTicket(values).unwrap();
-      toast.success('Ticket created successfully');
+      toast.success('Support ticket created successfully');
       closeModal();
     } catch {
-      toast.error('Failed to create ticket');
+      toast.error('Failed to create ticket. Please try again.');
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {/* Title Field */}
       <InputField
         name="title"
         label="Title"
-        placeholder="Enter ticket title"
+        placeholder="Brief summary of your issue"
         control={control}
         error={errors.title?.message}
         required
       />
 
+      {/* Target Support Role & Priority */}
       <div className="grid grid-cols-2 gap-4">
         <SelectField
-          name="category"
-          label="Category"
+          name="targetRole"
+          label="Target Support"
           control={control}
-          error={errors.category?.message}
+          error={errors.targetRole?.message}
           required
           options={[
-            { label: 'Payment Issue', value: 'Payment Issue' },
-            { label: 'Technical Issue', value: 'Technical Issue' },
-            { label: 'Certificate Issue', value: 'Certificate Issue' },
-            { label: 'Other', value: 'Other' },
+            { label: 'Platform Admin', value: 'admin' },
+            ...(role === 'student' ? [{ label: 'Course Instructor', value: 'instructor' }] : []),
           ]}
         />
+
         <SelectField
           name="priority"
           label="Priority"
@@ -91,21 +129,35 @@ export default function CreateTicketModal() {
         />
       </div>
 
-      <div className="space-y-1">
+      {selectedTargetRole === 'instructor' && (
         <SelectField
-          name="targetRole"
-          label="Target Support"
+          name="courseId"
+          label="Select Enrolled Course"
           control={control}
-          error={errors.targetRole?.message}
+          error={errors.courseId?.message}
           required
-          options={[
-            { label: 'Platform Admin', value: 'admin' },
-            ...(role === 'student' ? [{ label: 'Course Instructor', value: 'instructor' }] : []),
-          ]}
+          options={
+            enrolledCourses.length > 0
+              ? enrolledCourses.map((c: { _id: string; title: string }) => ({
+                  label: c.title,
+                  value: c._id,
+                }))
+              : [{ label: 'No enrolled courses found', value: '' }]
+          }
         />
-        <p className="text-text-placeholder text-xs">Who should resolve this issue?</p>
-      </div>
+      )}
 
+      {/* Category Field */}
+      <SelectField
+        name="category"
+        label="Category"
+        control={control}
+        error={errors.category?.message}
+        required
+        options={getCategoryOptions()}
+      />
+
+      {/* Message Field */}
       <TextAreaField
         name="message"
         label="Message"
@@ -116,7 +168,8 @@ export default function CreateTicketModal() {
         rows={4}
       />
 
-      <div className="flex justify-end gap-3">
+      {/* Action Buttons */}
+      <div className="flex justify-end gap-3 pt-2">
         <DynamicActionButton
           label="Cancel"
           variant="outline"
