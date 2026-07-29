@@ -2,7 +2,6 @@
 'use client';
 
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
-import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import { useModal } from '@/context/ModalContext';
 import { getSocket } from '@/lib/socket';
 import {
@@ -16,7 +15,7 @@ import { FormatDateTime } from '@/utils/formatDateTime';
 import { ChevronLeft, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import DynamicActionButton from '../DynamicActionButton/DynamicActionButton';
 import DynamicBadge from '../DynamicBadge/DynamicBadge';
@@ -80,6 +79,13 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
   const replyValue = watch('reply');
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const replyTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (!replyValue && replyTextareaRef.current) {
+      replyTextareaRef.current.style.height = 'auto';
+    }
+  }, [replyValue]);
 
   // Queries
   const {
@@ -464,7 +470,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
 
                           {/* Text Content */}
                           <div
-                            className={`relative rounded-sm px-2.5 py-0.75 text-xs leading-relaxed sm:text-sm ${isMe ? `bg-primary rounded-tr-xs text-white` : 'bg-primary-dark/70 rounded-tl-xs text-white'}`}
+                            className={`relative rounded-sm px-2.5 py-0.75 text-sm leading-relaxed ${isMe ? `bg-primary rounded-tr-none text-white` : 'bg-primary-dark/70 rounded-tl-none text-white'}`}
                           >
                             <p className="wrap-break-word whitespace-pre-wrap">
                               {msg.message || (msg as unknown as { text?: string }).text}
@@ -480,19 +486,48 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                 {/* Reply Box */}
                 {selectedTicket.status === 'open' && (
                   <div className="shrink-0 border-t border-slate-100 pt-3">
-                    <form onSubmit={handleSubmit(handleReply)} className="flex items-start gap-2">
+                    <form onSubmit={handleSubmit(handleReply)} className="flex items-end gap-2">
                       <div className="min-w-0 flex-1">
-                        <InputField
+                        <Controller
                           name="reply"
                           control={control}
-                          placeholder="Type your reply..."
+                          render={({ field: { ref, ...rest } }) => (
+                            <textarea
+                              {...rest}
+                              ref={(e) => {
+                                ref(e);
+                                replyTextareaRef.current = e;
+                              }}
+                              placeholder="Type your reply..."
+                              rows={1}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                  e.preventDefault();
+                                  if (replyValue?.trim() && !isReplying) {
+                                    handleSubmit(handleReply)();
+                                  }
+                                }
+                              }}
+                              onInput={(e) => {
+                                const target = e.target as HTMLTextAreaElement;
+                                target.style.height = 'auto';
+                                target.style.height = `${target.scrollHeight}px`;
+                              }}
+                              className="custom-scrollbar text-primary placeholder:text-text-placeholder focus-visible:border-primary border-primary/10 h-auto w-full resize-none rounded-sm border bg-[#F9FAFB] p-2.5 shadow-none transition-all outline-none focus-visible:ring-2 focus-visible:ring-emerald-100"
+                              style={{
+                                minHeight: '40px',
+                                maxHeight: '150px',
+                              }}
+                            />
+                          )}
                         />
                       </div>
+
                       <DynamicActionButton
                         label="Send"
                         type="submit"
                         disabled={isReplying || !replyValue?.trim()}
-                        className="h-11! shrink-0"
+                        className="mb-2 h-11!"
                       />
                     </form>
                   </div>
