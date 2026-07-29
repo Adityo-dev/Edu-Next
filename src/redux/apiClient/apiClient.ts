@@ -46,5 +46,6 @@ export const apiClient = createApi({
     'Payment',
     'AdminDashboard',
     'Categories',
+    'Tickets',
   ],
 });
