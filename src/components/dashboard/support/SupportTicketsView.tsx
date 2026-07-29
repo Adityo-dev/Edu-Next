@@ -12,7 +12,9 @@ import {
   useUpdateTicketStatusMutation,
 } from '@/redux/features/tickets/ticketsApi';
 import { FormatDateTime } from '@/utils/formatDateTime';
-import { ChevronLeft, MessageSquare } from 'lucide-react';
+import { ChevronLeft, MessageSquare, Clock, CheckCircle, Ticket } from 'lucide-react';
+import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
+import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -235,28 +237,25 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            {
-              label: 'Open',
-              value: tickets.filter((t) => t.status === 'open').length,
-              color: 'text-yellow-600',
-            },
-            {
-              label: 'Resolved',
-              value: tickets.filter((t) => t.status === 'resolved').length,
-              color: 'text-emerald-600',
-            },
-            { label: 'Total', value: tickets.length, color: theme.text },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              className="rounded-md border border-slate-100 bg-white p-5 text-center shadow-xs"
-            >
-              <p className={`text-3xl font-black ${stat.color}`}>{stat.value}</p>
-              <p className="text-text-secondary text-sm">{stat.label}</p>
-            </div>
-          ))}
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          <StatsCard
+            label="Total Tickets"
+            value={tickets.length}
+            icon={Ticket}
+            iconColor="#34796f"
+          />
+          <StatsCard
+            label="Open Tickets"
+            value={tickets.filter((t) => t.status === 'open').length}
+            icon={Clock}
+            iconColor="#ca8a04"
+          />
+          <StatsCard
+            label="Resolved Tickets"
+            value={tickets.filter((t) => t.status === 'resolved').length}
+            icon={CheckCircle}
+            iconColor="#059669"
+          />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -283,7 +282,25 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
               {isTicketsLoading ? (
                 <p className="py-10 text-center text-sm text-slate-500">Loading tickets...</p>
               ) : filteredTickets.length === 0 ? (
-                <p className="py-10 text-center text-sm text-slate-500">No tickets found.</p>
+                <EmptyState
+                  title="No Tickets Found"
+                  description="There are no support tickets matching your criteria."
+                  icon={Ticket}
+                  actionButton={
+                    <DynamicActionButton
+                      label="New Ticket"
+                      onClick={() =>
+                        openModal({
+                          view: 'CREATE_TICKET',
+                          data: { role },
+                          title: 'Create Support Ticket',
+                        })
+                      }
+                      showIcon
+                      className="h-11!"
+                    />
+                  }
+                />
               ) : (
                 filteredTickets.map((ticket) => (
                   <button

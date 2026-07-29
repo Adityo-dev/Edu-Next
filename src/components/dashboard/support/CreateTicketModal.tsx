@@ -126,7 +126,7 @@ export default function CreateTicketModal() {
         />
         <DynamicActionButton
           type="submit"
-          label="Submit Ticket"
+          label="Create Ticket"
           isLoading={isLoading}
           className="h-11!"
         />

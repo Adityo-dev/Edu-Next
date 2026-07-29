@@ -39,7 +39,7 @@ const EmptyState = ({
         <p className="text-secondary text-sm leading-relaxed">{description}</p>
       </div>
 
-      {actionButton && <div className="mt-6">{actionButton}</div>}
+      {actionButton && <div className="mt-5">{actionButton}</div>}
 
       <div className="mt-4 flex gap-1">
         <span className="bg-primary/20 h-1 w-8 rounded-full"></span>
