@@ -29,7 +29,7 @@ const DynamicModal: React.FC<DynamicModalProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className={`max-w-137.5 gap-0 p-4 ${className} bg-teal-accent`}>
+      <DialogContent className={`max-w-137.5 gap-0 p-4 ${className} `}>
         {!title && (
           <VisuallyHidden.Root>
             <DialogTitle>Modal Dialog</DialogTitle>

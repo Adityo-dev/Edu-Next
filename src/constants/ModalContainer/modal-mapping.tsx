@@ -5,6 +5,7 @@ import WriteReviewModal from '@/app/dashboard/student/reviews/_components/WriteR
 import StatusManageAlert from '@/components/dashboard/StatusManageAlert/StatusManageAlert';
 import LoginRequiredModal from '@/components/shared/LoginRequiredModal/LoginRequiredModal';
 import RefundDetailsModal from '@/app/dashboard/instructor/wallet/_components/TransactionHistory/_components/RefundDetailsModal/RefundDetailsModal';
+import CreateTicketModal from '@/components/dashboard/support/CreateTicketModal';
 import { TModalView } from '@/types/customModal.types';
 
 export const MODAL_COMPONENTS: Record<TModalView, React.ReactNode> = {
@@ -13,5 +14,6 @@ export const MODAL_COMPONENTS: Record<TModalView, React.ReactNode> = {
   LOGIN_REQUIRED: <LoginRequiredModal />,
   WRITE_REVIEW: <WriteReviewModal />,
   REFUND_DETAILS: <RefundDetailsModal />,
+  CREATE_TICKET: <CreateTicketModal />,
   NONE: null,
 };

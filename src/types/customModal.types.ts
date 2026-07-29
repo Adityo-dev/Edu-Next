@@ -8,6 +8,7 @@ export type TModalView =
   | 'STATUS_MANAGE'
   | 'LOGIN_REQUIRED'
   | 'REFUND_DETAILS'
+  | 'CREATE_TICKET'
   | 'NONE';
 
 //Open Modal Props

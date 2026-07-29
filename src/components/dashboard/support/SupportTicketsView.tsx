@@ -3,7 +3,7 @@
 
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
-import CreateTicketModal from '@/components/dashboard/support/CreateTicketModal';
+import { useModal } from '@/context/ModalContext';
 import { getSocket } from '@/lib/socket';
 import {
   TicketMessage,
@@ -12,6 +12,7 @@ import {
   useReplyToTicketMutation,
   useUpdateTicketStatusMutation,
 } from '@/redux/features/tickets/ticketsApi';
+import { FormatDateTime } from '@/utils/formatDateTime';
 import { MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
@@ -20,7 +21,6 @@ import { toast } from 'sonner';
 import DynamicActionButton from '../DynamicActionButton/DynamicActionButton';
 import DynamicBadge from '../DynamicBadge/DynamicBadge';
 import SectionHeader from '../SectionHeader/SectionHeader';
-import { FormatDateTime } from '@/utils/formatDateTime';
 
 interface SupportTicketsViewProps {
   role: 'student' | 'instructor' | 'admin';
@@ -57,7 +57,8 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
 
   const [filter, setFilter] = useState('all');
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const { openModal } = useModal();
 
   const { control, handleSubmit, reset, watch } = useForm({
     defaultValues: { reply: '' },
@@ -177,10 +178,16 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
             }
           />
           <DynamicActionButton
-            label="Create Ticket"
+            label="New Ticket"
+            onClick={() =>
+              openModal({
+                view: 'CREATE_TICKET',
+                data: { role },
+                title: 'Create Support Ticket',
+              })
+            }
             showIcon
-            onClick={() => setIsCreateModalOpen(true)}
-            className="h-11!"
+            className="h-10!"
           />
         </div>
 
@@ -227,7 +234,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
               ]}
             />
 
-            <div className="flex-1 space-y-3 overflow-y-auto pr-1">
+            <div className="custom-scrollbar flex-1 space-y-3 overflow-y-auto pr-2">
               {isTicketsLoading ? (
                 <p className="py-10 text-center text-sm text-slate-500">Loading tickets...</p>
               ) : filteredTickets.length === 0 ? (
@@ -287,10 +294,10 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
             ) : selectedTicket ? (
               <div className="flex h-full flex-col">
                 {/* Header */}
-                <div className="shrink-0 border-b border-slate-100">
+                <div className="shrink-0 border-b border-slate-100 pb-2">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="font-bold">{selectedTicket.title}</p>
+                      <p className="font-semibold">{selectedTicket.title}</p>
                       <p className="text-text-secondary mt-0.5 text-xs">
                         ID: {selectedTicket._id} • {selectedTicket.category} • Target:{' '}
                         {selectedTicket.targetRole}
@@ -316,7 +323,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 space-y-5 overflow-y-auto pt-5 pb-2">
+                <div className="custom-scrollbar flex-1 space-y-5 overflow-y-auto pt-5 pr-2 pb-2">
                   {ticketMessages.map((msg: TicketMessage) => {
                     let isMe = false;
                     const senderRole = msg.senderId?.role || msg.sender;
@@ -346,7 +353,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                             />
                           ) : (
                             <div
-                              className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold shadow-xs ${isMe ? `${theme.bg} text-white opacity-80` : 'bg-slate-200 text-slate-600'}`}
+                              className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold shadow-xs ${isMe ? `${theme.bg} text-white opacity-80` : 'bg-slate-200 text-slate-600'}`}
                             >
                               {(
                                 msg.senderId?.fullName ||
@@ -429,12 +436,6 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
           </div>
         </div>
       </div>
-
-      <CreateTicketModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        role={role}
-      />
     </div>
   );
 }
