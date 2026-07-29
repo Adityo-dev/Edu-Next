@@ -2,8 +2,16 @@ import { apiClient } from '@/redux/apiClient/apiClient';
 
 export interface TicketMessage {
   _id: string;
-  sender: 'user' | 'admin' | 'instructor';
-  message: string;
+  sender?: string;
+  senderId?: {
+    _id: string;
+    email: string;
+    role: string;
+    avatar?: string;
+    fullName?: string;
+  };
+  message?: string;
+  text?: string;
   createdAt: string;
 }
 
