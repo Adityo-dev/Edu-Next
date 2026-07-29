@@ -2,6 +2,8 @@
 'use client';
 
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
+import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
 import { useModal } from '@/context/ModalContext';
 import { getSocket } from '@/lib/socket';
 import {
@@ -12,9 +14,7 @@ import {
   useUpdateTicketStatusMutation,
 } from '@/redux/features/tickets/ticketsApi';
 import { FormatDateTime } from '@/utils/formatDateTime';
-import { ChevronLeft, MessageSquare, Clock, CheckCircle, Ticket } from 'lucide-react';
-import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
-import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import { CheckCircle, ChevronLeft, Clock, MessageSquare, Ticket } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -288,7 +288,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                   icon={Ticket}
                   actionButton={
                     <DynamicActionButton
-                      label="New Ticket"
+                      label="Create Ticket"
                       onClick={() =>
                         openModal({
                           view: 'CREATE_TICKET',
