@@ -24,10 +24,11 @@ export interface Ticket {
   status: 'open' | 'resolved' | 'closed';
   courseId?: string;
   assignedTo?: string;
-  user: {
+  senderId?: {
     _id: string;
-    name: string;
-    profilePicture?: string;
+    email: string;
+    fullName?: string;
+    avatar?: string;
     role: string;
   };
   messages?: TicketMessage[];

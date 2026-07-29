@@ -8,7 +8,7 @@ import { useCallback, useRef, useState } from 'react';
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
 
 interface InputFieldProps<T extends FieldValues> {
-  label: string;
+  label?: string;
   name: Path<T>;
   control: Control<T>;
   type?: string;
@@ -56,9 +56,11 @@ const InputField = <T extends FieldValues>({
 
   return (
     <div className="space-y-2">
-      <Label className="block font-medium">
-        {label} {required && <span className="text-danger">*</span>}
-      </Label>
+      {label && (
+        <Label className="block font-medium">
+          {label} {required && <span className="text-danger">*</span>}
+        </Label>
+      )}
 
       <div className="relative">
         {(isPassword || isEmail) && (

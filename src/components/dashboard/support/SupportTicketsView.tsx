@@ -1,34 +1,69 @@
+/* eslint-disable react-hooks/incompatible-library */
 'use client';
 
+import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
+import InputField from '@/components/dashboard/Fields/InputField/InputField';
+import CreateTicketModal from '@/components/dashboard/support/CreateTicketModal';
 import { getSocket } from '@/lib/socket';
 import {
+  TicketMessage,
   useGetTicketDetailsQuery,
   useGetTicketsQuery,
   useReplyToTicketMutation,
   useUpdateTicketStatusMutation,
 } from '@/redux/features/tickets/ticketsApi';
-import { MessageSquare, Plus, Send } from 'lucide-react';
-import { TicketMessage } from '@/redux/features/tickets/ticketsApi';
+import { MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import CreateTicketModal from '@/components/dashboard/support/CreateTicketModal';
+import DynamicActionButton from '../DynamicActionButton/DynamicActionButton';
+import DynamicBadge from '../DynamicBadge/DynamicBadge';
+import SectionHeader from '../SectionHeader/SectionHeader';
+import { FormatDateTime } from '@/utils/formatDateTime';
 
 interface SupportTicketsViewProps {
   role: 'student' | 'instructor' | 'admin';
 }
 
-const statusConfig: Record<string, string> = {
-  open: 'bg-yellow-50 text-yellow-600',
-  resolved: 'bg-emerald-50 text-[#0f172a]', // Used primary equivalent
-  closed: 'bg-slate-100 text-slate-500',
-};
-
 export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
-  const [filter, setFilter] = useState('open');
+  const isStudent = role === 'student';
+
+  const theme = {
+    bg: isStudent ? 'bg-[#0f172a]' : 'bg-primary',
+    text: isStudent ? 'text-[#0f172a]' : 'text-primary',
+    hoverBg: isStudent ? 'hover:bg-[#1e293b]' : 'hover:bg-[#2a6159]',
+    border: isStudent ? 'border-[#0f172a]' : 'border-primary',
+    focusBorder: isStudent ? 'focus:border-[#0f172a]' : 'focus:border-primary',
+    focusRing: isStudent ? 'focus:ring-slate-200' : 'focus:ring-emerald-100',
+    selectedBg: isStudent ? 'bg-slate-50/50' : 'bg-emerald-50/30',
+    resolvedStatus: isStudent ? 'bg-emerald-50 text-[#0f172a]' : 'bg-emerald-50 text-primary',
+    markResolvedBg: isStudent ? 'bg-slate-100' : 'bg-emerald-50',
+    markResolvedHover: isStudent ? 'hover:bg-slate-200' : 'hover:bg-emerald-100',
+  };
+
+  const getBadgeColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'open':
+        return '#ca8a04';
+      case 'resolved':
+        return isStudent ? '#0f172a' : '#34796f';
+      case 'closed':
+        return '#64748b';
+      default:
+        return '#64748b';
+    }
+  };
+
+  const [filter, setFilter] = useState('all');
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
-  const [reply, setReply] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const { control, handleSubmit, reset, watch } = useForm({
+    defaultValues: { reply: '' },
+  });
+
+  const replyValue = watch('reply');
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -98,16 +133,20 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
     }
   }, [selectedTicketData?.messages]);
 
-  const handleReply = async () => {
-    if (!reply.trim() || !selectedTicketId) return;
+  const handleReply = async (data: { reply: string }) => {
+    if (!data.reply.trim() || !selectedTicketId) return;
 
     try {
-      await replyToTicket({ id: selectedTicketId, message: reply }).unwrap();
-      setReply('');
+      await replyToTicket({ id: selectedTicketId, message: data.reply }).unwrap();
+      reset();
 
       // Emit via socket just in case it is required by backend real-time engine
       const socket = await getSocket();
-      socket.emit('sendMessage', { ticketId: selectedTicketId, message: reply, text: reply });
+      socket.emit('sendMessage', {
+        ticketId: selectedTicketId,
+        message: data.reply,
+        text: data.reply,
+      });
     } catch (err: unknown) {
       console.error('Reply error:', err);
       const error = err as { data?: { message?: string } };
@@ -129,21 +168,20 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
     <div className="min-h-[calc(100vh-100px)] bg-[#F9FAFB]">
       <div className="mx-auto space-y-6">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-text-primary text-2xl font-black">Support Tickets</h1>
-            <p className="text-text-secondary mt-1 text-sm">
-              {role === 'admin'
+          <SectionHeader
+            title="Support Tickets"
+            description={
+              role === 'admin'
                 ? 'Respond to user support requests.'
-                : 'Manage your support tickets.'}
-            </p>
-          </div>
-          <button
+                : 'Manage your support tickets.'
+            }
+          />
+          <DynamicActionButton
+            label="Create Ticket"
+            showIcon
             onClick={() => setIsCreateModalOpen(true)}
-            className="flex items-center gap-2 rounded-md bg-[#0f172a] px-4 py-2 text-sm font-semibold text-white hover:bg-[#1e293b]"
-          >
-            <Plus size={16} />
-            Create Ticket
-          </button>
+            className="h-11!"
+          />
         </div>
 
         {/* Stats */}
@@ -159,7 +197,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
               value: tickets.filter((t) => t.status === 'resolved').length,
               color: 'text-emerald-600',
             },
-            { label: 'Total', value: tickets.length, color: 'text-[#0f172a]' },
+            { label: 'Total', value: tickets.length, color: theme.text },
           ].map((stat, i) => (
             <div
               key={i}
@@ -173,18 +211,21 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Ticket List */}
-          <div className="flex h-[600px] flex-col space-y-3">
-            <div className="flex shrink-0 overflow-hidden rounded-sm border border-slate-200 bg-white shadow-xs">
-              {['all', 'open', 'resolved'].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setFilter(tab)}
-                  className={`flex-1 py-2.5 text-xs font-semibold capitalize transition-all ${filter === tab ? 'bg-[#0f172a] text-white' : 'text-slate-500 hover:bg-slate-50'}`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
+          <div className="flex h-150 flex-col space-y-3">
+            <DynamicTableFilterBar
+              fields={[
+                {
+                  name: 'filter',
+                  type: 'tabs',
+                  options: [
+                    { label: 'All', value: 'all' },
+                    { label: 'Open', value: 'open' },
+                    { label: 'Resolved', value: 'resolved' },
+                  ],
+                  onChange: (val) => setFilter(val),
+                },
+              ]}
+            />
 
             <div className="flex-1 space-y-3 overflow-y-auto pr-1">
               {isTicketsLoading ? (
@@ -196,39 +237,40 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                   <button
                     key={ticket._id}
                     onClick={() => setSelectedTicketId(ticket._id)}
-                    className={`w-full rounded-md border p-4 text-left shadow-xs transition-all hover:border-emerald-100 ${selectedTicketId === ticket._id ? 'border-[#0f172a] bg-slate-50/50' : 'border-slate-100 bg-white'}`}
+                    className={`w-full cursor-pointer rounded-md border p-3 text-left transition-all hover:border-emerald-100 ${selectedTicketId === ticket._id ? `${theme.border} ${theme.selectedBg}` : 'border-slate-100 bg-white'}`}
                   >
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-400">
+                      <span className="text-xs font-semibold text-slate-400">
                         {ticket._id.substring(ticket._id.length - 6).toUpperCase()}
                       </span>
-                      <span
-                        className={`rounded-full px-2.5 py-0.5 text-xs font-bold capitalize ${statusConfig[ticket.status] || statusConfig['open']}`}
-                      >
-                        {ticket.status}
-                      </span>
+                      <DynamicBadge text={ticket.status} color={getBadgeColor(ticket.status)} />
                     </div>
                     <div className="mb-2 flex items-center gap-2">
                       <Image
-                        src={
-                          ticket.user?.profilePicture ||
-                          `https://i.pravatar.cc/150?u=${ticket.user?._id}`
-                        }
-                        alt={ticket.user?.name || 'User'}
+                        src={ticket.senderId?.avatar || ''}
+                        alt={ticket.senderId?.fullName || 'User'}
                         width={24}
                         height={24}
                         className="rounded-full bg-slate-200 object-cover"
                       />
-                      <span className="text-sm font-semibold">{ticket.user?.name || 'User'}</span>
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${ticket.user?.role === 'instructor' ? 'bg-blue-50 text-blue-600' : 'bg-emerald-50 text-emerald-600'}`}
-                      >
-                        {ticket.user?.role}
+                      <span className="text-sm font-semibold">
+                        {ticket.senderId?.fullName || 'User'}
                       </span>
+                      <DynamicBadge
+                        text={ticket.senderId?.role || 'User'}
+                        color={
+                          ticket.senderId?.role === 'instructor'
+                            ? '#2563eb'
+                            : ticket.senderId?.role === 'admin'
+                              ? '#059669'
+                              : '#475569'
+                        }
+                        className="text-[10px]!"
+                      />
                     </div>
-                    <p className="line-clamp-1 text-sm text-slate-600">{ticket.title}</p>
+                    <p className="line-clamp-1 text-sm">{ticket.title}</p>
                     <p className="text-text-secondary mt-1 text-xs">
-                      {ticket.createdAt.split('T')[0]}
+                      {FormatDateTime(ticket.createdAt)}
                     </p>
                   </button>
                 ))
@@ -237,7 +279,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
           </div>
 
           {/* Ticket Detail */}
-          <div className="dashboard-card-container h-[600px] rounded-md border border-slate-200 bg-white shadow-xs lg:col-span-2">
+          <div className="dashboard-card-container h-150 lg:col-span-2">
             {isTicketLoading ? (
               <div className="flex h-full items-center justify-center">
                 <p className="text-sm text-slate-500">Loading ticket details...</p>
@@ -245,7 +287,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
             ) : selectedTicket ? (
               <div className="flex h-full flex-col">
                 {/* Header */}
-                <div className="shrink-0 border-b border-slate-100 p-5">
+                <div className="shrink-0 border-b border-slate-100">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-bold">{selectedTicket.title}</p>
@@ -255,17 +297,16 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-bold capitalize ${statusConfig[selectedTicket.status] || statusConfig['open']}`}
-                      >
-                        {selectedTicket.status}
-                      </span>
+                      <DynamicBadge
+                        text={selectedTicket.status}
+                        color={getBadgeColor(selectedTicket.status)}
+                      />
                       {selectedTicket.status === 'open' &&
                         (role === 'admin' || role === 'instructor') && (
                           <button
                             onClick={() => handleUpdateStatus('resolved')}
                             disabled={isUpdatingStatus}
-                            className="rounded-sm bg-slate-100 px-3 py-1.5 text-xs font-bold text-[#0f172a] hover:bg-slate-200 disabled:opacity-50"
+                            className={`cursor-pointer rounded-sm px-3 py-1.5 text-xs font-semibold transition-colors disabled:opacity-50 ${theme.markResolvedBg} ${theme.text} ${theme.markResolvedHover}`}
                           >
                             Mark Resolved
                           </button>
@@ -275,11 +316,8 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 space-y-4 overflow-y-auto p-5">
+                <div className="flex-1 space-y-5 overflow-y-auto pt-5 pb-2">
                   {ticketMessages.map((msg: TicketMessage) => {
-                    // Decide orientation based on role and sender
-                    // If I am admin, and sender is admin -> right
-                    // If I am user, and sender is user -> right
                     let isMe = false;
                     const senderRole = msg.senderId?.role || msg.sender;
 
@@ -287,62 +325,96 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                     if (role === 'student' && senderRole === 'student') isMe = true;
                     if (role === 'instructor' && senderRole === 'instructor') isMe = true;
 
-                    // Fallback for creator vs responder
-                    if (senderRole === selectedTicket.user?.role) {
-                      isMe = role === selectedTicket.user?.role;
+                    if (senderRole === selectedTicket.senderId?.role) {
+                      isMe = role === selectedTicket.senderId?.role;
                     }
 
                     return (
                       <div
                         key={msg._id}
-                        className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
+                        className={`flex w-full gap-3 pr-5 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}
                       >
+                        {/* Avatar */}
+                        <div className="shrink-0 pt-1">
+                          {msg.senderId?.avatar ? (
+                            <Image
+                              src={msg.senderId.avatar}
+                              alt="avatar"
+                              width={32}
+                              height={32}
+                              className="h-8 w-8 rounded-full bg-slate-200 object-cover shadow-xs"
+                            />
+                          ) : (
+                            <div
+                              className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold shadow-xs ${isMe ? `${theme.bg} text-white opacity-80` : 'bg-slate-200 text-slate-600'}`}
+                            >
+                              {(
+                                msg.senderId?.fullName ||
+                                msg.senderId?.role ||
+                                (msg as unknown as { sender?: string }).sender ||
+                                'U'
+                              )
+                                .charAt(0)
+                                .toUpperCase()}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Bubble */}
                         <div
-                          className={`max-w-md rounded-md px-4 py-3 text-sm leading-relaxed ${isMe ? 'bg-[#0f172a] text-white' : 'bg-slate-100 text-slate-700'}`}
+                          className={`flex max-w-[75%] flex-col gap-1 ${isMe ? 'items-end' : 'items-start'}`}
                         >
-                          <p className="mb-1 text-xs font-semibold capitalize opacity-70">
-                            {msg.senderId?.fullName ||
-                              (msg.senderId?.role ??
-                                (msg as unknown as { sender?: string }).sender)}
-                          </p>
-                          <p>{msg.message || (msg as unknown as { text?: string }).text}</p>
-                          <p
-                            className={`mt-1 text-xs ${isMe ? 'text-white/60' : 'text-slate-400'}`}
+                          {/* Sender Name */}
+                          {!isMe && (
+                            <span className="ml-1 text-xs font-semibold text-slate-500 capitalize">
+                              {msg.senderId?.fullName ||
+                                msg.senderId?.role ||
+                                (msg as unknown as { sender?: string }).sender}
+                            </span>
+                          )}
+
+                          <div
+                            className={`relative rounded-md px-3.5 py-2 text-[14px] leading-relaxed ${isMe ? `${theme.bg} rounded-tr-sm text-white` : 'rounded-tl-sm bg-slate-100 text-slate-700'}`}
                           >
-                            {msg.createdAt.replace('T', ' ').substring(0, 16)}
-                          </p>
+                            <p className="wrap-break-word whitespace-pre-wrap">
+                              {msg.message || (msg as unknown as { text?: string }).text}
+                            </p>
+
+                            {/* Timestamp */}
+                            <p
+                              className={`mt-0.5 flex items-center justify-end text-[10px] ${isMe ? 'text-white/70' : 'text-slate-400'}`}
+                            >
+                              {new Date(msg.createdAt).toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     );
                   })}
-                  <div ref={messagesEndRef} />
+                  <div ref={messagesEndRef} className="h-4" />
                 </div>
 
                 {/* Reply Box */}
                 {selectedTicket.status === 'open' && (
-                  <div className="shrink-0 border-t border-slate-100 p-5">
-                    <div className="flex gap-3">
-                      <textarea
-                        value={reply}
-                        onChange={(e) => setReply(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            handleReply();
-                          }
-                        }}
-                        rows={2}
-                        placeholder="Type your reply..."
-                        className="flex-1 resize-none rounded-sm border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-[#0f172a] focus:ring-2 focus:ring-slate-200"
+                  <div className="shrink-0 border-t border-slate-100">
+                    <form onSubmit={handleSubmit(handleReply)} className="flex items-start gap-3">
+                      <div className="flex-1">
+                        <InputField
+                          name="reply"
+                          control={control}
+                          placeholder="Type your reply..."
+                        />
+                      </div>
+                      <DynamicActionButton
+                        label="Send"
+                        type="submit"
+                        disabled={isReplying || !replyValue?.trim()}
+                        className="h-11!"
                       />
-                      <button
-                        onClick={handleReply}
-                        disabled={isReplying || !reply.trim()}
-                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-[#0f172a] text-white hover:bg-[#1e293b] disabled:opacity-50"
-                      >
-                        <Send size={16} />
-                      </button>
-                    </div>
+                    </form>
                   </div>
                 )}
               </div>
