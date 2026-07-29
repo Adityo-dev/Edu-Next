@@ -32,6 +32,8 @@ export interface Ticket {
     role: string;
   };
   messages?: TicketMessage[];
+  hasUnreadSender?: boolean;
+  hasUnreadTarget?: boolean;
   createdAt: string;
   updatedAt: string;
 }

@@ -13,7 +13,7 @@ import {
   useUpdateTicketStatusMutation,
 } from '@/redux/features/tickets/ticketsApi';
 import { FormatDateTime } from '@/utils/formatDateTime';
-import { MessageSquare } from 'lucide-react';
+import { ChevronLeft, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -43,13 +43,26 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
   };
 
   const getBadgeColor = (status: string) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case 'open':
         return '#ca8a04';
       case 'resolved':
         return isStudent ? '#0f172a' : '#34796f';
       case 'closed':
         return '#64748b';
+      default:
+        return '#64748b';
+    }
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority?.toLowerCase()) {
+      case 'high':
+        return '#ef4444';
+      case 'medium':
+        return '#f97316';
+      case 'low':
+        return '#3b82f6';
       default:
         return '#64748b';
     }
@@ -69,7 +82,11 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Queries
-  const { data: ticketsData, isLoading: isTicketsLoading } = useGetTicketsQuery();
+  const {
+    data: ticketsData,
+    isLoading: isTicketsLoading,
+    refetch: refetchTickets,
+  } = useGetTicketsQuery();
   const {
     data: selectedTicketData,
     isLoading: isTicketLoading,
@@ -96,15 +113,23 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
     const setupSocket = async () => {
       activeSocket = await getSocket();
 
+      const handleNewTicket = () => {
+        refetchTickets();
+      };
+
+      activeSocket.on('newTicketCreated', handleNewTicket);
+
       if (selectedTicketId) {
         activeSocket.emit('joinTicket', selectedTicketId);
 
         const handleNewMessage = () => {
           refetchTicketDetails();
+          refetchTickets();
         };
 
         const handleStatusUpdated = () => {
           refetchTicketDetails();
+          refetchTickets();
         };
 
         activeSocket.on('newMessage', handleNewMessage);
@@ -113,6 +138,11 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
         cleanupFn = () => {
           activeSocket?.off('newMessage', handleNewMessage);
           activeSocket?.off('ticketStatusUpdated', handleStatusUpdated);
+          activeSocket?.off('newTicketCreated', handleNewTicket);
+        };
+      } else {
+        cleanupFn = () => {
+          activeSocket?.off('newTicketCreated', handleNewTicket);
         };
       }
     };
@@ -126,6 +156,13 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTicketId]);
+
+  // Refetch tickets list when a ticket is selected so the red dot clears
+  useEffect(() => {
+    if (selectedTicketId) {
+      refetchTickets();
+    }
+  }, [selectedTicketId, refetchTickets]);
 
   // Scroll to bottom on new message
   useEffect(() => {
@@ -218,7 +255,9 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Ticket List */}
-          <div className="flex h-150 flex-col space-y-3">
+          <div
+            className={`h-150 flex-col space-y-3 ${selectedTicketId ? 'hidden lg:flex' : 'flex'}`}
+          >
             <DynamicTableFilterBar
               fields={[
                 {
@@ -246,23 +285,47 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                     onClick={() => setSelectedTicketId(ticket._id)}
                     className={`w-full cursor-pointer rounded-md border p-3 text-left transition-all hover:border-emerald-100 ${selectedTicketId === ticket._id ? `${theme.border} ${theme.selectedBg}` : 'border-slate-100 bg-white'}`}
                   >
-                    <div className="mb-2 flex items-center justify-between">
-                      <span className="text-xs font-semibold text-slate-400">
-                        {ticket._id.substring(ticket._id.length - 6).toUpperCase()}
-                      </span>
-                      <DynamicBadge text={ticket.status} color={getBadgeColor(ticket.status)} />
+                    <div className="mb-3 flex items-start justify-between">
+                      <div className="flex items-center gap-2">
+                        <Image
+                          src={ticket.senderId?.avatar || ''}
+                          alt={ticket.senderId?.fullName || 'User'}
+                          width={24}
+                          height={24}
+                          className="rounded-full bg-slate-200 object-cover"
+                        />
+                        <div className="flex flex-col">
+                          <span className="text-sm leading-none font-semibold">
+                            {ticket.senderId?.fullName || 'User'}
+                          </span>
+                          <span className="mt-1 text-xs font-semibold text-slate-400">
+                            #{ticket._id.substring(ticket._id.length - 6).toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        {ticket.priority && (
+                          <DynamicBadge
+                            text={ticket.priority}
+                            color={getPriorityColor(ticket.priority)}
+                          />
+                        )}
+                        <DynamicBadge text={ticket.status} color={getBadgeColor(ticket.status)} />
+                        {((isStudent && ticket.hasUnreadSender === true) ||
+                          ((role === 'admin' || role === 'instructor') &&
+                            ticket.hasUnreadTarget === true)) &&
+                          ticket._id !== selectedTicketId && (
+                            <span className="ml-0.5 inline-block h-2 w-2 rounded-full bg-red-500"></span>
+                          )}
+                      </div>
                     </div>
-                    <div className="mb-2 flex items-center gap-2">
-                      <Image
-                        src={ticket.senderId?.avatar || ''}
-                        alt={ticket.senderId?.fullName || 'User'}
-                        width={24}
-                        height={24}
-                        className="rounded-full bg-slate-200 object-cover"
-                      />
-                      <span className="text-sm font-semibold">
-                        {ticket.senderId?.fullName || 'User'}
-                      </span>
+
+                    <p className="mb-1 line-clamp-2 text-xs">{ticket.title}</p>
+
+                    <div className="flex items-center justify-between">
+                      <p className="text-text-secondary text-xs">
+                        {FormatDateTime(ticket.createdAt)}
+                      </p>
                       <DynamicBadge
                         text={ticket.senderId?.role || 'User'}
                         color={
@@ -275,10 +338,6 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                         className="text-[10px]!"
                       />
                     </div>
-                    <p className="line-clamp-1 text-sm">{ticket.title}</p>
-                    <p className="text-text-secondary mt-1 text-xs">
-                      {FormatDateTime(ticket.createdAt)}
-                    </p>
                   </button>
                 ))
               )}
@@ -286,7 +345,9 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
           </div>
 
           {/* Ticket Detail */}
-          <div className="dashboard-card-container h-150 lg:col-span-2">
+          <div
+            className={`dashboard-card-container h-150 lg:col-span-2 ${!selectedTicketId ? 'hidden lg:flex' : 'flex'} flex-col`}
+          >
             {isTicketLoading ? (
               <div className="flex h-full items-center justify-center">
                 <p className="text-sm text-slate-500">Loading ticket details...</p>
@@ -294,16 +355,30 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
             ) : selectedTicket ? (
               <div className="flex h-full flex-col">
                 {/* Header */}
-                <div className="shrink-0 border-b border-slate-100 pb-2">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-semibold">{selectedTicket.title}</p>
-                      <p className="text-text-secondary mt-0.5 text-xs">
-                        ID: {selectedTicket._id} • {selectedTicket.category} • Target:{' '}
-                        {selectedTicket.targetRole}
-                      </p>
+                <div className="shrink-0 border-b border-slate-100 pb-3">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="flex min-w-0 items-start gap-2">
+                      <button
+                        onClick={() => setSelectedTicketId(null)}
+                        className="mt-0.5 shrink-0 rounded-md p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700 lg:hidden"
+                      >
+                        <ChevronLeft size={20} />
+                      </button>
+                      <div className="min-w-0">
+                        <p className="font-semibold wrap-break-word">{selectedTicket.title}</p>
+                        <p className="text-text-secondary mt-0.5 text-xs wrap-break-word">
+                          ID: {selectedTicket._id} • {selectedTicket.category} • Target:{' '}
+                          {selectedTicket.targetRole}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2 pl-8 sm:pl-0">
+                      {selectedTicket.priority && (
+                        <DynamicBadge
+                          text={selectedTicket.priority}
+                          color={getPriorityColor(selectedTicket.priority)}
+                        />
+                      )}
                       <DynamicBadge
                         text={selectedTicket.status}
                         color={getBadgeColor(selectedTicket.status)}
@@ -406,9 +481,9 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
 
                 {/* Reply Box */}
                 {selectedTicket.status === 'open' && (
-                  <div className="shrink-0 border-t border-slate-100">
-                    <form onSubmit={handleSubmit(handleReply)} className="flex items-start gap-3">
-                      <div className="flex-1">
+                  <div className="shrink-0 border-t border-slate-100 pt-3">
+                    <form onSubmit={handleSubmit(handleReply)} className="flex items-start gap-2">
+                      <div className="min-w-0 flex-1">
                         <InputField
                           name="reply"
                           control={control}
@@ -419,14 +494,14 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                         label="Send"
                         type="submit"
                         disabled={isReplying || !replyValue?.trim()}
-                        className="h-11!"
+                        className="h-11! shrink-0"
                       />
                     </form>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="flex h-full items-center justify-center py-20 text-center">
+              <div className="flex h-full flex-col items-center justify-center py-20 text-center">
                 <div>
                   <MessageSquare size={40} className="mx-auto mb-3 text-slate-200" />
                   <p className="text-slate-400">Select a ticket to view</p>
