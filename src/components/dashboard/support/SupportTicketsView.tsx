@@ -398,7 +398,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                 </div>
 
                 {/* Messages */}
-                <div className="custom-scrollbar flex-1 space-y-5 overflow-y-auto pt-5 pr-2 pb-2">
+                <div className="custom-scrollbar flex-1 space-y-5 overflow-y-auto pt-4 pr-2 pb-2">
                   {ticketMessages.map((msg: TicketMessage) => {
                     let isMe = false;
                     const senderRole = msg.senderId?.role || msg.sender;
@@ -414,7 +414,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                     return (
                       <div
                         key={msg._id}
-                        className={`flex w-full gap-3 pr-5 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}
+                        className={`flex w-full gap-3 pr-3 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}
                       >
                         {/* Avatar */}
                         <div className="shrink-0 pt-1">
@@ -424,11 +424,11 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                               alt="avatar"
                               width={32}
                               height={32}
-                              className="h-8 w-8 rounded-full bg-slate-200 object-cover shadow-xs"
+                              className="h-8 w-8 rounded-full bg-slate-200 object-cover"
                             />
                           ) : (
                             <div
-                              className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold shadow-xs ${isMe ? `${theme.bg} text-white opacity-80` : 'bg-slate-200 text-slate-600'}`}
+                              className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${isMe ? `${theme.bg} text-white opacity-80` : 'bg-slate-200'}`}
                             >
                               {(
                                 msg.senderId?.fullName ||
@@ -444,32 +444,30 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
 
                         {/* Bubble */}
                         <div
-                          className={`flex max-w-[75%] flex-col gap-1 ${isMe ? 'items-end' : 'items-start'}`}
+                          className={`flex max-w-[85%] flex-col gap-1 ${isMe ? 'items-end' : 'items-start'}`}
                         >
-                          {/* Sender Name */}
-                          {!isMe && (
-                            <span className="ml-1 text-xs font-semibold text-slate-500 capitalize">
-                              {msg.senderId?.fullName ||
-                                msg.senderId?.role ||
-                                (msg as unknown as { sender?: string }).sender}
-                            </span>
-                          )}
+                          {/* Top Row: Sender Name & Date/Time */}
+                          <div className={`flex items-baseline gap-2 ${isMe ? 'mr-1' : 'ml-1'}`}>
+                            {!isMe && (
+                              <span className="text-xs font-semibold tracking-wide capitalize">
+                                {msg.senderId?.fullName ||
+                                  msg.senderId?.role ||
+                                  (msg as unknown as { sender?: string }).sender}
+                              </span>
+                            )}
+                            {msg.createdAt && (
+                              <span className="text-text-secondary/80 text-[10px] sm:text-xs">
+                                {FormatDateTime(msg.createdAt)}
+                              </span>
+                            )}
+                          </div>
 
+                          {/* Text Content */}
                           <div
-                            className={`relative rounded-md px-3.5 py-2 text-[14px] leading-relaxed ${isMe ? `${theme.bg} rounded-tr-sm text-white` : 'rounded-tl-sm bg-slate-100 text-slate-700'}`}
+                            className={`relative rounded-sm px-2.5 py-0.75 text-xs leading-relaxed sm:text-sm ${isMe ? `bg-primary rounded-tr-xs text-white` : 'bg-primary-dark/70 rounded-tl-xs text-white'}`}
                           >
                             <p className="wrap-break-word whitespace-pre-wrap">
                               {msg.message || (msg as unknown as { text?: string }).text}
-                            </p>
-
-                            {/* Timestamp */}
-                            <p
-                              className={`mt-0.5 flex items-center justify-end text-[10px] ${isMe ? 'text-white/70' : 'text-slate-400'}`}
-                            >
-                              {new Date(msg.createdAt).toLocaleTimeString([], {
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })}
                             </p>
                           </div>
                         </div>
