@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/purity */
 'use client';
 
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
@@ -63,11 +62,11 @@ const RevenueChart = () => {
       <div className="min-h-[300px] w-full sm:h-[350px]">
         {isLoading ? (
           <div className="flex h-full items-end justify-between gap-2 pb-5">
-            {[...Array(6)].map((_, i) => (
+            {[30, 60, 45, 80, 50, 70].map((h, i) => (
               <div
                 key={i}
                 className="w-full animate-pulse rounded-t-md bg-slate-100"
-                style={{ height: `${Math.random() * 60 + 20}%` }}
+                style={{ height: `${h}%` }}
               />
             ))}
           </div>
