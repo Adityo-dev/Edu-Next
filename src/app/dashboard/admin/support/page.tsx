@@ -1,12 +1,7 @@
-import dynamic from 'next/dynamic';
-
-const SupportTicketsView = dynamic(
-  () => import('@/components/dashboard/support/SupportTicketsView'),
-  { ssr: false },
-);
+import SupportTicketsWrapper from '@/components/dashboard/support/SupportTicketsWrapper';
 
 const SupportTicketsPage = () => {
-  return <SupportTicketsView role="admin" />;
+  return <SupportTicketsWrapper role="admin" />;
 };
 
 export default SupportTicketsPage;

@@ -9,7 +9,7 @@ import {
 import { Bookmark, Search } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import CourseCard from '../(home)/courses/_components/CourseCard/CourseCard';
+import CourseCard from '../courses/_components/CourseCard/CourseCard';
 
 const badgeColors: Record<string, string> = {
   Bestseller: '#f59e0b',

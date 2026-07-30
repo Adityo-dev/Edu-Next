@@ -1,16 +1,11 @@
-import dynamic from 'next/dynamic';
-
-const SupportTicketsView = dynamic(
-  () => import('@/components/dashboard/support/SupportTicketsView'),
-  { ssr: false },
-);
+import SupportTicketsWrapper from '@/components/dashboard/support/SupportTicketsWrapper';
 
 export const metadata = {
   title: 'Support Tickets - Student Dashboard',
 };
 
 const StudentSupportPage = () => {
-  return <SupportTicketsView role="student" />;
+  return <SupportTicketsWrapper role="student" />;
 };
 
 export default StudentSupportPage;
