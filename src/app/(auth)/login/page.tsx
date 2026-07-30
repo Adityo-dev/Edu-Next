@@ -4,6 +4,7 @@
 'use client';
 
 import { ROLE_DASHBOARD_HOME } from '@/components/dashboard/sidebar/sidebarRoutes';
+import { apiClient } from '@/redux/apiClient/apiClient';
 import { setAuth } from '@/redux/features/auth/authSlice';
 import { useAppDispatch } from '@/redux/hooks';
 import { setUserProfile } from '@/services/auth/auth.service';
@@ -13,10 +14,9 @@ import { BadgeCheck, Eye, EyeOff, Lock, Mail, PlayCircle, ShieldCheck, X } from 
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { apiClient } from '@/redux/apiClient/apiClient';
 
 const loginSchema = z.object({
   email: z.string().min(1, 'Email is required.').email('Please enter a valid email address.'),
@@ -234,7 +234,7 @@ const LoginPage = () => {
       <div className="flex w-full flex-col items-center justify-center px-6 py-16 lg:w-[45%]">
         <div className="w-full max-w-sm">
           <div className="mb-8">
-            <h1 className="text-text-primary mb-2 text-3xl font-black">Welcome back 👋</h1>
+            <h1 className="text-text-primary mb-2 text-3xl font-bold">Welcome back 👋</h1>
             <p className="text-text-secondary text-sm">
               No account?{' '}
               <Link href="/register" className="text-primary font-bold hover:underline">

@@ -4,8 +4,9 @@ import { apiClient } from '@/redux/apiClient/apiClient';
 export interface TCategory {
   _id: string;
   name: string;
+  slug: string;
   description?: string;
-  icon?: string;
+  image?: string;
   isActive: boolean;
   parentId?: string | null;
   subCategories?: TCategory[];
@@ -25,6 +26,12 @@ export interface TGetCategoryResponse {
   data: TCategory;
 }
 
+export interface TGetSubcategoriesResponse {
+  success: boolean;
+  message: string;
+  data: TCategory[];
+}
+
 export interface TMutationResponse {
   success: boolean;
   message: string;
@@ -39,14 +46,14 @@ export interface TGetCategoriesParams {
 export interface TCreateCategoryPayload {
   name: string;
   description?: string;
-  icon?: string;
+  image?: string;
   parentId?: string | null;
 }
 
 export interface TUpdateCategoryPayload {
   name?: string;
   description?: string;
-  icon?: string;
+  image?: string;
   isActive?: boolean;
   parentId?: string | null;
 }
@@ -81,6 +88,15 @@ export const categoriesApi = apiClient.injectEndpoints({
       providesTags: (_result, _error, id) => [{ type: 'Categories', id }],
     }),
 
+    // GET /categories/{id}/subcategories
+    getSubcategoriesByCategoryId: builder.query<TGetSubcategoriesResponse, string>({
+      query: (id) => ({
+        url: `/categories/${id}/subcategories`,
+        method: 'GET',
+      }),
+      providesTags: (_result, _error, id) => [{ type: 'Subcategories', id }, 'Categories'],
+    }),
+
     // POST /categories
     createCategory: builder.mutation<TMutationResponse, TCreateCategoryPayload>({
       query: (body) => ({
@@ -88,7 +104,7 @@ export const categoriesApi = apiClient.injectEndpoints({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['Categories'],
+      invalidatesTags: ['Categories', 'Subcategories'],
     }),
 
     // PATCH /categories/{id}
@@ -101,7 +117,11 @@ export const categoriesApi = apiClient.injectEndpoints({
         method: 'PATCH',
         body: payload,
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: 'Categories', id }, 'Categories'],
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: 'Categories', id },
+        'Categories',
+        'Subcategories',
+      ],
     }),
 
     // DELETE /categories/{id}
@@ -110,7 +130,7 @@ export const categoriesApi = apiClient.injectEndpoints({
         url: `/categories/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Categories'],
+      invalidatesTags: ['Categories', 'Subcategories'],
     }),
   }),
 });
@@ -118,6 +138,7 @@ export const categoriesApi = apiClient.injectEndpoints({
 export const {
   useGetCategoriesQuery,
   useGetCategoryByIdQuery,
+  useGetSubcategoriesByCategoryIdQuery,
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,

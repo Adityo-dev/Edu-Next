@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-// কাউন্টার ডেটা স্ট্রাকচার
 const statsData = [
   { id: 1, target: 500, suffix: 'k+', label: 'Students' },
   { id: 2, target: 200, suffix: 'k+', label: 'Total Courses' },
@@ -24,8 +23,8 @@ const CounterItem = ({ target, suffix, label, shouldStart }: CounterItemProps) =
     if (!shouldStart) return;
 
     let start = 0;
-    const duration = 2000; // ২ সেকেন্ডের মধ্যে অ্যানিমেশন শেষ হবে
-    const increment = Math.ceil(target / (duration / 16)); // ~60fps ফ্রেম রেট হিসেবে
+    const duration = 2000;
+    const increment = Math.ceil(target / (duration / 16));
 
     const timer = setInterval(() => {
       start += increment;
@@ -42,7 +41,7 @@ const CounterItem = ({ target, suffix, label, shouldStart }: CounterItemProps) =
 
   return (
     <div className="flex flex-col items-center justify-center text-center">
-      <h2 className="text-primary mb-2 text-4xl font-black tracking-tight md:text-5xl">
+      <h2 className="text-primary mb-2 text-4xl font-bold tracking-tight md:text-5xl">
         {count}
         {suffix}
       </h2>

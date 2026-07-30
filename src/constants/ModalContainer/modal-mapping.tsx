@@ -6,6 +6,7 @@ import StatusManageAlert from '@/components/dashboard/StatusManageAlert/StatusMa
 import LoginRequiredModal from '@/components/shared/LoginRequiredModal/LoginRequiredModal';
 import RefundDetailsModal from '@/app/dashboard/instructor/wallet/_components/TransactionHistory/_components/RefundDetailsModal/RefundDetailsModal';
 import CreateTicketModal from '@/components/dashboard/support/CreateTicketModal';
+import CategoryFormModal from '@/app/dashboard/admin/dynamic-content/_components/CategoryManager/_components/CategoryFormModal/CategoryFormModal';
 import { TModalView } from '@/types/customModal.types';
 
 export const MODAL_COMPONENTS: Record<TModalView, React.ReactNode> = {
@@ -15,5 +16,6 @@ export const MODAL_COMPONENTS: Record<TModalView, React.ReactNode> = {
   WRITE_REVIEW: <WriteReviewModal />,
   REFUND_DETAILS: <RefundDetailsModal />,
   CREATE_TICKET: <CreateTicketModal />,
+  CATEGORY_FORM: <CategoryFormModal />,
   NONE: null,
 };
