@@ -28,7 +28,7 @@ export default function CourseCard({
         className="group dashboard-card-container flex h-full flex-col overflow-hidden rounded-sm p-4! transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-sm hover:shadow-emerald-100/40"
       >
         {/* Image */}
-        <div className="relative h-50 w-full shrink-0 overflow-hidden rounded-sm">
+        <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-sm">
           <Image
             src={course?.image}
             alt={course?.title}
