@@ -173,16 +173,10 @@ export default function CreateTicketModal() {
         <DynamicActionButton
           label="Cancel"
           variant="outline"
-          className="h-11!"
           onClick={closeModal}
           disabled={isLoading}
         />
-        <DynamicActionButton
-          type="submit"
-          label="Create Ticket"
-          isLoading={isLoading}
-          className="h-11!"
-        />
+        <DynamicActionButton type="submit" label="Create Ticket" isLoading={isLoading} />
       </div>
     </form>
   );

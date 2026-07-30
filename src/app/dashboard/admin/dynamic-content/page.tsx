@@ -1,83 +1,60 @@
 'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
+import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
+import { Button } from '@/components/ui/button';
+import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
+import { ITableFilter } from '@/types/table-filter.types';
+import { MessageSquareQuote } from 'lucide-react';
 import CategoryManager from './_components/CategoryManager/CategoryManager';
 import FaqManager from './_components/FaqManager/FaqManager';
-import { Layers, HelpCircle, MessageSquareQuote, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 
 const ContentManagementPage = () => {
+  const { getQueryObject } = useSetSearchQueryInURL();
+  const queryParams = getQueryObject();
+  const currentTab = queryParams.tab || 'categories';
+
+  const tabFilters: ITableFilter[] = [
+    {
+      type: 'tabs',
+      name: 'tab',
+      value: 'categories',
+      options: [
+        { label: 'Categories', value: 'categories' },
+        { label: 'FAQs', value: 'faqs' },
+        { label: 'Testimonials', value: 'testimonials' },
+      ],
+    },
+  ];
+
   return (
     <div className="space-y-8 pb-10">
       {/* Premium Header Section */}
-      <div className="bg-card border-border relative overflow-hidden rounded-3xl border p-8 shadow-sm sm:p-10">
-        <div className="relative z-10 flex flex-col justify-between gap-6 md:flex-row md:items-center">
-          <div>
-            <div className="mb-2 flex items-center gap-2">
-              <span className="bg-primary/10 text-primary flex items-center justify-center rounded-full p-2">
-                <Sparkles className="h-5 w-5" />
-              </span>
-              <h1 className="text-foreground text-3xl font-black tracking-tight sm:text-4xl">
-                Content Management
-              </h1>
-            </div>
-            <p className="text-muted-foreground mt-2 max-w-2xl text-base sm:text-lg">
-              Manage the dynamic core of your platform. Organize categories, update FAQs, and curate
-              student testimonials effortlessly.
-            </p>
-          </div>
-        </div>
+      <SectionHeader
+        title="Content Management"
+        description="Manage dynamic aspects of your website including categories, FAQs, and testimonials."
+      />
 
-        {/* Decorative background elements */}
-        <div className="bg-primary/10 pointer-events-none absolute -top-12 -right-12 h-64 w-64 rounded-full blur-3xl"></div>
-        <div className="bg-primary/5 pointer-events-none absolute right-32 -bottom-12 h-48 w-48 rounded-full blur-3xl"></div>
+      <div className="mb-6">
+        <DynamicTableFilterBar fields={tabFilters} />
       </div>
 
-      <Tabs defaultValue="categories" className="w-full">
-        <TabsList className="bg-muted/50 border-border/50 mb-8 grid h-14 w-full max-w-2xl grid-cols-3 rounded-2xl border p-1">
-          <TabsTrigger
-            value="categories"
-            className="data-[state=active]:bg-background data-[state=active]:text-primary flex h-12 items-center gap-2 rounded-xl font-semibold transition-all data-[state=active]:shadow-sm"
-          >
-            <Layers className="h-4 w-4" />
-            Categories
-          </TabsTrigger>
-          <TabsTrigger
-            value="faqs"
-            className="data-[state=active]:bg-background data-[state=active]:text-primary flex h-12 items-center gap-2 rounded-xl font-semibold transition-all data-[state=active]:shadow-sm"
-          >
-            <HelpCircle className="h-4 w-4" />
-            FAQs
-          </TabsTrigger>
-          <TabsTrigger
-            value="testimonials"
-            className="data-[state=active]:bg-background data-[state=active]:text-primary flex h-12 items-center gap-2 rounded-xl font-semibold transition-all data-[state=active]:shadow-sm"
-          >
-            <MessageSquareQuote className="h-4 w-4" />
-            Testimonials
-          </TabsTrigger>
-        </TabsList>
-
-        <div className="mt-4">
-          <TabsContent
-            value="categories"
-            className="animate-in fade-in-50 duration-500 focus-visible:ring-0 focus-visible:outline-none data-[state=inactive]:hidden"
-          >
+      <div>
+        {currentTab === 'categories' && (
+          <div className="animate-in fade-in-50 duration-500">
             <CategoryManager />
-          </TabsContent>
+          </div>
+        )}
 
-          <TabsContent
-            value="faqs"
-            className="animate-in fade-in-50 duration-500 focus-visible:ring-0 focus-visible:outline-none data-[state=inactive]:hidden"
-          >
+        {currentTab === 'faqs' && (
+          <div className="animate-in fade-in-50 duration-500">
             <FaqManager />
-          </TabsContent>
+          </div>
+        )}
 
-          <TabsContent
-            value="testimonials"
-            className="animate-in fade-in-50 duration-500 focus-visible:ring-0 focus-visible:outline-none data-[state=inactive]:hidden"
-          >
+        {currentTab === 'testimonials' && (
+          <div className="animate-in fade-in-50 duration-500">
             <div className="dashboard-card-container w-full">
               <div className="border-border/40 mb-5 flex flex-col justify-between gap-4 border-b pb-5 sm:flex-row sm:items-center">
                 <div>
@@ -95,9 +72,9 @@ const ContentManagementPage = () => {
                 icon={MessageSquareQuote}
               />
             </div>
-          </TabsContent>
-        </div>
-      </Tabs>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { Ban, Check, Eye, Loader2, MessageCircle, Pencil, Trash2, X } from 'lucide-react';
+import { Ban, Check, Eye, Loader2, MessageCircle, Pencil, Trash2, X, Plus } from 'lucide-react';
 import Link from 'next/link';
 
 /**
@@ -20,7 +20,15 @@ import Link from 'next/link';
  * ]} />
  */
 
-export type ActionType = 'edit' | 'delete' | 'view' | 'save' | 'close' | 'suspend' | 'message';
+export type ActionType =
+  | 'edit'
+  | 'delete'
+  | 'view'
+  | 'save'
+  | 'close'
+  | 'suspend'
+  | 'message'
+  | 'add';
 
 interface ActionItem {
   type: ActionType;
@@ -71,6 +79,11 @@ const DynamicTableActions = ({ actions }: DynamicTableActionsProps) => {
     message: {
       icon: MessageCircle,
       defaultLabel: 'Message',
+      color: '#34796f',
+    },
+    add: {
+      icon: Plus,
+      defaultLabel: 'Add',
       color: '#34796f',
     },
   };

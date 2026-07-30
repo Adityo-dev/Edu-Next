@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
+import { useGetCategoriesQuery } from '@/redux/features/categories/categoriesApi';
 import { useGetPublishedCoursesQuery } from '@/redux/features/courseManagement/publicCourse.api';
 import { LayoutGrid, List, SlidersHorizontal } from 'lucide-react';
 import { Suspense, useEffect, useState } from 'react';
@@ -19,22 +20,6 @@ import CoursesGrid from './_components/CoursesGrid/CoursesGrid';
 import CoursesHeader from './_components/CoursesHeader/CoursesHeader';
 import CoursesSidebar from './_components/CoursesSidebar/CoursesSidebar';
 import MobileFilterDrawer from './_components/MobileFilterDrawer/MobileFilterDrawer';
-
-// ─── Data
-const categories = [
-  'Web Development',
-  'UI/UX Design',
-  'Digital Marketing',
-  'Freelancing',
-  'Graphic Design',
-  'Data Analytics',
-  'Mobile App Development',
-  'Cybersecurity',
-  'Machine Learning & AI',
-  'Video Editing',
-  'Spoken English',
-  'Accounting & Finance',
-];
 
 const levels = ['Beginner', 'Intermediate', 'Advanced'];
 const languages = ['Bangla', 'English', 'Hindi'];
@@ -61,6 +46,9 @@ const levelColors: Record<string, string> = {
 
 const CoursesPageContent = () => {
   const { setMultipleQueries, searchParams } = useSetSearchQueryInURL();
+  const { data: catData } = useGetCategoriesQuery({ nested: true });
+  const dynamicCategories =
+    catData?.data?.filter((c: any) => c.isActive).map((c: any) => c.name) || [];
 
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
@@ -217,7 +205,7 @@ const CoursesPageContent = () => {
                 </div>
               ) : (
                 <CoursesSidebar
-                  categories={categories}
+                  categories={dynamicCategories}
                   levels={levels}
                   languages={languages}
                   ratings={ratings}
@@ -338,7 +326,7 @@ const CoursesPageContent = () => {
         setMobileFilterOpen={setMobileFilterOpen}
       >
         <CoursesSidebar
-          categories={categories}
+          categories={dynamicCategories}
           levels={levels}
           languages={languages}
           ratings={ratings}

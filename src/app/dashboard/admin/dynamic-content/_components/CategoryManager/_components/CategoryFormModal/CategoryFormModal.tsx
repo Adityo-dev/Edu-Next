@@ -2,10 +2,10 @@
 /* eslint-disable react-hooks/incompatible-library */
 'use client';
 
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import ImageUploadField from '@/components/dashboard/Fields/ImageUploadField/ImageUploadField';
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import TextAreaField from '@/components/dashboard/Fields/TextAreaField/TextAreaField';
-import { Button } from '@/components/ui/button';
 import { useModal } from '@/context/ModalContext';
 import {
   useCreateCategoryMutation,
@@ -146,23 +146,26 @@ const CategoryFormModal = () => {
       )}
 
       <div className="flex justify-end gap-2 pt-4">
-        <Button
+        <DynamicActionButton
+          label="Cancel"
           variant="outline"
-          type="button"
           onClick={closeModal}
           disabled={isLoading || isUploadingImage}
-        >
-          Cancel
-        </Button>
-        <Button type="submit" disabled={isLoading || isUploadingImage}>
-          {isLoading
-            ? action === 'CREATE'
-              ? 'Creating...'
-              : 'Updating...'
-            : action === 'CREATE'
-              ? 'Create'
-              : 'Update'}
-        </Button>
+        />
+        <DynamicActionButton
+          type="submit"
+          label={
+            isLoading
+              ? action === 'CREATE'
+                ? 'Creating...'
+                : 'Updating...'
+              : action === 'CREATE'
+                ? 'Create'
+                : 'Update'
+          }
+          onClick={handleSubmit(onSubmit)}
+          disabled={isLoading || isUploadingImage}
+        />
       </div>
     </form>
   );

@@ -2,9 +2,10 @@
 'use client';
 
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
+import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
+import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useModal } from '@/context/ModalContext';
 import {
@@ -12,7 +13,7 @@ import {
   useDeleteCategoryMutation,
   useGetCategoriesQuery,
 } from '@/redux/features/categories/categoriesApi';
-import { Edit2, FolderTree, LayoutGrid, Plus, Trash2, X } from 'lucide-react';
+import { FolderTree, LayoutGrid, X } from 'lucide-react';
 import { toast } from 'sonner';
 
 const CategoryManager = () => {
@@ -22,13 +23,31 @@ const CategoryManager = () => {
 
   const categories = data?.data || [];
 
-  const handleDelete = async (id: string) => {
-    try {
-      const res = await deleteCategory(id).unwrap();
-      toast.success(res?.message || 'Category deleted successfully');
-    } catch (error: any) {
-      toast.error(error?.data?.message || 'Failed to delete category');
-    }
+  const handleDeleteClick = (category: TCategory) => {
+    openModal({
+      view: 'DELETE_CONFIRM',
+      data: {
+        deleteItem: 'category',
+        title: 'Delete Category',
+        description: (
+          <>
+            Permanently delete{' '}
+            <span className="text-danger font-semibold">&quot;{category?.name}&quot;</span>? This
+            action cannot be undone.
+          </>
+        ),
+        actionLabel: 'Delete Now',
+        requireReason: false,
+        onConfirm: async () => {
+          try {
+            const res = await deleteCategory(category?._id).unwrap();
+            toast.success(res?.message || 'Category deleted successfully');
+          } catch (error: any) {
+            toast.error(error?.data?.message || 'Failed to delete category');
+          }
+        },
+      },
+    });
   };
 
   const handleOpenMainCreate = () => {
@@ -44,7 +63,7 @@ const CategoryManager = () => {
     openModal({
       view: 'CATEGORY_FORM',
       title: 'Create Subcategory',
-      description: 'Add a subcategory under the selected main category.',
+      description: 'Add a subcategory under the selected main category?.',
       data: { type: 'SUB', action: 'CREATE', parentId },
     });
   };
@@ -53,35 +72,30 @@ const CategoryManager = () => {
     openModal({
       view: 'CATEGORY_FORM',
       title: `Update ${type === 'MAIN' ? 'Main Category' : 'Subcategory'}`,
-      description: 'Modify the details of this category.',
+      description: 'Modify the details of this category?.',
       data: {
         type,
         action: 'UPDATE',
-        categoryId: category._id,
-        parentId: category.parentId,
+        categoryId: category?._id,
+        parentId: category?.parentId,
         initialData: {
-          name: category.name,
-          description: category.description || '',
-          image: category.image || '',
+          name: category?.name,
+          description: category?.description || '',
+          image: category?.image || '',
         },
       },
     });
   };
 
   return (
-    <div className="dashboard-card-container w-full">
-      <div className="border-border/40 mb-5 flex flex-col justify-between gap-4 border-b pb-5 sm:flex-row sm:items-center">
+    <div className="dashboard-card-container">
+      <div className="border-border/40 mb-5 flex flex-col justify-between gap-4 border-b pb-4 sm:flex-row sm:items-center">
         <div>
           <h2 className="text-xl font-semibold">Category Management</h2>
-          <p className="text-text-secondary mt-1 text-sm">Manage course and site categories.</p>
+          <p className="text-text-secondary text-sm">Manage course and site categories.</p>
         </div>
 
-        <DynamicActionButton
-          label="Add Main Category"
-          onClick={handleOpenMainCreate}
-          showIcon
-          className="h-11!"
-        />
+        <DynamicActionButton label="Add Main Category" onClick={handleOpenMainCreate} showIcon />
       </div>
 
       <div>
@@ -103,53 +117,49 @@ const CategoryManager = () => {
             description="You haven't created any categories yet. Add a category to organize your courses."
             icon={LayoutGrid}
             actionButton={
-              <DynamicActionButton
-                label="Add Main Category"
-                onClick={handleOpenMainCreate}
-                className="h-11!"
-              />
+              <DynamicActionButton label="Add Main Category" onClick={handleOpenMainCreate} />
             }
           />
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {categories.map((category: TCategory) => (
               <div
-                key={category._id}
-                className="group bg-card hover:bg-muted/30 border-border hover:border-primary/40 relative flex flex-col gap-4 rounded-xl border p-5 shadow-sm transition-all duration-300 hover:shadow-md"
+                key={category?._id}
+                className="dashboard-card-container group flex flex-col gap-3"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm">
+                    <div className="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-md">
                       <LayoutGrid className="h-5 w-5" />
                     </div>
                     <div>
                       <h3 className="mb-0.5 text-base leading-tight font-semibold">
-                        {category.name}
+                        {category?.name}
                       </h3>
                       <p className="text-text-secondary text-xs">
-                        {category.subCategories?.length || 0} Subcategories
+                        {category?.subCategories?.length || 0} Subcategories
                       </p>
                     </div>
                   </div>
                 </div>
 
                 {/* Render subcategories if they exist */}
-                {category.subCategories && category.subCategories.length > 0 && (
+                {category?.subCategories && category?.subCategories.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {category.subCategories.map((sub: TCategory) => (
+                    {category?.subCategories.map((sub: TCategory) => (
                       <div
-                        key={sub._id}
-                        className="bg-primary/5 border-primary/20 text-primary/80 flex cursor-pointer items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium"
+                        key={sub?._id}
+                        className="bg-primary/5 border-primary/20 text-primary/80 flex cursor-pointer items-center gap-1.5 rounded-xs border px-2.5 py-1 text-xs font-medium"
                         onClick={() => handleOpenUpdate(sub, 'SUB')}
                       >
                         <FolderTree className="h-3 w-3" />
-                        {sub.name}
+                        {sub?.name}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleDelete(sub._id);
+                            handleDeleteClick(sub);
                           }}
-                          className="hover:text-destructive text-muted-foreground ml-1 transition-colors"
+                          className="text-danger/80 hover:text-danger ml-1 cursor-pointer transition-colors duration-300"
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -158,47 +168,27 @@ const CategoryManager = () => {
                   </div>
                 )}
 
-                <div className="border-border/40 mt-auto flex items-center justify-between border-t pt-4">
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase ${
-                      category.isActive
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400'
-                        : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400'
-                    }`}
-                  >
-                    {category.isActive ? 'Active' : 'Inactive'}
-                  </span>
+                <div className="border-border/40 mt-auto flex items-center justify-between border-t pt-2">
+                  <DynamicBadge text={category?.isActive ? 'Active' : 'Inactive'} />
 
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8 text-xs font-medium"
-                      onClick={() => handleOpenSubCreate(category._id)}
-                    >
-                      <Plus className="mr-1 h-3.5 w-3.5" />
-                      Add Sub
-                    </Button>
-                    <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                      <Button
-                        variant="secondary"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => handleOpenUpdate(category, 'MAIN')}
-                      >
-                        <Edit2 className="h-3.5 w-3.5" />
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => handleDelete(category._id)}
-                        disabled={isDeleting}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
-                  </div>
+                  <DynamicTableActions
+                    actions={[
+                      {
+                        type: 'add',
+                        label: 'Add Sub',
+                        onClick: () => handleOpenSubCreate(category?._id),
+                      },
+                      {
+                        type: 'edit',
+                        onClick: () => handleOpenUpdate(category, 'MAIN'),
+                      },
+                      {
+                        type: 'delete',
+                        onClick: () => handleDeleteClick(category),
+                        isLoading: isDeleting,
+                      },
+                    ]}
+                  />
                 </div>
               </div>
             ))}

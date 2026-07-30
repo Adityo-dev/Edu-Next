@@ -12,13 +12,7 @@ const CoursesHeader = () => {
         description="Track your learning progress and continue where you left off."
       />
 
-      <DynamicActionButton
-        label="Browse More Courses"
-        href="/courses"
-        showIcon
-        icon={BookOpen}
-        className="h-11!"
-      />
+      <DynamicActionButton label="Browse More Courses" href="/courses" showIcon icon={BookOpen} />
     </div>
   );
 };

@@ -59,7 +59,7 @@ const LeaveReview = () => {
                   title: `Write Review for ${course?.title}`,
                 })
               }
-              className="h-11! w-full sm:w-auto"
+              className="w-full sm:w-auto"
             />
           </div>
         </div>

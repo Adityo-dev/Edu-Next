@@ -34,9 +34,7 @@ const NavbarAuthSection = () => {
   };
 
   if (!isAuthenticated || !user) {
-    return (
-      <DynamicActionButton label="Sign In" href="/login" className="hidden sm:h-11! lg:block" />
-    );
+    return <DynamicActionButton label="Sign In" href="/login" className="hidden lg:block" />;
   }
 
   const dashboardPath = ROLE_DASHBOARD_PATH[user?.role] ?? '/';

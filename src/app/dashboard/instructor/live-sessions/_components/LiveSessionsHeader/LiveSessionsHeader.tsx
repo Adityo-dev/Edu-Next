@@ -9,7 +9,6 @@ const LiveSessionsHeader = () => {
         label="Schedule Session"
         showIcon
         href="/dashboard/instructor/live-sessions/create"
-        className="h-11!"
       />
     </div>
   );

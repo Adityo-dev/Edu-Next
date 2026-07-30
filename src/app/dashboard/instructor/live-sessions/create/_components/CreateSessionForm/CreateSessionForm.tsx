@@ -186,17 +186,11 @@ const CreateSessionForm = () => {
 
         {/* Action Buttons */}
         <div className="mt-5 flex gap-3">
-          <DynamicActionButton
-            type="submit"
-            label="Schedule Session"
-            isLoading={isScheduling}
-            className="h-11!"
-          />
+          <DynamicActionButton type="submit" label="Schedule Session" isLoading={isScheduling} />
           <DynamicActionButton
             variant="outline"
             label="Cancel Form"
             type="button"
-            className="h-11!"
             disabled={isScheduling}
             onClick={() => router.push('/dashboard/instructor/live-sessions')}
           />

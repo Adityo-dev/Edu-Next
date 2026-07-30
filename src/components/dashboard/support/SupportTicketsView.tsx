@@ -297,7 +297,6 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                         })
                       }
                       showIcon
-                      className="h-11!"
                     />
                   }
                 />
@@ -544,7 +543,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
                         label="Send"
                         type="submit"
                         disabled={isReplying || !replyValue?.trim()}
-                        className="mb-2 h-11!"
+                        className="mb-2"
                       />
                     </form>
                   </div>

@@ -62,7 +62,7 @@ const DynamicTableFilterBar = ({
       <div className="flex flex-wrap items-center gap-3">
         {filterFields.map((field) => {
           const paramName = field.name.replace('-filter', '');
-          const currentFieldValue = queryParams[paramName] || 'all';
+          const currentFieldValue = queryParams[paramName] || field.value || 'all';
 
           // Tabs Filter
           if ((field.type as string) === 'tabs' && field.options) {
