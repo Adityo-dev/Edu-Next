@@ -63,6 +63,7 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
     title: '',
     subtitle: '',
     category: '',
+    subCategory: '',
     level: '',
     language: '',
     hasCertificate: false,
@@ -175,6 +176,7 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
   const watchedTitle = watch('title');
   const watchedThumbnail = watch('thumbnail');
   const watchedCategory = watch('category');
+  const watchedSubCategory = watch('subCategory');
   const watchedLevel = watch('level');
   const watchedSections = watch('sections');
   const watchedTags = watch('tags');
@@ -216,6 +218,7 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
           : parseFloat(data.price),
         thumbnail: data.thumbnail,
         category: data.category,
+        subCategory: data.subCategory,
         level: data.level,
         language: data.language,
         tags: data.tags,
@@ -313,6 +316,7 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
             control={control}
             errors={errors}
             watchedThumbnail={watchedThumbnail}
+            watchedCategory={watchedCategory}
             isUploading={isUploading}
             handleThumbnailChange={handleThumbnailChange}
           />
@@ -344,6 +348,7 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
             watchedThumbnail={watchedThumbnail}
             watchedTitle={watchedTitle}
             watchedCategory={watchedCategory}
+            watchedSubCategory={watchedSubCategory}
             watchedLevel={watchedLevel}
             watchedTags={watchedTags}
             watchedRequirements={watchedRequirements}

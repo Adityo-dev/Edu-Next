@@ -1,10 +1,14 @@
 /* eslint-disable no-unused-vars */
+import { useMemo } from 'react';
 import { Control, FieldErrors, useController } from 'react-hook-form';
+
 import { CATEGORY_OPTIONS, CourseFormValues, LANGUAGE_OPTIONS, LEVEL_OPTIONS } from '../schema';
+import { useGetCategoriesQuery } from '@/redux/features/categories/categoriesApi';
 
 import ImageUploadField from '@/components/dashboard/Fields/ImageUploadField/ImageUploadField';
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import KeywordInputField from '@/components/dashboard/Fields/KeywordInputField/KeywordInputField';
+import SearchableSelect from '@/components/dashboard/Fields/SearchableSelect/SearchableSelect';
 import SelectField from '@/components/dashboard/Fields/SelectField/SelectField';
 import TiptapEditor from '@/components/dashboard/Fields/TiptapEditor/TiptapEditor';
 import { Label } from '@/components/ui/label';
@@ -13,6 +17,7 @@ interface Step1BasicInfoProps {
   control: Control<CourseFormValues>;
   errors: FieldErrors<CourseFormValues>;
   watchedThumbnail?: string;
+  watchedCategory?: string;
   isUploading: boolean;
   handleThumbnailChange: (file: File | null) => Promise<void>;
 }
@@ -21,15 +26,41 @@ const Step1BasicInfo = ({
   control,
   errors,
   watchedThumbnail,
+  watchedCategory,
   isUploading,
   handleThumbnailChange,
 }: Step1BasicInfoProps) => {
+  const { data: categoriesData, isLoading: isLoadingCategories } = useGetCategoriesQuery({
+    nested: true,
+  });
   const {
     field: { value: hasCertificate, onChange: onHasCertificateChange },
   } = useController({
     control,
     name: 'hasCertificate',
   });
+
+  const activeCategories = useMemo(() => {
+    return categoriesData?.data?.filter((cat) => cat.isActive) || [];
+  }, [categoriesData]);
+
+  const categoryOptions = useMemo(() => {
+    if (activeCategories.length === 0) return CATEGORY_OPTIONS;
+    // We use name as the value to be compatible with existing code which expects the category name
+    return activeCategories.map((cat) => ({ value: cat.name, label: cat.name }));
+  }, [activeCategories]);
+
+  const subCategoryOptions = useMemo(() => {
+    if (!watchedCategory) return [];
+    const selectedCategory = activeCategories.find(
+      (cat) => cat._id === watchedCategory || cat.name === watchedCategory,
+    );
+    if (!selectedCategory || !selectedCategory.subCategories) return [];
+
+    return selectedCategory.subCategories
+      .filter((sub) => sub.isActive)
+      .map((sub) => ({ value: sub.name, label: sub.name }));
+  }, [watchedCategory, activeCategories]);
 
   return (
     <div className="space-y-4">
@@ -68,14 +99,30 @@ const Step1BasicInfo = ({
           />
         </div>
 
-        <SelectField
+        <SearchableSelect
           label="Category"
           name="category"
           control={control}
-          options={CATEGORY_OPTIONS}
-          placeholder="Select category"
+          options={categoryOptions}
+          placeholder={isLoadingCategories ? 'Loading categories...' : 'Search & select category'}
           required
+          isSingle={true}
           error={errors.category?.message}
+        />
+
+        <SearchableSelect
+          label="Subcategory"
+          name="subCategory"
+          control={control}
+          options={subCategoryOptions}
+          placeholder={
+            subCategoryOptions.length === 0 && watchedCategory
+              ? 'No subcategories available'
+              : 'Search & select subcategory'
+          }
+          isSingle={true}
+          disabled={subCategoryOptions.length === 0}
+          error={errors.subCategory?.message}
         />
 
         <SelectField
@@ -126,8 +173,8 @@ const Step1BasicInfo = ({
 
         <div className="sm:col-span-2">
           <KeywordInputField
-            label="Tags"
-            placeholder="e.g. nextjs, react"
+            label="Search Tags"
+            placeholder="Type a relevant keyword and press Enter"
             required
             control={control}
             name="tags"

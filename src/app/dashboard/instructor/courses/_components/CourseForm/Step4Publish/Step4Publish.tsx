@@ -4,6 +4,7 @@ interface Step4PublishProps {
   watchedThumbnail?: string;
   watchedTitle?: string;
   watchedCategory?: string;
+  watchedSubCategory?: string;
   watchedLevel?: string;
   watchedTags?: string[];
   watchedRequirements?: string;
@@ -16,6 +17,7 @@ const Step4Publish = ({
   watchedThumbnail,
   watchedTitle,
   watchedCategory,
+  watchedSubCategory,
   watchedLevel,
   watchedTags,
   watchedRequirements,
@@ -38,6 +40,11 @@ const Step4Publish = ({
             label: 'Category',
             value: watchedCategory || 'Not set',
             done: !!watchedCategory,
+          },
+          {
+            label: 'Subcategory',
+            value: watchedSubCategory || 'Not set',
+            done: true, // Optional field, so consider it done always
           },
           { label: 'Level', value: watchedLevel || 'Not set', done: !!watchedLevel },
           {

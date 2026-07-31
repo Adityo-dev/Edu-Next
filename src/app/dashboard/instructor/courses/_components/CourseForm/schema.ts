@@ -30,6 +30,7 @@ export const courseSchema = z.object({
   title: z.string().min(3, 'Course title must be at least 3 characters'),
   subtitle: z.string().min(5, 'Subtitle must be at least 5 characters'),
   category: z.string().min(1, 'Please select a category'),
+  subCategory: z.string().optional(),
   level: z.string().min(1, 'Please select a level'),
   language: z.string().min(1, 'Please select a language'),
   hasCertificate: z.boolean(),
@@ -57,6 +58,7 @@ export type CourseFormValues = z.infer<typeof courseSchema>;
 export const STEPS = ['Basic Info', 'Curriculum', 'Pricing', 'Publish'] as const;
 export const LAST_STEP_INDEX = STEPS.length - 1;
 
+// Categories will be fetched dynamically, but keeping this for fallback if needed
 export const CATEGORY_OPTIONS = [
   'Web Development',
   'UI/UX Design',
@@ -87,6 +89,7 @@ export const STEP_FIELDS: Record<number, (keyof CourseFormValues)[]> = {
     'title',
     'subtitle',
     'category',
+    'subCategory',
     'level',
     'language',
     'hasCertificate',

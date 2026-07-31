@@ -50,7 +50,7 @@ const SelectField = <T extends FieldValues>({
         <SelectTrigger
           className={cn(
             'text-primary w-full rounded-sm border p-3 py-6 text-sm shadow-none transition-all outline-none',
-            'focus:border-primary focus:ring-emerald-100 focus:ring-offset-0 focus-visible:ring-2 focus-visible:ring-emerald-100 focus-visible:ring-offset-0',
+            'focus:ring-emerald-100 focus:ring-offset-0 focus-visible:ring-2 focus-visible:ring-emerald-100 focus-visible:ring-offset-0',
             {
               'cursor-default bg-[#F9FAFB] opacity-60': readOnly,
               'bg-[#F9FAFB] focus:bg-white': !readOnly,
