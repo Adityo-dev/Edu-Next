@@ -62,7 +62,7 @@ const ReviewsList = () => {
                 ? `${review.student.firstName} ${review.student.lastName}`
                 : 'Unknown Student';
             const avatarSrc =
-              review.student && typeof review.student !== 'string'
+              review.student && typeof review.student !== 'string' && review.student.avatar
                 ? review.student.avatar
                 : '/fallback-avatar.png';
 
