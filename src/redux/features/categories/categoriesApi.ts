@@ -8,6 +8,7 @@ export interface TCategory {
   description?: string;
   image?: string;
   isActive: boolean;
+  order?: number;
   parentId?: string | null;
   subCategories?: TCategory[];
   createdAt: string;
@@ -56,6 +57,13 @@ export interface TUpdateCategoryPayload {
   image?: string;
   isActive?: boolean;
   parentId?: string | null;
+}
+
+export interface TReorderCategoriesPayload {
+  categories: {
+    id: string;
+    order: number;
+  }[];
 }
 
 export const categoriesApi = apiClient.injectEndpoints({
@@ -132,6 +140,16 @@ export const categoriesApi = apiClient.injectEndpoints({
       }),
       invalidatesTags: ['Categories', 'Subcategories'],
     }),
+
+    // PUT /categories/reorder
+    reorderCategories: builder.mutation<TMutationResponse, TReorderCategoriesPayload>({
+      query: (body) => ({
+        url: '/categories/reorder',
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: ['Categories', 'Subcategories'],
+    }),
   }),
 });
 
@@ -142,4 +160,5 @@ export const {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
+  useReorderCategoriesMutation,
 } = categoriesApi;
