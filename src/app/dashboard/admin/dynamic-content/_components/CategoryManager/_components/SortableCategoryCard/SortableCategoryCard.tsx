@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
-import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
 import { TCategory } from '@/redux/features/categories/categoriesApi';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { FolderTree, GripVertical, LayoutGrid, X } from 'lucide-react';
+import { GripVertical, LayoutGrid, FolderEdit } from 'lucide-react';
+import { useModal } from '@/context/ModalContext';
 
 const SortableCategoryCard = ({
   category,
@@ -22,6 +22,7 @@ const SortableCategoryCard = ({
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: category._id,
   });
+  const { openModal } = useModal();
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -56,36 +57,38 @@ const SortableCategoryCard = ({
             </p>
           </div>
         </div>
+        {/* <DynamicBadge text={category?.isActive ? 'Active' : 'Inactive'} /> */}
       </div>
 
-      {/* Render subcategories if they exist */}
-      {category?.subCategories && category?.subCategories.length > 0 && (
-        <div className="mt-2 flex flex-wrap gap-2">
-          {category?.subCategories.map((sub: TCategory) => (
-            <div
-              key={sub?._id}
-              className="bg-primary/5 border-primary/20 text-primary/80 flex cursor-pointer items-center gap-1.5 rounded-xs border px-2.5 py-1 text-xs font-medium"
-              onClick={() => handleOpenUpdate(sub, 'SUB')}
-            >
-              <FolderTree className="h-3 w-3" />
-              {sub?.name}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteClick(sub);
-                }}
-                className="text-danger/80 hover:text-danger ml-1 cursor-pointer transition-colors duration-300"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </div>
-          ))}
+      {/* Subcategory Management Button */}
+      <button
+        className="hover:border-primary/30 hover:bg-primary/5 hover:text-primary mt-2 flex w-full items-center justify-between rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-600 transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          openModal({
+            view: 'SUBCATEGORY_MANAGEMENT',
+            layout: 'DRAWER',
+            title: `Manage ${category?.name} Subcategories`,
+            description: 'View, add, edit, or remove subcategories.',
+            data: {
+              category,
+              handleOpenUpdate,
+              handleDeleteClick,
+              handleOpenSubCreate,
+            },
+          });
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <FolderEdit className="h-4 w-4" />
+          <span>Manage Subcategories</span>
         </div>
-      )}
+        <span className="flex h-5 items-center justify-center rounded-full bg-slate-200 px-2 text-xs font-semibold text-slate-600">
+          {category?.subCategories?.length || 0}
+        </span>
+      </button>
 
-      <div className="border-border/40 mt-auto flex items-center justify-between border-t pt-2">
-        <DynamicBadge text={category?.isActive ? 'Active' : 'Inactive'} />
-
+      <div className="border-border/40 mt-auto flex items-center justify-end border-t pt-2">
         <DynamicTableActions
           actions={[
             {

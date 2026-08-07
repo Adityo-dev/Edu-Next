@@ -15,6 +15,7 @@ const initialState: IModalState = {
   data: null,
   title: '',
   description: '',
+  layout: 'MODAL',
 };
 
 //Create Reducer function
@@ -29,6 +30,7 @@ const modalReducer = (state: IModalState, action: TModalAction): IModalState => 
         data: action.payload.data || null,
         title: action.payload.title || '',
         description: action.payload.description || '',
+        layout: action.payload.layout || 'MODAL',
       };
     case 'CLOSE_MODAL':
       return initialState;

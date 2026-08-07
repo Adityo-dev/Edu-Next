@@ -10,6 +10,7 @@ export type TModalView =
   | 'REFUND_DETAILS'
   | 'CREATE_TICKET'
   | 'CATEGORY_FORM'
+  | 'SUBCATEGORY_MANAGEMENT'
   | 'NONE';
 
 //Open Modal Props
@@ -18,6 +19,7 @@ export interface IOpenModalProps {
   data?: any;
   title?: string;
   description?: string;
+  layout?: 'MODAL' | 'DRAWER';
 }
 
 //Modal state interface
@@ -27,6 +29,7 @@ export interface IModalState {
   data: any;
   title: string;
   description: string;
+  layout: 'MODAL' | 'DRAWER';
 }
 
 //Action types
