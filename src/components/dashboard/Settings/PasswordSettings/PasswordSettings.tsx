@@ -4,10 +4,11 @@
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import { useChangePasswordMutation } from '@/redux/features/settings/profileManagement/profileManagement.api';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { RefreshCw, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import DynamicActionButton from '../../DynamicActionButton/DynamicActionButton';
 
 const passwordSchema = z
   .object({
@@ -27,7 +28,12 @@ const PasswordSettings = () => {
   const [apiError, setApiError] = useState<string | null>(null);
   const [apiSuccess, setApiSuccess] = useState<string | null>(null);
 
-  const { control, handleSubmit, reset } = useForm<PasswordFormData>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema),
     defaultValues: {
       oldPassword: '',
@@ -79,6 +85,7 @@ const PasswordSettings = () => {
           type="password"
           control={control}
           placeholder="Enter your current password"
+          error={errors.oldPassword?.message}
           required
         />
 
@@ -88,6 +95,7 @@ const PasswordSettings = () => {
           type="password"
           control={control}
           placeholder="Enter your new password"
+          error={errors.newPassword?.message}
           required
         />
 
@@ -97,17 +105,17 @@ const PasswordSettings = () => {
           type="password"
           control={control}
           placeholder="Enter your new password again"
+          error={errors.confirmPassword?.message}
           required
         />
 
-        <button
+        <DynamicActionButton
           type="submit"
           disabled={isLoading}
-          className="bg-primary mt-2 flex items-center gap-2 rounded-sm px-6 py-3 text-sm font-bold text-white transition-all hover:bg-[#2a6159] disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isLoading ? <RefreshCw size={15} className="animate-spin" /> : <Save size={15} />}
-          {isLoading ? 'Updating...' : 'Update Password'}
-        </button>
+          label={isLoading ? 'Updating...' : 'Update Password'}
+          showIcon
+          icon={Save}
+        />
       </form>
     </div>
   );

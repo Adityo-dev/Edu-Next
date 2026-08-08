@@ -85,7 +85,8 @@ const InputField = <T extends FieldValues>({
             'text-primary',
             `${isPickerField ? 'cursor-pointer' : ''}`,
             {
-              'cursor-default bg-[#F9FAFB] opacity-60 focus-visible:border-[#F5F2F0]': readOnly,
+              'text-text-primary cursor-default bg-[#F9FAFB] opacity-60 focus-visible:border-[#F5F2F0]':
+                readOnly,
               'bg-[#F9FAFB]': !readOnly,
               'border-danger/50 focus-visible:border-danger focus-visible:ring-danger/10': error,
               'border-primary/10': !error,
