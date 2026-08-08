@@ -18,6 +18,8 @@ import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
 
 import { getSocket } from '@/lib/socket';
+import { useCurrentUser } from '@/redux/features/auth/authSlice';
+import { useAppSelector } from '@/redux/hooks';
 import {
   notificationsApi,
   useClearAllNotificationsMutation,
@@ -71,6 +73,7 @@ const Notifications = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const dispatch = useDispatch();
+  const user = useAppSelector(useCurrentUser);
 
   const { data, isLoading } = useGetNotificationsQuery({
     page,
@@ -95,19 +98,22 @@ const Notifications = () => {
     const setupSocket = async () => {
       socketInstance = await getSocket();
       if (socketInstance && isMounted) {
+        // Join the specific user socket room
+        if (user?._id) {
+          socketInstance.emit('joinUserRoom', user._id);
+        }
+
         const handleNewNotification = (newNotif: any) => {
           // Invalidate cache to refetch
           dispatch(notificationsApi.util.invalidateTags(['Notifications']));
           toast.success(newNotif?.title || 'New Notification Received');
         };
 
-        // Listen for new notifications (we assume 'new_notification' as fallback)
-        socketInstance.on('new_notification', handleNewNotification);
-        socketInstance.on('notification:new', handleNewNotification);
+        // Listen for new notifications
+        socketInstance.on('newNotification', handleNewNotification);
 
         return () => {
-          socketInstance.off('new_notification', handleNewNotification);
-          socketInstance.off('notification:new', handleNewNotification);
+          socketInstance.off('newNotification', handleNewNotification);
         };
       }
     };
@@ -117,7 +123,7 @@ const Notifications = () => {
     return () => {
       isMounted = false;
     };
-  }, [dispatch]);
+  }, [dispatch, user?._id]);
 
   const handleMarkAllRead = async () => {
     try {
