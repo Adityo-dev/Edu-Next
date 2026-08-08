@@ -46,6 +46,7 @@ export interface ICourse {
   estimatedPrice: number;
   thumbnail: string;
   category: string;
+  subCategory?: string;
   level: TCourseLevel;
   language: TCourseLanguage;
   tags: string[];
@@ -74,6 +75,7 @@ export interface ICourseListItem {
   slug: string;
   thumbnail: string;
   category: string;
+  subCategory?: string;
   level: TCourseLevel;
   language: TCourseLanguage;
   rating: number;
