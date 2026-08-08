@@ -48,5 +48,6 @@ export const apiClient = createApi({
     'Categories',
     'Subcategories',
     'Tickets',
+    'Notifications',
   ],
 });
