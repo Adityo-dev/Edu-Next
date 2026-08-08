@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import {
@@ -13,15 +12,10 @@ import {
   Trash2,
   Users,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { getSocket } from '@/lib/socket';
-import { useCurrentUser } from '@/redux/features/auth/authSlice';
-import { useAppSelector } from '@/redux/hooks';
 import {
-  notificationsApi,
   useClearAllNotificationsMutation,
   useDeleteNotificationMutation,
   useGetNotificationsQuery,
@@ -72,8 +66,6 @@ export const formatTimeAgo = (dateString: string) => {
 const Notifications = () => {
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
-  const dispatch = useDispatch();
-  const user = useAppSelector(useCurrentUser);
 
   const { data, isLoading } = useGetNotificationsQuery({
     page,
@@ -89,41 +81,6 @@ const Notifications = () => {
   const notificationsData = data?.data;
   const notifications = notificationsData?.notifications || [];
   const unreadCount = notificationsData?.unreadCount || 0;
-
-  // Socket.io Real-time Integration
-  useEffect(() => {
-    let socketInstance: any = null;
-    let isMounted = true;
-
-    const setupSocket = async () => {
-      socketInstance = await getSocket();
-      if (socketInstance && isMounted) {
-        // Join the specific user socket room
-        if (user?._id) {
-          socketInstance.emit('joinUserRoom', user._id);
-        }
-
-        const handleNewNotification = (newNotif: any) => {
-          // Invalidate cache to refetch
-          dispatch(notificationsApi.util.invalidateTags(['Notifications']));
-          toast.success(newNotif?.title || 'New Notification Received');
-        };
-
-        // Listen for new notifications
-        socketInstance.on('newNotification', handleNewNotification);
-
-        return () => {
-          socketInstance.off('newNotification', handleNewNotification);
-        };
-      }
-    };
-
-    setupSocket();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [dispatch, user?._id]);
 
   const handleMarkAllRead = async () => {
     try {

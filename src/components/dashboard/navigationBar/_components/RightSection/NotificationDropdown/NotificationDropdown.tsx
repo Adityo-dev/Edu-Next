@@ -9,16 +9,77 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useGetNotificationsQuery } from '@/redux/features/notifications/notificationsApi';
+import {
+  useGetNotificationsQuery,
+  notificationsApi,
+} from '@/redux/features/notifications/notificationsApi';
 import { INotification } from '@/types/notifications.types';
 import { Bell, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { toast } from 'sonner';
+import { getSocket } from '@/lib/socket';
+import { useCurrentUser } from '@/redux/features/auth/authSlice';
+import { useAppSelector } from '@/redux/hooks';
 import { formatTimeAgo, getNotificationStyle } from '../../../../Notifications/Notifications';
 
 export default function NotificationDropdown({ role }: { role: string }) {
   const { data } = useGetNotificationsQuery({ limit: 5 });
   const unreadCount = data?.data?.unreadCount || 0;
   const notifications = data?.data?.notifications || [];
+
+  const dispatch = useDispatch();
+  const user = useAppSelector(useCurrentUser);
+  // Global Socket Listener for Real-time Notifications
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let socketInstance: any = null;
+    let isMounted = true;
+
+    const setupSocket = async () => {
+      socketInstance = await getSocket();
+      if (socketInstance && isMounted) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const userId = user?._id || (user as any)?.id;
+
+        // Function to join room
+        const joinRoom = () => {
+          if (userId) {
+            socketInstance.emit('joinUserRoom', userId);
+          }
+        };
+
+        // If already connected, join immediately
+        if (socketInstance.connected) {
+          joinRoom();
+        }
+
+        // Always join on connect/reconnect
+        socketInstance.on('connect', joinRoom);
+
+        const handleNewNotification = (newNotif: INotification) => {
+          // Invalidate cache to refetch
+          dispatch(notificationsApi.util.invalidateTags(['Notifications']));
+          toast.success(newNotif?.title || 'New Notification Received');
+        };
+
+        // Listen for new notifications
+        socketInstance.on('newNotification', handleNewNotification);
+
+        return () => {
+          socketInstance.off('connect', joinRoom);
+          socketInstance.off('newNotification', handleNewNotification);
+        };
+      }
+    };
+
+    setupSocket();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [dispatch, user]);
 
   return (
     <DropdownMenu>

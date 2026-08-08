@@ -3,40 +3,48 @@ const SOCKET_URL =
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let socket: any = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let socketPromise: Promise<any> | null = null;
 
 export const initSocket = async () => {
   if (typeof window === 'undefined') return null;
 
-  if (!socket) {
-    try {
-      const { getValidToken } = await import('@/services/root/handleToken');
-      const token = await getValidToken();
+  if (socket) return socket;
 
-      const { io } = await import('socket.io-client');
-      socket = io(SOCKET_URL, {
-        transports: ['websocket'],
-        autoConnect: true,
-        auth: { token },
-      });
+  if (!socketPromise) {
+    socketPromise = (async () => {
+      try {
+        const { getValidToken } = await import('@/services/root/handleToken');
+        const token = await getValidToken();
 
-      socket.on('connect', () => {
-        console.log('Socket connected:', socket.id);
-      });
+        const { io } = await import('socket.io-client');
+        socket = io(SOCKET_URL, {
+          transports: ['websocket'],
+          autoConnect: true,
+          auth: { token },
+        });
 
-      socket.on('disconnect', () => {
-        console.log('Socket disconnected');
-      });
-    } catch (e) {
-      console.error('Socket initialization failed', e);
-    }
+        socket.on('connect', () => {
+          // Socket connected successfully
+        });
+
+        socket.on('disconnect', () => {
+          // Socket disconnected
+        });
+
+        return socket;
+      } catch (e) {
+        console.error('Socket initialization failed', e);
+        socketPromise = null;
+        return null;
+      }
+    })();
   }
-  return socket;
+
+  return socketPromise;
 };
 
 export const getSocket = async () => {
   if (typeof window === 'undefined') return null;
-  if (!socket) {
-    return await initSocket();
-  }
-  return socket;
+  return await initSocket();
 };
