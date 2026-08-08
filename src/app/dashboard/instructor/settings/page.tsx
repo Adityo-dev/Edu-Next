@@ -1,11 +1,12 @@
 'use client';
 
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import PasswordSettings from '@/components/dashboard/Settings/PasswordSettings/PasswordSettings';
 import { Lock, Shield, User, Video } from 'lucide-react';
 import { useState } from 'react';
 import NotificationSettings from './_components/NotificationSettings/NotificationSettings';
 import PrivacySettings from './_components/PrivacySettings/PrivacySettings';
-import ProfileSettings from './_components/ProfileSettings/ProfileSettings';
+import InstructorProfileSettings from './_components/InstructorProfileSettings/InstructorProfileSettings';
 import SettingsSidebar from './_components/SettingsSidebar/SettingsSidebar';
 
 const InstructorSettingsPage = () => {
@@ -28,14 +29,12 @@ const InstructorSettingsPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
-      <div className="mx-auto space-y-6">
-        <div>
-          <h1 className="text-text-primary text-2xl font-black">Settings</h1>
-          <p className="text-text-secondary mt-1 text-sm">
-            Manage your instructor profile, security, and notification preferences.
-          </p>
-        </div>
+    <section>
+      <div className="mx-auto space-y-5">
+        <SectionHeader
+          title="Settings"
+          description=" Manage your instructor profile, security, and notification preferences."
+        />
 
         <div className="flex flex-col gap-6 lg:flex-row">
           {/* Sidebar */}
@@ -43,7 +42,7 @@ const InstructorSettingsPage = () => {
 
           {/* Content */}
           <div className="flex-1 rounded-md border border-slate-100 bg-white p-6 shadow-xs">
-            {activeTab === 'profile' && <ProfileSettings />}
+            {activeTab === 'profile' && <InstructorProfileSettings />}
 
             {activeTab === 'password' && <PasswordSettings />}
 
@@ -58,7 +57,7 @@ const InstructorSettingsPage = () => {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

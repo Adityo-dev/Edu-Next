@@ -16,6 +16,7 @@ import DynamicActionButton from '@/components/dashboard/DynamicActionButton/Dyna
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import SearchableSelect from '@/components/dashboard/Fields/SearchableSelect/SearchableSelect';
 import TextAreaField from '@/components/dashboard/Fields/TextAreaField/TextAreaField';
+import InstructorProfileSkeleton from '@/components/dashboard/Skeletons/Instructor/InstructorProfileSkeleton';
 
 interface IBadgeRequest {
   requestedBadge: string;
@@ -69,7 +70,7 @@ const AVAILABLE_EXPERTISES = [
   { value: 'Machine Learning & AI', label: 'Machine Learning & AI' },
 ];
 
-const ProfileSettings = ({}: ProfileSettingsProps) => {
+const InstructorProfileSettings = ({}: ProfileSettingsProps) => {
   const { data: profileData, isLoading: isProfileLoading } = useGetProfileQuery();
   const [updateProfile, { isLoading: isUpdating }] = useUpdateProfileMutation();
   const [uploadImage, { isLoading: isUploading }] = useUploadImageMutation();
@@ -201,11 +202,7 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
   };
 
   if (isProfileLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center gap-2 text-sm text-slate-500">
-        <Loader2 className="text-primary animate-spin" size={20} /> Loading profile content...
-      </div>
-    );
+    return <InstructorProfileSkeleton />;
   }
 
   const getBadgeStyles = (badge: string) => {
@@ -414,4 +411,4 @@ const ProfileSettings = ({}: ProfileSettingsProps) => {
   );
 };
 
-export default ProfileSettings;
+export default InstructorProfileSettings;
