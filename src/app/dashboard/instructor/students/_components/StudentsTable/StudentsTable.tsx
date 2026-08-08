@@ -14,12 +14,12 @@ import {
 } from '@/redux/features/courseManagement/instructorCourse.api';
 import { IInstructorStudent } from '@/types/courseManagement.types';
 
+import DynamicUserAvatar from '@/components/shared/DynamicUserAvatar/DynamicUserAvatar';
 import { Progress } from '@/components/ui/progress';
 import { TColumn } from '@/types/custom-table.types';
 import { ITableFilter } from '@/types/table-filter.types';
 import { GetRelativeTime } from '@/utils/formatDateTime';
 import { Star, Users } from 'lucide-react';
-import Image from 'next/image';
 import { useMemo } from 'react';
 
 const InstructorStudentsPage = () => {
@@ -59,14 +59,7 @@ const InstructorStudentsPage = () => {
       header: 'STUDENT',
       cell: (row) => (
         <div className="flex items-center gap-3 py-1">
-          <div className="border-primary relative h-9 w-9 shrink-0 overflow-hidden rounded-full border-2">
-            <Image
-              src={row?.student?.avatar || 'https://placeholder.com/150'}
-              alt={row?.student?.name}
-              fill
-              className="object-cover"
-            />
-          </div>
+          <DynamicUserAvatar src={row?.student?.avatar} alt={row?.student?.name} size={36} />
           <div className="flex flex-col">
             <span className="text-text-primary text-sm font-semibold">{row?.student?.name}</span>
             <span className="text-text-secondary text-xs">{row?.student?.email}</span>

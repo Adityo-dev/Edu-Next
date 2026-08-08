@@ -6,7 +6,7 @@ import DynamicTableActions from '@/components/dashboard/DynamicTableActions/Dyna
 import { IReview } from '@/types/review.types';
 import { FormatDateTime } from '@/utils/formatDateTime';
 import { ShieldAlert, Star } from 'lucide-react';
-import Image from 'next/image';
+import DynamicUserAvatar from '@/components/shared/DynamicUserAvatar/DynamicUserAvatar';
 
 interface ActionItem {
   type: 'save' | 'suspend' | 'delete' | 'view' | 'edit' | 'message';
@@ -86,13 +86,7 @@ const ReviewCard = ({
       }`}
     >
       <div className="flex gap-4">
-        <Image
-          src={avatarSrc}
-          alt={studentName}
-          width={44}
-          height={44}
-          className="h-11 w-11 shrink-0 rounded-full border-2 border-slate-100 object-cover"
-        />
+        <DynamicUserAvatar src={avatarSrc} alt={studentName} />
         <div className="flex-1">
           <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
             <div>

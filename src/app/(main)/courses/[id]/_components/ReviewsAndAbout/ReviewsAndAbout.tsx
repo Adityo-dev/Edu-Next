@@ -5,6 +5,7 @@ import { IReview } from '@/types/review.types';
 import { FormatDateTime } from '@/utils/formatDateTime';
 import { Star } from 'lucide-react';
 import Image from 'next/image';
+import DynamicUserAvatar from '@/components/shared/DynamicUserAvatar/DynamicUserAvatar';
 import Link from 'next/link';
 
 interface RelatedCourse {
@@ -109,12 +110,11 @@ export default function ReviewsAndAbout({ course }: { course: CourseData }) {
 
               return (
                 <div key={review?._id} className="flex gap-4">
-                  <Image
+                  <DynamicUserAvatar
                     src={studentAvatar}
                     alt={studentName}
-                    width={44}
-                    height={44}
-                    className="h-11 w-11 shrink-0 rounded-full border-2 border-emerald-50 object-cover"
+                    size={44}
+                    className="border-2 border-emerald-50"
                   />
                   <div className="flex-1">
                     <div className="mb-1 flex items-center justify-between">

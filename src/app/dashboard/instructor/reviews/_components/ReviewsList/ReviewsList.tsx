@@ -1,13 +1,13 @@
 'use client';
 
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
+import DynamicUserAvatar from '@/components/shared/DynamicUserAvatar/DynamicUserAvatar';
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
 import { useGetInstructorReviewsQuery } from '@/redux/features/reviews/instructorReview.api';
 import { ITableFilter } from '@/types/table-filter.types';
 import { FormatDateTime } from '@/utils/formatDateTime';
 import { Loader2, Star } from 'lucide-react';
-import Image from 'next/image';
 
 const ReviewsList = () => {
   const { getQueryObject } = useSetSearchQueryInURL();
@@ -69,13 +69,7 @@ const ReviewsList = () => {
             return (
               <div key={review._id} className="dashboard-card-container shadow-none">
                 <div className="flex gap-4">
-                  <Image
-                    src={avatarSrc}
-                    alt={studentName}
-                    width={44}
-                    height={44}
-                    className="h-11 w-11 shrink-0 rounded-full border-2 border-emerald-50 object-cover"
-                  />
+                  <DynamicUserAvatar src={avatarSrc} alt={studentName} />
                   <div className="flex-1">
                     <div className="mb-1 flex items-center justify-between">
                       <div>

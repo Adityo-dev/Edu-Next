@@ -5,6 +5,7 @@ import silverBadge from '@/assets/badge/silver.svg';
 
 import { BookOpen, Briefcase, Star, Users } from 'lucide-react';
 import Image from 'next/image';
+import DynamicUserAvatar from '@/components/shared/DynamicUserAvatar/DynamicUserAvatar';
 
 export default function SkillsAndTeacher({ course }: { course: any }) {
   const proseClasses =
@@ -38,15 +39,11 @@ export default function SkillsAndTeacher({ course }: { course: any }) {
         <h2 className="mb-4 text-lg font-semibold sm:mb-6 sm:text-xl">About the Instructor</h2>
         <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:items-start sm:text-left">
           <div className="relative shrink-0">
-            <div className="border-primary/20 relative h-16 w-16 overflow-hidden rounded-full border-2 sm:h-20 sm:w-20">
-              <Image
-                src={course?.instructor?.image}
-                alt={course?.instructor?.name}
-                width={150}
-                height={150}
-                className="h-full w-full object-cover"
-              />
-            </div>
+            <DynamicUserAvatar
+              src={course?.instructor?.image}
+              alt={course?.instructor?.name}
+              className="border-primary/20 h-16 w-16 border-2 sm:h-20 sm:w-20"
+            />
             {course?.instructor?.badge && (
               <div
                 className="absolute right-0.5 bottom-0 flex h-6 w-6 items-center justify-center rounded-full shadow-sm sm:h-7 sm:w-7"

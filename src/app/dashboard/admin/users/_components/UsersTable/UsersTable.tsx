@@ -21,7 +21,7 @@ import { ITableFilter } from '@/types/table-filter.types';
 import { TUserListItem, TUserRole, TUserStatus } from '@/types/userRole.types';
 import { FormatDateTime } from '@/utils/formatDateTime';
 import { GraduationCap, ShieldCheck, ShieldX, User, User2, UserStar } from 'lucide-react';
-import Image from 'next/image';
+import DynamicUserAvatar from '@/components/shared/DynamicUserAvatar/DynamicUserAvatar';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -152,21 +152,7 @@ const UsersTable = () => {
       header: 'USER',
       cell: (row) => (
         <div className="flex items-center gap-2.5">
-          <div className="border-primary/50 rounded-full border">
-            {row?.avatar ? (
-              <Image
-                src={row?.avatar}
-                alt={row?.name}
-                width={150}
-                height={150}
-                className="h-10 w-10 rounded-full object-cover"
-              />
-            ) : (
-              <div className="bg-primary/10 text-primary flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
-                {row?.initial}
-              </div>
-            )}
-          </div>
+          <DynamicUserAvatar src={row?.avatar} alt={row?.name} size={36} />
 
           <div className="flex flex-col">
             <span className="text-text-primary font-semibold">{row?.name}</span>

@@ -4,7 +4,7 @@ import { useGetUsersQuery } from '@/redux/features/admin/userManagement/userMana
 import { TUserListItem } from '@/types/userRole.types';
 import { GetRelativeTime } from '@/utils/formatDateTime';
 import { ArrowRight } from 'lucide-react';
-import Image from 'next/image';
+import DynamicUserAvatar from '@/components/shared/DynamicUserAvatar/DynamicUserAvatar';
 import Link from 'next/link';
 
 const RecentUsers = () => {
@@ -39,19 +39,11 @@ const RecentUsers = () => {
         ) : (
           recentUsers.map((user: TUserListItem, i: number) => (
             <div key={i} className="flex items-center gap-3">
-              {user?.avatar ? (
-                <Image
-                  src={user.avatar}
-                  alt={user.firstName}
-                  width={36}
-                  height={36}
-                  className="border-primary/50 h-9 w-9 rounded-full border-2 object-cover"
-                />
-              ) : (
-                <div className="bg-primary/10 text-primary border-primary/50 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 text-sm font-semibold">
-                  {user?.firstName?.[0]?.toUpperCase() ?? '?'}
-                </div>
-              )}
+              <DynamicUserAvatar
+                src={user?.avatar}
+                alt={`${user?.firstName} ${user?.lastName}`}
+                size={36}
+              />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold">
                   {user?.firstName} {user?.lastName}

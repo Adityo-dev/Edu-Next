@@ -4,7 +4,7 @@ import RecentStudentSkeleton from '@/components/dashboard/Skeletons/RecentStuden
 import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
 import { useGetInstructorStudentsQuery } from '@/redux/features/courseManagement/instructorCourse.api';
 import { GetRelativeTime } from '@/utils/formatDateTime';
-import Image from 'next/image';
+import DynamicUserAvatar from '@/components/shared/DynamicUserAvatar/DynamicUserAvatar';
 import Link from 'next/link';
 
 const RecentStudents = () => {
@@ -37,14 +37,11 @@ const RecentStudents = () => {
         ) : recentStudents.length > 0 ? (
           recentStudents.map((studentItem, i) => (
             <div key={i} className="flex items-center gap-3">
-              <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full border-2 border-emerald-50">
-                <Image
-                  src={studentItem?.student?.avatar || '/placeholder-user.jpg'}
-                  alt={studentItem?.student?.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+              <DynamicUserAvatar
+                src={studentItem?.student?.avatar}
+                alt={studentItem?.student?.name}
+                size={36}
+              />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold">{studentItem?.student?.name}</p>
                 <p className="text-text-secondary truncate text-xs">{studentItem?.course?.title}</p>
