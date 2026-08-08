@@ -1,42 +1,73 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { BookOpen, CheckCircle, Clock, FileText } from 'lucide-react';
+'use client';
 
-const CoursesStats = ({ courses }: { courses: any[] }) => {
+import { useGetInstructorCourseStatsQuery } from '@/redux/features/courseManagement/instructorCourse.api';
+import { BookOpen, CheckCircle, Clock, FileText, XCircle, AlertTriangle } from 'lucide-react';
+import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
+import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleton';
+
+const CoursesStats = () => {
+  const { data, isLoading } = useGetInstructorCourseStatsQuery();
+  const stats = data?.data;
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-6">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <StatsCardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
+  const statItems = [
+    {
+      label: 'Total Courses',
+      value: stats?.totalCourses || 0,
+      icon: BookOpen,
+      iconColor: '#3b82f6',
+    },
+    {
+      label: 'Published',
+      value: stats?.published || 0,
+      icon: CheckCircle,
+      iconColor: '#10b981',
+    },
+    {
+      label: 'Pending',
+      value: stats?.pending || 0,
+      icon: Clock,
+      iconColor: '#f59e0b',
+    },
+    {
+      label: 'Draft',
+      value: stats?.draft || 0,
+      icon: FileText,
+      iconColor: '#94a3b8',
+    },
+    {
+      label: 'Rejected',
+      value: stats?.rejected || 0,
+      icon: XCircle,
+      iconColor: '#ef4444',
+    },
+    {
+      label: 'Suspended',
+      value: stats?.suspended || 0,
+      icon: AlertTriangle,
+      iconColor: '#f97316',
+    },
+  ];
+
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-      {[
-        {
-          label: 'Total Courses',
-          value: courses.length,
-          icon: <BookOpen className="h-5 w-5 text-slate-400" />,
-        },
-        {
-          label: 'Published',
-          value: courses.filter((c) => c.status === 'published').length,
-          icon: <CheckCircle className="h-5 w-5 text-emerald-500" />,
-        },
-        {
-          label: 'Pending',
-          value: courses.filter((c) => c.status === 'pending').length,
-          icon: <Clock className="h-5 w-5 text-amber-500" />,
-        },
-        {
-          label: 'Draft',
-          value: courses.filter((c) => c.status === 'draft').length,
-          icon: <FileText className="h-5 w-5 text-slate-400" />,
-        },
-      ].map((stat, i) => (
-        <div
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-6">
+      {statItems.map((stat, i) => (
+        <StatsCard
           key={i}
-          className="dashboard-card-container flex items-center justify-between transition-all hover:border-emerald-100 hover:shadow-sm"
-        >
-          <div>
-            <p className="text-primary text-3xl font-black">{stat.value}</p>
-            <p className="text-text-secondary text-sm">{stat.label}</p>
-          </div>
-
-          <div className="flex items-center justify-center">{stat.icon}</div>
-        </div>
+          label={stat.label}
+          value={stat.value}
+          icon={stat.icon}
+          iconColor={stat.iconColor}
+        />
       ))}
     </div>
   );

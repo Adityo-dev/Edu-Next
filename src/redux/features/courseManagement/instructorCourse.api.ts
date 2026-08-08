@@ -11,6 +11,7 @@ import {
   IInstructorStudentsData,
   IInstructorStudentsQueryParams,
   IInstructorStudentStats,
+  IInstructorCourseStats,
   IPaginatedData,
 } from '@/types/courseManagement.types';
 
@@ -37,6 +38,15 @@ export const instructorCourseApi = apiClient.injectEndpoints({
         params,
       }),
       providesTags: ['InstructorCourses'],
+    }),
+
+    // 2.5. Get instructor course stats
+    getInstructorCourseStats: builder.query<ICommonResponse<IInstructorCourseStats>, void>({
+      query: () => ({
+        url: '/courses/instructor/course-stats',
+        method: 'GET',
+      }),
+      providesTags: ['CourseStats'],
     }),
 
     // 3. Get single course by slug for instructor
@@ -164,4 +174,5 @@ export const {
   useGetInstructorAnalyticsGrowthQuery,
   useGetInstructorRevenueOverviewQuery,
   useGetInstructorCoursePerformanceQuery,
+  useGetInstructorCourseStatsQuery,
 } = instructorCourseApi;

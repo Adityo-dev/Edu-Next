@@ -113,6 +113,15 @@ export interface ICourseStats {
   rejected: number;
 }
 
+export interface IInstructorCourseStats {
+  totalCourses: number;
+  published: number;
+  pending: number;
+  draft: number;
+  rejected: number;
+  suspended: number;
+}
+
 // --- Query Parameters ---
 export interface IGetCoursesQueryParams {
   search?: string;
