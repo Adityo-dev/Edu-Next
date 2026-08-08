@@ -106,16 +106,11 @@ export default function ReviewsAndAbout({ course }: { course: CourseData }) {
               const studentAvatar =
                 typeof review.student === 'object' && review.student?.avatar
                   ? review.student.avatar
-                  : 'https://i.pravatar.cc/150';
+                  : undefined;
 
               return (
                 <div key={review?._id} className="flex gap-4">
-                  <DynamicUserAvatar
-                    src={studentAvatar}
-                    alt={studentName}
-                    size={44}
-                    className="border-2 border-emerald-50"
-                  />
+                  <DynamicUserAvatar src={studentAvatar} alt={studentName} />
                   <div className="flex-1">
                     <div className="mb-1 flex items-center justify-between">
                       <h4 className="font-semibold">{studentName}</h4>

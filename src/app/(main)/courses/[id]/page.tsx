@@ -218,7 +218,7 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
     instructor: {
       name: apiCourse.instructor?.fullName || 'Instructor',
       title: apiCourse.instructor?.bio || 'Instructor',
-      image: apiCourse.instructor?.avatar || 'https://i.pravatar.cc/150',
+      image: apiCourse.instructor?.avatar || undefined,
       students: apiCourse.instructor?.totalStudents?.toLocaleString() || '0',
       courses: apiCourse.instructor?.totalCourses || 0,
       rating: apiCourse.instructor?.rating || 0,
