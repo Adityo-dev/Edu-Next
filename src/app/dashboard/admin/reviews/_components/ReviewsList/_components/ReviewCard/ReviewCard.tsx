@@ -70,9 +70,10 @@ const ReviewCard = ({
   const studentName = isStudentObject(review.student)
     ? `${review.student.firstName} ${review.student.lastName}`
     : 'Unknown Student';
-  const avatarSrc = isStudentObject(review.student)
-    ? review.student.avatar
-    : '/fallback-avatar.png';
+  const avatarSrc =
+    isStudentObject(review.student) && review.student.avatar
+      ? review.student.avatar
+      : '/fallback-avatar.png';
 
   return (
     <div

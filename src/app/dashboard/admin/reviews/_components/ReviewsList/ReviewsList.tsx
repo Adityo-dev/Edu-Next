@@ -12,7 +12,8 @@ import {
 
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import { ITableFilter } from '@/types/table-filter.types';
-import { Loader2, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
+import ReviewsListSkeleton from '@/components/dashboard/Skeletons/ReviewsListSkeleton';
 import ReviewCard from './_components/ReviewCard/ReviewCard';
 
 const ReviewsList = () => {
@@ -101,9 +102,7 @@ const ReviewsList = () => {
       <DynamicTableFilterBar fields={filterFields} />
 
       {isLoading || isFetching ? (
-        <div className="flex h-40 items-center justify-center">
-          <Loader2 className="text-primary animate-spin" size={32} />
-        </div>
+        <ReviewsListSkeleton />
       ) : data?.data && data.data.length > 0 ? (
         <div className="space-y-4">
           {data.data.map((review) => (
