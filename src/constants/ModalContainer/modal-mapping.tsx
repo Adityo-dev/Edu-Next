@@ -8,6 +8,7 @@ import RefundDetailsModal from '@/app/dashboard/instructor/wallet/_components/Tr
 import CreateTicketModal from '@/components/dashboard/support/CreateTicketModal';
 import CategoryFormModal from '@/app/dashboard/admin/dynamic-content/_components/CategoryManager/_components/CategoryFormModal/CategoryFormModal';
 import SubcategoryManager from '@/app/dashboard/admin/dynamic-content/_components/CategoryManager/_components/SubcategoryManager/SubcategoryManager';
+import InstructorDetail from '@/app/dashboard/admin/instructors/_components/InstructorDetail/InstructorDetail';
 import { TModalView } from '@/types/customModal.types';
 
 export const MODAL_COMPONENTS: Record<TModalView, React.ReactNode> = {
@@ -19,5 +20,6 @@ export const MODAL_COMPONENTS: Record<TModalView, React.ReactNode> = {
   CREATE_TICKET: <CreateTicketModal />,
   CATEGORY_FORM: <CategoryFormModal />,
   SUBCATEGORY_MANAGEMENT: <SubcategoryManager />,
+  INSTRUCTOR_BADGE_DETAILS: <InstructorDetail />,
   NONE: null,
 };

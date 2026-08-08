@@ -11,6 +11,7 @@ export type TModalView =
   | 'CREATE_TICKET'
   | 'CATEGORY_FORM'
   | 'SUBCATEGORY_MANAGEMENT'
+  | 'INSTRUCTOR_BADGE_DETAILS'
   | 'NONE';
 
 //Open Modal Props
