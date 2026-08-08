@@ -1,6 +1,6 @@
 'use client';
 
-import { Ban, Check, Eye, Loader2, MessageCircle, Pencil, Trash2, X, Plus } from 'lucide-react';
+import { Ban, Check, Eye, Loader2, MessageCircle, Pencil, Plus, Trash2, X } from 'lucide-react';
 import Link from 'next/link';
 
 /**

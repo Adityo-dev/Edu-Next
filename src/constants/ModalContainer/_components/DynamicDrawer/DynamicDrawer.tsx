@@ -44,7 +44,7 @@ const DynamicDrawer: React.FC<DynamicDrawerProps> = ({
               </SheetTitle>
             )}
             {description && (
-              <SheetDescription className="text-left text-sm leading-relaxed text-slate-500">
+              <SheetDescription className="text-text-secondary text-left text-sm leading-relaxed">
                 {description}
               </SheetDescription>
             )}

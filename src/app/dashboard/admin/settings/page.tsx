@@ -1,5 +1,6 @@
 'use client';
 
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import PasswordSettings from '@/components/dashboard/Settings/PasswordSettings/PasswordSettings';
 import ProfileSettings from '@/components/dashboard/Settings/ProfileSettings/ProfileSettings';
 import { Bell, Globe, Lock, Save, Shield } from 'lucide-react';
@@ -26,12 +27,10 @@ const AdminSettingsPage = () => {
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
       <div className="mx-auto space-y-6">
-        <div>
-          <h1 className="text-text-primary text-2xl font-black">Settings</h1>
-          <p className="text-text-secondary mt-1 text-sm">
-            Manage admin profile and platform configuration.
-          </p>
-        </div>
+        <SectionHeader
+          title="Settings"
+          description="Manage admin profile and platform configuration."
+        />
 
         <div className="flex flex-col gap-6 lg:flex-row">
           {/* Sidebar */}

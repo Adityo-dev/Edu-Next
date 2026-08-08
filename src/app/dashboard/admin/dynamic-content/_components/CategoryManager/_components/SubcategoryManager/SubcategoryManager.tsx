@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 'use client';
 
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
+import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
 import { useModal } from '@/context/ModalContext';
 import { TCategory } from '@/redux/features/categories/categoriesApi';
-import { FolderTree, X, Edit2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { FolderTree } from 'lucide-react';
 
 interface SubcategoryPayload {
   category: TCategory;
@@ -28,29 +29,19 @@ const SubcategoryManager = () => {
           {category.subCategories.map((sub: TCategory) => (
             <div
               key={sub?._id}
-              className="hover:border-primary/30 hover:bg-primary/5 group flex items-center justify-between rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 transition-colors"
+              className="hover:border-primary/30 hover:bg-primary/5 group border-border text-text-primary flex items-center justify-between rounded-sm border bg-slate-50 px-3 py-2 text-sm transition-colors"
             >
               <div className="flex items-center gap-2 overflow-hidden">
-                <FolderTree className="group-hover:text-primary/70 h-4 w-4 shrink-0 text-slate-400 transition-colors" />
+                <FolderTree className="group-hover:text-primary/70 text-text-secondary h-4 w-4 shrink-0 transition-colors" />
                 <span className="truncate">{sub?.name}</span>
               </div>
               <div className="flex shrink-0 items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="hover:text-primary h-8 w-8 p-0 text-slate-500"
-                  onClick={() => handleOpenUpdate(sub, 'SUB')}
-                >
-                  <Edit2 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="hover:bg-danger/10 hover:text-danger h-8 w-8 p-0 text-slate-500"
-                  onClick={() => handleDeleteClick(sub)}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+                <DynamicTableActions
+                  actions={[
+                    { type: 'edit', onClick: () => handleOpenUpdate(sub, 'SUB') },
+                    { type: 'delete', onClick: () => handleDeleteClick(sub) },
+                  ]}
+                />
               </div>
             </div>
           ))}
@@ -62,12 +53,12 @@ const SubcategoryManager = () => {
         </div>
       )}
 
-      <Button
-        className="bg-primary hover:bg-primary/90 mt-4 w-full text-white"
+      <DynamicActionButton
+        label="Add Subcategory"
+        showIcon
         onClick={() => handleOpenSubCreate(category._id)}
-      >
-        + Add Subcategory
-      </Button>
+        className="w-full"
+      />
     </div>
   );
 };

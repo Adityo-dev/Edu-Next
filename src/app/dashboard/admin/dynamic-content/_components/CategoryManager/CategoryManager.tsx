@@ -6,7 +6,8 @@
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
-import { Skeleton } from '@/components/ui/skeleton';
+
+import CategoryCardSkeleton from '@/components/dashboard/Skeletons/admin/CategoryCardSkeleton';
 import { useModal } from '@/context/ModalContext';
 import {
   TCategory,
@@ -14,24 +15,24 @@ import {
   useGetCategoriesQuery,
   useReorderCategoriesMutation,
 } from '@/redux/features/categories/categoriesApi';
-import { LayoutGrid } from 'lucide-react';
-import { toast } from 'sonner';
-import { useEffect, useState } from 'react';
 import {
-  DndContext,
   closestCenter,
+  DndContext,
+  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
+  rectSortingStrategy,
   SortableContext,
   sortableKeyboardCoordinates,
-  rectSortingStrategy,
 } from '@dnd-kit/sortable';
+import { LayoutGrid } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import SortableCategoryCard from './_components/SortableCategoryCard/SortableCategoryCard';
 
 const CategoryManager = () => {
@@ -159,7 +160,7 @@ const CategoryManager = () => {
     <div className="dashboard-card-container">
       <div className="border-border/40 mb-5 flex flex-col justify-between gap-4 border-b pb-4 sm:flex-row sm:items-center">
         <div>
-          <h2 className="text-xl font-semibold">Category Management</h2>
+          <h2 className="text-lg font-semibold">Category Management</h2>
           <p className="text-text-secondary text-sm">Manage course and site categories.</p>
         </div>
 
@@ -168,9 +169,9 @@ const CategoryManager = () => {
 
       <div>
         {isLoading || !isClient ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-36 w-full rounded-2xl" />
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {[...Array(9)].map((_, i) => (
+              <CategoryCardSkeleton key={i} />
             ))}
           </div>
         ) : isError ? (
