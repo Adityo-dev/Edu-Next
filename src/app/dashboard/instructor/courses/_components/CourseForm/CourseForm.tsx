@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 
 import {
   useCreateCourseMutation,
@@ -174,15 +175,8 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
 
   const watchedPrice = watch('price');
   const watchedEstimatedPrice = watch('estimatedPrice');
-  const watchedTitle = watch('title');
   const watchedThumbnail = watch('thumbnail');
   const watchedCategory = watch('category');
-  const watchedSubCategory = watch('subCategory');
-  const watchedLevel = watch('level');
-  const watchedSections = watch('sections');
-  const watchedTags = watch('tags');
-  const watchedRequirements = watch('requirements');
-  const watchedWhatYouLearn = watch('whatYouLearn');
 
   const handleNext = async () => {
     const fields = STEP_FIELDS[step];
@@ -347,48 +341,28 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
         )}
 
         {/* Step 4: Publish */}
-        {step === 3 && (
-          <Step4Publish
-            watchedThumbnail={watchedThumbnail}
-            watchedTitle={watchedTitle}
-            watchedCategory={watchedCategory}
-            watchedSubCategory={watchedSubCategory}
-            watchedLevel={watchedLevel}
-            watchedTags={watchedTags}
-            watchedRequirements={watchedRequirements}
-            watchedWhatYouLearn={watchedWhatYouLearn}
-            watchedSections={watchedSections}
-            watchedPrice={watchedPrice}
-          />
-        )}
+        {step === 3 && <Step4Publish formData={watch()} />}
 
         {/* Navigation */}
         <div className="border-border mt-6 flex items-center justify-between border-t pt-4">
-          <button
+          <DynamicActionButton
             type="button"
             onClick={() => setStep(Math.max(0, step - 1))}
             disabled={step === 0}
-            className="cursor-pointer rounded-sm border border-slate-200 px-6 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40"
-          >
-            ← Previous
-          </button>
+            variant="outline"
+            label="← Previous"
+            className="border-slate-200 text-slate-600"
+          />
           {!isLastStep ? (
-            <button
-              type="button"
-              onClick={handleNext}
-              className="bg-primary cursor-pointer rounded-sm px-6 py-2.5 text-sm font-bold text-white hover:bg-[#2a6159]"
-            >
-              Next →
-            </button>
+            <DynamicActionButton type="button" onClick={handleNext} label="Next →" />
           ) : (
-            <button
+            <DynamicActionButton
               type="button"
               onClick={handleSaveClick}
-              disabled={isSaving}
-              className="bg-secondary cursor-pointer rounded-sm px-8 py-2.5 text-sm font-bold text-white hover:bg-[#d98c0a] disabled:cursor-none disabled:opacity-50"
-            >
-              {isSaving ? 'Saving...' : mode === 'create' ? 'Save as Draft' : 'Save Changes'}
-            </button>
+              isLoading={isSaving}
+              label={mode === 'create' ? 'Save as Draft' : 'Save Changes'}
+              className="!bg-secondary !border-none text-white hover:!bg-[#d98c0a]"
+            />
           )}
         </div>
       </div>
