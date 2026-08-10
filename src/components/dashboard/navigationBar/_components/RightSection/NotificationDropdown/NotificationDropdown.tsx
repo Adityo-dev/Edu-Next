@@ -107,11 +107,11 @@ export default function NotificationDropdown({ role }: { role: string }) {
 
         <DropdownMenuSeparator className="m-0 bg-slate-100" />
 
-        <DropdownMenuGroup className="max-h-87.5 overflow-y-auto">
+        <DropdownMenuGroup className="custom-scrollbar max-h-87.5 overflow-y-auto">
           {notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <Bell size={24} className="mb-2 text-slate-200" />
-              <p className="text-xs font-bold text-slate-400">No new notifications</p>
+              <p className="text-text-secondary text-xs font-bold">No new notifications</p>
             </div>
           ) : (
             notifications.map((notif: INotification) => {

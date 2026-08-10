@@ -48,6 +48,7 @@ export default function WishlistPage() {
       enrolled: w.course.enrolledCount || 0,
       duration: (w.course as any).totalDuration || '',
       category: w.course.category || '',
+      subCategory: w.course.subCategory || '',
       level: w.course.level || '',
       language: w.course.language || '',
       badge: w.course.badge || '',
@@ -118,7 +119,6 @@ export default function WishlistPage() {
                 <CourseCard
                   key={course.id}
                   course={course}
-                  viewMode="grid"
                   badgeColors={badgeColors}
                   levelColors={levelColors}
                   onRemove={handleRemove}

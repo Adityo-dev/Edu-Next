@@ -12,7 +12,7 @@ import {
 import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
 import { useGetCategoriesQuery } from '@/redux/features/categories/categoriesApi';
 import { useGetPublishedCoursesQuery } from '@/redux/features/courseManagement/publicCourse.api';
-import { LayoutGrid, List, SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 import { Suspense, useEffect, useState } from 'react';
 
 import { Skeleton } from '@/components/ui/skeleton';
@@ -66,7 +66,6 @@ const CoursesPageContent = () => {
     Number(searchParams.get('maxPrice')) || 0,
   ]);
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'Most Popular');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [certificateOnly, setCertificateOnly] = useState(
     searchParams.get('certificate') === 'true',
@@ -146,6 +145,7 @@ const CoursesPageContent = () => {
     image: c.thumbnail,
     badge: c.badge,
     category: c.category,
+    subCategory: c.subCategory,
     level: c.level,
     language: c.language,
     instructor: c.instructor ? c.instructor.fullName : 'Unknown',
@@ -285,33 +285,12 @@ const CoursesPageContent = () => {
                     </Select>
                   </div>
                 )}
-
-                {/* View Toggle */}
-                {isLoading ? (
-                  <Skeleton className="hidden h-10.5 w-20.5 rounded-sm md:block" />
-                ) : (
-                  <div className="hidden overflow-hidden rounded-sm border border-slate-200 bg-white shadow-xs md:flex">
-                    <button
-                      onClick={() => setViewMode('grid')}
-                      className={`flex h-10 w-10 cursor-pointer items-center justify-center transition-all ${viewMode === 'grid' ? 'bg-primary text-white' : 'text-slate-500 hover:bg-slate-50'}`}
-                    >
-                      <LayoutGrid size={16} />
-                    </button>
-                    <button
-                      onClick={() => setViewMode('list')}
-                      className={`flex h-10 w-10 cursor-pointer items-center justify-center transition-all ${viewMode === 'list' ? 'bg-primary text-white' : 'text-slate-500 hover:bg-slate-50'}`}
-                    >
-                      <List size={16} />
-                    </button>
-                  </div>
-                )}
               </div>
             </div>
 
             <CoursesGrid
               filtered={filtered}
               isLoading={isLoading}
-              viewMode={viewMode}
               clearFilters={clearFilters}
               badgeColors={badgeColors}
               levelColors={levelColors}
