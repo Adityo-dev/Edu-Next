@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unused-vars */
-import TiptapEditor from '@/components/dashboard/Fields/TiptapEditor/TiptapEditor';
-import { ChevronDown, ChevronUp, GripVertical, Plus, Settings, Trash2, Video } from 'lucide-react';
-import { useState } from 'react';
+import InputField from '@/components/dashboard/Fields/InputField/InputField';
+import { useModal } from '@/context/ModalContext';
+import { GripVertical, Plus, Settings, Trash2, Video } from 'lucide-react';
 import { Control, FieldErrors, useController, useFieldArray } from 'react-hook-form';
 import { toast } from 'sonner';
 import { CourseFormValues } from '../schema';
@@ -219,7 +219,7 @@ const LessonRow = ({
   onRemove,
   canRemove,
 }: LessonRowProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const { openModal } = useModal();
 
   const {
     field: { value: title, onChange: onTitleChange, onBlur: onTitleBlur },
@@ -366,11 +366,23 @@ const LessonRow = ({
 
         <button
           type="button"
-          onClick={() => setIsExpanded(!isExpanded)}
-          className={`flex cursor-pointer items-center gap-1 rounded-sm px-2 py-1.5 text-xs transition-colors ${isExpanded ? 'bg-primary/10 text-primary' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+          onClick={() => {
+            openModal({
+              view: 'LESSON_DETAILS_DRAWER',
+              layout: 'DRAWER',
+              title: `Lesson Details: ${title || `Lesson ${lessonIndex + 1}`}`,
+              data: {
+                control,
+                errors,
+                sectionIndex,
+                lessonIndex,
+              },
+            });
+          }}
+          className="flex cursor-pointer items-center gap-1.5 rounded-sm bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:bg-slate-200"
         >
           <Settings size={14} />
-          {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+          <span className="hidden sm:inline">Details</span>
         </button>
 
         {canRemove && (
@@ -395,42 +407,12 @@ const LessonRow = ({
           {hasDurationError && <p className="text-danger text-xs">Duration: select hh:mm:ss</p>}
         </div>
       )}
-
-      {/* Expanded Advanced Settings */}
-      {isExpanded && (
-        <div className="mt-2 space-y-6 rounded-sm border border-slate-200 bg-white p-4">
-          <div className="space-y-4">
-            <TiptapEditor
-              control={control as any}
-              name={`sections.${sectionIndex}.lessons.${lessonIndex}.description` as any}
-              label="Lesson Description"
-              placeholder="Briefly describe what this lesson covers..."
-            />
-            <TiptapEditor
-              control={control as any}
-              name={`sections.${sectionIndex}.lessons.${lessonIndex}.references` as any}
-              label="References & Links"
-              placeholder="Add useful links or reference materials here..."
-            />
-          </div>
-
-          <div className="border-t border-slate-100 pt-4">
-            <QuizBuilder
-              control={control}
-              errors={errors}
-              sectionIndex={sectionIndex}
-              lessonIndex={lessonIndex}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
 // ─── QuizBuilder Components ───
-
-const QuizBuilder = ({ control, errors, sectionIndex, lessonIndex }: any) => {
+export const QuizBuilder = ({ control, errors, sectionIndex, lessonIndex }: any) => {
   const { fields, append, remove } = useFieldArray({
     control,
     name: `sections.${sectionIndex}.lessons.${lessonIndex}.quizzes`,
@@ -485,20 +467,6 @@ const QuizBuilder = ({ control, errors, sectionIndex, lessonIndex }: any) => {
 
 const QuizItem = ({ control, sectionIndex, lessonIndex, quizIndex, onRemove }: any) => {
   const {
-    field: { value: title, onChange: onTitleChange },
-  } = useController({
-    control,
-    name: `sections.${sectionIndex}.lessons.${lessonIndex}.quizzes.${quizIndex}.title`,
-  });
-
-  const {
-    field: { value: passMark, onChange: onPassMarkChange },
-  } = useController({
-    control,
-    name: `sections.${sectionIndex}.lessons.${lessonIndex}.quizzes.${quizIndex}.passMark`,
-  });
-
-  const {
     fields: questionFields,
     append: appendQuestion,
     remove: removeQuestion,
@@ -508,69 +476,71 @@ const QuizItem = ({ control, sectionIndex, lessonIndex, quizIndex, onRemove }: a
   });
 
   return (
-    <div className="space-y-4 rounded border border-slate-200 bg-slate-50 p-3">
-      <div className="flex items-start gap-3">
-        <div className="flex-1 space-y-3">
-          <div className="flex gap-3">
-            <div className="flex-1">
-              <input
-                type="text"
-                value={title}
-                onChange={onTitleChange}
-                placeholder="Quiz Title (e.g. Next.js Basics)"
-                className="focus:border-primary w-full rounded-sm border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none"
-              />
-            </div>
-            <div className="w-24">
-              <input
-                type="number"
-                value={passMark}
-                onChange={(e) => onPassMarkChange(Number(e.target.value))}
-                placeholder="Pass Mark"
-                className="focus:border-primary w-full rounded-sm border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none"
-              />
-            </div>
-          </div>
-
-          <div className="border-primary/20 space-y-3 border-l-2 pl-2">
-            {questionFields.map((q, qIdx) => (
-              <QuestionItem
-                key={q.id}
-                control={control}
-                sectionIndex={sectionIndex}
-                lessonIndex={lessonIndex}
-                quizIndex={quizIndex}
-                questionIndex={qIdx}
-                onRemove={() => removeQuestion(qIdx)}
-                canRemove={questionFields.length > 1}
-              />
-            ))}
-
-            <button
-              type="button"
-              onClick={() =>
-                appendQuestion({
-                  questionText: '',
-                  reason: '',
-                  options: [
-                    { text: '', isCorrect: true },
-                    { text: '', isCorrect: false },
-                  ],
-                })
-              }
-              className="text-primary bg-primary/5 flex items-center gap-1 rounded px-2 py-1 text-xs font-medium hover:underline"
-            >
-              <Plus size={12} /> Add Question
-            </button>
-          </div>
-        </div>
-
+    <div className="space-y-4 rounded-md border border-slate-200 bg-slate-50/50 p-4">
+      <div className="flex items-start justify-between gap-4">
+        <h4 className="text-sm font-semibold text-slate-800">Quiz {quizIndex + 1}</h4>
         <button
           type="button"
           onClick={onRemove}
-          className="text-danger cursor-pointer rounded p-1.5 hover:bg-red-100"
+          className="hover:text-danger rounded p-1 text-slate-400 transition-colors hover:bg-red-50"
         >
           <Trash2 size={16} />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+        <div className="sm:col-span-3">
+          <InputField
+            control={control}
+            name={
+              `sections.${sectionIndex}.lessons.${lessonIndex}.quizzes.${quizIndex}.title` as any
+            }
+            label="Quiz Title"
+            placeholder="e.g. Next.js Basics"
+          />
+        </div>
+        <div className="sm:col-span-1">
+          <InputField
+            control={control}
+            name={
+              `sections.${sectionIndex}.lessons.${lessonIndex}.quizzes.${quizIndex}.passMark` as any
+            }
+            label="Pass Mark"
+            type="number"
+            placeholder="e.g. 80"
+          />
+        </div>
+      </div>
+
+      <div className="mt-4 space-y-4 border-l-2 border-slate-200 pl-4">
+        {questionFields.map((q, qIdx) => (
+          <QuestionItem
+            key={q.id}
+            control={control}
+            sectionIndex={sectionIndex}
+            lessonIndex={lessonIndex}
+            quizIndex={quizIndex}
+            questionIndex={qIdx}
+            onRemove={() => removeQuestion(qIdx)}
+            canRemove={questionFields.length > 1}
+          />
+        ))}
+
+        <button
+          type="button"
+          onClick={() =>
+            appendQuestion({
+              questionText: '',
+              reason: '',
+              options: [
+                { text: '', isCorrect: true },
+                { text: '', isCorrect: false },
+              ],
+            })
+          }
+          className="text-primary flex items-center gap-1 text-sm font-medium hover:underline"
+        >
+          <Plus size={14} /> Add Question
         </button>
       </div>
     </div>
@@ -587,20 +557,6 @@ const QuestionItem = ({
   canRemove,
 }: any) => {
   const {
-    field: { value: questionText, onChange: onQuestionTextChange },
-  } = useController({
-    control,
-    name: `sections.${sectionIndex}.lessons.${lessonIndex}.quizzes.${quizIndex}.questions.${questionIndex}.questionText`,
-  });
-
-  const {
-    field: { value: reason, onChange: onReasonChange },
-  } = useController({
-    control,
-    name: `sections.${sectionIndex}.lessons.${lessonIndex}.quizzes.${quizIndex}.questions.${questionIndex}.reason`,
-  });
-
-  const {
     fields: optionFields,
     append: appendOption,
     remove: removeOption,
@@ -610,36 +566,39 @@ const QuestionItem = ({
   });
 
   return (
-    <div className="space-y-2 rounded border border-slate-100 bg-white p-3 shadow-sm">
-      <div className="flex gap-2">
-        <div className="flex-1 space-y-2">
-          <input
-            type="text"
-            value={questionText}
-            onChange={onQuestionTextChange}
-            placeholder="Question text..."
-            className="focus:border-primary w-full rounded-sm border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm outline-none focus:bg-white"
+    <div className="space-y-4 rounded-md border border-slate-100 bg-white p-4 shadow-sm">
+      <div className="flex items-start gap-4">
+        <div className="flex-1 space-y-4">
+          <InputField
+            control={control}
+            name={
+              `sections.${sectionIndex}.lessons.${lessonIndex}.quizzes.${quizIndex}.questions.${questionIndex}.questionText` as any
+            }
+            label={`Question ${questionIndex + 1}`}
+            placeholder="Enter question text..."
           />
-          <input
-            type="text"
-            value={reason}
-            onChange={onReasonChange}
-            placeholder="Reason/Explanation (optional)..."
-            className="focus:border-primary w-full rounded-sm border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-500 outline-none focus:bg-white"
+          <InputField
+            control={control}
+            name={
+              `sections.${sectionIndex}.lessons.${lessonIndex}.quizzes.${quizIndex}.questions.${questionIndex}.reason` as any
+            }
+            label="Reason/Explanation (Optional)"
+            placeholder="Why is the answer correct?..."
           />
         </div>
         {canRemove && (
           <button
             type="button"
             onClick={onRemove}
-            className="hover:text-danger h-fit cursor-pointer p-1 text-slate-400"
+            className="hover:text-danger mt-8 rounded p-1 text-slate-400 transition-colors hover:bg-red-50"
           >
-            <Trash2 size={14} />
+            <Trash2 size={16} />
           </button>
         )}
       </div>
 
-      <div className="mt-2 space-y-2">
+      <div className="mt-4 space-y-3">
+        <p className="text-sm font-medium text-slate-700">Options</p>
         {optionFields.map((opt, oIdx) => (
           <OptionItem
             key={opt.id}
@@ -657,9 +616,9 @@ const QuestionItem = ({
         <button
           type="button"
           onClick={() => appendOption({ text: '', isCorrect: false })}
-          className="hover:text-primary flex items-center gap-1 text-[11px] font-medium text-slate-500"
+          className="text-primary flex items-center gap-1 text-sm font-medium hover:underline"
         >
-          <Plus size={10} /> Add Option
+          <Plus size={14} /> Add Option
         </button>
       </div>
     </div>
@@ -677,13 +636,6 @@ const OptionItem = ({
   canRemove,
 }: any) => {
   const {
-    field: { value: text, onChange: onTextChange },
-  } = useController({
-    control,
-    name: `sections.${sectionIndex}.lessons.${lessonIndex}.quizzes.${quizIndex}.questions.${questionIndex}.options.${optionIndex}.text`,
-  });
-
-  const {
     field: { value: isCorrect, onChange: onIsCorrectChange },
   } = useController({
     control,
@@ -691,25 +643,37 @@ const OptionItem = ({
   });
 
   return (
-    <div className="flex items-center gap-2">
-      <input
-        type="checkbox"
-        checked={isCorrect}
-        onChange={(e) => onIsCorrectChange(e.target.checked)}
-        className="h-3.5 w-3.5 accent-emerald-500"
-        title="Mark as correct option"
-      />
-      <input
-        type="text"
-        value={text}
-        onChange={onTextChange}
-        placeholder={`Option ${optionIndex + 1}`}
-        className={`flex-1 border-b bg-transparent py-1 text-xs transition-colors outline-none ${isCorrect ? 'border-emerald-300 font-medium text-emerald-700' : 'focus:border-primary border-slate-200 text-slate-600'}`}
-      />
+    <div className="flex items-start gap-3">
+      <div className="flex h-11 items-center pt-5.5">
+        <input
+          type="checkbox"
+          checked={isCorrect}
+          onChange={(e) => onIsCorrectChange(e.target.checked)}
+          className="accent-primary h-4 w-4 cursor-pointer rounded border-slate-300"
+          title="Mark as correct option"
+        />
+      </div>
+
+      <div className="flex-1">
+        <InputField
+          control={control}
+          name={
+            `sections.${sectionIndex}.lessons.${lessonIndex}.quizzes.${quizIndex}.questions.${questionIndex}.options.${optionIndex}.text` as any
+          }
+          placeholder={`Option ${optionIndex + 1}`}
+        />
+      </div>
+
       {canRemove && (
-        <button type="button" onClick={onRemove} className="hover:text-danger p-0.5 text-slate-300">
-          <Trash2 size={12} />
-        </button>
+        <div className="flex h-11 items-center pt-5.5">
+          <button
+            type="button"
+            onClick={onRemove}
+            className="hover:text-danger rounded p-1 text-slate-400 transition-colors hover:bg-red-50"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
       )}
     </div>
   );

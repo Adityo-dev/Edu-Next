@@ -29,7 +29,7 @@ const DynamicDrawer: React.FC<DynamicDrawerProps> = ({
 }) => {
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className={`flex w-full flex-col p-4 sm:max-w-lg ${className}`}>
+      <SheetContent className={`flex w-full flex-col p-4 sm:max-w-xl ${className}`}>
         {!title && (
           <VisuallyHidden.Root>
             <SheetTitle>Drawer Dialog</SheetTitle>
