@@ -9,8 +9,8 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 
 import {
   useCreateCourseMutation,
@@ -44,6 +44,7 @@ const formatDuration = (hr: string, min: string, sec: string) =>
   `${(hr || '0').padStart(2, '0')}:${(min || '0').padStart(2, '0')}:${(sec || '0').padStart(2, '0')}`;
 
 const LOCAL_STORAGE_KEY = 'edu-next-course-draft';
+const LOCAL_STORAGE_STEP_KEY = 'edu-next-course-draft-step';
 
 interface ICourseFormProps {
   mode: 'create' | 'edit';
@@ -146,32 +147,53 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
   }, [mode, watch]);
 
   const [step, setStep] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
   const isLastStep = step === LAST_STEP_INDEX;
 
-  // Read initial step from URL query params
+  // Read initial step from URL query params or localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      let initialStep = 0;
       const params = new URLSearchParams(window.location.search);
       const stepParam = params.get('step');
+
       if (stepParam) {
         const parsed = parseInt(stepParam, 10);
         if (!isNaN(parsed) && parsed >= 0 && parsed <= LAST_STEP_INDEX) {
-          setStep(parsed);
+          initialStep = parsed;
+        }
+      } else if (mode === 'create') {
+        // Fallback to localStorage if in create mode
+        const savedStep = localStorage.getItem(LOCAL_STORAGE_STEP_KEY);
+        if (savedStep) {
+          const parsed = parseInt(savedStep, 10);
+          if (!isNaN(parsed) && parsed >= 0 && parsed <= LAST_STEP_INDEX) {
+            initialStep = parsed;
+          }
         }
       }
-    }
-  }, []);
 
-  // Sync step to URL query param
+      setStep(initialStep);
+      setIsMounted(true);
+    }
+  }, [mode]);
+
+  // Sync step to URL query param and localStorage
   useEffect(() => {
+    if (!isMounted) return;
+
     if (typeof window !== 'undefined') {
       const url = new URL(window.location.href);
       if (url.searchParams.get('step') !== step.toString()) {
         url.searchParams.set('step', step.toString());
         window.history.replaceState({}, '', url.toString());
       }
+
+      if (mode === 'create') {
+        localStorage.setItem(LOCAL_STORAGE_STEP_KEY, step.toString());
+      }
     }
-  }, [step]);
+  }, [step, mode, isMounted]);
 
   const watchedPrice = watch('price');
   const watchedEstimatedPrice = watch('estimatedPrice');
@@ -240,6 +262,7 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
       if (mode === 'create') {
         await createCourse(payload as any).unwrap();
         localStorage.removeItem(LOCAL_STORAGE_KEY);
+        localStorage.removeItem(LOCAL_STORAGE_STEP_KEY);
         toast.success('Course created and saved as draft!');
       } else {
         if (!courseId) throw new Error('Course ID is required for editing.');
@@ -351,7 +374,7 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
             disabled={step === 0}
             variant="outline"
             label="← Previous"
-            className="border-slate-200 text-slate-600"
+            className="text-text-secondary border-slate-200"
           />
           {!isLastStep ? (
             <DynamicActionButton type="button" onClick={handleNext} label="Next →" />
@@ -361,7 +384,6 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
               onClick={handleSaveClick}
               isLoading={isSaving}
               label={mode === 'create' ? 'Save as Draft' : 'Save Changes'}
-              className="!bg-secondary !border-none text-white hover:!bg-[#d98c0a]"
             />
           )}
         </div>
