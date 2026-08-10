@@ -79,9 +79,7 @@ export default function SkillsAndTeacher({ course }: { course: any }) {
                 {course?.instructor?.name}
               </h3>
             </div>
-            <p className="text-primary mb-4 text-xs font-medium wrap-break-word sm:text-sm">
-              {course?.instructor?.title}
-            </p>
+
             <div className="mb-4 flex flex-wrap justify-center gap-x-3 gap-y-2 text-xs sm:justify-start sm:gap-4 sm:text-sm">
               <span className="flex items-center gap-1.5 whitespace-nowrap">
                 <Star size={14} fill="#ffc107" color="#ffc107" />

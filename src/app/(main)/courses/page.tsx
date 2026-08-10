@@ -268,22 +268,20 @@ const CoursesPageContent = () => {
 
                 {/* Sort */}
                 {isLoading ? (
-                  <Skeleton className="h-10.5 w-40 rounded-sm sm:w-48" />
+                  <Skeleton className="h-11 w-48 rounded-sm" />
                 ) : (
-                  <div className="w-40 sm:w-48">
-                    <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="h-11! cursor-pointer rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium shadow-xs outline-none">
-                        <SelectValue placeholder="Sort by" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white">
-                        {sortOptions.map((o) => (
-                          <SelectItem key={o} value={o} className="cursor-pointer">
-                            {o}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="h-11! w-48 cursor-pointer rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium shadow-xs outline-none">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      {sortOptions.map((o) => (
+                        <SelectItem key={o} value={o} className="cursor-pointer">
+                          {o}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 )}
               </div>
             </div>

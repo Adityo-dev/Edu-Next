@@ -217,7 +217,9 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
     description: apiCourse.description || '',
     instructor: {
       name: apiCourse.instructor?.fullName || 'Instructor',
-      title: apiCourse.instructor?.bio || 'Instructor',
+      title: apiCourse.instructor?.experienceYears
+        ? `${apiCourse.instructor.experienceYears} Years Exp.`
+        : 'Instructor',
       image: apiCourse.instructor?.avatar || undefined,
       students: apiCourse.instructor?.totalStudents?.toLocaleString() || '0',
       courses: apiCourse.instructor?.totalCourses || 0,
@@ -227,6 +229,7 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
       experienceYears: apiCourse.instructor?.experienceYears || 0,
     },
     category: apiCourse.category || 'Course',
+    subCategory: apiCourse.subCategory,
     level: apiCourse.level || 'Beginner',
     language: apiCourse.language || 'English',
     rating: apiCourse.rating || 0,
