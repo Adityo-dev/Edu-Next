@@ -475,7 +475,7 @@ const LessonRow = ({
                   data: { control, errors, sectionIndex, lessonIndex },
                 });
               }}
-              className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-sm bg-slate-100 px-2 py-1.5 text-sm font-semibold transition-all duration-300 hover:bg-slate-200 sm:w-auto"
+              className="flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-sm bg-slate-100 px-2 py-1.5 text-xs font-medium transition-all duration-300 hover:bg-slate-200 sm:w-auto"
             >
               <Settings size={14} />
               <span>Details</span>
