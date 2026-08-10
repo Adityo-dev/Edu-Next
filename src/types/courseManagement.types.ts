@@ -5,13 +5,36 @@ export type TCourseLanguage = 'Bangla' | 'English' | 'Hindi';
 export type TCourseBadge = 'New' | 'Bestseller' | 'Trending' | 'none' | null;
 
 // --- Sub-Structures (Curriculum) ---
+export interface IQuizOption {
+  _id?: string;
+  text: string;
+  isCorrect?: boolean;
+}
+
+export interface IQuizQuestion {
+  _id?: string;
+  questionText: string;
+  reason?: string;
+  options: IQuizOption[];
+}
+
+export interface IQuiz {
+  _id?: string;
+  title: string;
+  passMark: number;
+  questions: IQuizQuestion[];
+}
+
 export interface ILesson {
   _id?: string;
   title: string;
+  description?: string;
   duration: string;
   videoUrl: string;
+  references?: string;
   isFree: boolean;
   order: number;
+  quizzes?: IQuiz[];
 }
 
 export interface ISection {

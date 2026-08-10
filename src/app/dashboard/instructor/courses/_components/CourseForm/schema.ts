@@ -1,8 +1,27 @@
 import { z } from 'zod';
 
 // ─── Zod Schema
+export const quizOptionSchema = z.object({
+  text: z.string().min(1, 'Option text is required'),
+  isCorrect: z.boolean(),
+});
+
+export const quizQuestionSchema = z.object({
+  questionText: z.string().min(1, 'Question text is required'),
+  reason: z.string().optional(),
+  options: z.array(quizOptionSchema).min(2, 'At least 2 options are required'),
+});
+
+export const quizSchema = z.object({
+  title: z.string().min(1, 'Quiz title is required'),
+  passMark: z.number().min(0).max(100, 'Must be between 0 and 100'),
+  questions: z.array(quizQuestionSchema).min(1, 'At least 1 question is required'),
+});
+
 export const lessonSchema = z.object({
   title: z.string().min(1, 'Lesson title is required'),
+  description: z.string().optional(),
+  references: z.string().optional(),
   durationHr: z
     .string()
     .min(1, 'Required')
@@ -17,6 +36,7 @@ export const lessonSchema = z.object({
     .regex(/^\d{1,2}$/, 'Invalid'),
   videoUrl: z.string().min(1, 'Video URL is required').url('Must be a valid URL'),
   free: z.boolean(),
+  quizzes: z.array(quizSchema).optional(),
 });
 
 export const sectionSchema = z.object({

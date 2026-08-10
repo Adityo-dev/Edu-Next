@@ -3,6 +3,7 @@
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import Placeholder from '@tiptap/extension-placeholder';
+import Link from '@tiptap/extension-link';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import {
@@ -18,6 +19,7 @@ import {
   Redo,
   Strikethrough,
   Undo,
+  Link as LinkIcon,
 } from 'lucide-react';
 import { useEffect } from 'react';
 import { Control, FieldValues, Path, useController } from 'react-hook-form';
@@ -51,6 +53,11 @@ const TiptapEditor = <T extends FieldValues>({
       Placeholder.configure({
         placeholder,
         emptyEditorClass: 'is-editor-empty',
+      }),
+      Link.configure({
+        openOnClick: false,
+        autolink: true,
+        defaultProtocol: 'https',
       }),
     ],
     content: value || '',
@@ -206,6 +213,28 @@ const TiptapEditor = <T extends FieldValues>({
             title="Inline Code"
           >
             <Code size={16} />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              const previousUrl = editor.getAttributes('link').href;
+              const url = window.prompt('URL', previousUrl);
+              if (url === null) {
+                return;
+              }
+              if (url === '') {
+                editor.chain().focus().extendMarkRange('link').unsetLink().run();
+                return;
+              }
+              editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+            }}
+            className={cn(
+              'rounded-sm p-1.5 transition-colors hover:bg-slate-200',
+              editor.isActive('link') ? 'bg-slate-200 text-slate-900' : 'text-slate-600',
+            )}
+            title="Link"
+          >
+            <LinkIcon size={16} />
           </button>
 
           <div className="mx-1 h-5 w-px bg-slate-300" />

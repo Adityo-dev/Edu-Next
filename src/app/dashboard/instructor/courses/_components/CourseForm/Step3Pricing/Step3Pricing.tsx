@@ -1,5 +1,6 @@
 import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import { Control, FieldErrors } from 'react-hook-form';
+import { useGetCurrentCommissionQuery } from '@/redux/features/admin/commission/commission.api';
 import { CourseFormValues } from '../schema';
 
 interface Step3PricingProps {
@@ -15,13 +16,17 @@ const Step3Pricing = ({
   watchedPrice,
   watchedEstimatedPrice,
 }: Step3PricingProps) => {
+  const { data: commissionData } = useGetCurrentCommissionQuery();
+  const commissionRate = commissionData?.data?.commissionRate || 20;
+  const instructorShare = 100 - commissionRate;
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold">Pricing</h2>
       <div className="rounded-sm border border-emerald-100 bg-emerald-50 p-3 text-sm">
         💡 EduNext deducts a{' '}
-        <span className="text-primary font-semibold">20% platform commission</span> from each sale.
-        You keep the remaining 80%.
+        <span className="text-primary font-semibold">{commissionRate}% platform commission</span>{' '}
+        from each sale. You keep the remaining {instructorShare}%.
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -66,14 +71,14 @@ const Step3Pricing = ({
               </div>
             )}
             <div className="text-danger flex justify-between">
-              <span>Platform Commission (20%)</span>
-              <span>- ৳{(parseInt(watchedPrice) * 0.2).toLocaleString()}</span>
+              <span>Platform Commission ({commissionRate}%)</span>
+              <span>- ৳{(parseInt(watchedPrice) * (commissionRate / 100)).toLocaleString()}</span>
             </div>
             <div className="bg-border h-px" />
             <div className="flex justify-between font-semibold">
               <span>You Earn Per Sale</span>
               <span className="text-primary">
-                ৳{(parseInt(watchedPrice) * 0.8).toLocaleString()}
+                ৳{(parseInt(watchedPrice) * (instructorShare / 100)).toLocaleString()}
               </span>
             </div>
           </div>

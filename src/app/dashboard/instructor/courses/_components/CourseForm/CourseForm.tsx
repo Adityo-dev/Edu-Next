@@ -77,11 +77,14 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
         lessons: [
           {
             title: '',
+            description: '',
+            references: '',
             durationHr: '',
             durationMin: '',
             durationSec: '',
             videoUrl: '',
             free: false,
+            quizzes: [],
           },
         ],
       },
@@ -105,7 +108,6 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
     mode: 'onTouched',
   });
 
-  // Re-populate from localStorage on mount (only in create mode)
   useEffect(() => {
     if (mode === 'create') {
       const savedDraft = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -126,7 +128,6 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, reset]);
 
-  // Re-populate if initialData changes (useful for edit mode if fetched asynchronously)
   useEffect(() => {
     if (mode === 'edit' && initialData) {
       reset(initialData);
@@ -231,10 +232,13 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
           order: sIdx + 1,
           lessons: section.lessons.map((lesson, lIdx) => ({
             title: lesson.title,
+            description: lesson.description || '',
+            references: lesson.references || '',
             duration: formatDuration(lesson.durationHr, lesson.durationMin, lesson.durationSec),
             videoUrl: lesson.videoUrl,
             isFree: lesson.free,
             order: lIdx + 1,
+            quizzes: lesson.quizzes || [],
           })),
         })),
       };
@@ -313,8 +317,8 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
         {/* Step 1: Basic Info */}
         {step === 0 && (
           <Step1BasicInfo
-            control={control}
-            errors={errors}
+            control={control as any}
+            errors={errors as any}
             watchedThumbnail={watchedThumbnail}
             watchedCategory={watchedCategory}
             isUploading={isUploading}
@@ -325,8 +329,8 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
         {/* Step 2: Curriculum */}
         {step === 1 && (
           <Step2Curriculum
-            control={control}
-            errors={errors}
+            control={control as any}
+            errors={errors as any}
             trigger={trigger}
             getValues={getValues}
           />
@@ -335,8 +339,8 @@ const CourseForm = ({ mode, initialData, courseId }: ICourseFormProps) => {
         {/* Step 3: Pricing */}
         {step === 2 && (
           <Step3Pricing
-            control={control}
-            errors={errors}
+            control={control as any}
+            errors={errors as any}
             watchedPrice={watchedPrice}
             watchedEstimatedPrice={watchedEstimatedPrice}
           />

@@ -110,21 +110,70 @@ export default function LessonInfoTabs({
         )}
 
         <div className="prose text-text-secondary max-w-none">
-          {activeTab === 'description' && (
-            <p className="leading-relaxed">
-              Welcome to this lesson on <strong>{currentLesson?.title}</strong>. In this video, we
-              will cover the foundational concepts you need to succeed. Make sure to code along and
-              practice the examples shown in the video.
-            </p>
-          )}
-          {activeTab === 'reference' && (
-            <p className="leading-relaxed">No references available for this lesson.</p>
-          )}
-          {activeTab === 'quiz' && (
-            <p className="text-text-placeholder leading-relaxed italic">
-              No quiz available for this lesson yet.
-            </p>
-          )}
+          {activeTab === 'description' &&
+            (currentLesson?.description ? (
+              <div dangerouslySetInnerHTML={{ __html: currentLesson.description }} />
+            ) : (
+              <p className="text-text-placeholder leading-relaxed italic">
+                No description available for this lesson.
+              </p>
+            ))}
+
+          {activeTab === 'reference' &&
+            (currentLesson?.references ? (
+              <div dangerouslySetInnerHTML={{ __html: currentLesson.references }} />
+            ) : (
+              <p className="text-text-placeholder leading-relaxed italic">
+                No references available for this lesson.
+              </p>
+            ))}
+
+          {activeTab === 'quiz' &&
+            (currentLesson?.quizzes && currentLesson.quizzes.length > 0 ? (
+              <div className="not-prose space-y-8">
+                {currentLesson.quizzes.map((quiz, qIdx) => (
+                  <div
+                    key={quiz._id || qIdx}
+                    className="rounded-md border border-slate-200 bg-slate-50 p-6"
+                  >
+                    <h3 className="mb-1 text-lg font-bold text-slate-800">{quiz.title}</h3>
+                    <p className="mb-6 text-sm font-medium text-slate-500">
+                      Pass Mark: {quiz.passMark}%
+                    </p>
+
+                    <div className="space-y-6">
+                      {quiz.questions.map((q, qIndex) => (
+                        <div key={q._id || qIndex} className="space-y-3">
+                          <h4 className="font-semibold text-slate-700">
+                            {qIndex + 1}. {q.questionText}
+                          </h4>
+                          <div className="space-y-2 pl-4">
+                            {q.options.map((opt, oIndex) => (
+                              <label
+                                key={opt._id || oIndex}
+                                className="flex cursor-pointer items-center gap-2 text-sm text-slate-600 transition-colors hover:text-slate-800"
+                              >
+                                <input
+                                  type="radio"
+                                  name={`question-${q._id}`}
+                                  value={opt._id}
+                                  className="accent-primary h-4 w-4"
+                                />
+                                {opt.text}
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-text-placeholder leading-relaxed italic">
+                No quiz available for this lesson yet.
+              </p>
+            ))}
         </div>
       </div>
     </div>
