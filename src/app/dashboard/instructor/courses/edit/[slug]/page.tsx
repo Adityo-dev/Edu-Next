@@ -59,6 +59,7 @@ const EditCoursePage = () => {
     title: course.title || '',
     subtitle: course.subtitle || '',
     category: course.category || '',
+    subCategory: course.subCategory || '',
     level: course.level || '',
     language: course.language || '',
     hasCertificate: course.hasCertificate || false,
