@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/purity */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
@@ -52,11 +51,11 @@ export default function WeeklyRevenue() {
       <div className="h-62.5 w-full p-0">
         {isLoading ? (
           <div className="flex h-full w-full items-end justify-between gap-2 px-2 pb-6">
-            {[...Array(7)].map((_, i) => (
+            {[40, 70, 45, 90, 60, 30, 80].map((height, i) => (
               <div
                 key={i}
                 className="w-full animate-pulse rounded-t bg-slate-100"
-                style={{ height: `${Math.max(20, Math.random() * 100)}%` }}
+                style={{ height: `${height}%` }}
               />
             ))}
           </div>

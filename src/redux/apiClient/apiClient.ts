@@ -49,5 +49,7 @@ export const apiClient = createApi({
     'Subcategories',
     'Tickets',
     'Notifications',
+    'InstructorStats',
+    'StudentProgress',
   ],
 });

@@ -1,9 +1,9 @@
 'use client';
 
-import { Award, BookOpen, Clock, TrendingUp } from 'lucide-react';
-import { useGetMyCourseStatsQuery } from '@/redux/features/courseManagement/studentCourse.api';
 import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleton';
 import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
+import { useGetMyCourseStatsQuery } from '@/redux/features/overview/studentOverview.api';
+import { Award, BookOpen, Clock, TrendingUp } from 'lucide-react';
 
 const StudentStats = () => {
   const { data, isLoading } = useGetMyCourseStatsQuery();

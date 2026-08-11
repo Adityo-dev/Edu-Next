@@ -7,11 +7,11 @@ import {
   IInstructorCoursePerformanceData,
   IInstructorCoursePerformanceQueryParams,
   IInstructorCoursesQueryParams,
+  IInstructorCourseStats,
   IInstructorRevenueOverview,
   IInstructorStudentsData,
   IInstructorStudentsQueryParams,
   IInstructorStudentStats,
-  IInstructorCourseStats,
   IPaginatedData,
 } from '@/types/courseManagement.types';
 
