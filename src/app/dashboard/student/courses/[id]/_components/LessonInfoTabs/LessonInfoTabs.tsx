@@ -1,7 +1,9 @@
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { ILesson } from '@/types/courseManagement.types';
 import { ArrowLeft, ArrowRight, Maximize } from 'lucide-react';
+import { useParams } from 'next/navigation';
 import { useState } from 'react';
+import QuizForm from './QuizForm';
 
 interface LessonInfoTabsProps {
   currentLesson: ILesson | null;
@@ -20,6 +22,8 @@ export default function LessonInfoTabs({
   hasPrev,
   onFullScreen,
 }: LessonInfoTabsProps) {
+  const params = useParams();
+  const courseId = params.id as string;
   const [activeTab, setActiveTab] = useState<'description' | 'reference' | 'quiz'>('description');
 
   return (
@@ -132,41 +136,12 @@ export default function LessonInfoTabs({
             (currentLesson?.quizzes && currentLesson.quizzes.length > 0 ? (
               <div className="not-prose space-y-8">
                 {currentLesson.quizzes.map((quiz, qIdx) => (
-                  <div
+                  <QuizForm
                     key={quiz._id || qIdx}
-                    className="rounded-md border border-slate-200 bg-slate-50 p-6"
-                  >
-                    <h3 className="mb-1 text-lg font-bold text-slate-800">{quiz.title}</h3>
-                    <p className="mb-6 text-sm font-medium text-slate-500">
-                      Pass Mark: {quiz.passMark}%
-                    </p>
-
-                    <div className="space-y-6">
-                      {quiz.questions.map((q, qIndex) => (
-                        <div key={q._id || qIndex} className="space-y-3">
-                          <h4 className="font-semibold text-slate-700">
-                            {qIndex + 1}. {q.questionText}
-                          </h4>
-                          <div className="space-y-2 pl-4">
-                            {q.options.map((opt, oIndex) => (
-                              <label
-                                key={opt._id || oIndex}
-                                className="flex cursor-pointer items-center gap-2 text-sm text-slate-600 transition-colors hover:text-slate-800"
-                              >
-                                <input
-                                  type="radio"
-                                  name={`question-${q._id}`}
-                                  value={opt._id}
-                                  className="accent-primary h-4 w-4"
-                                />
-                                {opt.text}
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                    quiz={quiz}
+                    courseId={courseId}
+                    lessonId={currentLesson._id as string}
+                  />
                 ))}
               </div>
             ) : (

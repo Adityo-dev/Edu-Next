@@ -3,12 +3,14 @@ import {
   ICommonResponse,
   ICoursePlaybackData,
   IStudentStats,
+  IEnrolledCourse,
+  IPaginatedData,
 } from '@/types/courseManagement.types';
 
 export const studentCourseApi = apiClient.injectEndpoints({
   endpoints: (builder) => ({
     getMyCourses: builder.query<
-      ICommonResponse<unknown>,
+      ICommonResponse<IPaginatedData<IEnrolledCourse>>,
       { search?: string; stats?: string; page?: number; limit?: number } | void
     >({
       query: (params) => ({
@@ -52,6 +54,28 @@ export const studentCourseApi = apiClient.injectEndpoints({
         'CourseStats',
       ],
     }),
+
+    // 5. Submit Quiz
+    submitQuiz: builder.mutation<
+      ICommonResponse<unknown>,
+      {
+        courseId: string;
+        lessonId: string;
+        quizId: string;
+        answers: { questionId: string; optionId: string }[];
+      }
+    >({
+      query: ({ courseId, lessonId, quizId, answers }) => ({
+        url: `/progress/${courseId}/lesson/${lessonId}/quiz/${quizId}/submit`,
+        method: 'POST',
+        body: { answers },
+      }),
+      invalidatesTags: (result, error, { courseId }) => [
+        { type: 'Courses', id: courseId },
+        'Courses',
+        'CourseStats',
+      ],
+    }),
   }),
 });
 
@@ -60,4 +84,5 @@ export const {
   useGetMyBasicStatsQuery,
   useGetCoursePlaybackDataQuery,
   useMarkLessonAsCompleteMutation,
+  useSubmitQuizMutation,
 } = studentCourseApi;

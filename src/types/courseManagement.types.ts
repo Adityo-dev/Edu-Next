@@ -214,6 +214,7 @@ export interface IEnrolledCourse {
     isCourseCompleted: boolean;
     status: string;
     lastActivityAt: string;
+    averageQuizScore?: number;
   };
 }
 
