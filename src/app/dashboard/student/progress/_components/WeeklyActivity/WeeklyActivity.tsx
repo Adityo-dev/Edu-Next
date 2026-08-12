@@ -1,19 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { Flame } from 'lucide-react';
-import { useGetStudentWeeklyActivityQuery } from '@/redux/features/progress/studentProgress.api';
 import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
-import { Bar, BarChart, Tooltip, XAxis, LabelList } from 'recharts';
+import { useGetStudentWeeklyActivityQuery } from '@/redux/features/progress/studentProgress.api';
+import { Flame } from 'lucide-react';
+import { Bar, BarChart, LabelList, Tooltip, XAxis } from 'recharts';
 
 const chartConfig = {
   hours: {
     label: 'Hours',
-    color: '#34796f', // primary color
+    color: '#34796f',
   },
 } satisfies ChartConfig;
 
-// Custom tooltip to show exact hours on hover
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
@@ -23,7 +22,7 @@ const CustomTooltip = ({ active, payload }: any) => {
         </p>
         <div className="flex items-center gap-2">
           <span className="bg-primary h-2 w-2 rounded-full" />
-          <p className="text-secondary text-sm font-semibold">{payload[0].value}h</p>
+          <p className="text-secondary text-sm font-semibold">{payload[0].payload.timeText}</p>
         </div>
       </div>
     );
@@ -34,13 +33,14 @@ const CustomTooltip = ({ active, payload }: any) => {
 const WeeklyActivity = () => {
   const { data, isLoading } = useGetStudentWeeklyActivityQuery();
   const weeklyActivity = data?.data || [];
+  const currentStreak = data?.currentStreak || 0;
 
   return (
     <div className="dashboard-card-container">
       <h3 className="mb-5 text-base font-semibold">This Week</h3>
 
       {/* Weekly Bar Chart from Shadcn */}
-      <div className="mb-5 h-[120px] w-full">
+      <div className="mb-5 h-37.5 w-full">
         {isLoading ? (
           <div className="flex h-full w-full items-end justify-between gap-2 px-2 pb-6">
             {[40, 70, 45, 90, 60, 30, 80].map((height, i) => (
@@ -56,14 +56,14 @@ const WeeklyActivity = () => {
             <BarChart
               accessibilityLayer
               data={weeklyActivity}
-              margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
+              margin={{ top: 25, right: 0, left: 0, bottom: 0 }}
             >
               <XAxis
                 dataKey="day"
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                className="text-text-secondary text-[10px]"
+                className="text-text-secondary text-xs"
               />
               <Tooltip
                 content={<CustomTooltip />}
@@ -72,10 +72,13 @@ const WeeklyActivity = () => {
               />
               <Bar dataKey="hours" fill="var(--color-hours)" radius={[4, 4, 0, 0]} minPointSize={2}>
                 <LabelList
-                  dataKey="hours"
+                  dataKey="timeText"
                   position="top"
-                  className="fill-primary text-[10px] font-semibold"
-                  formatter={(value: unknown) => (Number(value) > 0 ? `${value}h` : '')}
+                  className="fill-primary text-xs font-semibold"
+                  formatter={(value: unknown) => {
+                    const str = String(value);
+                    return str !== '0m' && str !== '0h' && str !== '0' ? str : '';
+                  }}
                   offset={5}
                 />
               </Bar>
@@ -86,13 +89,41 @@ const WeeklyActivity = () => {
 
       <div className="mb-4 h-px bg-slate-100" />
 
-      {/* Streak */}
-      <div className="flex items-center justify-between rounded-sm bg-orange-50 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <Flame size={20} className="text-secondary" />
-          <span className="text-sm font-bold text-slate-700">Current Streak</span>
+      {/* 7-Day Streak */}
+      <div className="flex flex-col gap-3 rounded-sm bg-orange-50 p-3">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-semibold">7-Day Streak</span>
+          <span className="text-secondary text-sm font-semibold">
+            {isLoading ? '-' : `${Math.min(currentStreak, 7)}/7`}
+          </span>
         </div>
-        <span className="text-secondary text-xl font-black">{isLoading ? '-' : '7 days 🔥'}</span>
+        <div className="flex items-center justify-between">
+          {[...Array(7)].map((_, i) => {
+            const isActive = i < currentStreak;
+            // Dynamic colors from light orange to vibrant red-orange
+            const activeColors = [
+              'text-orange-300 fill-orange-300',
+              'text-orange-400 fill-orange-400',
+              'text-orange-500 fill-orange-500',
+              'text-orange-500 fill-orange-500',
+              'text-orange-600 fill-orange-600',
+              'text-red-500 fill-red-500',
+              'text-red-600 fill-red-600',
+            ];
+            const colorClass = isActive ? activeColors[i] : 'text-slate-200 fill-slate-200';
+
+            return (
+              <div key={i} className="flex flex-col items-center gap-1">
+                <Flame size={20} className={`transition-all duration-300 ${colorClass}`} />
+                <span
+                  className={`text-[10px] font-semibold ${isActive ? '' : 'text-text-placeholder'}`}
+                >
+                  Day {i + 1}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

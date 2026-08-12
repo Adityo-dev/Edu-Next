@@ -3,7 +3,7 @@ import { ICommonResponse } from '@/types/courseManagement.types';
 import {
   IStudentOverallProgress,
   IStudentSummaryCards,
-  IStudentWeeklyActivity,
+  IStudentWeeklyActivityResponse,
   IStudentAchievement,
   IStudentWeeklyGoal,
 } from '@/types/progress.types';
@@ -26,7 +26,7 @@ export const studentProgressApi = apiClient.injectEndpoints({
       providesTags: ['StudentProgress'],
     }),
 
-    getStudentWeeklyActivity: builder.query<ICommonResponse<IStudentWeeklyActivity[]>, void>({
+    getStudentWeeklyActivity: builder.query<IStudentWeeklyActivityResponse, void>({
       query: () => ({
         url: '/progress/student/weekly-activity',
         method: 'GET',

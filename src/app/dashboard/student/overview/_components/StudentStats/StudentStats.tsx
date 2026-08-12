@@ -41,7 +41,7 @@ const StudentStats = () => {
       {isLoading ? (
         <>
           {[...Array(4)].map((_, i) => (
-            <StatsCardSkeleton key={i} />
+            <StatsCardSkeleton key={i} hasSub />
           ))}
         </>
       ) : (

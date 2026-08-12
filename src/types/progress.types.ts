@@ -36,6 +36,15 @@ export interface IStudentSummaryCards {
 export interface IStudentWeeklyActivity {
   day: string;
   hours: number;
+  minutes: number;
+  timeText: string;
+}
+
+export interface IStudentWeeklyActivityResponse {
+  success: boolean;
+  message: string;
+  data: IStudentWeeklyActivity[];
+  currentStreak: number;
 }
 
 export interface IStudentAchievement {

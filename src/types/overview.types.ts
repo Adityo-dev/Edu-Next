@@ -41,3 +41,17 @@ export interface IInstructorOverviewStatus {
   };
   walletBalance: number;
 }
+
+export interface IStudentWelcomeStats {
+  studentName: string;
+  motivationalMessage: string;
+  inProgressCount: number;
+  currentStreak: number;
+  thisWeekHours: number;
+  thisWeekTimeText: string;
+  resumeCourse: {
+    courseId: string;
+    title: string;
+    thumbnail: string;
+  } | null;
+}
