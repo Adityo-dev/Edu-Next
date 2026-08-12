@@ -18,8 +18,9 @@ const Achievements = () => {
             : achievements.map((badge, i) => (
                 <Tooltip key={i}>
                   <TooltipTrigger asChild>
-                    <div
-                      className={`flex cursor-pointer flex-col items-center justify-center rounded-sm p-3 text-center transition-all ${
+                    <button
+                      type="button"
+                      className={`flex cursor-pointer flex-col items-center justify-center rounded-sm p-3 text-center transition-all focus:outline-none ${
                         badge?.isUnlocked
                           ? 'border border-emerald-100 bg-emerald-50 hover:bg-emerald-100'
                           : 'border border-slate-100 bg-slate-50 opacity-50 hover:opacity-70'
@@ -27,7 +28,7 @@ const Achievements = () => {
                     >
                       <span className="mb-1 text-2xl">{badge?.icon}</span>
                       <span className="text-xs leading-tight font-semibold">{badge?.title}</span>
-                    </div>
+                    </button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="max-w-[200px] text-center">
                     <p className="font-semibold text-white">{badge?.title}</p>
