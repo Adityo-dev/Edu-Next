@@ -34,7 +34,7 @@ const OverallProgress = () => {
 
   return (
     <div className="dashboard-card-container">
-      <h3 className="mb-5 text-base font-bold">Overall Progress</h3>
+      <h3 className="mb-5 text-base font-semibold">Overall Progress</h3>
 
       {/* Big Circle */}
       <div className="mb-5 flex flex-col items-center">

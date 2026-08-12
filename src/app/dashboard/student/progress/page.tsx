@@ -27,7 +27,7 @@ const StudentProgressPage = () => {
         </div>
 
         {/* Right (1/3) */}
-        <div className="space-y-6">
+        <div className="space-y-5">
           <WeeklyActivity />
           <OverallProgress />
           <Achievements />

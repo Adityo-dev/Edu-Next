@@ -2,63 +2,86 @@
 
 import { Flame } from 'lucide-react';
 import { useGetStudentWeeklyActivityQuery } from '@/redux/features/progress/studentProgress.api';
+import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
+import { Bar, BarChart, Tooltip, XAxis, LabelList } from 'recharts';
+
+const chartConfig = {
+  hours: {
+    label: 'Hours',
+    color: '#34796f', // primary color
+  },
+} satisfies ChartConfig;
+
+// Custom tooltip to show exact hours on hover
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="flex items-center gap-2 rounded-sm border border-slate-100 bg-white p-2 shadow-md backdrop-blur-md">
+        <p className="text-[11px] font-semibold tracking-wider uppercase">
+          {payload[0].payload.day}
+        </p>
+        <div className="flex items-center gap-2">
+          <span className="bg-primary h-2 w-2 rounded-full" />
+          <p className="text-secondary text-sm font-semibold">{payload[0].value}h</p>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
 
 const WeeklyActivity = () => {
   const { data, isLoading } = useGetStudentWeeklyActivityQuery();
-  const weeklyActivity = data?.data || [
-    { day: 'Mon', hours: 0 },
-    { day: 'Tue', hours: 0 },
-    { day: 'Wed', hours: 0 },
-    { day: 'Thu', hours: 0 },
-    { day: 'Fri', hours: 0 },
-    { day: 'Sat', hours: 0 },
-    { day: 'Sun', hours: 0 },
-  ];
+  const weeklyActivity = data?.data || [];
 
-  const maxHours = Math.max(0.1, ...weeklyActivity.map((d) => d.hours));
   return (
     <div className="dashboard-card-container">
-      <h3 className="mb-5 text-base font-bold">This Week</h3>
+      <h3 className="mb-5 text-base font-semibold">This Week</h3>
 
-      {/* Weekly Bar Chart */}
-      <div className="mb-5 flex items-end justify-between gap-1.5">
-        {isLoading
-          ? // Skeleton for chart
-            [40, 70, 45, 90, 60, 30, 80].map((height, i) => (
-              <div key={i} className="flex flex-1 flex-col items-center gap-1.5">
-                <span className="text-[10px] font-bold text-transparent">-</span>
-                <div
-                  className="w-full animate-pulse overflow-hidden rounded-sm bg-slate-100"
-                  style={{ height: '60px' }}
-                >
-                  <div
-                    className="w-full rounded-sm bg-slate-200"
-                    style={{ height: `${height}%`, marginTop: `${100 - height}%` }}
-                  />
-                </div>
-                <span className="text-[10px] text-transparent">-</span>
-              </div>
-            ))
-          : weeklyActivity.map((day) => (
-              <div key={day.day} className="flex flex-1 flex-col items-center gap-1.5">
-                <span className="text-primary text-[10px] font-bold">
-                  {day.hours > 0 ? `${day.hours}h` : ''}
-                </span>
-                <div
-                  className="w-full overflow-hidden rounded-sm bg-slate-100"
-                  style={{ height: '60px' }}
-                >
-                  <div
-                    className="bg-primary w-full rounded-sm transition-all duration-500"
-                    style={{
-                      height: `${(day.hours / maxHours) * 100}%`,
-                      marginTop: `${100 - (day.hours / maxHours) * 100}%`,
-                    }}
-                  />
-                </div>
-                <span className="text-text-secondary text-[10px]">{day.day}</span>
-              </div>
+      {/* Weekly Bar Chart from Shadcn */}
+      <div className="mb-5 h-[120px] w-full">
+        {isLoading ? (
+          <div className="flex h-full w-full items-end justify-between gap-2 px-2 pb-6">
+            {[40, 70, 45, 90, 60, 30, 80].map((height, i) => (
+              <div
+                key={i}
+                className="w-full animate-pulse rounded-t bg-slate-100"
+                style={{ height: `${height}%` }}
+              />
             ))}
+          </div>
+        ) : (
+          <ChartContainer config={chartConfig} className="h-full w-full">
+            <BarChart
+              accessibilityLayer
+              data={weeklyActivity}
+              margin={{ top: 10, right: 0, left: 0, bottom: 0 }}
+            >
+              <XAxis
+                dataKey="day"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                className="text-text-secondary text-[10px]"
+              />
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{ fill: 'rgba(52, 121, 111, 0.04)', radius: 4 }}
+                animationDuration={200}
+              />
+              <Bar dataKey="hours" fill="var(--color-hours)" radius={[4, 4, 0, 0]} minPointSize={2}>
+                <LabelList
+                  dataKey="hours"
+                  position="top"
+                  className="fill-primary text-[10px] font-semibold"
+                  formatter={(value: unknown) => (Number(value) > 0 ? `${value}h` : '')}
+                  offset={5}
+                />
+              </Bar>
+            </BarChart>
+          </ChartContainer>
+        )}
       </div>
 
       <div className="mb-4 h-px bg-slate-100" />
@@ -70,7 +93,6 @@ const WeeklyActivity = () => {
           <span className="text-sm font-bold text-slate-700">Current Streak</span>
         </div>
         <span className="text-secondary text-xl font-black">{isLoading ? '-' : '7 days 🔥'}</span>
-        {/* Note: If the API returns streak data in the future, we can wire it up here */}
       </div>
     </div>
   );

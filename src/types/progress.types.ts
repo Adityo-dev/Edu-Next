@@ -37,3 +37,22 @@ export interface IStudentWeeklyActivity {
   day: string;
   hours: number;
 }
+
+export interface IStudentAchievement {
+  id: string;
+  title: string;
+  description: string;
+  isUnlocked: boolean;
+  icon: string;
+}
+
+export interface IStudentWeeklyGoal {
+  hoursLearnedThisWeek?: number;
+  hoursLearnedText?: string;
+  weeklyGoalHours?: number;
+  lessonsCompletedThisWeek: number;
+  weeklyGoal?: number;
+  percentile: number;
+  percentileText: string;
+  progressText: string;
+}
