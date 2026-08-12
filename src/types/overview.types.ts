@@ -18,7 +18,7 @@ export interface IStudentCourseOverviewStats {
 }
 
 export interface IInstructorWelcomeStats {
-  name: string;
+  instructorName: string;
   activeCourses: number;
   pendingCourses: number;
   newEnrollmentsToday: number;
@@ -54,4 +54,11 @@ export interface IStudentWelcomeStats {
     title: string;
     thumbnail: string;
   } | null;
+}
+
+export interface IAdminWelcomeStats {
+  adminName: string;
+  totalUsers: number;
+  totalCommission: number;
+  totalActions: number;
 }

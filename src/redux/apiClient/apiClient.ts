@@ -51,5 +51,6 @@ export const apiClient = createApi({
     'Notifications',
     'InstructorStats',
     'StudentProgress',
+    'AdminStats',
   ],
 });

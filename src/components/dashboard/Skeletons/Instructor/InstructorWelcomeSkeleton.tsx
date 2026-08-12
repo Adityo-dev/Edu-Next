@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 
-const WelcomeSectionSkeleton = () => {
+const InstructorWelcomeSkeleton = () => {
   return (
     <div className="bg-primary dashboard-card-container relative overflow-hidden sm:px-6 sm:py-6">
       <div
@@ -34,4 +34,4 @@ const WelcomeSectionSkeleton = () => {
   );
 };
 
-export default WelcomeSectionSkeleton;
+export default InstructorWelcomeSkeleton;
