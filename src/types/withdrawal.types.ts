@@ -31,6 +31,7 @@ export interface IWithdrawalRequest {
         email: string;
         phone: string;
         fullName: string;
+        walletBalance?: number;
       };
   amount: number;
   status: 'pending' | 'approved' | 'rejected';

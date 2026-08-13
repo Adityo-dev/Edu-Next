@@ -55,7 +55,6 @@ export const withdrawalApi = apiClient.injectEndpoints({
 
     getPendingWithdrawals: builder.query<
       ICommonResponse<{
-        stats: IWithdrawalStats;
         withdrawals: IWithdrawalRequest[];
         pagination: TMeta;
       }>,
@@ -65,6 +64,14 @@ export const withdrawalApi = apiClient.injectEndpoints({
         url: '/withdrawal',
         method: 'GET',
         params: params || { status: 'pending' },
+      }),
+      providesTags: ['Withdrawals'],
+    }),
+
+    getWithdrawalStats: builder.query<ICommonResponse<IWithdrawalStats>, void>({
+      query: () => ({
+        url: '/withdrawal/stats',
+        method: 'GET',
       }),
       providesTags: ['Withdrawals'],
     }),
@@ -92,5 +99,6 @@ export const {
   useRequestWithdrawalMutation,
   useGetMyWithdrawalsQuery,
   useGetPendingWithdrawalsQuery,
+  useGetWithdrawalStatsQuery,
   useProcessWithdrawalMutation,
 } = withdrawalApi;

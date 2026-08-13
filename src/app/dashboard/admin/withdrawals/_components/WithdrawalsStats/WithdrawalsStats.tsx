@@ -1,14 +1,11 @@
 import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
 import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleton';
-import { IWithdrawalStats } from '@/types/withdrawal.types';
+import { useGetWithdrawalStatsQuery } from '@/redux/features/withdrawal/withdrawal.api';
 import { Ban, CheckCircle2, Clock, Wallet } from 'lucide-react';
 
-interface WithdrawalsStatsProps {
-  stats: IWithdrawalStats | undefined;
-  isLoading?: boolean;
-}
-
-const WithdrawalsStats = ({ stats, isLoading }: WithdrawalsStatsProps) => {
+const WithdrawalsStats = () => {
+  const { data, isLoading } = useGetWithdrawalStatsQuery();
+  const stats = data?.data;
   const statCards = [
     {
       label: 'Pending Requests',
