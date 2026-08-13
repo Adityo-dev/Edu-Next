@@ -10,6 +10,7 @@ import CategoryFormModal from '@/app/dashboard/admin/dynamic-content/_components
 import SubcategoryManager from '@/app/dashboard/admin/dynamic-content/_components/CategoryManager/_components/SubcategoryManager/SubcategoryManager';
 import InstructorDetail from '@/app/dashboard/admin/instructors/_components/InstructorDetail/InstructorDetail';
 import LessonDetailsDrawer from '@/app/dashboard/instructor/courses/_components/CourseForm/Step2Curriculum/LessonDetailsDrawer';
+import AdminProcessingModal from '@/components/dashboard/Withdrawals/AdminProcessingModal';
 import { TModalView } from '@/types/customModal.types';
 
 export const MODAL_COMPONENTS: Record<TModalView, React.ReactNode> = {
@@ -23,5 +24,6 @@ export const MODAL_COMPONENTS: Record<TModalView, React.ReactNode> = {
   SUBCATEGORY_MANAGEMENT: <SubcategoryManager />,
   INSTRUCTOR_BADGE_DETAILS: <InstructorDetail />,
   LESSON_DETAILS_DRAWER: <LessonDetailsDrawer />,
+  WITHDRAWAL_PROCESSING: <AdminProcessingModal />,
   NONE: null,
 };

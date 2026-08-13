@@ -1,10 +1,16 @@
+import CustomPagination from '@/components/dashboard/CustomPagination/CustomPagination';
 import { useGetMyWithdrawalsQuery } from '@/redux/features/withdrawal/withdrawal.api';
+import { useSearchParams } from 'next/navigation';
 
 import WithdrawalHistoryCard from './_components/WithdrawalHistoryCard/WithdrawalHistoryCard';
 
 const WithdrawalHistory = () => {
-  const { data, isLoading } = useGetMyWithdrawalsQuery();
-  const withdrawals = data?.data || [];
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get('page')) || 1;
+
+  const { data, isLoading } = useGetMyWithdrawalsQuery({ page, limit: 10 });
+  const withdrawals = data?.data?.withdrawals || [];
+  const pagination = data?.data?.pagination;
 
   return (
     <div className="dashboard-card-container">
@@ -20,10 +26,24 @@ const WithdrawalHistory = () => {
           <p className="text-sm text-slate-500">No withdrawals found</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {withdrawals.map((wd) => (
-            <WithdrawalHistoryCard key={wd._id} wd={wd} />
-          ))}
+        <div className="space-y-4">
+          <div className="space-y-3">
+            {withdrawals.map((wd) => (
+              <WithdrawalHistoryCard key={wd._id} wd={wd} />
+            ))}
+          </div>
+          {pagination && (
+            <div className="mt-4">
+              <CustomPagination
+                meta={{
+                  total: pagination?.total || 0,
+                  page: pagination?.page || 1,
+                  limit: pagination?.limit || 10,
+                  totalPages: pagination?.totalPages || 1,
+                }}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>

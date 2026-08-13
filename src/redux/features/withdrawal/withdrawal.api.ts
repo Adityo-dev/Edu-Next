@@ -1,6 +1,7 @@
 import { apiClient } from '@/redux/apiClient/apiClient';
+import { TMeta } from '@/types/apiResponse.types';
 import { ICommonResponse } from '@/types/courseManagement.types';
-import { IPayoutSettings, IWithdrawalRequest } from '@/types/withdrawal.types';
+import { IPayoutSettings, IWithdrawalRequest, IWithdrawalStats } from '@/types/withdrawal.types';
 
 export const withdrawalApi = apiClient.injectEndpoints({
   endpoints: (builder) => ({
@@ -38,20 +39,32 @@ export const withdrawalApi = apiClient.injectEndpoints({
       invalidatesTags: ['Withdrawals'],
     }),
 
-    getMyWithdrawals: builder.query<ICommonResponse<IWithdrawalRequest[]>, void>({
-      query: () => ({
+    getMyWithdrawals: builder.query<
+      ICommonResponse<{ withdrawals: IWithdrawalRequest[]; pagination: TMeta }>,
+      { page?: number; limit?: number } | void
+    >({
+      query: (params) => ({
         url: '/withdrawal/my-requests',
         method: 'GET',
+        params: params || {},
       }),
       providesTags: ['Withdrawals'],
     }),
 
     // ADMIN ENDPOINTS
 
-    getPendingWithdrawals: builder.query<ICommonResponse<IWithdrawalRequest[]>, void>({
-      query: () => ({
-        url: '/withdrawal?status=pending',
+    getPendingWithdrawals: builder.query<
+      ICommonResponse<{
+        stats: IWithdrawalStats;
+        withdrawals: IWithdrawalRequest[];
+        pagination: TMeta;
+      }>,
+      { page?: number; limit?: number; status?: string } | void
+    >({
+      query: (params) => ({
+        url: '/withdrawal',
         method: 'GET',
+        params: params || { status: 'pending' },
       }),
       providesTags: ['Withdrawals'],
     }),

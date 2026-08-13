@@ -13,6 +13,7 @@ export type TModalView =
   | 'SUBCATEGORY_MANAGEMENT'
   | 'INSTRUCTOR_BADGE_DETAILS'
   | 'LESSON_DETAILS_DRAWER'
+  | 'WITHDRAWAL_PROCESSING'
   | 'NONE';
 
 //Open Modal Props

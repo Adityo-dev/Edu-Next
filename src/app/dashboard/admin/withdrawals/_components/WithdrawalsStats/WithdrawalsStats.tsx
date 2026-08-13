@@ -1,48 +1,54 @@
-interface Withdrawal {
-  status: string;
-  amount: number;
-}
+import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
+import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleton';
+import { IWithdrawalStats } from '@/types/withdrawal.types';
+import { Ban, CheckCircle2, Clock, Wallet } from 'lucide-react';
 
 interface WithdrawalsStatsProps {
-  withdrawals: Withdrawal[];
+  stats: IWithdrawalStats | undefined;
+  isLoading?: boolean;
 }
 
-const WithdrawalsStats = ({ withdrawals }: WithdrawalsStatsProps) => {
-  const totalPending = withdrawals
-    .filter((w) => w.status === 'pending')
-    .reduce((a, b) => a + b.amount, 0);
-
-  const stats = [
+const WithdrawalsStats = ({ stats, isLoading }: WithdrawalsStatsProps) => {
+  const statCards = [
     {
       label: 'Pending Requests',
-      value: withdrawals.filter((w) => w.status === 'pending').length,
-      color: 'text-yellow-600',
+      value: stats?.totalPendingRequests ?? 0,
+      iconColor: '#d97706',
+      icon: Clock,
     },
     {
       label: 'Total Pending Amount',
-      value: `৳${totalPending.toLocaleString()}`,
-      color: 'text-secondary',
+      value: `৳${(stats?.totalPendingAmount ?? 0).toLocaleString()}`,
+      iconColor: '#475569',
+      icon: Wallet,
     },
     {
       label: 'Approved',
-      value: withdrawals.filter((w) => w.status === 'approved').length,
-      color: 'text-primary',
+      value: stats?.totalApproved ?? 0,
+      iconColor: '#34796f',
+      icon: CheckCircle2,
     },
     {
       label: 'Rejected',
-      value: withdrawals.filter((w) => w.status === 'rejected').length,
-      color: 'text-red-500',
+      value: stats?.totalRejected ?? 0,
+      iconColor: '#dc3545',
+      icon: Ban,
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-      {stats.map((stat, i) => (
-        <div key={i} className="dashboard-card-container text-center">
-          <p className={`text-2xl font-black ${stat.color}`}>{stat.value}</p>
-          <p className="text-text-secondary text-sm">{stat.label}</p>
-        </div>
-      ))}
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {isLoading
+        ? Array.from({ length: 4 }).map((_, i) => <StatsCardSkeleton key={i} />)
+        : statCards.map((stat, i) => (
+            <StatsCard
+              key={i}
+              label={stat.label}
+              value={stat.value}
+              icon={stat.icon}
+              iconColor={stat.iconColor}
+            />
+          ))}
     </div>
   );
 };

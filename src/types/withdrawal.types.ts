@@ -51,3 +51,10 @@ export interface IWithdrawalRequest {
   processedAt?: string;
   processedBy?: string;
 }
+
+export interface IWithdrawalStats {
+  totalPendingRequests: number;
+  totalPendingAmount: number;
+  totalApproved: number;
+  totalRejected: number;
+}
