@@ -52,5 +52,7 @@ export const apiClient = createApi({
     'InstructorStats',
     'StudentProgress',
     'AdminStats',
+    'PayoutSettings',
+    'Withdrawals',
   ],
 });

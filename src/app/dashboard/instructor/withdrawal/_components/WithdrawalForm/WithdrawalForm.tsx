@@ -1,42 +1,103 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/incompatible-library */
+'use client';
+
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
+import InputField from '@/components/dashboard/Fields/InputField/InputField';
+import {
+  useGetPayoutSettingsQuery,
+  useRequestWithdrawalMutation,
+} from '@/redux/features/withdrawal/withdrawal.api';
+import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 interface WithdrawalFormProps {
-  method: string;
-  setMethod: (m: string) => void;
-  amount: string;
-  setAmount: (a: string) => void;
-  account: string;
-  setAccount: (a: string) => void;
   balance: number;
   minWithdrawal: number;
 }
 
-const WithdrawalForm = ({
-  method,
-  setMethod,
-  amount,
-  setAmount,
-  account,
-  setAccount,
-  balance,
-  minWithdrawal,
-}: WithdrawalFormProps) => {
+const formSchema = z.object({
+  method: z.enum(['bKash', 'Nagad', 'Bank']),
+  amount: z.string().min(1, 'Amount is required'),
+  account: z.string(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+const WithdrawalForm = ({ balance, minWithdrawal }: WithdrawalFormProps) => {
+  const { data: payoutSettingsData } = useGetPayoutSettingsQuery();
+  const [requestWithdrawal, { isLoading }] = useRequestWithdrawalMutation();
+
+  const { control, handleSubmit, setValue, watch } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      method: 'bKash',
+      amount: '',
+      account: '',
+    },
+  });
+
+  const method = watch('method');
+  const amount = watch('amount');
+  const account = watch('account');
+
+  // Update account when method or payout settings change
+  useEffect(() => {
+    const settings = payoutSettingsData?.data;
+    if (method.toLowerCase() === 'bKash'.toLowerCase()) {
+      setValue('account', settings?.bkash?.mobileNumber || '');
+    } else if (method.toLowerCase() === 'Nagad'.toLowerCase()) {
+      setValue('account', settings?.nagad?.mobileNumber || '');
+    } else if (method.toLowerCase() === 'Bank'.toLowerCase()) {
+      setValue('account', settings?.bank?.accountNumber || '');
+    }
+  }, [method, payoutSettingsData, setValue]);
+
+  const onSubmit = async (data: FormValues) => {
+    const numericAmount = Number(data.amount);
+    if (!numericAmount || numericAmount < minWithdrawal || numericAmount > balance) return;
+
+    try {
+      await requestWithdrawal({
+        amount: numericAmount,
+        method: data.method.toLowerCase() as 'bank' | 'bkash' | 'nagad',
+      }).unwrap();
+      toast.success('Withdrawal request submitted successfully');
+      setValue('amount', '');
+    } catch (err) {
+      const error = err as { data?: { message?: string } };
+      toast.error(error?.data?.message || 'Failed to submit withdrawal request');
+    }
+  };
+
+  const isSubmitDisabled =
+    !amount || !account || parseInt(amount) > balance || parseInt(amount) < minWithdrawal;
+
+  let amountError = '';
+  if (amount && parseInt(amount) > balance) amountError = 'Amount exceeds available balance.';
+  else if (amount && parseInt(amount) < minWithdrawal)
+    amountError = `Minimum withdrawal is ৳${minWithdrawal}.`;
+
   return (
     <div className="dashboard-card-container">
       <h2 className="mb-5 text-lg font-semibold">New Withdrawal Request</h2>
 
-      <div className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Method */}
         <div>
           <label className="mb-2 block text-xs font-bold tracking-wider text-slate-500 uppercase">
             Payment Method
           </label>
           <div className="grid grid-cols-3 gap-2">
-            {['bKash', 'Nagad', 'Bank'].map((m) => (
+            {(['bKash', 'Nagad', 'Bank'] as const).map((m) => (
               <button
+                type="button"
                 key={m}
-                onClick={() => setMethod(m)}
-                className={`rounded-sm border py-3 text-sm font-bold transition-all ${
+                onClick={() => setValue('method', m)}
+                className={`cursor-pointer rounded-sm border py-3 text-sm font-bold transition-all ${
                   method === m
                     ? 'border-primary text-primary bg-emerald-50'
                     : 'border-slate-200 text-slate-500 hover:border-slate-300'
@@ -49,55 +110,48 @@ const WithdrawalForm = ({
         </div>
 
         {/* Account */}
-        <div>
-          <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-            {method === 'Bank' ? 'Bank Account Number' : `${method} Number`}
-          </label>
-          <input
-            type="text"
-            value={account}
-            onChange={(e) => setAccount(e.target.value)}
-            placeholder={method === 'Bank' ? 'Account number' : '01700-000000'}
-            className="focus:border-primary w-full rounded-sm border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-100"
+        <div className="space-y-1">
+          <InputField
+            name="account"
+            control={control}
+            label={method === 'Bank' ? 'Bank Account Number' : `${method} Number`}
+            placeholder={method === 'Bank' ? 'Account number not set' : `${method} number not set`}
+            readOnly
           />
+          <p className="text-text-secondary text-[11px]">
+            You can update your payout details from your{' '}
+            <Link
+              href="/dashboard/instructor/profile"
+              className="text-primary font-medium underline"
+            >
+              Profile Settings
+            </Link>
+            .
+          </p>
         </div>
 
         {/* Amount */}
-        <div>
-          <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-            Amount (BDT)
-          </label>
-          <div className="relative">
-            <span className="absolute top-1/2 left-4 -translate-y-1/2 font-bold text-slate-400">
-              ৳
-            </span>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder={`Min. ৳${minWithdrawal}`}
-              className="focus:border-primary w-full rounded-sm border border-slate-200 bg-slate-50 py-3 pr-4 pl-9 text-sm outline-none focus:ring-2 focus:ring-emerald-100"
-            />
-          </div>
-          {amount && parseInt(amount) > balance && (
-            <p className="mt-1 text-xs text-red-500">Amount exceeds available balance.</p>
-          )}
-          {amount && parseInt(amount) < minWithdrawal && (
-            <p className="mt-1 text-xs text-yellow-600">Minimum withdrawal is ৳{minWithdrawal}.</p>
-          )}
-        </div>
+        <InputField
+          name="amount"
+          control={control}
+          type="number"
+          label="Amount (BDT)"
+          placeholder={`Min. ৳${minWithdrawal}`}
+          error={amountError}
+        />
 
         {/* Quick Amounts */}
         <div>
-          <label className="mb-2 block text-xs font-bold tracking-wider text-slate-500 uppercase">
+          <label className="mb-2 block text-xs font-semibold tracking-wider text-slate-500 uppercase">
             Quick Select
           </label>
           <div className="flex gap-2">
             {[1000, 3000, 5000, 10000].map((q) => (
               <button
+                type="button"
                 key={q}
-                onClick={() => setAmount(String(q))}
-                className={`flex-1 rounded-sm border py-2 text-xs font-bold transition-all ${
+                onClick={() => setValue('amount', String(q))}
+                className={`flex-1 cursor-pointer rounded-sm border py-2 text-xs font-bold transition-all ${
                   amount === String(q)
                     ? 'border-primary text-primary bg-emerald-50'
                     : 'border-slate-200 text-slate-500 hover:border-slate-300'
@@ -114,15 +168,14 @@ const WithdrawalForm = ({
           after admin approval.
         </div>
 
-        <button
-          disabled={
-            !amount || !account || parseInt(amount) > balance || parseInt(amount) < minWithdrawal
-          }
-          className="bg-secondary w-full rounded-sm py-3.5 text-sm font-bold text-white transition-all hover:bg-[#d98c0a] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          Submit Withdrawal Request
-        </button>
-      </div>
+        <DynamicActionButton
+          type="submit"
+          label="Submit Withdrawal Request"
+          disabled={isSubmitDisabled}
+          isLoading={isLoading}
+          className="w-full"
+        />
+      </form>
     </div>
   );
 };

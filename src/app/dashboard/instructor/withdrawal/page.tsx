@@ -1,17 +1,15 @@
 'use client';
 
 import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
-import { useState } from 'react';
+import { useGetInstructorEarningsQuery } from '@/redux/features/payment/paymentApi';
 import WithdrawalBalance from './_components/WithdrawalBalance/WithdrawalBalance';
 import WithdrawalForm from './_components/WithdrawalForm/WithdrawalForm';
 import WithdrawalHistory from './_components/WithdrawalHistory/WithdrawalHistory';
 
 const WithdrawalPage = () => {
-  const [method, setMethod] = useState('bKash');
-  const [amount, setAmount] = useState('');
-  const [account, setAccount] = useState('');
+  const { data: earningsData } = useGetInstructorEarningsQuery();
 
-  const balance = 12300;
+  const balance = earningsData?.data?.available || 0;
   const minWithdrawal = 500;
 
   return (
@@ -21,16 +19,7 @@ const WithdrawalPage = () => {
       <WithdrawalBalance balance={balance} />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <WithdrawalForm
-          method={method}
-          setMethod={setMethod}
-          amount={amount}
-          setAmount={setAmount}
-          account={account}
-          setAccount={setAccount}
-          balance={balance}
-          minWithdrawal={minWithdrawal}
-        />
+        <WithdrawalForm balance={balance} minWithdrawal={minWithdrawal} />
 
         <WithdrawalHistory />
       </div>

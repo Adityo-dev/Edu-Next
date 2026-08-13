@@ -1,61 +1,46 @@
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
-import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
-import { Clock, Wallet } from 'lucide-react';
-import Image from 'next/image';
-
-interface Withdrawal {
-  id: string;
-  instructor: string;
-  image: string;
-  amount: number;
-  method: string;
-  account: string;
-  walletBalance: number;
-  requestedDate: string;
-  status: string;
-}
+import { IWithdrawalRequest } from '@/types/withdrawal.types';
+import { Clock } from 'lucide-react';
+import { useState } from 'react';
+import AdminProcessingModal from '../AdminProcessingModal/AdminProcessingModal';
 
 interface WithdrawalsListProps {
-  withdrawals: Withdrawal[];
+  withdrawals: IWithdrawalRequest[];
 }
 
 const WithdrawalsList = ({ withdrawals }: WithdrawalsListProps) => {
+  const [selectedWithdrawal, setSelectedWithdrawal] = useState<IWithdrawalRequest | null>(null);
+
   return (
     <div className="space-y-3">
       {withdrawals.map((wd) => (
         <div
-          key={wd.id}
+          key={wd._id}
           className={`dashboard-card-container p-3 shadow-none ${wd.status === 'pending' ? 'border-warning/30' : wd.status === 'rejected' ? 'border-danger/30' : 'border-primary/30'}`}
         >
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <div className="flex flex-1 items-center gap-4">
-              <Image
-                src={wd.image}
-                alt={wd.instructor}
-                width={44}
-                height={44}
-                className="border-primary/20 rounded-full border-2"
-              />
+              <div className="bg-primary/10 text-primary flex h-11 w-11 items-center justify-center rounded-full font-bold">
+                {typeof wd.instructor === 'object' ? wd.instructor.fullName.charAt(0) : 'I'}
+              </div>
               <div>
                 <div className="mb-1 flex items-center gap-2">
-                  <h3 className="font-bold">{wd.instructor}</h3>
+                  <h3 className="font-bold">
+                    {typeof wd.instructor === 'object' ? wd.instructor.fullName : 'Instructor'}
+                  </h3>
                   <DynamicBadge
                     text={wd?.status}
                     color={`${wd.status === 'pending' ? '#ffc107' : wd.status === 'rejected' ? '#dc3545' : '#34796f'}`}
                   />
                 </div>
                 <div className="text-text-secondary flex flex-wrap items-center gap-3 text-xs">
-                  <span className="flex items-center gap-1">
-                    <Wallet size={11} /> Wallet: ৳{wd.walletBalance.toLocaleString()}
-                  </span>
-                  <span>•</span>
-                  <span>
-                    {wd.method}: {wd.account}
+                  <span className="font-semibold uppercase">
+                    {wd.payoutDetails?.method || 'Unknown'}
                   </span>
                   <span>•</span>
                   <span>
                     <Clock size={11} className="mr-1 inline" />
-                    {wd.requestedDate}
+                    {new Date(wd.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>
@@ -65,28 +50,27 @@ const WithdrawalsList = ({ withdrawals }: WithdrawalsListProps) => {
                 <p className="text-text-primary text-xl font-semibold">
                   ৳{wd.amount.toLocaleString()}
                 </p>
-                <p className="text-text-secondary text-xs">{wd.id}</p>
               </div>
               {wd.status === 'pending' && (
                 <div className="flex gap-2">
-                  <DynamicTableActions
-                    actions={[
-                      {
-                        type: 'message',
-                        label: 'Approve',
-                      },
-                      {
-                        type: 'suspend',
-                        label: 'Reject',
-                      },
-                    ]}
-                  />
+                  <button
+                    onClick={() => setSelectedWithdrawal(wd)}
+                    className="bg-primary hover:bg-primary/90 rounded-sm px-4 py-2 text-xs font-bold text-white transition"
+                  >
+                    Process
+                  </button>
                 </div>
               )}
             </div>
           </div>
         </div>
       ))}
+
+      <AdminProcessingModal
+        isOpen={!!selectedWithdrawal}
+        onClose={() => setSelectedWithdrawal(null)}
+        withdrawal={selectedWithdrawal}
+      />
     </div>
   );
 };

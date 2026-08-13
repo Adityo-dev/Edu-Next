@@ -7,12 +7,14 @@ import { useState } from 'react';
 import NotificationSettings from './_components/NotificationSettings/NotificationSettings';
 import PrivacySettings from './_components/PrivacySettings/PrivacySettings';
 import InstructorProfileSettings from './_components/InstructorProfileSettings/InstructorProfileSettings';
+import PayoutSettings from './_components/PayoutSettings/PayoutSettings';
 import SettingsSidebar from './_components/SettingsSidebar/SettingsSidebar';
+import { CreditCard } from 'lucide-react';
 
 const InstructorSettingsPage = () => {
-  const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'notifications' | 'privacy'>(
-    'profile',
-  );
+  const [activeTab, setActiveTab] = useState<
+    'profile' | 'password' | 'notifications' | 'privacy' | 'payout'
+  >('profile');
   const [notifications, setNotifications] = useState({
     newEnrollment: true,
     newReview: true,
@@ -26,6 +28,7 @@ const InstructorSettingsPage = () => {
     { key: 'password', label: 'Password & Security', icon: <Lock size={16} /> },
     { key: 'notifications', label: 'Notifications', icon: <Shield size={16} /> },
     { key: 'privacy', label: 'Privacy', icon: <Video size={16} /> },
+    { key: 'payout', label: 'Payout Settings', icon: <CreditCard size={16} /> },
   ];
 
   return (
@@ -54,6 +57,8 @@ const InstructorSettingsPage = () => {
             )}
 
             {activeTab === 'privacy' && <PrivacySettings />}
+
+            {activeTab === 'payout' && <PayoutSettings />}
           </div>
         </div>
       </div>

@@ -1,72 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import WithdrawalsFilter from './_components/WithdrawalsFilter/WithdrawalsFilter';
+import { useGetPendingWithdrawalsQuery } from '@/redux/features/withdrawal/withdrawal.api';
 import WithdrawalsList from './_components/WithdrawalsList/WithdrawalsList';
-import WithdrawalsStats from './_components/WithdrawalsStats/WithdrawalsStats';
-
-const withdrawalsData = [
-  {
-    id: 'WD-001',
-    instructor: 'Md. Rafiqul Islam',
-    image: 'https://i.pravatar.cc/150?u=rafiq',
-    amount: 8000,
-    method: 'bKash',
-    account: '01700-000000',
-    walletBalance: 12300,
-    requestedDate: 'Apr 22, 2025',
-    status: 'pending',
-  },
-  {
-    id: 'WD-002',
-    instructor: 'Farhan Hossain',
-    image: 'https://i.pravatar.cc/150?u=farhan',
-    amount: 5000,
-    method: 'Nagad',
-    account: '01800-111111',
-    walletBalance: 7800,
-    requestedDate: 'Apr 21, 2025',
-    status: 'pending',
-  },
-  {
-    id: 'WD-003',
-    instructor: 'Nasrin Sultana',
-    image: 'https://i.pravatar.cc/150?u=nasrin',
-    amount: 3000,
-    method: 'bKash',
-    account: '01900-222222',
-    walletBalance: 4200,
-    requestedDate: 'Apr 20, 2025',
-    status: 'pending',
-  },
-  {
-    id: 'WD-004',
-    instructor: 'Sabbir Hossain',
-    image: 'https://i.pravatar.cc/150?u=sabbir',
-    amount: 10000,
-    method: 'Bank Transfer',
-    account: 'Dutch Bangla ****1234',
-    walletBalance: 15000,
-    requestedDate: 'Apr 18, 2025',
-    status: 'approved',
-  },
-  {
-    id: 'WD-005',
-    instructor: 'Imran Hossain',
-    image: 'https://i.pravatar.cc/150?u=imran',
-    amount: 2000,
-    method: 'bKash',
-    account: '01700-333333',
-    walletBalance: 1500,
-    requestedDate: 'Apr 15, 2025',
-    status: 'rejected',
-  },
-];
 
 const WithdrawalRequestsPage = () => {
-  const [filter, setFilter] = useState('all');
-
-  const filtered = withdrawalsData.filter((w) => filter === 'all' || w.status === filter);
+  const { data, isLoading } = useGetPendingWithdrawalsQuery();
+  const withdrawals = data?.data || [];
 
   return (
     <div className="min-h-screen bg-[#F9FAFB]">
@@ -74,12 +13,25 @@ const WithdrawalRequestsPage = () => {
         <div>
           <h1 className="text-text-primary text-2xl font-black">Withdrawal Requests</h1>
           <p className="text-text-secondary mt-1 text-sm">
-            Review and process instructor withdrawal requests.
+            Review and process pending instructor withdrawal requests.
           </p>
         </div>
-        <WithdrawalsStats withdrawals={withdrawalsData} />
-        <WithdrawalsFilter filter={filter} onFilterChange={setFilter} />
-        <WithdrawalsList withdrawals={filtered} />
+
+        {/* Keeping stats hidden or static for now since the API only returns pending, unless we want to show it. Actually we can just show the list for now. */}
+
+        {isLoading ? (
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-24 animate-pulse rounded-md bg-slate-200"></div>
+            ))}
+          </div>
+        ) : withdrawals.length === 0 ? (
+          <div className="flex h-32 items-center justify-center rounded-md border border-dashed border-slate-300">
+            <p className="text-sm text-slate-500">No pending withdrawal requests found.</p>
+          </div>
+        ) : (
+          <WithdrawalsList withdrawals={withdrawals} />
+        )}
       </div>
     </div>
   );

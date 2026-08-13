@@ -4,10 +4,10 @@ import { TOverviewStats, TQuickActionStats } from '@/types/dashboard.types';
 
 export const dashboardApi = apiClient.injectEndpoints({
   endpoints: (builder) => ({
-    // GET /admin/overview-stats
+    // GET /overview/admin/stats
     getOverviewStats: builder.query<TResponseRedux<TOverviewStats>, void>({
       query: () => ({
-        url: '/admin/overview-stats',
+        url: '/overview/admin/stats',
         method: 'GET',
       }),
       providesTags: ['AdminDashboard'],
