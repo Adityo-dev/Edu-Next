@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import { ROLE_DASHBOARD_HOME } from '@/components/dashboard/sidebar/sidebarRoutes';
 import { apiClient } from '@/redux/apiClient/apiClient';
 import { setAuth } from '@/redux/features/auth/authSlice';
@@ -10,7 +11,7 @@ import { useAppDispatch } from '@/redux/hooks';
 import { setUserProfile } from '@/services/auth/auth.service';
 import { baseApi } from '@/services/root/baseApi';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BadgeCheck, Eye, EyeOff, Lock, Mail, PlayCircle, ShieldCheck, X } from 'lucide-react';
+import { Eye, EyeOff, Lock, LogIn, Mail, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -72,7 +73,6 @@ const LoginPage = () => {
         data: payload,
       });
 
-      // ── 403: email not verify  / suspended / pending approval
       if (response?.statusCode === 403 || response?.success === false) {
         const message = (response?.message || '').toLowerCase();
 
@@ -122,116 +122,92 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen overflow-hidden bg-white">
       {/* ── Left Panel ── */}
-      <div className="relative hidden w-[55%] overflow-hidden lg:flex">
-        <div className="bg-primary absolute inset-0" />
-
+      <div className="relative hidden w-[50%] overflow-hidden lg:flex">
+        <div className="absolute inset-0 bg-[#0f1a19]" />
+        <div className="from-primary/40 to-secondary/20 absolute inset-0 bg-linear-to-br via-transparent" />
         <div
-          className="absolute inset-0 opacity-[0.07]"
+          className="absolute inset-0 opacity-[0.06]"
           style={{
             backgroundImage: `radial-gradient(#ffffff 1.5px, transparent 1px)`,
             backgroundSize: '24px 24px',
           }}
         />
-
-        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-white/10 blur-3xl" />
-        <div className="bg-secondary/20 absolute -right-32 -bottom-32 h-96 w-96 rounded-full blur-3xl" />
+        <div className="bg-primary/30 absolute -top-40 -left-40 h-80 w-80 rounded-full blur-3xl" />
+        <div className="bg-secondary/20 absolute -right-40 -bottom-40 h-80 w-80 rounded-full blur-3xl" />
 
         <div className="relative z-10 flex w-full flex-col justify-between p-14">
+          {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-white/15 backdrop-blur-sm">
+            <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-white/10 backdrop-blur-sm">
               <span className="text-lg font-black text-white">E</span>
             </div>
             <span className="text-xl font-black text-white">
-              Edu<span className="text-yellow-400">Next</span>
+              Edu<span className="text-warning">Next</span>
             </span>
           </Link>
 
           <div>
-            <h2 className="mb-5 text-5xl leading-[1.1] font-black text-white">
-              Learn Skills <br />
-              That Actually <br />
-              <span className="text-yellow-400">Matter.</span>
+            <DynamicBadge
+              text="Welcome Back"
+              icon={LogIn}
+              size="base"
+              color="#34796f"
+              className="mb-5 transition-all duration-300"
+            />
+
+            <h2 className="mb-5 text-5xl leading-[1.1] font-bold text-white transition-all duration-300">
+              Continue Your Learning <br /> <span className="text-warning">Journey.</span>
             </h2>
-            <p className="mb-10 max-w-md text-base leading-relaxed text-white/60">
-              Bangladesh er sera instructor der theke শিখুন বাংলায় — verified courses, live
-              sessions, ar industry-recognized certificates, ekta platform e.
+
+            <p className="mb-10 max-w-lg text-base leading-relaxed text-white/80 transition-all duration-300">
+              Sign in to your account and resume your courses, join live sessions, and track your
+              progress all in one place.
             </p>
 
-            <div className="space-y-4">
-              <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-white/10">
-                  <PlayCircle size={19} className="text-yellow-400" />
+            {/* Perks */}
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { emoji: '📚', text: 'Resume learning' },
+                { emoji: '🎯', text: 'Track progress' },
+                { emoji: '💬', text: 'Community access' },
+                { emoji: '🏆', text: 'Earn certificates' },
+              ].map((perk, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-3 rounded-sm border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm transition-all duration-300"
+                >
+                  <span className="text-xl">{perk.emoji}</span>
+                  <span className="text-sm text-white/80">{perk.text}</span>
                 </div>
-                <div>
-                  <p className="text-sm font-semibold text-white">Live & Recorded Sessions</p>
-                  <p className="text-xs leading-relaxed text-white/55">
-                    Instructor der sathe direct live class korun, ba apnar shomoy moto recorded
-                    lesson dekhun.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-white/10">
-                  <BadgeCheck size={19} className="text-yellow-400" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white">Verified Instructors Only</p>
-                  <p className="text-xs leading-relaxed text-white/55">
-                    Protek instructor admin theke verified — quality content er guarantee shate
-                    shate.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-white/10">
-                  <ShieldCheck size={19} className="text-yellow-400" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white">Lifetime Course Access</p>
-                  <p className="text-xs leading-relaxed text-white/55">
-                    Ekbar enroll korle course content e apnar lifetime access thakbe, kono hidden
-                    fee nai.
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
+          {/* Bottom */}
           <div className="flex items-center gap-4">
             <div className="flex -space-x-3">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Image
                   key={i}
-                  src={`https://i.pravatar.cc/150?u=auth${i}`}
-                  alt="Student"
-                  width={34}
-                  height={34}
-                  className="border-primary rounded-full border-2"
+                  src={`https://i.pravatar.cc/150?u=reg${i}`}
+                  alt="User"
+                  width={32}
+                  height={32}
+                  className="rounded-full border-2 border-[#0f1a19]"
                 />
               ))}
             </div>
-            <div>
-              <div className="mb-0.5 flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <span key={i} className="text-xs text-yellow-400">
-                    ★
-                  </span>
-                ))}
-              </div>
-              <p className="text-xs text-white/50">
-                Trusted by <span className="font-bold text-white">5,000+</span> students
-              </p>
-            </div>
+            <p className="text-xs text-white/80">
+              <span className="font-semibold text-white">5,000+</span> People already joined
+            </p>
           </div>
         </div>
       </div>
 
       {/* ── Right Panel ── */}
-      <div className="flex w-full flex-col items-center justify-center px-6 py-16 lg:w-[45%]">
+      <div className="flex w-full flex-col items-center justify-center px-6 py-16 lg:w-[50%]">
         <div className="w-full max-w-sm">
           <div className="mb-8">
             <h1 className="text-text-primary mb-2 text-3xl font-bold">Welcome back 👋</h1>
@@ -287,7 +263,6 @@ const LoginPage = () => {
           )}
 
           <form onSubmit={handleSubmit(handleLogin)} className="space-y-4" noValidate>
-            {/* ── Email (raw input + clear ✕ button) ── */}
             <div>
               <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
                 Email <span className="text-red-400">*</span>
