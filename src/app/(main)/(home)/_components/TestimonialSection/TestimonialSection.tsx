@@ -7,10 +7,10 @@ import { testimonialsData } from './data/testimonials.data';
 
 const TestimonialSection = () => {
   return (
-    <section className="w-full bg-[#F9FAFB] py-20">
+    <section className="overflow-hidden bg-[#F9FAFB] py-12">
       {/* Header */}
-      <div className="mx-auto mb-14 max-w-400 px-6 text-center">
-        <h2 className="text-4xl leading-tight font-bold md:text-5xl">
+      <div className="mx-auto mb-10 max-w-400 px-4 text-center">
+        <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
           Our <span className="text-secondary">5,000+</span> Satisfied <br /> Students Say
         </h2>
       </div>
@@ -21,33 +21,32 @@ const TestimonialSection = () => {
           {testimonialsData.map((item) => (
             <div
               key={item?.id}
-              className="group mx-2.5 w-100 cursor-pointer rounded-md border border-slate-100 bg-white p-6 text-left transition-all duration-300 hover:border-emerald-100 hover:shadow-sm"
+              className="group mx-2.5 w-100 cursor-pointer rounded-md border border-slate-100 bg-white p-4 text-left transition-all duration-300 hover:border-emerald-100 hover:shadow-sm"
             >
               {/* Quote Icon */}
-              <div className="text-primary group-hover:bg-primary mb-6 inline-flex h-10 w-10 items-center justify-center rounded-sm bg-emerald-50 transition-colors group-hover:text-white">
-                <Quote size={24} />
+              <div className="text-primary group-hover:bg-primary mb-5 inline-flex h-8 w-8 items-center justify-center rounded-sm bg-emerald-50 transition-colors group-hover:text-white">
+                <Quote size={18} />
               </div>
 
               {/* Feedback Text */}
-              <p className="text-text-secondary mb-6 line-clamp-3 text-lg leading-relaxed italic">
+              <p className="text-text-secondary mb-4 line-clamp-3 text-sm leading-relaxed italic sm:text-base">
                 {item?.text}
               </p>
 
               {/* User Profile */}
               <div className="flex items-center gap-4">
-                <div className="h-14 w-14 rounded-full border-2 border-emerald-100">
+                <div className="h-10 w-10 rounded-full border-2 border-emerald-100">
                   <Image
                     src={item?.image}
                     alt={item?.name}
-                    width={60}
-                    height={60}
+                    width={50}
+                    height={50}
                     className="h-full w-full rounded-full object-cover"
                   />
                 </div>
                 <div>
-                  <h4 className="font-semibold">{item?.name}</h4>
-
-                  <p className="text-text-secondary text-sm font-medium">{item?.role}</p>
+                  <h4 className="text-sm font-semibold">{item?.name}</h4>
+                  <p className="text-text-secondary text-xs font-medium">{item?.role}</p>
                 </div>
               </div>
             </div>

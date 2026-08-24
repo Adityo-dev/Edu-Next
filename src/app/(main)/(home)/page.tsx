@@ -6,6 +6,7 @@ import FAQSection from './_components/FAQSection/FAQSection';
 import HeroSection from './_components/HeroSection/HeroSection';
 import { default as HowItWorksSection } from './_components/HowItWorksSection/HowItWorksSection';
 import TestimonialSection from './_components/TestimonialSection/TestimonialSection';
+import BecomeInstructorSection from './_components/BecomeInstructorSection/BecomeInstructorSection';
 
 function LendingHomePage() {
   return (
@@ -14,6 +15,7 @@ function LendingHomePage() {
       <CategorySection />
       <TopRatedCourses />
       <HowItWorksSection />
+      <BecomeInstructorSection />
       <TestimonialSection />
       <BlogSection />
       <FAQSection />
