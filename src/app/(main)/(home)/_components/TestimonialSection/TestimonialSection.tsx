@@ -21,7 +21,7 @@ const TestimonialSection = () => {
           {testimonialsData.map((item) => (
             <div
               key={item?.id}
-              className="group mx-2.5 w-100 cursor-pointer rounded-md border border-slate-100 bg-white p-4 text-left transition-all duration-300 hover:border-emerald-100 hover:shadow-sm"
+              className="group mx-2.5 w-80 cursor-pointer rounded-md border border-slate-100 bg-white p-4 text-left transition-all duration-300 hover:border-emerald-100 hover:shadow-sm md:w-100"
             >
               {/* Quote Icon */}
               <div className="text-primary group-hover:bg-primary mb-5 inline-flex h-8 w-8 items-center justify-center rounded-sm bg-emerald-50 transition-colors group-hover:text-white">

@@ -60,7 +60,7 @@ const PhotoMarquee = () => {
               {stripImages.map((img, idx) => (
                 <div
                   key={idx}
-                  className="relative shrink-0 overflow-hidden rounded-2xl shadow-lg"
+                  className="relative shrink-0 overflow-hidden rounded-xl"
                   style={{
                     width: '160px',
                     height: `${img.height}px`,
