@@ -19,7 +19,7 @@ const CategoryCard = ({ cat, isYellowStyle }: CategoryCardProps) => {
       {isYellowStyle ? (
         <>
           <div className="flex w-full grow flex-col">
-            <h3 className="mb-2 text-xl font-semibold sm:text-2xl">{cat?.name}</h3>
+            <h3 className="mb-2 text-lg font-semibold sm:text-xl">{cat?.name}</h3>
             <p className="text-text-secondary line-clamp-2 w-full text-sm leading-relaxed sm:line-clamp-3 sm:text-base">
               {cat?.description ||
                 'Explore courses in this category to enhance your skills and knowledge.'}
@@ -50,7 +50,7 @@ const CategoryCard = ({ cat, isYellowStyle }: CategoryCardProps) => {
               <ArrowUpRight size={22} className="sm:h-6 sm:w-6" />
             </div>
 
-            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-tl-[3rem] rounded-tr-md rounded-br-3xl rounded-bl-3xl border-4 border-white/60 shadow-xl shadow-black/5 sm:h-32 sm:w-32 sm:rounded-tl-[4rem] sm:border-[6px] md:h-40 md:w-40 md:rounded-tl-[5rem]">
+            <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-tl-[3rem] rounded-tr-md rounded-br-3xl rounded-bl-3xl border-4 border-white/60 shadow-xl shadow-black/5 sm:rounded-tl-[4rem] sm:border-[6px] md:h-40 md:w-40 md:rounded-tl-[5rem]">
               {cat?.image && (
                 <Image
                   src={cat.image}
@@ -63,8 +63,8 @@ const CategoryCard = ({ cat, isYellowStyle }: CategoryCardProps) => {
           </div>
 
           <div className="mt-auto">
-            <h3 className="mb-2 text-xl font-semibold sm:text-2xl">{cat?.name}</h3>
-            <p className="text-text-secondary line-clamp-2 text-sm leading-relaxed sm:line-clamp-3 sm:text-base">
+            <h3 className="mb-2 text-lg font-semibold sm:text-xl">{cat?.name}</h3>
+            <p className="text-text-secondary line-clamp-2 text-base leading-relaxed sm:line-clamp-3">
               {cat?.description ||
                 'Explore courses in this category to enhance your skills and knowledge.'}
             </p>

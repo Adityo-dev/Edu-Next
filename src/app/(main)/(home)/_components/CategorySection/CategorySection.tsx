@@ -19,18 +19,18 @@ const CategorySection = () => {
   const categories = data?.data?.filter((cat) => cat.isActive) || [];
 
   return (
-    <section className="overflow-hidden bg-white py-16">
+    <section className="overflow-hidden bg-white py-12">
       <div className="mx-auto max-w-400 px-4">
         {/* Header */}
         <div className="mb-10 flex flex-col gap-4 md:mb-14 lg:flex-row lg:items-end lg:justify-between lg:gap-6">
           <div className="max-w-3xl">
-            <h2 className="text-3xl leading-[1.15] font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl lg:leading-[1.08]">
+            <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
               Browse by Topic: Find <br className="hidden lg:block" />
               Your Perfect <span className="text-[#F59E0B] italic">Category</span>
             </h2>
           </div>
           <div className="max-w-sm lg:self-end lg:pb-1">
-            <p className="text-base leading-relaxed text-slate-500 md:text-lg lg:text-base">
+            <p className="text-text-secondary text-base leading-relaxed">
               Explore categories from Web Development to Business — and find the right course to
               grow your skills with EduNext.
             </p>
