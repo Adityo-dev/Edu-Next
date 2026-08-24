@@ -30,7 +30,7 @@ const CategoryCard = ({ cat, isYellowStyle }: CategoryCardProps) => {
               <ArrowUpRight size={22} className="sm:h-6 sm:w-6" />
             </div>
             {/* Pixel Perfect Cut Image */}
-            <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-tl-[3rem] rounded-tr-md rounded-br-3xl rounded-bl-3xl border-4 border-white/60 shadow-xl shadow-black/5 sm:h-32 sm:w-32 sm:rounded-tl-[4rem] sm:border-[6px] md:h-40 md:w-40 md:rounded-tl-[5rem]">
+            <div className="relative h-40 w-40 shrink-0 overflow-hidden rounded-tl-[3rem] rounded-tr-md rounded-br-3xl rounded-bl-3xl border-4 border-white/60 shadow-xl shadow-black/5 sm:rounded-tl-[4rem] md:rounded-tl-[5rem]">
               {cat?.image && (
                 <Image
                   src={cat.image}
