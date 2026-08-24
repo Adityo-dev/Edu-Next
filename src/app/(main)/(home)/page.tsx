@@ -11,9 +11,9 @@ function LendingHomePage() {
   return (
     <section>
       <HeroSection />
-      <HowItWorksSection />
       <CategorySection />
       <TopRatedCourses />
+      <HowItWorksSection />
       <TestimonialSection />
       <BlogSection />
       <FAQSection />
