@@ -1,16 +1,16 @@
 'use client';
 
-import { ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
-import { Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import CategoryCard from './_components/CategoryCard/CategoryCard';
 
+import { Skeleton } from '@/components/ui/skeleton';
+import { useGetCategoriesQuery } from '@/redux/features/categories/categoriesApi';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { useGetCategoriesQuery } from '@/redux/features/categories/categoriesApi';
-import { Skeleton } from '@/components/ui/skeleton';
 
 const CategorySection = () => {
   const { data, isLoading, isError } = useGetCategoriesQuery({ nested: true });
@@ -19,18 +19,18 @@ const CategorySection = () => {
   const categories = data?.data?.filter((cat) => cat.isActive) || [];
 
   return (
-    <section className="overflow-hidden bg-white py-24">
-      <div className="mx-auto max-w-400 px-6">
+    <section className="overflow-hidden bg-white py-16">
+      <div className="mx-auto max-w-400 px-4">
         {/* Header */}
-        <div className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl leading-tight font-bold tracking-tight md:text-5xl">
-              Browse by Topic: Find <br />
-              Your Perfect <span className="text-secondary italic">Category</span>
+        <div className="mb-10 flex flex-col gap-4 md:mb-14 lg:flex-row lg:items-end lg:justify-between lg:gap-6">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl leading-[1.15] font-bold tracking-tight text-slate-900 md:text-4xl lg:text-5xl lg:leading-[1.08]">
+              Browse by Topic: Find <br className="hidden lg:block" />
+              Your Perfect <span className="text-[#F59E0B] italic">Category</span>
             </h2>
           </div>
-          <div className="max-w-sm md:self-end">
-            <p className="text-text-secondary text-lg leading-relaxed">
+          <div className="max-w-sm lg:self-end lg:pb-1">
+            <p className="text-base leading-relaxed text-slate-500 md:text-lg lg:text-base">
               Explore categories from Web Development to Business — and find the right course to
               grow your skills with EduNext.
             </p>
@@ -57,9 +57,14 @@ const CategorySection = () => {
         ) : (
           <div className="relative">
             <Swiper
-              modules={[Navigation, Pagination]}
-              spaceBetween={30}
-              slidesPerView={1}
+              modules={[Navigation, Pagination, Autoplay]}
+              loop={true}
+              speed={800}
+              autoplay={{
+                delay: 5000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              }}
               navigation={{ nextEl: '.cat-next', prevEl: '.cat-prev' }}
               pagination={{
                 el: '.cat-pagination-bar',
@@ -67,10 +72,10 @@ const CategorySection = () => {
                 progressbarFillClass: 'swiper-pagination-progressbar-fill',
               }}
               breakpoints={{
-                640: { slidesPerView: 1 },
-                768: { slidesPerView: 2 },
-                1024: { slidesPerView: 3 },
-                1440: { slidesPerView: 4 },
+                0: { slidesPerView: 1.15, spaceBetween: 16 },
+                800: { slidesPerView: 2, spaceBetween: 20 },
+                1024: { slidesPerView: 3, spaceBetween: 24 },
+                1280: { slidesPerView: 4, spaceBetween: 30 },
               }}
               watchOverflow={true}
               onLock={() => setIsLocked(true)}
@@ -91,7 +96,7 @@ const CategorySection = () => {
 
             {/* Progress Bar & Navigation */}
             <div
-              className={`mt-8 flex w-full items-center justify-between gap-[10%] ${isLocked ? 'hidden' : ''}`}
+              className={`mt-6 flex w-full items-center justify-between gap-[10%] ${isLocked ? 'hidden' : ''}`}
             >
               <div className="cat-pagination-bar relative h-1.25 w-full flex-1 overflow-hidden rounded-full bg-slate-100"></div>
 
