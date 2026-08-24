@@ -26,7 +26,7 @@ const CategoryCard = ({ cat, isYellowStyle }: CategoryCardProps) => {
             </p>
           </div>
           <div className="mt-4 flex items-end justify-between">
-            <div className="bg-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-transform duration-500 group-hover:rotate-45 sm:h-12 sm:w-12 md:h-14 md:w-14">
+            <div className="bg-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-transform duration-500 group-hover:rotate-45 sm:h-12 sm:w-12">
               <ArrowUpRight size={22} className="sm:h-6 sm:w-6" />
             </div>
             {/* Pixel Perfect Cut Image */}
@@ -46,7 +46,7 @@ const CategoryCard = ({ cat, isYellowStyle }: CategoryCardProps) => {
         /* Data Analytics Style (Teal Card) - Reverse Layout */
         <>
           <div className="mb-4 flex justify-between">
-            <div className="bg-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-transform duration-500 group-hover:rotate-45 sm:h-12 sm:w-12 md:h-14 md:w-14">
+            <div className="bg-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-transform duration-500 group-hover:rotate-45 sm:h-12 sm:w-12">
               <ArrowUpRight size={22} className="sm:h-6 sm:w-6" />
             </div>
 

@@ -6,7 +6,7 @@ import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import CategoryCard from './_components/CategoryCard/CategoryCard';
 
-import { Skeleton } from '@/components/ui/skeleton';
+import CategoryCardSkeleton from '@/components/main/Skeletons/CategoryCardSkeleton/CategoryCardSkeleton';
 import { useGetCategoriesQuery } from '@/redux/features/categories/categoriesApi';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -22,7 +22,7 @@ const CategorySection = () => {
     <section className="overflow-hidden bg-white py-12">
       <div className="mx-auto max-w-400 px-4">
         {/* Header */}
-        <div className="mb-10 flex flex-col gap-4 md:mb-14 lg:flex-row lg:items-end lg:justify-between lg:gap-6">
+        <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-6">
           <div className="max-w-3xl">
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
               Browse by Topic: Find <br className="hidden lg:block" />
@@ -39,10 +39,18 @@ const CategorySection = () => {
 
         {/* Content */}
         {isLoading ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className="h-95 w-full rounded-md" />
-            ))}
+          <div className="flex w-full gap-4 overflow-hidden sm:gap-5 md:gap-6 xl:gap-7.5">
+            {[1, 2, 3, 4].map((i, index) => {
+              const isYellowStyle = index % 2 !== 0;
+              return (
+                <div
+                  key={i}
+                  className="w-[85%] shrink-0 min-[800px]:w-[calc(40%-14.4px)] sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-16px)] xl:w-[calc(25%-22.5px)]"
+                >
+                  <CategoryCardSkeleton isYellowStyle={isYellowStyle} />
+                </div>
+              );
+            })}
           </div>
         ) : isError ? (
           <div className="bg-destructive/5 border-destructive/20 flex flex-col items-center justify-center rounded-2xl border p-10 text-center">
@@ -73,9 +81,9 @@ const CategorySection = () => {
               }}
               breakpoints={{
                 0: { slidesPerView: 1.15, spaceBetween: 16 },
-                800: { slidesPerView: 2, spaceBetween: 20 },
+                650: { slidesPerView: 2, spaceBetween: 20 },
                 1024: { slidesPerView: 3, spaceBetween: 24 },
-                1280: { slidesPerView: 4, spaceBetween: 30 },
+                1300: { slidesPerView: 4, spaceBetween: 30 },
               }}
               watchOverflow={true}
               onLock={() => setIsLocked(true)}

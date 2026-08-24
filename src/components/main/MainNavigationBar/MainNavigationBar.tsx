@@ -54,8 +54,8 @@ const MainNavigationBar = ({ initialConfig }: MainNavigationBarProps) => {
   const dashboardPath = user ? (ROLE_DASHBOARD_PATH[user.role] ?? '/') : '/';
 
   return (
-    <nav className="bg-subtle fixed top-0 z-50 w-full border-b border-slate-100 backdrop-blur-lg">
-      <div className="mx-auto flex max-w-400 items-center justify-between py-2 md:px-6">
+    <nav className="fixed top-0 z-50 w-full border-b border-slate-200/50 bg-white/70 backdrop-blur-xl transition-all duration-300">
+      <div className="mx-auto flex max-w-400 items-center justify-between px-4 py-2 md:px-6">
         {/* Left Section: Logo */}
         <Link href={'/'} className="group flex cursor-pointer items-center gap-3">
           <SiteLogo
