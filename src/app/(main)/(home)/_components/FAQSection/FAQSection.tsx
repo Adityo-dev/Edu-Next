@@ -149,7 +149,7 @@ const FAQSection = () => {
                 className="relative cursor-pointer py-4"
               >
                 <div className="flex items-center justify-between gap-4">
-                  <h3 className={`text-base font-bold sm:text-lg ${isActive && 'text-primary'}`}>
+                  <h3 className={`text-sm font-bold sm:text-base ${isActive && 'text-primary'}`}>
                     {faq?.question}
                   </h3>
                   <div
@@ -174,7 +174,7 @@ const FAQSection = () => {
                   }`}
                 >
                   <div className="overflow-hidden pr-10">
-                    <p className="text-text-secondary text-sm leading-relaxed sm:text-base">
+                    <p className="text-text-secondary text-xs leading-relaxed sm:text-base">
                       {faq?.answer}
                     </p>
                   </div>
@@ -231,7 +231,7 @@ const FAQSection = () => {
             </div>
 
             {/* Support CTA Line on Card */}
-            <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+            <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
               <span className="text-text-secondary text-xs font-semibold sm:text-sm">
                 We usually respond within 2 hours
               </span>
