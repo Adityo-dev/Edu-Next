@@ -13,11 +13,15 @@ function LendingHomePage() {
     <section>
       <HeroSection />
       <CategorySection />
-      <TopRatedCourses />
-      <HowItWorksSection />
+      <div style={{ background: 'linear-gradient(160deg, #fdf9f0 0%, #f5f8f5 50%, #eef5f0 100%)' }}>
+        <TopRatedCourses />
+        <HowItWorksSection />
+      </div>
       <BecomeInstructorSection />
-      <TestimonialSection />
-      <BlogSection />
+      <div style={{ background: 'linear-gradient(160deg, #fdf9f0 0%, #f5f8f5 50%, #eef5f0 100%)' }}>
+        <TestimonialSection />
+        <BlogSection />
+      </div>
       <FAQSection />
       <CTASection />
     </section>

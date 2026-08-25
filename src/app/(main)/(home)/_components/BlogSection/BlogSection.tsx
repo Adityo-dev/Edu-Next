@@ -1,13 +1,14 @@
 'use client';
 
-import { ArrowRight, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
-import Image from 'next/image';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { Autoplay, Navigation } from 'swiper/modules';
+import 'swiper/css/pagination';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import BlogCard, { IBlogPost } from './_components/BlogCard';
 
-const additionalBlogPosts = [
+const additionalBlogPosts: IBlogPost[] = [
   {
     id: 1,
     title: 'How to Start Freelancing in Bangladesh',
@@ -57,95 +58,55 @@ const additionalBlogPosts = [
 
 const BlogSection = () => {
   return (
-    <section className="overflow-hidden bg-[#F9FAFB] py-20">
-      <div className="mx-auto max-w-400 px-6">
+    <section className="overflow-hidden py-12">
+      <div className="mx-auto max-w-400 px-4">
         {/* Section Header */}
-        <div className="mb-14 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+        <div className="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">
-            <h2 className="text-4xl leading-tight font-bold tracking-tight md:text-5xl">
+            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
               Learn More from Our <span className="text-primary">Blog</span>
             </h2>
-            <p className="text-text-secondary mt-4 max-w-lg text-lg leading-relaxed">
+            <p className="text-text-secondary mt-3 max-w-lg text-base leading-relaxed">
               Stay updated with the latest tips, career advice, and learning strategies from our
               expert instructors.
             </p>
           </div>
 
           <div className="flex gap-3">
-            <button className="blog-prev text-text-secondary flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm border border-orange-200 transition-all hover:bg-orange-50 active:scale-95">
-              <ChevronLeft size={24} />
+            <button className="blog-prev text-text-secondary flex h-10 w-10 cursor-pointer items-center justify-center rounded-sm border border-orange-200 transition-all hover:bg-orange-50 active:scale-95">
+              <ChevronLeft size={20} />
             </button>
-            <button className="blog-next bg-secondary flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm text-white transition-all hover:bg-[#d98c0a] active:scale-95">
-              <ChevronRight size={24} />
+            <button className="blog-next bg-secondary flex h-10 w-10 cursor-pointer items-center justify-center rounded-sm text-white transition-all hover:bg-[#d98c0a] active:scale-95">
+              <ChevronRight size={20} />
             </button>
           </div>
         </div>
 
         {/* Swiper */}
-        <Swiper
-          modules={[Navigation, Autoplay]}
-          spaceBetween={24}
-          slidesPerView={1}
-          loop={true}
-          autoplay={{ delay: 7000, disableOnInteraction: false }}
-          navigation={{ nextEl: '.blog-next', prevEl: '.blog-prev' }}
-          breakpoints={{
-            640: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-            1280: { slidesPerView: 4 },
-          }}
-        >
-          {additionalBlogPosts.map((post) => (
-            <SwiperSlide key={post.id}>
-              <div className="group cursor-pointer overflow-hidden rounded-md bg-white shadow-xs transition-all duration-300 hover:shadow-md hover:shadow-emerald-100/50">
-                {/* Image */}
-                <div className="relative h-52 w-full overflow-hidden">
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  {/* Category */}
-                  <span className="bg-primary absolute top-4 left-4 rounded-sm px-3 py-1 text-xs font-bold text-white">
-                    {post.category}
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  {/* Read Time */}
-                  <div className="text-text-secondary mb-3 flex items-center gap-1.5">
-                    <Clock size={13} />
-                    <span className="text-xs font-medium">{post.readTime}</span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="group-hover:text-primary mb-3 line-clamp-2 text-lg leading-snug font-bold transition-colors duration-300">
-                    {post.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-text-secondary mb-6 line-clamp-2 text-sm leading-relaxed">
-                    {post.description}
-                  </p>
-
-                  {/* Divider */}
-                  <div className="mb-4 h-px w-full bg-slate-100" />
-
-                  {/* Read More */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-primary text-sm font-bold">Read Article</span>
-                    <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-full text-white opacity-0 transition-all duration-300 group-hover:opacity-100">
-                      <ArrowRight size={15} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className="[&_.swiper-pagination-bullet]:bg-primary/30 hover:[&_.swiper-pagination-bullet]:bg-primary/60 [&_.swiper-pagination-bullet-active]:bg-primary! relative [&_.swiper-pagination]:bottom-0! [&_.swiper-pagination-bullet]:h-2.5 [&_.swiper-pagination-bullet]:w-2.5 [&_.swiper-pagination-bullet]:opacity-100 [&_.swiper-pagination-bullet]:transition-all [&_.swiper-pagination-bullet]:duration-300 [&_.swiper-pagination-bullet-active]:w-8! [&_.swiper-pagination-bullet-active]:rounded-full!">
+          <Swiper
+            modules={[Navigation, Autoplay, Pagination]}
+            spaceBetween={24}
+            slidesPerView={1}
+            loop={true}
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 6000, disableOnInteraction: false }}
+            navigation={{ nextEl: '.blog-next', prevEl: '.blog-prev' }}
+            breakpoints={{
+              640: { slidesPerView: 1 },
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+              1280: { slidesPerView: 4 },
+            }}
+            className="pb-8!"
+          >
+            {additionalBlogPosts.map((post) => (
+              <SwiperSlide key={post.id} className="flex h-auto!">
+                <BlogCard post={post} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
     </section>
   );

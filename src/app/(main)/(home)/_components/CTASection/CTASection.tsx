@@ -1,8 +1,10 @@
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
+
 const CTASection = () => {
   return (
-    <section className="px-6 pt-10 pb-24">
-      <div className="mx-auto max-w-400">
-        <div className="bg-primary relative overflow-hidden rounded-md px-8 py-24 text-center shadow-sm">
+    <section className="mx-auto max-w-400 px-4 py-12">
+      <div className="w-full">
+        <div className="bg-primary relative overflow-hidden rounded-md px-6 py-16 text-center shadow-md md:px-12 md:py-20">
           {/* Background Dot Grid */}
           <div
             className="absolute inset-0 opacity-10"
@@ -36,28 +38,35 @@ const CTASection = () => {
 
           {/* Badge */}
           <div className="relative z-10 mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 backdrop-blur-sm">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-yellow-400" />
-            <span className="text-sm font-medium text-white">5,000+ Students Already Enrolled</span>
+            <span className="bg-warning h-1.5 w-1.5 animate-pulse rounded-full" />
+            <span className="text-xs font-semibold text-white">
+              5,000+ Students Already Enrolled
+            </span>
           </div>
 
           {/* Content */}
           <div className="relative z-10 flex flex-col items-center">
-            <h2 className="text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">
-              Your Future Starts <span className="text-yellow-400">Here</span>
+            <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">
+              Your Future Starts <span className="text-warning italic">Here</span>
             </h2>
 
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/75">
+            <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/80">
               Join thousands of students on EduNext — learn from verified instructors, earn
               certificates, and unlock new career opportunities from anywhere in Bangladesh.
             </p>
 
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-              <button className="bg-secondary cursor-pointer rounded-sm px-10 py-4 text-lg font-semibold text-white shadow-sm shadow-orange-300/30 transition-all active:scale-95">
-                Register Now
-              </button>
-              <button className="cursor-pointer rounded-sm border border-white/30 bg-white/10 px-10 py-4 text-lg font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20 active:scale-95">
-                Browse Courses
-              </button>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+              <DynamicActionButton
+                label="Register Now"
+                href="/register"
+                className="bg-secondary border-none text-white hover:bg-[#d98c0a]"
+              />
+              <DynamicActionButton
+                label="Browse Courses"
+                href="/courses"
+                variant="outline"
+                className="border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20"
+              />
             </div>
           </div>
         </div>

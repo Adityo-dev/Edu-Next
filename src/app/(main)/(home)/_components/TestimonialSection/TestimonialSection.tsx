@@ -7,7 +7,7 @@ import { testimonialsData } from './data/testimonials.data';
 
 const TestimonialSection = () => {
   return (
-    <section className="overflow-hidden bg-[#F9FAFB] py-12">
+    <section className="overflow-hidden py-12">
       {/* Header */}
       <div className="mx-auto mb-10 max-w-400 px-4 text-center">
         <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">

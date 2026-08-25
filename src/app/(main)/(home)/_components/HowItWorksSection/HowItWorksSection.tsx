@@ -72,10 +72,7 @@ const HowItWorksSection = () => {
   const steps = activeTab === 'student' ? studentSteps : instructorSteps;
 
   return (
-    <section
-      className="py-12"
-      style={{ background: 'linear-gradient(160deg, #fdf9f0 0%, #f5f8f5 50%, #eef5f0 100%)' }}
-    >
+    <section className="py-12">
       <div className="mx-auto max-w-400 px-4">
         {/* Header */}
         <div className="mb-6 flex flex-col items-center text-center">

@@ -34,27 +34,30 @@ const MainFooter = async () => {
   );
 
   return (
-    <footer className="bg-[#F8F9FA] pt-20 pb-10">
-      <div className="mx-auto max-w-400 px-6">
+    <footer
+      className="pt-16 pb-8"
+      style={{ background: 'linear-gradient(160deg, #fdf9f0 0%, #f5f8f5 50%, #eef5f0 100%)' }}
+    >
+      <div className="mx-auto max-w-400 px-4">
         {/* Top Section: Logo and Links */}
-        <div className="mb-4 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Logo & Info */}
           <div className="max-w-xs">
-            <div className="mb-6 flex items-center gap-2">
+            <div className="mb-4 flex items-center">
               <SiteLogo
                 siteLogo={siteLogo}
                 siteName={siteName}
                 showTagline={false}
-                className="h-20 w-72"
+                className="h-16 w-60"
               />
             </div>
-            <p className="line-clamp-3 leading-relaxed text-slate-500">{tagline}</p>
+            <p className="text-text-secondary line-clamp-3 text-sm leading-relaxed">{tagline}</p>
           </div>
 
           {/* Page Links */}
           <div>
-            <h4 className="mb-6 text-xl font-semibold text-[#2D3134]">Page</h4>
-            <ul className="space-y-4 text-slate-500">
+            <h4 className="mb-5 text-lg font-semibold tracking-tight">Page</h4>
+            <ul className="text-text-secondary space-y-3 text-sm">
               <li>
                 <Link href="/" className="hover:text-primary transition-colors">
                   Home
@@ -80,8 +83,8 @@ const MainFooter = async () => {
 
           {/* Company Links */}
           <div>
-            <h4 className="mb-6 text-xl font-semibold text-[#2D3134]">Company</h4>
-            <ul className="space-y-4 text-slate-500">
+            <h4 className="mb-5 text-lg font-semibold tracking-tight">Company</h4>
+            <ul className="text-text-secondary space-y-3 text-sm">
               <li>
                 <Link href="/style-guide" className="hover:text-primary transition-colors">
                   Style Guide
@@ -107,22 +110,22 @@ const MainFooter = async () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="mb-6 text-xl font-semibold text-[#2D3134]">Contact</h4>
-            <ul className="space-y-5 text-slate-500">
+            <h4 className="mb-5 text-lg font-semibold tracking-tight">Contact</h4>
+            <ul className="text-text-secondary space-y-4 text-sm">
               <li className="flex items-center gap-3">
-                <Phone size={20} className="text-[#2D3134]" />
+                <Phone size={18} className="text-primary" />
                 <a href={`tel:${contactPhone}`} className="hover:text-primary transition-colors">
                   {contactPhone}
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <Mail size={20} className="text-[#2D3134]" />
+                <Mail size={18} className="text-primary" />
                 <a href={`mailto:${supportEmail}`} className="hover:text-primary transition-colors">
                   {supportEmail}
                 </a>
               </li>
               <li className="flex items-start gap-3">
-                <MapPin size={24} className="shrink-0 text-[#2D3134]" />
+                <MapPin size={20} className="text-primary shrink-0" />
                 <span>Dhaka, Bangladesh</span>
               </li>
             </ul>
@@ -131,8 +134,8 @@ const MainFooter = async () => {
 
         {/* Bottom Section: Social Media Bar */}
         {hasSocialLinks && (
-          <div className="flex flex-col items-center justify-between gap-6 rounded-md bg-[#EEF5F5] px-8 py-6 md:flex-row">
-            <h3 className="text-2xl font-semibold text-[#2D3134]">Support for Social Medias :</h3>
+          <div className="mt-12 flex flex-col items-center justify-between gap-6 border-t border-slate-200/60 pt-8 md:flex-row">
+            <h3 className="text-lg font-semibold tracking-tight">Support for Social Medias :</h3>
 
             <div className="flex items-center gap-4">
               {/* Facebook */}
@@ -141,9 +144,9 @@ const MainFooter = async () => {
                   href={socialLinks.facebook}
                   target="_blank"
                   rel="noreferrer"
-                  className="bg-secondary flex h-12 w-12 items-center justify-center rounded-full text-white shadow-orange-200 transition-transform hover:scale-110"
+                  className="bg-secondary flex h-10 w-10 items-center justify-center rounded-full text-white transition-transform hover:-translate-y-1"
                 >
-                  <Facebook size={22} fill="currentColor" />
+                  <Facebook size={18} fill="currentColor" strokeWidth={0} />
                 </a>
               )}
               {/* YouTube */}
@@ -152,9 +155,9 @@ const MainFooter = async () => {
                   href={socialLinks.youtube}
                   target="_blank"
                   rel="noreferrer"
-                  className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
+                  className="bg-primary flex h-10 w-10 items-center justify-center rounded-full text-white transition-transform hover:-translate-y-1"
                 >
-                  <Youtube size={22} fill="currentColor" />
+                  <Youtube size={18} fill="currentColor" strokeWidth={0} />
                 </a>
               )}
               {/* Linkedin */}
@@ -163,9 +166,9 @@ const MainFooter = async () => {
                   href={socialLinks.linkedin}
                   target="_blank"
                   rel="noreferrer"
-                  className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
+                  className="bg-primary flex h-10 w-10 items-center justify-center rounded-full text-white transition-transform hover:-translate-y-1"
                 >
-                  <Linkedin size={22} fill="currentColor" />
+                  <Linkedin size={18} fill="currentColor" strokeWidth={0} />
                 </a>
               )}
               {/* Github */}
@@ -174,9 +177,9 @@ const MainFooter = async () => {
                   href={socialLinks.github}
                   target="_blank"
                   rel="noreferrer"
-                  className="bg-primary flex h-12 w-12 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
+                  className="bg-primary flex h-10 w-10 items-center justify-center rounded-full text-white transition-transform hover:-translate-y-1"
                 >
-                  <Github size={22} fill="currentColor" />
+                  <Github size={18} fill="currentColor" strokeWidth={0} />
                 </a>
               )}
             </div>
@@ -184,8 +187,19 @@ const MainFooter = async () => {
         )}
 
         {/* Copyright Section */}
-        <div className="mt-8 border-t border-slate-200 pt-8 text-center text-slate-500">
+        <div className="text-text-secondary mt-8 flex flex-col items-center justify-center gap-4 border-t border-slate-200/60 pt-8 text-center text-sm md:flex-row md:justify-between">
           <p>{copyrightText}</p>
+          <p>
+            Created by{' '}
+            <a
+              href="https://www.facebook.com/koushik.barmon.79"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary font-semibold hover:underline"
+            >
+              Koushik Barmon
+            </a>
+          </p>
         </div>
       </div>
     </footer>

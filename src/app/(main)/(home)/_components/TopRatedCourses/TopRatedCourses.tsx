@@ -34,10 +34,7 @@ const TopRatedCourses = () => {
   const displayCourses = filteredCourses.length > 0 ? filteredCourses : allCourses;
 
   return (
-    <section
-      className="overflow-hidden py-12"
-      style={{ background: 'linear-gradient(160deg, #fdf9f0 0%, #f5f8f5 50%, #eef5f0 100%)' }}
-    >
+    <section className="overflow-hidden py-12">
       <div className="mx-auto max-w-400 px-4">
         {/* Header */}
         <div className="mb-5">
