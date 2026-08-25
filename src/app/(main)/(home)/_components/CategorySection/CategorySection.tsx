@@ -69,7 +69,7 @@ const CategorySection = () => {
               loop={true}
               speed={800}
               autoplay={{
-                delay: 5000,
+                delay: 6000,
                 disableOnInteraction: false,
                 pauseOnMouseEnter: true,
               }}

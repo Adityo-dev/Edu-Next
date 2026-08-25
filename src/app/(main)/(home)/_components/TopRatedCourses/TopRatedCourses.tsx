@@ -20,8 +20,6 @@ const TopRatedCourses = () => {
 
   const allCourses: ICourseListItem[] = data?.data?.courses || [];
 
-  // Basic mock filtering based on active tab. For real implementation,
-  // ensure the backend returns the category data or fetches by category.
   const filteredCourses =
     activeTab === 'All'
       ? allCourses
@@ -29,7 +27,6 @@ const TopRatedCourses = () => {
           (course) =>
             // @ts-expect-error category might not be fully typed in ICourseListItem if not populated
             course?.category?.name?.toLowerCase().includes(activeTab.toLowerCase()) ||
-            // fallback to checking title if category isn't populated
             course?.title?.toLowerCase().includes(activeTab.toLowerCase()),
         );
 
@@ -37,11 +34,14 @@ const TopRatedCourses = () => {
   const displayCourses = filteredCourses.length > 0 ? filteredCourses : allCourses;
 
   return (
-    <section className="mb-10 overflow-hidden bg-slate-50 py-12">
+    <section
+      className="overflow-hidden py-12"
+      style={{ background: 'linear-gradient(160deg, #fdf9f0 0%, #f5f8f5 50%, #eef5f0 100%)' }}
+    >
       <div className="mx-auto max-w-400 px-4">
         {/* Header */}
-        <div className="mb-6">
-          <h2 className="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
+        <div className="mb-5">
+          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
             Top Rated Learning <span className="text-primary italic">Courses</span>
           </h2>
           <p className="text-text-secondary mt-3 max-w-2xl text-base leading-relaxed">
@@ -74,7 +74,7 @@ const TopRatedCourses = () => {
         </div>
 
         {/* Course Carousel */}
-        <div className="relative">
+        <div className="[&_.swiper-pagination-bullet]:bg-primary/30 hover:[&_.swiper-pagination-bullet]:bg-primary/60 [&_.swiper-pagination-bullet-active]:bg-primary! relative [&_.swiper-pagination]:bottom-0! [&_.swiper-pagination-bullet]:h-2.5 [&_.swiper-pagination-bullet]:w-2.5 [&_.swiper-pagination-bullet]:opacity-100 [&_.swiper-pagination-bullet]:transition-all [&_.swiper-pagination-bullet]:duration-300 [&_.swiper-pagination-bullet-active]:w-8! [&_.swiper-pagination-bullet-active]:rounded-full!">
           {isLoading ? (
             <div className="flex w-full gap-4 overflow-hidden sm:gap-5 md:gap-6">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -88,18 +88,18 @@ const TopRatedCourses = () => {
             </div>
           ) : (
             <Swiper
-              key={activeTab} // Force re-render on tab change to reset swiper state
+              key={activeTab}
               modules={[Autoplay, Pagination]}
               spaceBetween={16}
               slidesPerView={1.15}
-              pagination={{ clickable: true, dynamicBullets: true }}
-              autoplay={{ delay: 4500, disableOnInteraction: false }}
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 6000, disableOnInteraction: false }}
               breakpoints={{
-                650: { slidesPerView: 2, spaceBetween: 20 },
+                650: { slidesPerView: 2, spaceBetween: 16 },
                 1024: { slidesPerView: 3, spaceBetween: 24 },
                 1280: { slidesPerView: 4, spaceBetween: 24 },
               }}
-              className="pb-4!"
+              className="pb-8!"
             >
               {displayCourses.map((course) => (
                 <SwiperSlide key={course?._id} className="h-auto">

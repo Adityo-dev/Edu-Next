@@ -72,27 +72,30 @@ const HowItWorksSection = () => {
   const steps = activeTab === 'student' ? studentSteps : instructorSteps;
 
   return (
-    <section className="bg-[#F9FAFB] py-20">
-      <div className="mx-auto max-w-400 px-6">
+    <section
+      className="mb-10 py-12"
+      style={{ background: 'linear-gradient(160deg, #fdf9f0 0%, #f5f8f5 50%, #eef5f0 100%)' }}
+    >
+      <div className="mx-auto max-w-400 px-4">
         {/* Header */}
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 text-4xl leading-tight font-bold tracking-tight md:text-5xl">
-            How <span className="text-primary">EduNext</span> Works
+        <div className="mb-6 flex flex-col items-center text-center">
+          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
+            How <span className="text-primary italic">EduNext</span> Works
           </h2>
-          <p className="text-text-secondary mx-auto max-w-xl text-lg leading-relaxed">
+          <p className="text-text-secondary mt-3 max-w-2xl text-base leading-relaxed">
             Whether you are here to learn or to teach — EduNext makes the process simple,
             transparent, and rewarding.
           </p>
         </div>
 
         {/* Tab Toggle */}
-        <div className="mb-12 flex justify-center">
+        <div className="mb-8 flex justify-center">
           <div className="flex rounded-sm border border-slate-200 bg-white p-1 shadow-xs">
             <button
               onClick={() => setActiveTab('student')}
-              className={`cursor-pointer rounded-sm px-8 py-2.5 text-sm font-semibold transition-all duration-300 ${
+              className={`cursor-pointer rounded-sm px-4 py-2 text-xs font-semibold transition-all duration-300 ${
                 activeTab === 'student'
-                  ? 'bg-primary text-white shadow-sm'
+                  ? 'bg-primary text-white'
                   : 'text-text-secondary hover:text-primary'
               }`}
             >
@@ -100,9 +103,9 @@ const HowItWorksSection = () => {
             </button>
             <button
               onClick={() => setActiveTab('instructor')}
-              className={`cursor-pointer rounded-sm px-8 py-2.5 text-sm font-semibold transition-all duration-300 ${
+              className={`cursor-pointer rounded-sm px-4 py-2 text-xs font-semibold transition-all duration-300 ${
                 activeTab === 'instructor'
-                  ? 'bg-primary text-white shadow-sm'
+                  ? 'bg-primary text-white'
                   : 'text-text-secondary hover:text-primary'
               }`}
             >
@@ -114,23 +117,23 @@ const HowItWorksSection = () => {
         {/* Steps Grid */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((step) => (
-            <div key={step.id} className="group relative">
-              <div className="relative rounded-md border border-slate-100 bg-white p-8 text-center shadow-xs transition-all duration-300 hover:border-emerald-100 hover:shadow-sm">
+            <div key={step?.id} className="group relative">
+              <div className="relative rounded-md border border-slate-100 bg-white p-5 text-center shadow-xs transition-all duration-300 hover:border-emerald-100 hover:shadow-sm">
                 {/* Step Number */}
-                <span className="text-primary/15 absolute top-4 right-5 text-5xl font-black">
-                  {step.id}
+                <span className="text-primary/30 absolute top-4 right-5 text-5xl font-black">
+                  {step?.id}
                 </span>
 
                 {/* Icon */}
-                <div className="bg-primary mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full text-white shadow-sm transition-all duration-300 group-hover:scale-105">
-                  {step.icon}
+                <div className="bg-primary mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full text-white shadow-sm transition-all duration-300 group-hover:scale-105">
+                  {step?.icon}
                 </div>
 
                 {/* Title */}
-                <h3 className="mb-3 text-xl font-bold">{step.title}</h3>
+                <h3 className="mb-2 text-lg font-semibold">{step?.title}</h3>
 
                 {/* Description */}
-                <p className="text-text-secondary leading-relaxed">{step.desc}</p>
+                <p className="text-text-secondary leading-relaxed">{step?.desc}</p>
               </div>
             </div>
           ))}
