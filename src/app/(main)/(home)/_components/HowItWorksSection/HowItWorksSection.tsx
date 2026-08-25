@@ -73,7 +73,7 @@ const HowItWorksSection = () => {
 
   return (
     <section
-      className="mb-10 py-12"
+      className="py-12"
       style={{ background: 'linear-gradient(160deg, #fdf9f0 0%, #f5f8f5 50%, #eef5f0 100%)' }}
     >
       <div className="mx-auto max-w-400 px-4">
