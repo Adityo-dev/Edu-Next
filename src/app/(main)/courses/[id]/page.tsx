@@ -15,7 +15,6 @@ import { use } from 'react';
 const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
   const { data, isLoading, isError } = useGetCourseBySlugQuery(id);
-  console.log(data);
 
   if (isLoading) {
     return (

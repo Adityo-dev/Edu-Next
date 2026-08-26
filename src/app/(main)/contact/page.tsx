@@ -1,7 +1,7 @@
+import CTASection from '../(home)/_components/CTASection/CTASection';
+import ContactForm from './_components/ContactForm/ContactForm';
 import ContactHero from './_components/ContactHero/ContactHero';
 import ContactInfo from './_components/ContactInfo/ContactInfo';
-import ContactForm from './_components/ContactForm/ContactForm';
-import CTASection from '../(home)/_components/CTASection/CTASection';
 
 export const metadata = {
   title: 'Contact Support',
@@ -10,12 +10,12 @@ export const metadata = {
 
 const ContactPage = () => {
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <section className="mt-20">
       <ContactHero />
       <ContactInfo />
       <ContactForm />
       <CTASection />
-    </div>
+    </section>
   );
 };
 

@@ -102,7 +102,6 @@ export default function StickyBuyCard({
         return;
       } catch (error: any) {
         if (error.name === 'AbortError') return;
-        console.log('Native sharing failed, falling back to clipboard...');
       }
     }
 

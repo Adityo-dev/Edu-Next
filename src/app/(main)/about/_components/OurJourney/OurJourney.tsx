@@ -23,8 +23,8 @@ const timeline = [
 
 const OurJourney = () => {
   return (
-    <section className="mx-auto max-w-400 px-4 py-12 lg:py-16">
-      <div className="mb-12 text-center">
+    <section className="mx-auto max-w-400 px-4 py-12">
+      <div className="mb-10 text-center">
         <h2 className="mb-4 text-3xl font-semibold tracking-tight md:text-4xl">
           Our <span className="text-primary italic">Journey</span>
         </h2>
@@ -33,7 +33,7 @@ const OurJourney = () => {
         </p>
       </div>
 
-      <div className="relative mx-auto max-w-3xl">
+      <div className="relative mx-auto max-w-4xl">
         {/* Center Line */}
         <div className="absolute top-0 left-1/2 hidden h-full w-px -translate-x-1/2 bg-emerald-200/50 md:block" />
 
@@ -46,13 +46,11 @@ const OurJourney = () => {
               }`}
             >
               {/* Card */}
-              <div className="bg-primary/5 w-full rounded-md border border-emerald-100/50 p-6 md:w-[calc(50%-2rem)]">
+              <div className="bg-primary/5 w-full rounded-md border border-emerald-100/50 p-5 md:w-[calc(50%-2rem)]">
                 <span className="text-primary mb-2 block text-xs font-black tracking-widest uppercase">
                   {item.year}
                 </span>
-                <h3 className="mb-2 text-lg font-semibold tracking-tight text-slate-800">
-                  {item.title}
-                </h3>
+                <h3 className="mb-2 text-lg font-semibold tracking-tight">{item.title}</h3>
                 <p className="text-text-secondary text-sm leading-relaxed">{item.desc}</p>
               </div>
 

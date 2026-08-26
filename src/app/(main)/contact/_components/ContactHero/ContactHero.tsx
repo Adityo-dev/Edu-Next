@@ -1,6 +1,6 @@
 const ContactHero = () => {
   return (
-    <div className="bg-primary relative overflow-hidden px-4 py-20 text-center lg:py-28">
+    <div className="bg-primary px-6 py-16 text-center">
       {/* Background Dot Grid */}
       <div
         className="absolute inset-0 opacity-10"
@@ -12,7 +12,7 @@ const ContactHero = () => {
 
       <div className="relative z-10 mx-auto max-w-400">
         <h1 className="mb-4 text-3xl font-semibold tracking-tight text-white md:text-5xl">
-          Get in <span className="text-yellow-400 italic">Touch</span>
+          Get in <span className="text-warning italic">Touch</span>
         </h1>
         <p className="mx-auto max-w-2xl text-base leading-relaxed text-white/80 md:text-lg">
           Have a question, feedback, or need help with a course? Our support team is always ready to

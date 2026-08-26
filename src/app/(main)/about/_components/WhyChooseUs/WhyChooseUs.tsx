@@ -1,14 +1,14 @@
-import Image from 'next/image';
 import {
-  ShieldCheck,
-  Video,
   Award,
+  Bell,
   CreditCard,
   PlayCircle,
-  Bell,
+  ShieldCheck,
   Smartphone,
+  Video,
   Wallet,
 } from 'lucide-react';
+import Image from 'next/image';
 
 const whyChooseUs = [
   { text: 'Verified Instructors', icon: <ShieldCheck size={16} className="text-primary" /> },
@@ -43,7 +43,7 @@ const WhyChooseUs = () => {
                 <div className="border-primary/20 bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full border">
                   {item.icon}
                 </div>
-                <span className="text-sm font-medium text-slate-800">{item.text}</span>
+                <span className="text-sm font-medium">{item.text}</span>
               </div>
             ))}
           </div>
@@ -51,7 +51,7 @@ const WhyChooseUs = () => {
 
         {/* Right: Image Collage */}
         <div className="w-full lg:w-1/2">
-          <div className="grid h-[350px] w-full grid-cols-12 grid-rows-6 gap-3 sm:h-[450px] lg:h-[400px]">
+          <div className="grid h-87.5 w-full grid-cols-12 grid-rows-6 gap-3 sm:h-112.5 lg:h-100">
             {/* Left Tall Image */}
             <div className="relative col-span-5 row-span-6 overflow-hidden rounded-md bg-emerald-50">
               <Image

@@ -9,7 +9,7 @@ import WhyChooseUs from './_components/WhyChooseUs/WhyChooseUs';
 
 const AboutUsPage = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pt-20">
       <AboutHero />
       <div style={{ background: 'linear-gradient(160deg, #fdf9f0 0%, #f5f8f5 50%, #eef5f0 100%)' }}>
         <OurStory />

@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 'use client';
 
+import CoursePlayerSkeleton from '@/components/dashboard/Skeletons/CoursePlayerSkeleton';
 import {
   useGetCoursePlaybackDataQuery,
   useMarkLessonAsCompleteMutation,
 } from '@/redux/features/courseManagement/studentCourse.api';
 import { ILesson } from '@/types/courseManagement.types';
 import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import CoursePlayerSkeleton from '@/components/dashboard/Skeletons/CoursePlayerSkeleton';
 import CourseContentSidebar, {
   ICourseSection,
 } from './_components/CourseContentSidebar/CourseContentSidebar';
@@ -71,7 +73,6 @@ export default function CoursePlayerPage({ params }: { params: Promise<{ id: str
       );
       if (isAlreadyCompleted) return;
 
-      console.log(`[Completion] ✅ ${reason} — marking lesson complete`);
       markLessonAsComplete({
         courseId: courseData._id,
         lessonId: currentLesson._id as string,
