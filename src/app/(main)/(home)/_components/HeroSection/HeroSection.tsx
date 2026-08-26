@@ -37,8 +37,8 @@ const HeroSection = () => {
 
         {/* Description */}
         <p className="text-text-secondary mx-auto mt-5 max-w-xl text-base leading-relaxed md:text-lg">
-          Expert-led courses, live Zoom sessions & verifiable PDF certificates — learn at your own
-          pace from anywhere in Bangladesh.
+          Transform your potential into expertise with industry-curated courses, interactive live
+          sessions, and verifiable credentials. Learn from top professionals at your own pace.
         </p>
 
         {/* Decorative handwritten annotation — right side */}
@@ -109,8 +109,9 @@ const HeroSection = () => {
             label="Explore Courses"
             href="/courses"
             variant="default"
-            icon={ArrowRight}
             showIcon
+            icon={ArrowRight}
+            iconPosition="right"
           />
           <DynamicActionButton label="Get Started Free" href="/register" variant="outline" />
         </div>

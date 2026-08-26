@@ -11,47 +11,71 @@ import BlogCard, { IBlogPost } from './_components/BlogCard';
 const additionalBlogPosts: IBlogPost[] = [
   {
     id: 1,
-    title: 'How to Start Freelancing in Bangladesh',
+    title: 'The Future of AI: How Machine Learning is Shaping 2025',
     description:
-      'A complete beginner guide to starting your freelancing career on Fiverr and Upwork from Bangladesh.',
-    image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?q=80&w=1000',
-    category: 'Freelancing',
-    readTime: '5 min read',
-  },
-  {
-    id: 2,
-    title: 'Top 5 In-Demand Skills in 2025',
-    description:
-      'Discover which digital skills are most wanted by employers and clients globally in 2025.',
-    image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000',
-    category: 'Career',
-    readTime: '4 min read',
-  },
-  {
-    id: 3,
-    title: 'How to Learn UI/UX Design from Scratch',
-    description:
-      'A step-by-step roadmap for beginners to master UI/UX design using Figma and modern tools.',
-    image: 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?q=80&w=1000',
-    category: 'Design',
+      'Explore the revolutionary advancements in AI, from generative models to automation, and how to prepare for the AI-driven economy.',
+    image:
+      'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1000&auto=format&fit=crop',
+    category: 'Artificial Intelligence',
     readTime: '6 min read',
   },
   {
-    id: 4,
-    title: 'Web Development Roadmap for Beginners',
+    id: 2,
+    title: 'Mastering DevOps: Streamlining CI/CD Pipelines',
     description:
-      'Everything you need to know to go from zero to a job-ready web developer in 2025.',
-    image: 'https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=1000',
-    category: 'Development',
+      'A comprehensive guide to continuous integration and deployment, Docker, Kubernetes, and automating your workflow.',
+    image:
+      'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?q=80&w=1000&auto=format&fit=crop',
+    category: 'DevOps',
     readTime: '7 min read',
   },
   {
-    id: 5,
-    title: 'Why Digital Marketing is the Future',
+    id: 3,
+    title: 'Cybersecurity Trends You Cannot Ignore',
     description:
-      'Learn why businesses in Bangladesh are investing heavily in digital marketing and how you can benefit.',
-    image: 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?q=80&w=1000',
-    category: 'Marketing',
+      'With digital threats evolving rapidly, discover the most critical security practices to protect your infrastructure.',
+    image:
+      'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop',
+    category: 'Security',
+    readTime: '5 min read',
+  },
+  {
+    id: 4,
+    title: 'Cloud Computing: AWS vs Azure vs GCP',
+    description:
+      'An in-depth comparison of the top cloud platforms to help you choose the right infrastructure for your next big project.',
+    image:
+      'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1000&auto=format&fit=crop',
+    category: 'Cloud',
+    readTime: '8 min read',
+  },
+  {
+    id: 5,
+    title: 'Web3 & Blockchain: Beyond Cryptocurrency',
+    description:
+      'Understand the underlying technology of Web3, smart contracts, and decentralized applications (dApps).',
+    image: '/images/web3.jpg',
+    category: 'Web3',
+    readTime: '6 min read',
+  },
+  {
+    id: 6,
+    title: 'Data Science: Turning Raw Data into Insights',
+    description:
+      'Learn the core principles of data analysis, visualization techniques, and predictive modeling for business growth.',
+    image:
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop',
+    category: 'Data Science',
+    readTime: '7 min read',
+  },
+  {
+    id: 7,
+    title: 'Full-Stack Development with Next.js 15',
+    description:
+      'A deep dive into the latest features of Next.js, React Server Components, and building performant web applications.',
+    image:
+      'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop',
+    category: 'Development',
     readTime: '5 min read',
   },
 ];
