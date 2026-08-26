@@ -2,6 +2,7 @@
 
 import { ArrowDown, ArrowUp, Headset } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 const faqData = [
@@ -117,7 +118,7 @@ const FAQSection = () => {
   };
 
   return (
-    <section className="mx-auto max-w-400 px-4 py-12">
+    <section id="faq" className="mx-auto max-w-400 px-4 py-12">
       {/* Header */}
       <div className="mb-8 flex flex-col items-center text-center">
         <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
@@ -234,9 +235,12 @@ const FAQSection = () => {
               <span className="text-text-secondary text-xs font-semibold sm:text-sm">
                 We usually respond within 2 hours
               </span>
-              <span className="text-primary cursor-pointer text-xs font-semibold hover:underline sm:text-sm">
+              <Link
+                href="/contact"
+                className="text-primary cursor-pointer text-xs font-semibold hover:underline sm:text-sm"
+              >
                 Contact Support →
-              </span>
+              </Link>
             </div>
           </div>
         </div>

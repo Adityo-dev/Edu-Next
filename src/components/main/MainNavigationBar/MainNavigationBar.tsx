@@ -20,6 +20,7 @@ const navLinks = [
   { name: 'About Us', href: '/about' },
   { name: 'Courses', href: '/courses' },
   { name: 'Blog', href: '/blog' },
+  { name: 'Contact Us', href: '/contact' },
 ];
 
 interface PlatformConfig {

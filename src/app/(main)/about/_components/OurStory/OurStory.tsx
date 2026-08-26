@@ -3,7 +3,7 @@ import { CheckCircle } from 'lucide-react';
 
 const OurStory = () => {
   return (
-    <section className="mx-auto max-w-400 px-4 py-12 lg:py-16">
+    <section id="journey" className="mx-auto max-w-400 px-4 py-12 lg:py-16">
       <div className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16">
         {/* Image */}
         <div className="w-full lg:w-1/2">

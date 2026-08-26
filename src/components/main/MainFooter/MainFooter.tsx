@@ -3,6 +3,24 @@ import Link from 'next/link';
 import { baseApi } from '@/services/root/baseApi';
 import { SiteLogo } from '@/components/shared/SiteLogo/SiteLogo';
 
+const exploreLinks = [
+  { name: 'All Courses', href: '/courses' },
+  { name: 'Our Blog', href: '/blog' },
+  { name: 'About Us', href: '/about' },
+  { name: 'Why Choose EduNext', href: '/about#why-choose-us' },
+  { name: 'Our Journey', href: '/about#journey' },
+  { name: 'Contact Us', href: '/contact' },
+];
+
+const quickLinks = [
+  { name: 'Student Login', href: '/login' },
+  { name: 'Become an Instructor', href: '/register' },
+  { name: 'Help Center & FAQ', href: '/#faq' },
+  { name: 'My Wishlist', href: '/wishlist' },
+  { name: 'Terms & Conditions', href: '/terms' },
+  { name: 'Privacy Policy', href: '/privacy-policy' },
+];
+
 const MainFooter = async () => {
   let config = null;
   try {
@@ -54,57 +72,31 @@ const MainFooter = async () => {
             <p className="text-text-secondary line-clamp-3 text-sm leading-relaxed">{tagline}</p>
           </div>
 
-          {/* Page Links */}
+          {/* Explore Links */}
           <div>
-            <h4 className="mb-5 text-lg font-semibold tracking-tight">Page</h4>
+            <h4 className="mb-5 text-lg font-semibold tracking-tight">Explore</h4>
             <ul className="text-text-secondary space-y-3 text-sm">
-              <li>
-                <Link href="/" className="hover:text-primary transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/category" className="hover:text-primary transition-colors">
-                  Category
-                </Link>
-              </li>
-              <li>
-                <Link href="/course" className="hover:text-primary transition-colors">
-                  Course
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="hover:text-primary transition-colors">
-                  Blog
-                </Link>
-              </li>
+              {exploreLinks.map((link, i) => (
+                <li key={i}>
+                  <Link href={link.href} className="hover:text-primary transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Company Links */}
+          {/* Quick Links */}
           <div>
-            <h4 className="mb-5 text-lg font-semibold tracking-tight">Company</h4>
+            <h4 className="mb-5 text-lg font-semibold tracking-tight">Quick Links</h4>
             <ul className="text-text-secondary space-y-3 text-sm">
-              <li>
-                <Link href="/style-guide" className="hover:text-primary transition-colors">
-                  Style Guide
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-primary transition-colors">
-                  About us
-                </Link>
-              </li>
-              <li>
-                <Link href="/why-choose-us" className="hover:text-primary transition-colors">
-                  Why Choose Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/404" className="hover:text-primary transition-colors">
-                  404
-                </Link>
-              </li>
+              {quickLinks.map((link, i) => (
+                <li key={i}>
+                  <Link href={link.href} className="hover:text-primary transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

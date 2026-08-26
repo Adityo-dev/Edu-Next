@@ -23,7 +23,7 @@ const whyChooseUs = [
 
 const WhyChooseUs = () => {
   return (
-    <section className="mx-auto max-w-400 px-4 py-12 lg:py-16">
+    <section id="why-choose-us" className="mx-auto max-w-400 px-4 py-12 lg:py-16">
       <div className="flex flex-col justify-between gap-12 lg:flex-row lg:items-center lg:gap-16">
         {/* Left: Content */}
         <div className="w-full lg:w-1/2">
