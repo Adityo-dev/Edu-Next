@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
+import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import OtpInput from '@/components/shared/OtpInput';
 import { baseApi } from '@/services/root/baseApi';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, Eye, EyeOff, KeyRound, Lock, RefreshCw } from 'lucide-react';
+import { ArrowLeft, KeyRound, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
@@ -35,12 +37,9 @@ const ResetPasswordForm = () => {
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [apiSuccess, setApiSuccess] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [otpKey, setOtpKey] = useState(0);
 
   const {
-    register,
     handleSubmit,
     control,
     setValue,
@@ -133,32 +132,34 @@ const ResetPasswordForm = () => {
   };
 
   return (
-    <div className="w-full rounded-xl border border-slate-100 bg-white p-6 text-center shadow-md shadow-slate-100/70">
-      {/* Icon */}
-      <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50/80 ring-8 ring-emerald-50/40">
-        <KeyRound size={24} className="text-primary" />
-      </div>
-
-      {/* Heading */}
-      <h1 className="mb-1.5 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-        Reset Password
-      </h1>
-
-      {step === 1 ? (
-        <>
-          <p className="text-sm text-slate-500">We sent a 6-digit code to</p>
-          <p className="mt-2 mb-6 inline-block max-w-full rounded-md border border-slate-100 bg-slate-50 px-3 py-1.5 text-xs font-semibold break-all text-slate-700">
-            {email || 'your email'}
-          </p>
-        </>
-      ) : (
-        <div className="mb-6">
-          <div className="mx-auto mb-2 flex w-max items-center justify-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">
-            <span>✅</span> Code Format Accepted
-          </div>
-          <p className="text-sm text-slate-500">Now enter your new password to verify and reset.</p>
+    <div className="relative z-10 w-full max-w-md rounded-md border border-slate-100 bg-white p-5 shadow-slate-100/70">
+      <div className="text-center">
+        {/* Icon */}
+        <div className="ring-primary/20 mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 ring-1">
+          <KeyRound size={24} className="text-primary" />
         </div>
-      )}
+
+        {/* Heading */}
+        <h1 className="text-text-primary mb-2 text-2xl font-bold">Reset Password</h1>
+
+        {step === 1 ? (
+          <>
+            <p className="text-text-secondary text-sm">We sent a 6-digit code to</p>
+            <p className="mt-2 mb-6 inline-block max-w-full rounded-md border border-slate-100 bg-slate-50 px-3 py-1.5 text-xs font-semibold break-all">
+              {email || 'your email'}
+            </p>
+          </>
+        ) : (
+          <div className="mb-8">
+            <div className="mx-auto mb-2 flex w-max items-center justify-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">
+              <span>✅</span> Code Format Accepted
+            </div>
+            <p className="text-text-secondary text-sm">
+              Now enter your new password to verify and reset.
+            </p>
+          </div>
+        )}
+      </div>
 
       {/* Alerts */}
       <div className="min-h-12.5 empty:hidden">
@@ -180,8 +181,8 @@ const ResetPasswordForm = () => {
         {step === 1 && (
           <div className="animate-in fade-in slide-in-from-bottom-2 space-y-4">
             <div>
-              <label className="mb-2 block text-center text-xs font-bold tracking-wider text-slate-500 uppercase">
-                Enter 6-digit Code <span className="text-red-400">*</span>
+              <label className="text-text-secondary mb-2 block text-center text-xs font-semibold tracking-wider uppercase">
+                Enter 6-digit Code <span className="text-danger">*</span>
               </label>
               <div className="flex justify-center">
                 <Controller
@@ -200,13 +201,13 @@ const ResetPasswordForm = () => {
               </div>
 
               {isVerifyingOtp ? (
-                <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-slate-500">
+                <div className="text-text-secondary mt-4 flex items-center justify-center gap-2 text-xs font-medium">
                   <RefreshCw size={14} className="text-primary animate-spin" />
                   <span>Checking code...</span>
                 </div>
               ) : (
                 errors.otp && (
-                  <p className="mt-2 text-center text-xs text-red-500">{errors.otp.message}</p>
+                  <p className="text-danger mt-2 text-center text-xs">{errors.otp.message}</p>
                 )
               )}
             </div>
@@ -215,94 +216,43 @@ const ResetPasswordForm = () => {
 
         {/* Step 2: Passwords */}
         {step === 2 && (
-          <div className="animate-in fade-in slide-in-from-bottom-2 space-y-4">
-            {/* New Password Input */}
-            <div>
-              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-                New Password <span className="text-red-400">*</span>
-              </label>
-              <div className="relative">
-                <Lock
-                  size={15}
-                  className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
-                />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  disabled={isLoading}
-                  {...register('newPassword')}
-                  placeholder="Enter new password"
-                  className={`focus:border-primary w-full rounded-sm border bg-[#F9FAFB] py-3.5 pr-10 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60 ${
-                    errors.newPassword ? 'border-red-300' : 'border-slate-200'
-                  }`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400"
-                  tabIndex={-1}
-                >
-                  {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
-              </div>
-              {errors.newPassword && (
-                <p className="mt-1 text-xs text-red-500">{errors.newPassword.message}</p>
-              )}
-            </div>
+          <div className="animate-in fade-in slide-in-from-bottom-2 space-y-6">
+            <InputField
+              label="New Password"
+              name="newPassword"
+              type="password"
+              control={control}
+              placeholder="Enter new password"
+              error={errors.newPassword?.message}
+              required
+            />
 
-            {/* Confirm Password Input */}
-            <div>
-              <label className="mb-1.5 block text-xs font-bold tracking-wider text-slate-500 uppercase">
-                Confirm Password <span className="text-red-400">*</span>
-              </label>
-              <div className="relative">
-                <Lock
-                  size={15}
-                  className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"
-                />
-                <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  disabled={isLoading}
-                  {...register('confirmPassword')}
-                  placeholder="Confirm new password"
-                  className={`focus:border-primary w-full rounded-sm border bg-[#F9FAFB] py-3.5 pr-10 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60 ${
-                    errors.confirmPassword ? 'border-red-300' : 'border-slate-200'
-                  }`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword((prev) => !prev)}
-                  className="absolute top-1/2 right-3 -translate-y-1/2 text-slate-400"
-                  tabIndex={-1}
-                >
-                  {showConfirmPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                </button>
-              </div>
-              {errors.confirmPassword && (
-                <p className="mt-1 text-xs text-red-500">{errors.confirmPassword.message}</p>
-              )}
-            </div>
+            <InputField
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              control={control}
+              placeholder="Confirm new password"
+              error={errors.confirmPassword?.message}
+              required
+            />
 
-            <button
+            <DynamicActionButton
               type="submit"
-              disabled={isLoading}
-              className="bg-primary mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-sm py-4 text-sm font-bold text-white transition-all hover:bg-[#2a6159] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {isLoading ? (
-                <>
-                  <RefreshCw size={16} className="animate-spin text-white" />
-                  Resetting...
-                </>
-              ) : (
-                'Reset Password →'
-              )}
-            </button>
+              label="Reset Password"
+              isLoading={isLoading}
+              showIcon
+              icon={KeyRound}
+              iconPosition="right"
+              className="w-full"
+            />
           </div>
         )}
       </form>
 
-      <div className="mt-6 border-t border-slate-100 pt-5 text-center">
+      <div className="mt-4 border-t border-slate-100 pt-3 text-center">
         <Link
-          className="text-primary inline-flex items-center gap-1.5 text-xs font-bold hover:underline"
+          className="text-primary inline-flex items-center gap-1.5 text-xs font-semibold hover:underline"
           href="/login"
         >
           <ArrowLeft size={14} /> Back to Sign In
@@ -314,7 +264,7 @@ const ResetPasswordForm = () => {
 
 const ForgotPasswordVerifyOtpPage = () => {
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-white px-4 py-12 sm:px-6">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-x-hidden bg-white px-4 py-12 lg:px-6">
       {/* Background dot grid */}
       <div
         className="absolute inset-0 opacity-[0.06]"
@@ -328,7 +278,7 @@ const ForgotPasswordVerifyOtpPage = () => {
       <div className="bg-primary/5 pointer-events-none absolute top-1/4 left-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
       <div className="bg-primary/10 pointer-events-none absolute right-1/4 bottom-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
 
-      <div className="relative z-10 w-full max-w-110">
+      <div className="relative z-10 w-full max-w-md">
         <Suspense fallback={<div className="text-center text-slate-500">Loading...</div>}>
           <ResetPasswordForm />
         </Suspense>

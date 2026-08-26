@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
+import InputField from '@/components/dashboard/Fields/InputField/InputField';
 import { baseApi } from '@/services/root/baseApi';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowLeft, LockKeyhole, Mail, RefreshCw } from 'lucide-react';
+import { ArrowLeft, LockKeyhole, Send } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -23,8 +25,8 @@ const ForgotPasswordPage = () => {
   const [apiSuccess, setApiSuccess] = useState<string | null>(null);
 
   const {
-    register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<ForgotFormData>({
     resolver: zodResolver(forgotSchema),
@@ -59,7 +61,7 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-white px-4 py-12 sm:px-6">
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-x-hidden bg-white px-4 py-12">
       {/* Background dot grid */}
       <div
         className="absolute inset-0 opacity-[0.06]"
@@ -73,19 +75,19 @@ const ForgotPasswordPage = () => {
       <div className="bg-primary/5 pointer-events-none absolute top-1/4 left-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
       <div className="bg-primary/10 pointer-events-none absolute right-1/4 bottom-1/4 z-0 h-72 w-72 rounded-full blur-3xl" />
 
-      <div className="relative z-10 w-full max-w-110 rounded-xl border border-slate-100 bg-white p-6 text-center shadow-md shadow-slate-100/70">
-        {/* Icon */}
-        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50/80 ring-8 ring-emerald-50/40">
-          <LockKeyhole size={24} className="text-primary" />
-        </div>
+      <div className="relative z-10 w-full max-w-md rounded-md border border-slate-100 bg-white p-5 shadow-slate-100/70">
+        <div className="text-center">
+          {/* Icon */}
+          <div className="ring-primary/20 mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 ring-1">
+            <LockKeyhole size={24} className="text-primary" />
+          </div>
 
-        {/* Heading */}
-        <h1 className="mb-1.5 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-          Forgot Password
-        </h1>
-        <p className="mb-6 text-sm text-slate-500">
-          Enter your email and we will send you an OTP to reset your password.
-        </p>
+          {/* Heading */}
+          <h1 className="text-text-primary mb-2 text-2xl font-bold">Forgot Password</h1>
+          <p className="text-text-secondary mb-6 text-sm">
+            Enter your email and we will send you an OTP to reset your password.
+          </p>
+        </div>
 
         {/* Alerts */}
         <div className="min-h-12.5 text-left empty:hidden">
@@ -102,46 +104,31 @@ const ForgotPasswordPage = () => {
           )}
         </div>
 
-        <form onSubmit={handleSubmit(handleSendOtp)} className="space-y-5 text-left" noValidate>
-          <div>
-            <label className="mb-2 block text-xs font-semibold tracking-wider text-slate-500 uppercase">
-              Enter Email <span className="text-red-400">*</span>
-            </label>
-            <div className="relative">
-              <Mail className="absolute top-1/2 left-4 -translate-y-1/2 text-slate-400" size={15} />
-              <input
-                type="email"
-                disabled={isLoading}
-                {...register('email')}
-                placeholder="you@example.com"
-                autoComplete="email"
-                className={`focus:border-primary w-full rounded-sm border bg-[#F9FAFB] py-3.5 pr-4 pl-11 text-sm transition-all outline-none focus:bg-white focus:ring-2 focus:ring-emerald-100 disabled:opacity-60 ${
-                  errors.email ? 'border-red-300' : 'border-slate-200'
-                }`}
-              />
-            </div>
-            {errors.email && <p className="mt-2 text-xs text-red-500">{errors.email.message}</p>}
-          </div>
+        <form onSubmit={handleSubmit(handleSendOtp)} className="space-y-4 text-left" noValidate>
+          <InputField
+            label="Email Address"
+            name="email"
+            type="email"
+            control={control}
+            placeholder="Enter your email"
+            error={errors.email?.message}
+            required
+          />
 
-          <button
+          <DynamicActionButton
             type="submit"
-            disabled={isLoading}
-            className="bg-primary flex w-full cursor-pointer items-center justify-center gap-2 rounded-sm py-4 text-sm font-bold text-white transition-all hover:bg-[#2a6159] active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isLoading ? (
-              <>
-                <RefreshCw size={16} className="animate-spin text-white" />
-                Sending OTP...
-              </>
-            ) : (
-              'Send OTP →'
-            )}
-          </button>
+            label="Send OTP"
+            isLoading={isLoading}
+            showIcon
+            icon={Send}
+            iconPosition="right"
+            className="w-full"
+          />
         </form>
 
-        <div className="mt-6 border-t border-slate-100 pt-5 text-center">
+        <div className="mt-4 border-t border-slate-100 pt-3 text-center">
           <Link
-            className="text-primary inline-flex items-center gap-1.5 text-xs font-bold hover:underline"
+            className="text-primary inline-flex items-center gap-1.5 text-xs font-semibold hover:underline"
             href="/login"
           >
             <ArrowLeft size={14} /> Back to Sign In

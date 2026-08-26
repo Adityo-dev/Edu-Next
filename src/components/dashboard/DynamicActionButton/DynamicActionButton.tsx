@@ -16,6 +16,7 @@ interface DynamicButtonProps {
   isLoading?: boolean;
   icon?: LucideIcon | null;
   showIcon?: boolean;
+  iconPosition?: 'left' | 'right';
   target?: string;
 }
 
@@ -30,6 +31,7 @@ const DynamicActionButton = ({
   isLoading = false,
   icon: Icon = Plus,
   showIcon = false,
+  iconPosition = 'left',
   target,
 }: DynamicButtonProps) => {
   const variantStyles = {
@@ -45,14 +47,17 @@ const DynamicActionButton = ({
     className,
   );
 
+  const iconElement = isLoading ? (
+    <Loader2 className="h-4 w-4 animate-spin" />
+  ) : (
+    showIcon && Icon && <Icon size={18} strokeWidth={2.5} />
+  );
+
   const buttonContent = (
     <>
-      {isLoading ? (
-        <Loader2 className="h-4 w-4 animate-spin" />
-      ) : (
-        showIcon && Icon && <Icon size={18} strokeWidth={2.5} />
-      )}
+      {iconPosition === 'left' && iconElement}
       <span className="relative z-10 text-sm">{label}</span>
+      {iconPosition === 'right' && iconElement}
     </>
   );
 
