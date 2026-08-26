@@ -6,6 +6,7 @@ import silverBadge from '@/assets/badge/silver.svg';
 import { BookOpen, Briefcase, Star, Users } from 'lucide-react';
 import Image from 'next/image';
 import DynamicUserAvatar from '@/components/shared/DynamicUserAvatar/DynamicUserAvatar';
+import ShowMoreText from '@/components/shared/ShowMoreText/ShowMoreText';
 
 export default function SkillsAndTeacher({ course }: { course: any }) {
   const proseClasses =
@@ -15,22 +16,37 @@ export default function SkillsAndTeacher({ course }: { course: any }) {
     <>
       {/* Description */}
       {course?.description && (
-        <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4">
-          <div className={proseClasses} dangerouslySetInnerHTML={{ __html: course.description }} />
+        <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 sm:p-6">
+          <ShowMoreText>
+            <div
+              className={proseClasses}
+              dangerouslySetInnerHTML={{ __html: course.description }}
+            />
+          </ShowMoreText>
         </div>
       )}
 
       {/* What You'll Learn */}
       {course?.whatYouLearn && (
-        <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs">
-          <div className={proseClasses} dangerouslySetInnerHTML={{ __html: course.whatYouLearn }} />
+        <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs sm:p-6">
+          <ShowMoreText>
+            <div
+              className={proseClasses}
+              dangerouslySetInnerHTML={{ __html: course.whatYouLearn }}
+            />
+          </ShowMoreText>
         </div>
       )}
 
       {/* Requirements */}
       {course?.requirements && (
-        <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs">
-          <div className={proseClasses} dangerouslySetInnerHTML={{ __html: course.requirements }} />
+        <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs sm:p-6">
+          <ShowMoreText>
+            <div
+              className={proseClasses}
+              dangerouslySetInnerHTML={{ __html: course.requirements }}
+            />
+          </ShowMoreText>
         </div>
       )}
 
@@ -100,9 +116,11 @@ export default function SkillsAndTeacher({ course }: { course: any }) {
                 </span>
               ) : null}
             </div>
-            <p className="text-text-secondary text-xs leading-relaxed wrap-break-word sm:text-sm">
-              {course?.instructor?.bio}
-            </p>
+            <ShowMoreText maxHeight={100}>
+              <p className="text-text-secondary text-xs leading-relaxed wrap-break-word sm:text-sm">
+                {course?.instructor?.bio}
+              </p>
+            </ShowMoreText>
           </div>
         </div>
       </div>
