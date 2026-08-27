@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 const AnimatedStat = ({
   endValue,
@@ -11,23 +11,24 @@ const AnimatedStat = ({
   suffix: string;
   label: string;
 }) => {
-  const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const countRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           let start = 0;
           const duration = 2000;
           const increment = endValue / (duration / 16);
-          const timer = setInterval(() => {
+          timer = setInterval(() => {
             start += increment;
             if (start >= endValue) {
-              setCount(endValue);
+              if (countRef.current) countRef.current.textContent = endValue.toString();
               clearInterval(timer);
             } else {
-              setCount(Math.ceil(start));
+              if (countRef.current) countRef.current.textContent = Math.ceil(start).toString();
             }
           }, 16);
           observer.disconnect();
@@ -37,13 +38,17 @@ const AnimatedStat = ({
     );
 
     if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
+
+    return () => {
+      observer.disconnect();
+      if (timer) clearInterval(timer);
+    };
   }, [endValue]);
 
   return (
     <div ref={ref} className="text-center">
       <p className="text-lg leading-none font-semibold text-slate-900">
-        {count}
+        <span ref={countRef}>0</span>
         {suffix}
       </p>
       <p className="text-text-secondary mt-0.5 text-xs">{label}</p>
