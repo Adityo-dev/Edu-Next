@@ -13,7 +13,7 @@ import useSetSearchQueryInURL from '@/hooks/useSetSearchQueryInURL';
 import { useGetCategoriesQuery } from '@/redux/features/categories/categoriesApi';
 import { useGetPublishedCoursesQuery } from '@/redux/features/courseManagement/publicCourse.api';
 import { SlidersHorizontal } from 'lucide-react';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import CoursesGrid from './_components/CoursesGrid/CoursesGrid';
@@ -47,8 +47,9 @@ const levelColors: Record<string, string> = {
 const CoursesPageContent = () => {
   const { setMultipleQueries, searchParams } = useSetSearchQueryInURL();
   const { data: catData } = useGetCategoriesQuery({ nested: true });
-  const dynamicCategories =
-    catData?.data?.filter((c: any) => c.isActive).map((c: any) => c.name) || [];
+  const dynamicCategories = useMemo(() => {
+    return catData?.data?.filter((c: any) => c.isActive).map((c: any) => c.name) || [];
+  }, [catData]);
 
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
@@ -137,29 +138,32 @@ const CoursesPageContent = () => {
 
   const { data, isLoading } = useGetPublishedCoursesQuery(queryParams);
 
-  const apiCourses = data?.data?.courses || [];
+  const apiCourses = useMemo(() => data?.data?.courses || [], [data?.data?.courses]);
 
-  const filtered = apiCourses.map((c: any) => ({
-    id: c.slug || c._id,
-    title: c.title,
-    image: c.thumbnail,
-    badge: c.badge,
-    category: c.category,
-    subCategory: c.subCategory,
-    level: c.level,
-    language: c.language,
-    instructor: c.instructor ? c.instructor.fullName : 'Unknown',
-    instructorImage: c.instructor?.avatar,
-    rating: c.rating || 0,
-    enrolled: c.enrolledCount || 0,
-    duration: c.totalDuration || '1h 0m',
-    price: c.price,
-    estimatedPrice: c.estimatedPrice,
-    certificate: c.hasCertificate,
-  }));
+  const filtered = useMemo(() => {
+    return apiCourses.map((c: any) => ({
+      id: c.slug || c._id,
+      title: c.title,
+      image: c.thumbnail,
+      badge: c.badge,
+      category: c.category,
+      subCategory: c.subCategory,
+      level: c.level,
+      language: c.language,
+      instructor: c.instructor ? c.instructor.fullName : 'Unknown',
+      instructorImage: c.instructor?.avatar,
+      rating: c.rating || 0,
+      enrolled: c.enrolledCount || 0,
+      duration: c.totalDuration || '1h 0m',
+      price: c.price,
+      estimatedPrice: c.estimatedPrice,
+      certificate: c.hasCertificate,
+    }));
+  }, [apiCourses]);
 
-  const maxPriceData =
-    apiCourses.length > 0 ? Math.max(...apiCourses.map((c: any) => c.price), 20000) : 20000;
+  const maxPriceData = useMemo(() => {
+    return apiCourses.length > 0 ? Math.max(...apiCourses.map((c: any) => c.price), 20000) : 20000;
+  }, [apiCourses]);
   const minPriceData = 0;
 
   const effectivePriceRange = [priceRange[0], priceRange[1] || maxPriceData];
