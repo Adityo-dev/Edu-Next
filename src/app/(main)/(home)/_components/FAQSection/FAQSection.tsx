@@ -61,7 +61,7 @@ const AUTOPLAY_INTERVAL = 20000;
 
 const FAQSection = () => {
   const [activeId, setActiveId] = useState(faqData[0].id);
-  const [progress, setProgress] = useState(0);
+  const progressBarRef = useRef<HTMLDivElement | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
@@ -91,7 +91,10 @@ const FAQSection = () => {
       if (!stateRef.current.isHovered && stateRef.current.isAutoPlaying) {
         stateRef.current.elapsed += delta;
         const nextProgress = Math.min((stateRef.current.elapsed / AUTOPLAY_INTERVAL) * 100, 100);
-        setProgress(nextProgress);
+
+        if (progressBarRef.current) {
+          progressBarRef.current.style.width = `${nextProgress}%`;
+        }
 
         if (stateRef.current.elapsed >= AUTOPLAY_INTERVAL) {
           setActiveId((currentId) => {
@@ -184,8 +187,9 @@ const FAQSection = () => {
                 <div className="absolute bottom-0 left-0 h-0.5 w-full bg-slate-100">
                   {isActive && (
                     <div
+                      ref={progressBarRef}
                       className="bg-primary h-full transition-none"
-                      style={{ width: `${progress}%` }}
+                      style={{ width: '0%' }}
                     />
                   )}
                 </div>
