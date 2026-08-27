@@ -9,12 +9,108 @@ import StickyBuyCard from './_components/StickyBuyCard/StickyBuyCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetCourseBySlugQuery } from '@/redux/features/courseManagement/publicCourse.api';
 
-import { use } from 'react';
+import { use, useMemo } from 'react';
 
 // ─── Component
 const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = use(params);
   const { data, isLoading, isError } = useGetCourseBySlugQuery(id);
+
+  const apiCourse = data?.data;
+
+  const course = useMemo(() => {
+    if (!apiCourse) return null;
+    return {
+      id: apiCourse._id,
+      title: apiCourse.title,
+      subtitle: apiCourse.subtitle,
+      description: apiCourse.description || '',
+      instructor: {
+        name: apiCourse.instructor?.fullName || 'Instructor',
+        title: apiCourse.instructor?.experienceYears
+          ? `${apiCourse.instructor.experienceYears} Years Exp.`
+          : 'Instructor',
+        image: apiCourse.instructor?.avatar || undefined,
+        students: apiCourse.instructor?.totalStudents?.toLocaleString() || '0',
+        courses: apiCourse.instructor?.totalCourses || 0,
+        rating: apiCourse.instructor?.rating || 0,
+        bio: apiCourse.instructor?.bio || '',
+        badge: apiCourse.instructor?.badge || '',
+        experienceYears: apiCourse.instructor?.experienceYears || 0,
+      },
+      category: apiCourse.category || 'Course',
+      subCategory: apiCourse.subCategory,
+      level: apiCourse.level || 'Beginner',
+      language: apiCourse.language || 'English',
+      rating: apiCourse.rating || 0,
+      totalReviews: apiCourse.totalReviews || 0,
+      enrolled: apiCourse.enrolledCount?.toLocaleString() || '0',
+      duration: apiCourse.totalDuration || '0 mins',
+      lessons: apiCourse.lessonsCount || 0,
+      lastUpdated: apiCourse.updatedAt
+        ? new Date(apiCourse.updatedAt).toLocaleDateString('en-US', {
+            month: 'long',
+            year: 'numeric',
+          })
+        : 'Recently',
+      price: apiCourse.price || 0,
+      estimatedPrice: apiCourse.estimatedPrice || null,
+      badge: apiCourse.badge || '',
+      certificate: apiCourse.hasCertificate,
+      image:
+        apiCourse.thumbnail ||
+        'https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=1000',
+      whatYouLearn: Array.isArray(apiCourse.whatYouLearn)
+        ? `<ul>${apiCourse.whatYouLearn.map((i: string) => `<li>${i}</li>`).join('')}</ul>`
+        : apiCourse.whatYouLearn || '',
+      requirements: Array.isArray(apiCourse.requirements)
+        ? `<ul>${apiCourse.requirements.map((i: string) => `<li>${i}</li>`).join('')}</ul>`
+        : apiCourse.requirements || '',
+      curriculum: (apiCourse.sections || []).map(
+        (sec: {
+          title: string;
+          lessons: { title: string; duration: string; isFree: boolean; videoUrl?: string }[];
+        }) => ({
+          section: sec.title || 'Section',
+          lessons: (sec.lessons || []).map((lesson) => ({
+            title: lesson.title || 'Lesson',
+            duration: lesson.duration || '0:00',
+            free: lesson.isFree || false,
+            videoUrl: lesson.videoUrl || '',
+          })),
+        }),
+      ),
+      reviews: [
+        {
+          id: 1,
+          name: 'Sumaiya Akter',
+          image: 'https://i.pravatar.cc/150?u=sumaiya',
+          rating: 5,
+          date: 'March 2025',
+          text: 'This is the best course I have ever taken. The instructor explains everything clearly and the projects are very practical. Highly recommended!',
+        },
+      ],
+      relatedCourses: [
+        {
+          id: 2,
+          title: 'UI/UX Design Masterclass',
+          price: 1800,
+          rating: 4.8,
+          image: 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?q=80&w=600',
+          instructor: 'Farhan Hossain',
+        },
+      ],
+    };
+  }, [apiCourse]);
+
+  const totalLessons = useMemo(() => {
+    if (!course) return 0;
+    return course.curriculum.reduce(
+      (acc: number, s: { lessons: { title: string; duration: string; free: boolean }[] }) =>
+        acc + s.lessons.length,
+      0,
+    );
+  }, [course]);
 
   if (isLoading) {
     return (
@@ -199,103 +295,13 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
     );
   }
 
-  if (isError || !data?.data) {
+  if (isError || !course) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F9FAFB] text-xl font-semibold">
         Course not found
       </div>
     );
   }
-
-  const apiCourse = data.data;
-
-  const course = {
-    id: apiCourse._id,
-    title: apiCourse.title,
-    subtitle: apiCourse.subtitle,
-    description: apiCourse.description || '',
-    instructor: {
-      name: apiCourse.instructor?.fullName || 'Instructor',
-      title: apiCourse.instructor?.experienceYears
-        ? `${apiCourse.instructor.experienceYears} Years Exp.`
-        : 'Instructor',
-      image: apiCourse.instructor?.avatar || undefined,
-      students: apiCourse.instructor?.totalStudents?.toLocaleString() || '0',
-      courses: apiCourse.instructor?.totalCourses || 0,
-      rating: apiCourse.instructor?.rating || 0,
-      bio: apiCourse.instructor?.bio || '',
-      badge: apiCourse.instructor?.badge || '',
-      experienceYears: apiCourse.instructor?.experienceYears || 0,
-    },
-    category: apiCourse.category || 'Course',
-    subCategory: apiCourse.subCategory,
-    level: apiCourse.level || 'Beginner',
-    language: apiCourse.language || 'English',
-    rating: apiCourse.rating || 0,
-    totalReviews: apiCourse.totalReviews || 0,
-    enrolled: apiCourse.enrolledCount?.toLocaleString() || '0',
-    duration: apiCourse.totalDuration || '0 mins',
-    lessons: apiCourse.lessonsCount || 0,
-    lastUpdated: apiCourse.updatedAt
-      ? new Date(apiCourse.updatedAt).toLocaleDateString('en-US', {
-          month: 'long',
-          year: 'numeric',
-        })
-      : 'Recently',
-    price: apiCourse.price || 0,
-    estimatedPrice: apiCourse.estimatedPrice || null,
-    badge: apiCourse.badge || '',
-    certificate: apiCourse.hasCertificate,
-    image:
-      apiCourse.thumbnail ||
-      'https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=1000',
-    whatYouLearn: Array.isArray(apiCourse.whatYouLearn)
-      ? `<ul>${apiCourse.whatYouLearn.map((i: string) => `<li>${i}</li>`).join('')}</ul>`
-      : apiCourse.whatYouLearn || '',
-    requirements: Array.isArray(apiCourse.requirements)
-      ? `<ul>${apiCourse.requirements.map((i: string) => `<li>${i}</li>`).join('')}</ul>`
-      : apiCourse.requirements || '',
-    curriculum: (apiCourse.sections || []).map(
-      (sec: {
-        title: string;
-        lessons: { title: string; duration: string; isFree: boolean; videoUrl?: string }[];
-      }) => ({
-        section: sec.title || 'Section',
-        lessons: (sec.lessons || []).map((lesson) => ({
-          title: lesson.title || 'Lesson',
-          duration: lesson.duration || '0:00',
-          free: lesson.isFree || false,
-          videoUrl: lesson.videoUrl || '',
-        })),
-      }),
-    ),
-    reviews: [
-      {
-        id: 1,
-        name: 'Sumaiya Akter',
-        image: 'https://i.pravatar.cc/150?u=sumaiya',
-        rating: 5,
-        date: 'March 2025',
-        text: 'This is the best course I have ever taken. The instructor explains everything clearly and the projects are very practical. Highly recommended!',
-      },
-    ],
-    relatedCourses: [
-      {
-        id: 2,
-        title: 'UI/UX Design Masterclass',
-        price: 1800,
-        rating: 4.8,
-        image: 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?q=80&w=600',
-        instructor: 'Farhan Hossain',
-      },
-    ],
-  };
-
-  const totalLessons = course.curriculum.reduce(
-    (acc: number, s: { lessons: { title: string; duration: string; free: boolean }[] }) =>
-      acc + s.lessons.length,
-    0,
-  );
 
   return (
     <section className="pb-24 lg:pb-0">
