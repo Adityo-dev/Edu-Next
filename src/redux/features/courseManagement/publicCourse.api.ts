@@ -32,10 +32,22 @@ export const publicCourseApi = apiClient.injectEndpoints({
     }),
 
     // 3. Get top rated courses
-    getTopRatedCourses: builder.query<ICommonResponse<{ courses: ICourseListItem[] }>, void>({
-      query: () => ({
+    getTopRatedCourses: builder.query<
+      ICommonResponse<{
+        courses: ICourseListItem[];
+        pagination: {
+          totalPages: number;
+          currentPage: number;
+          limit: number;
+          totalCourses: number;
+        };
+      }>,
+      { page?: number; limit?: number; category?: string } | void
+    >({
+      query: (params) => ({
         url: '/courses/top-rated',
         method: 'GET',
+        params: params || undefined,
       }),
       providesTags: ['Courses'],
     }),
