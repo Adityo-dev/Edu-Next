@@ -1,7 +1,7 @@
 'use client';
 
 import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import CategoryCard from './_components/CategoryCard/CategoryCard';
@@ -16,7 +16,9 @@ const CategorySection = () => {
   const { data, isLoading, isError } = useGetCategoriesQuery({ nested: true });
   const [isLocked, setIsLocked] = useState(false);
 
-  const categories = data?.data?.filter((cat) => cat.isActive) || [];
+  const categories = useMemo(() => {
+    return data?.data?.filter((cat) => cat.isActive) || [];
+  }, [data]);
 
   return (
     <section className="overflow-hidden bg-white py-12">
