@@ -111,10 +111,16 @@ const CategorySection = () => {
               <div className="cat-pagination-bar relative h-1.25 w-full flex-1 overflow-hidden rounded-full bg-slate-100"></div>
 
               <div className="flex items-center gap-4">
-                <button className="cat-prev flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm border border-orange-200 text-[#2D3134] transition-all hover:bg-orange-50 active:scale-95">
-                  <ChevronLeft size={24} />
+                <button
+                  aria-label="Previous Category"
+                  className="cat-prev flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm border border-orange-200 text-[#2D3134] transition-all hover:bg-orange-50 active:scale-95"
+                >
+                  <ChevronLeft className="h-5 w-5" />
                 </button>
-                <button className="cat-next flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm bg-[#F59E0B] text-white shadow-orange-200/50 transition-all hover:bg-[#d98c0a] active:scale-95">
+                <button
+                  aria-label="Next Category"
+                  className="cat-next flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm bg-[#F59E0B] text-white shadow-orange-200/50 transition-all hover:bg-[#d98c0a] active:scale-95"
+                >
                   <ChevronRight size={24} />
                 </button>
               </div>

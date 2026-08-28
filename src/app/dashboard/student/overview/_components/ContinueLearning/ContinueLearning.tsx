@@ -38,7 +38,7 @@ const ContinueLearning = () => {
   return (
     <div className="dashboard-card-container">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Continue Learning</h2>
+        <h2 className="text-base font-semibold">Continue Learning</h2>
         <Link
           href="/dashboard/student/courses"
           className="text-primary text-sm font-semibold hover:underline"

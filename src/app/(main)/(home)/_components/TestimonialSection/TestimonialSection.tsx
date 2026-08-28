@@ -45,7 +45,7 @@ const TestimonialSection = () => {
                   />
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold">{item?.name}</h4>
+                  <h3 className="text-sm font-semibold">{item?.name}</h3>
                   <p className="text-text-secondary text-xs font-medium">{item?.role}</p>
                 </div>
               </div>

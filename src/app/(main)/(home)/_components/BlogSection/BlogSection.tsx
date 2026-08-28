@@ -97,10 +97,16 @@ const BlogSection = () => {
           </div>
 
           <div className="flex gap-3">
-            <button className="blog-prev text-text-secondary flex h-10 w-10 cursor-pointer items-center justify-center rounded-sm border border-orange-200 transition-all hover:bg-orange-50 active:scale-95">
+            <button
+              aria-label="Previous Post"
+              className="blog-prev text-text-secondary flex h-10 w-10 cursor-pointer items-center justify-center rounded-sm border border-orange-200 transition-all hover:bg-orange-50 active:scale-95"
+            >
               <ChevronLeft size={20} />
             </button>
-            <button className="blog-next bg-secondary flex h-10 w-10 cursor-pointer items-center justify-center rounded-sm text-white transition-all hover:bg-[#d98c0a] active:scale-95">
+            <button
+              aria-label="Next Post"
+              className="blog-next bg-secondary flex h-10 w-10 cursor-pointer items-center justify-center rounded-sm text-white transition-all hover:bg-[#d98c0a] active:scale-95"
+            >
               <ChevronRight size={20} />
             </button>
           </div>

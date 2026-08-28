@@ -19,7 +19,7 @@ const CourseProgress = () => {
 
   return (
     <div className="dashboard-card-container">
-      <h2 className="mb-5 text-lg font-bold">Course Progress</h2>
+      <h2 className="mb-5 text-base font-semibold">Course Progress</h2>
 
       <div className="space-y-3">
         {isLoading ? (

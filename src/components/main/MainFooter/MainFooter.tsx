@@ -74,7 +74,7 @@ const MainFooter = async () => {
 
           {/* Explore Links */}
           <div>
-            <h4 className="mb-5 text-lg font-semibold tracking-tight">Explore</h4>
+            <h3 className="mb-5 text-lg font-semibold tracking-tight">Explore</h3>
             <ul className="text-text-secondary space-y-3 text-sm">
               {exploreLinks.map((link, i) => (
                 <li key={i}>
@@ -88,7 +88,7 @@ const MainFooter = async () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="mb-5 text-lg font-semibold tracking-tight">Quick Links</h4>
+            <h3 className="mb-5 text-lg font-semibold tracking-tight">Quick Links</h3>
             <ul className="text-text-secondary space-y-3 text-sm">
               {quickLinks.map((link, i) => (
                 <li key={i}>
@@ -102,7 +102,7 @@ const MainFooter = async () => {
 
           {/* Contact Info */}
           <div>
-            <h4 className="mb-5 text-lg font-semibold tracking-tight">Contact</h4>
+            <h3 className="mb-5 text-lg font-semibold tracking-tight">Contact</h3>
             <ul className="text-text-secondary space-y-4 text-sm">
               <li className="flex items-center gap-3">
                 <Phone size={18} className="text-primary" />
@@ -136,6 +136,7 @@ const MainFooter = async () => {
                   href={socialLinks.facebook}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label="Facebook Profile"
                   className="bg-secondary flex h-10 w-10 items-center justify-center rounded-full text-white transition-transform hover:-translate-y-1"
                 >
                   <Facebook size={18} fill="currentColor" strokeWidth={0} />
@@ -147,6 +148,7 @@ const MainFooter = async () => {
                   href={socialLinks.youtube}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label="YouTube Channel"
                   className="bg-primary flex h-10 w-10 items-center justify-center rounded-full text-white transition-transform hover:-translate-y-1"
                 >
                   <Youtube size={18} fill="currentColor" strokeWidth={0} />
@@ -158,6 +160,7 @@ const MainFooter = async () => {
                   href={socialLinks.linkedin}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label="LinkedIn Profile"
                   className="bg-primary flex h-10 w-10 items-center justify-center rounded-full text-white transition-transform hover:-translate-y-1"
                 >
                   <Linkedin size={18} fill="currentColor" strokeWidth={0} />
@@ -169,6 +172,7 @@ const MainFooter = async () => {
                   href={socialLinks.github}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label="GitHub Profile"
                   className="bg-primary flex h-10 w-10 items-center justify-center rounded-full text-white transition-transform hover:-translate-y-1"
                 >
                   <Github size={18} fill="currentColor" strokeWidth={0} />

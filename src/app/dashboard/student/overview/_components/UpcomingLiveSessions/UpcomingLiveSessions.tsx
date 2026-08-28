@@ -38,7 +38,7 @@ const UpcomingLiveSessions = () => {
   return (
     <div className="dashboard-card-container">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Live Sessions</h2>
+        <h2 className="text-base font-semibold">Live Sessions</h2>
         <Link
           href="/dashboard/student/live-sessions"
           className="text-primary text-sm font-semibold hover:underline"

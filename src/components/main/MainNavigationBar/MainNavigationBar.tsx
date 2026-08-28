@@ -88,6 +88,7 @@ const MainNavigationBar = ({ initialConfig }: MainNavigationBarProps) => {
         <div className="flex items-center gap-3.5">
           <Link
             href="/wishlist"
+            aria-label="Wishlist"
             className="bg-primary/10 hidden h-10 w-10 items-center justify-center rounded-full transition-all hover:bg-slate-50 active:scale-95 lg:flex"
           >
             <Bookmark size={20} className="text-primary" />
