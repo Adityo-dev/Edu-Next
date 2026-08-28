@@ -12,6 +12,7 @@ import {
 import { IEnrolledCourse } from '@/types/courseManagement.types';
 import { ITableFilter } from '@/types/table-filter.types';
 import { BookOpen } from 'lucide-react';
+import { useMemo } from 'react';
 import MyCourseCard from './_components/MyCourseCard/MyCourseCard';
 
 const MyCourse = () => {
@@ -39,32 +40,38 @@ const MyCourse = () => {
     | { result?: IEnrolledCourse[]; courses?: IEnrolledCourse[]; data?: IEnrolledCourse[] }
     | IEnrolledCourse[]
     | undefined;
-  const enrolledCourses: IEnrolledCourse[] = Array.isArray(rawData)
-    ? rawData
-    : Array.isArray(rawData?.result)
-      ? rawData.result
-      : Array.isArray(rawData?.courses)
-        ? rawData.courses
-        : Array.isArray(rawData?.data)
-          ? rawData.data
-          : [];
 
-  const CourseFilters: ITableFilter[] = [
-    {
-      type: 'tabs',
-      name: 'status-filter',
-      options: [
-        { label: `All (${totalCourses})`, value: 'all' },
-        { label: `In Progress (${totalInProgress})`, value: 'in-progress' },
-        { label: `Completed (${totalCompleted})`, value: 'completed' },
-      ],
-    },
-    {
-      type: 'search',
-      name: 'search',
-      placeholder: 'Search your courses...',
-    },
-  ];
+  const enrolledCourses: IEnrolledCourse[] = useMemo(() => {
+    return Array.isArray(rawData)
+      ? rawData
+      : Array.isArray(rawData?.result)
+        ? rawData.result
+        : Array.isArray(rawData?.courses)
+          ? rawData.courses
+          : Array.isArray(rawData?.data)
+            ? rawData.data
+            : [];
+  }, [rawData]);
+
+  const CourseFilters: ITableFilter[] = useMemo(
+    () => [
+      {
+        type: 'tabs',
+        name: 'status-filter',
+        options: [
+          { label: `All (${totalCourses})`, value: 'all' },
+          { label: `In Progress (${totalInProgress})`, value: 'in-progress' },
+          { label: `Completed (${totalCompleted})`, value: 'completed' },
+        ],
+      },
+      {
+        type: 'search',
+        name: 'search',
+        placeholder: 'Search your courses...',
+      },
+    ],
+    [totalCourses, totalInProgress, totalCompleted],
+  );
 
   return (
     <div className="space-y-6">

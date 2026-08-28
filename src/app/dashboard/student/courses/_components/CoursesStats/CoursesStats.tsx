@@ -4,37 +4,41 @@ import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleto
 import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
 import { useGetMyBasicStatsQuery } from '@/redux/features/courseManagement/studentCourse.api';
 import { Award, BookOpen, Play, Star } from 'lucide-react';
+import { useMemo } from 'react';
 
 const CoursesStats = () => {
   const { data, isLoading } = useGetMyBasicStatsQuery();
   const statsData = data?.data;
 
-  const stats = [
-    {
-      label: 'Total Enrolled',
-      value: statsData?.totalEnrolled ?? 0,
-      icon: BookOpen,
-      iconColor: '#10b981',
-    },
-    {
-      label: 'In Progress',
-      value: statsData?.inProgress ?? 0,
-      icon: Play,
-      iconColor: '#3b82f6',
-    },
-    {
-      label: 'Completed',
-      value: statsData?.completed ?? 0,
-      icon: Star,
-      iconColor: '#eab308',
-    },
-    {
-      label: 'Certificates',
-      value: statsData?.certificates ?? 0,
-      icon: Award,
-      iconColor: '#f97316',
-    },
-  ];
+  const stats = useMemo(
+    () => [
+      {
+        label: 'Total Enrolled',
+        value: statsData?.totalEnrolled ?? 0,
+        icon: BookOpen,
+        iconColor: '#10b981',
+      },
+      {
+        label: 'In Progress',
+        value: statsData?.inProgress ?? 0,
+        icon: Play,
+        iconColor: '#3b82f6',
+      },
+      {
+        label: 'Completed',
+        value: statsData?.completed ?? 0,
+        icon: Star,
+        iconColor: '#eab308',
+      },
+      {
+        label: 'Certificates',
+        value: statsData?.certificates ?? 0,
+        icon: Award,
+        iconColor: '#f97316',
+      },
+    ],
+    [statsData],
+  );
 
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
