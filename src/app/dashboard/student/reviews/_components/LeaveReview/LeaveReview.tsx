@@ -34,36 +34,43 @@ const LeaveReview = () => {
   return (
     <div>
       <h2 className="mb-3 text-lg font-semibold">Leave a Review</h2>
-      {courses.map((course) => (
-        <div key={course?._id} className="dashboard-card-container">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-4">
-              <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-sm">
-                <Image src={course?.thumbnail} alt={course?.title} fill className="object-cover" />
+      <div className="space-y-4">
+        {courses.map((course) => (
+          <div key={course?._id} className="dashboard-card-container">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+                <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-sm">
+                  <Image
+                    src={course?.thumbnail}
+                    alt={course?.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="line-clamp-2 text-sm font-semibold">{course?.title}</p>
+                  <p className="text-text-secondary mt-1 text-xs">
+                    {course?.instructor
+                      ? `${course?.instructor?.firstName} ${course?.instructor?.lastName}`
+                      : 'Unknown Instructor'}
+                  </p>
+                </div>
               </div>
-              <div className="flex-1">
-                <p className="line-clamp-2 text-sm font-semibold">{course?.title}</p>
-                <p className="text-text-secondary mt-1 text-xs">
-                  {course?.instructor
-                    ? `${course?.instructor?.firstName} ${course?.instructor?.lastName}`
-                    : 'Unknown Instructor'}
-                </p>
-              </div>
+              <DynamicActionButton
+                label="Write Review"
+                onClick={() =>
+                  openModal({
+                    view: 'WRITE_REVIEW',
+                    data: course,
+                    title: `Write Review for ${course?.title}`,
+                  })
+                }
+                className="w-full sm:w-auto"
+              />
             </div>
-            <DynamicActionButton
-              label="Write Review"
-              onClick={() =>
-                openModal({
-                  view: 'WRITE_REVIEW',
-                  data: course,
-                  title: `Write Review for ${course?.title}`,
-                })
-              }
-              className="w-full sm:w-auto"
-            />
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       {unreviewedData && unreviewedData.totalPages > 1 && (
         <div className="mt-4">
