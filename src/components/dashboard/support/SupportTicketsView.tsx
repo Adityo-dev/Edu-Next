@@ -257,6 +257,7 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
             value={tickets.filter((t) => t.status === 'resolved').length}
             icon={CheckCircle}
             iconColor="#059669"
+            className="col-span-2 sm:col-span-1"
           />
         </div>
 

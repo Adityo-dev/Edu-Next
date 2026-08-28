@@ -34,11 +34,15 @@ const ReviewsStats = () => {
   );
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
       {isLoading ? (
         <>
           {[...Array(3)].map((_, i) => (
-            <StatsCardSkeleton key={i} hasSub />
+            <StatsCardSkeleton
+              key={i}
+              hasSub
+              className={i === 2 ? 'col-span-2 lg:col-span-1' : ''}
+            />
           ))}
         </>
       ) : (
@@ -49,6 +53,7 @@ const ReviewsStats = () => {
             label={stat.label}
             value={stat.value}
             sub={stat.sub}
+            className={i === 2 ? 'col-span-2 lg:col-span-1' : ''}
           />
         ))
       )}
