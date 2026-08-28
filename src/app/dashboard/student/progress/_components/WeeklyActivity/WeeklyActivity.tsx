@@ -5,6 +5,7 @@ import { ChartContainer, type ChartConfig } from '@/components/ui/chart';
 import { useGetStudentWeeklyActivityQuery } from '@/redux/features/progress/studentProgress.api';
 import { Flame } from 'lucide-react';
 import { Bar, BarChart, LabelList, Tooltip, XAxis } from 'recharts';
+import { useMemo } from 'react';
 
 const chartConfig = {
   hours: {
@@ -32,7 +33,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 const WeeklyActivity = () => {
   const { data, isLoading } = useGetStudentWeeklyActivityQuery();
-  const weeklyActivity = data?.data || [];
+  const weeklyActivity = useMemo(() => data?.data || [], [data?.data]);
   const currentStreak = data?.currentStreak || 0;
 
   return (

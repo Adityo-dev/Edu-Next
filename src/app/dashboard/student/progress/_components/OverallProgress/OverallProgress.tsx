@@ -1,6 +1,7 @@
 'use client';
 
 import { useGetStudentOverallProgressQuery } from '@/redux/features/progress/studentProgress.api';
+import { useMemo } from 'react';
 
 const OverallProgress = () => {
   const { data, isLoading } = useGetStudentOverallProgressQuery();
@@ -8,29 +9,32 @@ const OverallProgress = () => {
 
   const percentage = overallProgress?.overallPercentage || 0;
 
-  const items = [
-    {
-      label: 'Lessons Done',
-      value: `${overallProgress?.lessonsDone?.completed || 0}/${overallProgress?.lessonsDone?.total || 0}`,
-      percent: overallProgress?.lessonsDone?.total
-        ? (overallProgress.lessonsDone.completed / overallProgress.lessonsDone.total) * 100
-        : 0,
-    },
-    {
-      label: 'Quizzes Passed',
-      value: `${overallProgress?.quizzesPassed?.completed || 0}/${overallProgress?.quizzesPassed?.total || 0}`,
-      percent: overallProgress?.quizzesPassed?.total
-        ? (overallProgress.quizzesPassed.completed / overallProgress.quizzesPassed.total) * 100
-        : 0,
-    },
-    {
-      label: 'Courses Done',
-      value: `${overallProgress?.coursesDone?.completed || 0}/${overallProgress?.coursesDone?.total || 0}`,
-      percent: overallProgress?.coursesDone?.total
-        ? (overallProgress.coursesDone.completed / overallProgress.coursesDone.total) * 100
-        : 0,
-    },
-  ];
+  const items = useMemo(
+    () => [
+      {
+        label: 'Lessons Done',
+        value: `${overallProgress?.lessonsDone?.completed || 0}/${overallProgress?.lessonsDone?.total || 0}`,
+        percent: overallProgress?.lessonsDone?.total
+          ? (overallProgress.lessonsDone.completed / overallProgress.lessonsDone.total) * 100
+          : 0,
+      },
+      {
+        label: 'Quizzes Passed',
+        value: `${overallProgress?.quizzesPassed?.completed || 0}/${overallProgress?.quizzesPassed?.total || 0}`,
+        percent: overallProgress?.quizzesPassed?.total
+          ? (overallProgress.quizzesPassed.completed / overallProgress.quizzesPassed.total) * 100
+          : 0,
+      },
+      {
+        label: 'Courses Done',
+        value: `${overallProgress?.coursesDone?.completed || 0}/${overallProgress?.coursesDone?.total || 0}`,
+        percent: overallProgress?.coursesDone?.total
+          ? (overallProgress.coursesDone.completed / overallProgress.coursesDone.total) * 100
+          : 0,
+      },
+    ],
+    [overallProgress],
+  );
 
   return (
     <div className="dashboard-card-container">

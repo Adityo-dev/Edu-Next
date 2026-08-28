@@ -3,10 +3,11 @@
 import { useGetStudentAchievementsQuery } from '@/redux/features/progress/studentProgress.api';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import AchievementsSkeleton from '@/components/dashboard/Skeletons/student/AchievementsSkeleton';
+import { useMemo } from 'react';
 
 const Achievements = () => {
   const { data, isLoading } = useGetStudentAchievementsQuery();
-  const achievements = data?.data || [];
+  const achievements = useMemo(() => data?.data || [], [data?.data]);
 
   return (
     <div className="dashboard-card-container">

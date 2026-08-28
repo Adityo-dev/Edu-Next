@@ -2,10 +2,11 @@ import { BookOpen, CheckCircle, Clock, Star } from 'lucide-react';
 import Image from 'next/image';
 import { useGetMyCoursesQuery } from '@/redux/features/courseManagement/studentCourse.api';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useMemo } from 'react';
 
 const CourseProgressTab = () => {
   const { data, isLoading } = useGetMyCoursesQuery({ page: 1, limit: 10 });
-  const courses = data?.data?.courses || [];
+  const courses = useMemo(() => data?.data?.courses || [], [data?.data?.courses]);
 
   if (isLoading) {
     return (
