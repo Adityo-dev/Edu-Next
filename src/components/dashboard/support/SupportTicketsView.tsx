@@ -120,52 +120,48 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
 
   // Socket connection
   useEffect(() => {
+    let isMounted = true;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let activeSocket: any = null;
-    let cleanupFn: (() => void) | null = null;
+
+    const handleNewTicket = () => {
+      refetchTickets();
+    };
+
+    const handleNewMessage = () => {
+      refetchTicketDetails();
+      refetchTickets();
+    };
+
+    const handleStatusUpdated = () => {
+      refetchTicketDetails();
+      refetchTickets();
+    };
 
     const setupSocket = async () => {
       activeSocket = await getSocket();
-
-      const handleNewTicket = () => {
-        refetchTickets();
-      };
+      if (!isMounted || !activeSocket) return;
 
       activeSocket.on('newTicketCreated', handleNewTicket);
 
       if (selectedTicketId) {
         activeSocket.emit('joinTicket', selectedTicketId);
-
-        const handleNewMessage = () => {
-          refetchTicketDetails();
-          refetchTickets();
-        };
-
-        const handleStatusUpdated = () => {
-          refetchTicketDetails();
-          refetchTickets();
-        };
-
         activeSocket.on('newMessage', handleNewMessage);
         activeSocket.on('ticketStatusUpdated', handleStatusUpdated);
-
-        cleanupFn = () => {
-          activeSocket?.off('newMessage', handleNewMessage);
-          activeSocket?.off('ticketStatusUpdated', handleStatusUpdated);
-          activeSocket?.off('newTicketCreated', handleNewTicket);
-        };
-      } else {
-        cleanupFn = () => {
-          activeSocket?.off('newTicketCreated', handleNewTicket);
-        };
       }
     };
 
     setupSocket();
 
     return () => {
-      if (cleanupFn) {
-        cleanupFn();
+      isMounted = false;
+      if (activeSocket) {
+        activeSocket.off('newTicketCreated', handleNewTicket);
+        if (selectedTicketId) {
+          activeSocket.emit('leaveTicket', selectedTicketId);
+          activeSocket.off('newMessage', handleNewMessage);
+          activeSocket.off('ticketStatusUpdated', handleStatusUpdated);
+        }
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
