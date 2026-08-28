@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/accordion';
 import { ILesson } from '@/types/courseManagement.types';
 import { BookOpen, CheckCircle, ChevronDown, PlayCircle, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export interface ICourseSection {
   _id?: string;
@@ -48,25 +48,27 @@ export default function CourseContentSidebar({
   const completedLessons = progressData?.completedLessonsCount || 0;
   const progressPercentage = progressData?.percentage || 0;
 
-  const filteredSections = courseData.sections
-    .map((section: ICourseSection) => {
-      const filteredLessons = section.lessons.filter((lesson: ILesson) =>
-        lesson.title.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
-      if (
-        section.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        filteredLessons.length > 0
-      ) {
-        return {
-          ...section,
-          lessons: section.title.toLowerCase().includes(searchQuery.toLowerCase())
-            ? section.lessons
-            : filteredLessons,
-        };
-      }
-      return null;
-    })
-    .filter((section): section is ICourseSection => section !== null);
+  const filteredSections = useMemo(() => {
+    return courseData.sections
+      .map((section: ICourseSection) => {
+        const filteredLessons = section.lessons.filter((lesson: ILesson) =>
+          lesson.title.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
+        if (
+          section.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          filteredLessons.length > 0
+        ) {
+          return {
+            ...section,
+            lessons: section.title.toLowerCase().includes(searchQuery.toLowerCase())
+              ? section.lessons
+              : filteredLessons,
+          };
+        }
+        return null;
+      })
+      .filter((section): section is ICourseSection => section !== null);
+  }, [courseData.sections, searchQuery]);
 
   return (
     <div
