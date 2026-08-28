@@ -13,6 +13,7 @@ import {
   Users,
 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
 import { toast } from 'sonner';
 
 import {
@@ -75,7 +76,10 @@ const Notifications = () => {
   const [deleteNotification] = useDeleteNotificationMutation();
 
   const notificationsData = data?.data;
-  const notifications = notificationsData?.notifications || [];
+  const notifications = useMemo(
+    () => notificationsData?.notifications || [],
+    [notificationsData?.notifications],
+  );
   const unreadCount = notificationsData?.unreadCount || 0;
 
   const handleMarkAllRead = async () => {
