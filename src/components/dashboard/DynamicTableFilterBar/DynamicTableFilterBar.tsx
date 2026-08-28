@@ -74,9 +74,9 @@ const DynamicTableFilterBar = ({
                   setMultipleQueries({ [paramName]: val === 'all' ? undefined : val, page: 1 });
                   if (field.onChange) field.onChange(val);
                 }}
-                className="w-auto"
+                className="w-full sm:w-auto"
               >
-                <TabsList className="h-10! rounded-sm border border-slate-200 bg-white p-0 shadow-xs">
+                <TabsList className="no-scrollbar h-10! w-full justify-start overflow-x-auto overflow-y-hidden rounded-sm border border-slate-200 bg-white p-0 shadow-xs sm:w-auto sm:justify-center">
                   {field.options.map((option) => (
                     <TabsTrigger
                       key={option.value}
