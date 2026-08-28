@@ -16,7 +16,7 @@ import {
 import { FormatDateTime } from '@/utils/formatDateTime';
 import { CheckCircle, ChevronLeft, Clock, MessageSquare, Ticket } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import DynamicActionButton from '../DynamicActionButton/DynamicActionButton';
@@ -107,10 +107,16 @@ export default function SupportTicketsView({ role }: SupportTicketsViewProps) {
   const [replyToTicket, { isLoading: isReplying }] = useReplyToTicketMutation();
   const [updateStatus, { isLoading: isUpdatingStatus }] = useUpdateTicketStatusMutation();
 
-  const tickets = ticketsData?.tickets || [];
-  const filteredTickets = tickets.filter((t) => filter === 'all' || t.status === filter);
+  const tickets = useMemo(() => ticketsData?.tickets || [], [ticketsData?.tickets]);
+  const filteredTickets = useMemo(
+    () => tickets.filter((t) => filter === 'all' || t.status === filter),
+    [tickets, filter],
+  );
   const selectedTicket = selectedTicketData?.ticket;
-  const ticketMessages = selectedTicketData?.messages || [];
+  const ticketMessages = useMemo(
+    () => selectedTicketData?.messages || [],
+    [selectedTicketData?.messages],
+  );
 
   // Socket connection
   useEffect(() => {
