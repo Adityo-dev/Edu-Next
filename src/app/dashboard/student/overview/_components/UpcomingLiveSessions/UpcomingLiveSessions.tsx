@@ -2,17 +2,17 @@
 
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
+import UpcomingLiveSessionCardSkeleton from '@/components/dashboard/Skeletons/UpcomingLiveSessionCardSkeleton';
 import { useGetStudentDashboardSessionsQuery } from '@/redux/features/liveSessionsManagement/studentLiveSession.api';
 import { FormatDateTime } from '@/utils/formatDateTime';
 import { Calendar, Clock, ExternalLink, Video } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo } from 'react';
-import UpcomingLiveSessionCardSkeleton from '../../../../../../components/dashboard/Skeletons/UpcomingLiveSessionCardSkeleton';
 
 const statusConfig: Record<string, { label: string; color: string }> = {
-  live: { label: 'Live Now', color: '#dc2626' }, // red-600
-  upcoming: { label: 'Upcoming', color: '#ea580c' }, // orange-600
+  live: { label: 'Live Now', color: '#dc2626' },
+  upcoming: { label: 'Upcoming', color: '#ea580c' },
 };
 
 const UpcomingLiveSessions = () => {

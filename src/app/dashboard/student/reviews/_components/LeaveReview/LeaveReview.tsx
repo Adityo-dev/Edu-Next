@@ -7,6 +7,7 @@ import { useGetStudentUnreviewedCoursesQuery } from '@/redux/features/reviews/st
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
 
 const LeaveReview = () => {
   const { openModal } = useModal();
@@ -18,8 +19,7 @@ const LeaveReview = () => {
     limit: 10,
   });
 
-  const courses = unreviewedData?.data || [];
-  console.log(courses);
+  const courses = useMemo(() => unreviewedData?.data || [], [unreviewedData?.data]);
 
   if (isLoading) {
     return (

@@ -12,7 +12,7 @@ import { FormatDateTime } from '@/utils/formatDateTime';
 import { Edit } from 'lucide-react';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 const ReviewsList = () => {
@@ -41,7 +41,7 @@ const ReviewsList = () => {
     }
   };
 
-  const reviews = reviewsData?.data || [];
+  const reviews = useMemo(() => reviewsData?.data || [], [reviewsData?.data]);
 
   if (isReviewsLoading) {
     return (
