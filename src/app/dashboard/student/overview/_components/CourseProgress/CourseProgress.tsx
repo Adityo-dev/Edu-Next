@@ -1,6 +1,5 @@
 'use client';
 
-import { Star } from 'lucide-react';
 import { useGetMyCoursesQuery } from '@/redux/features/courseManagement/studentCourse.api';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMemo } from 'react';
@@ -78,11 +77,6 @@ const CourseProgress = () => {
           {isLoading ? '-' : `${overallPercentage}%`}
         </p>
         <p className="text-text-secondary text-xs">Overall Completion</p>
-        <div className="mt-2 flex items-center justify-center gap-1">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <Star key={i} size={11} fill={i <= 4 ? '#ffc107' : 'none'} color="#ffc107" />
-          ))}
-        </div>
       </div>
     </div>
   );

@@ -58,7 +58,7 @@ const DynamicTableFilterBar = ({
   const filterFields = fields.filter((f) => f.type === 'select' || (f.type as string) === 'tabs');
 
   return (
-    <div className="flex w-full flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+    <div className="flex w-full flex-wrap items-center justify-between gap-4">
       <div className="flex flex-wrap items-center gap-3">
         {filterFields.map((field) => {
           const paramName = field.name.replace('-filter', '');
@@ -130,7 +130,7 @@ const DynamicTableFilterBar = ({
       </div>
 
       {/* [RIGHT SIDE - SEARCH INPUT & ACTIONS] */}
-      <div className="flex flex-wrap items-center gap-3 sm:justify-end">
+      <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto sm:justify-end">
         {/* Search Input Field */}
         {searchField && (
           <div className="relative w-full sm:w-auto">
