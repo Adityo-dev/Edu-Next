@@ -4,37 +4,41 @@ import StatsCardSkeleton from '@/components/dashboard/Skeletons/StatsCardSkeleto
 import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
 import { useGetMyCourseStatsQuery } from '@/redux/features/overview/studentOverview.api';
 import { Award, BookOpen, Clock, TrendingUp } from 'lucide-react';
+import { useMemo } from 'react';
 
 const StudentStats = () => {
   const { data, isLoading } = useGetMyCourseStatsQuery();
   const overviewStats = data?.data;
 
-  const stats = [
-    {
-      icon: BookOpen,
-      label: 'Enrolled Courses',
-      value: overviewStats?.enrolledCourses?.total || 0,
-      sub: `+${overviewStats?.enrolledCourses?.thisMonth || 0} this month`,
-    },
-    {
-      icon: TrendingUp,
-      label: 'Completed',
-      value: overviewStats?.completed?.total || 0,
-      sub: `${overviewStats?.completed?.completionRate || 0}% completion rate`,
-    },
-    {
-      icon: Award,
-      label: 'Certificates',
-      value: overviewStats?.certificates?.total || 0,
-      sub: overviewStats?.certificates?.text || 'Download anytime',
-    },
-    {
-      icon: Clock,
-      label: 'Hours Learned',
-      value: overviewStats?.hoursLearned?.total || '0h',
-      sub: `${overviewStats?.hoursLearned?.thisWeek || '0h'} this week`,
-    },
-  ];
+  const stats = useMemo(
+    () => [
+      {
+        icon: BookOpen,
+        label: 'Enrolled Courses',
+        value: overviewStats?.enrolledCourses?.total || 0,
+        sub: `+${overviewStats?.enrolledCourses?.thisMonth || 0} this month`,
+      },
+      {
+        icon: TrendingUp,
+        label: 'Completed',
+        value: overviewStats?.completed?.total || 0,
+        sub: `${overviewStats?.completed?.completionRate || 0}% completion rate`,
+      },
+      {
+        icon: Award,
+        label: 'Certificates',
+        value: overviewStats?.certificates?.total || 0,
+        sub: overviewStats?.certificates?.text || 'Download anytime',
+      },
+      {
+        icon: Clock,
+        label: 'Hours Learned',
+        value: overviewStats?.hoursLearned?.total || '0h',
+        sub: `${overviewStats?.hoursLearned?.thisWeek || '0h'} this week`,
+      },
+    ],
+    [overviewStats],
+  );
 
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

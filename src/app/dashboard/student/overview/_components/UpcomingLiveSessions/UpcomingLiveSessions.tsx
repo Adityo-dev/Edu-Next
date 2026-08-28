@@ -8,6 +8,7 @@ import { FormatDateTime } from '@/utils/formatDateTime';
 import { Calendar, Clock, ExternalLink, Video, VideoOff } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useMemo } from 'react';
 import UpcomingLiveSessionCardSkeleton from '../../../../../../components/dashboard/Skeletons/UpcomingLiveSessionCardSkeleton';
 
 const statusConfig: Record<string, { label: string; color: string }> = {
@@ -18,17 +19,18 @@ const statusConfig: Record<string, { label: string; color: string }> = {
 const UpcomingLiveSessions = () => {
   const { data, isLoading } = useGetStudentDashboardSessionsQuery({ status: 'all' });
 
-  const sessions = data?.data || [];
-
   // Show up to 3 upcoming or live sessions
-  const displaySessions = [...sessions]
-    .filter((s) => s.status === 'live' || s.status === 'upcoming')
-    .sort((a, b) => {
-      if (a.status === 'live' && b.status !== 'live') return -1;
-      if (a.status !== 'live' && b.status === 'live') return 1;
-      return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
-    })
-    .slice(0, 3);
+  const displaySessions = useMemo(() => {
+    const sessions = data?.data || [];
+    return [...sessions]
+      .filter((s) => s.status === 'live' || s.status === 'upcoming')
+      .sort((a, b) => {
+        if (a.status === 'live' && b.status !== 'live') return -1;
+        if (a.status !== 'live' && b.status === 'live') return 1;
+        return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
+      })
+      .slice(0, 3);
+  }, [data?.data]);
 
   return (
     <div className="dashboard-card-container">

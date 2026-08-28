@@ -7,6 +7,7 @@ import { IEnrolledCourse } from '@/types/courseManagement.types';
 import { BookOpen, Play } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useMemo } from 'react';
 
 const ContinueLearning = () => {
   const { data, isLoading } = useGetMyCoursesQuery({
@@ -15,22 +16,24 @@ const ContinueLearning = () => {
     limit: 10,
   });
 
-  const rawData = data?.data as
-    | { result?: IEnrolledCourse[]; courses?: IEnrolledCourse[]; data?: IEnrolledCourse[] }
-    | IEnrolledCourse[]
-    | undefined;
+  const displayCourses = useMemo(() => {
+    const rawData = data?.data as
+      | { result?: IEnrolledCourse[]; courses?: IEnrolledCourse[]; data?: IEnrolledCourse[] }
+      | IEnrolledCourse[]
+      | undefined;
 
-  const enrolledCourses: IEnrolledCourse[] = Array.isArray(rawData)
-    ? rawData
-    : Array.isArray(rawData?.result)
-      ? rawData.result
-      : Array.isArray(rawData?.courses)
-        ? rawData.courses
-        : Array.isArray(rawData?.data)
-          ? rawData.data
-          : [];
+    const enrolledCourses: IEnrolledCourse[] = Array.isArray(rawData)
+      ? rawData
+      : Array.isArray(rawData?.result)
+        ? rawData.result
+        : Array.isArray(rawData?.courses)
+          ? rawData.courses
+          : Array.isArray(rawData?.data)
+            ? rawData.data
+            : [];
 
-  const displayCourses = enrolledCourses.slice(0, 3);
+    return enrolledCourses.slice(0, 3);
+  }, [data]);
 
   return (
     <div className="dashboard-card-container">

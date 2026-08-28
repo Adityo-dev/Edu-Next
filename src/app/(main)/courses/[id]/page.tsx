@@ -5,6 +5,7 @@ import CourseDetailsHero from './_components/CourseDetailsHero/CourseDetailsHero
 import ReviewsAndAbout from './_components/ReviewsAndAbout/ReviewsAndAbout';
 import SkillsAndTeacher from './_components/SkillsAndTeacher/SkillsAndTeacher';
 import StickyBuyCard from './_components/StickyBuyCard/StickyBuyCard';
+import RelatedCourses from './_components/RelatedCourses/RelatedCourses';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetCourseBySlugQuery } from '@/redux/features/courseManagement/publicCourse.api';
@@ -324,6 +325,9 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
           {/* ── Right: Sticky Buy Card  */}
           <StickyBuyCard course={course} totalLessons={totalLessons} />
         </div>
+
+        {/* ── Related Courses ── */}
+        <RelatedCourses slug={id} />
       </div>
     </section>
   );

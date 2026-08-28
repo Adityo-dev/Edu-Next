@@ -3,18 +3,20 @@
 import { Star } from 'lucide-react';
 import { useGetMyCoursesQuery } from '@/redux/features/courseManagement/studentCourse.api';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useMemo } from 'react';
 
 const CourseProgress = () => {
   const { data, isLoading } = useGetMyCoursesQuery({ limit: 3 });
-  const courses = data?.data?.courses || [];
+  const courses = useMemo(() => data?.data?.courses || [], [data?.data?.courses]);
 
   // Calculate overall completion based on fetched courses
-  const overallPercentage =
-    courses.length > 0
+  const overallPercentage = useMemo(() => {
+    return courses.length > 0
       ? Math.round(
           courses.reduce((acc, curr) => acc + (curr.progress?.percentage || 0), 0) / courses.length,
         )
       : 0;
+  }, [courses]);
 
   return (
     <div className="dashboard-card-container">

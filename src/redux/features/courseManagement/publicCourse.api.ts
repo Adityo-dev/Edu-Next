@@ -51,8 +51,25 @@ export const publicCourseApi = apiClient.injectEndpoints({
       }),
       providesTags: ['Courses'],
     }),
+    // 4. Get related courses
+    getRelatedCourses: builder.query<
+      ICommonResponse<{
+        courses: ICourseListItem[];
+      }>,
+      string
+    >({
+      query: (slug) => ({
+        url: `/courses/${slug}/related`,
+        method: 'GET',
+      }),
+      providesTags: ['Courses'],
+    }),
   }),
 });
 
-export const { useGetPublishedCoursesQuery, useGetCourseBySlugQuery, useGetTopRatedCoursesQuery } =
-  publicCourseApi;
+export const {
+  useGetPublishedCoursesQuery,
+  useGetCourseBySlugQuery,
+  useGetTopRatedCoursesQuery,
+  useGetRelatedCoursesQuery,
+} = publicCourseApi;
