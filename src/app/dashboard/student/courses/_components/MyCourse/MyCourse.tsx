@@ -11,6 +11,7 @@ import {
 } from '@/redux/features/courseManagement/studentCourse.api';
 import { IEnrolledCourse } from '@/types/courseManagement.types';
 import { ITableFilter } from '@/types/table-filter.types';
+import CustomPagination from '@/components/dashboard/CustomPagination/CustomPagination';
 import { BookOpen } from 'lucide-react';
 import { useMemo } from 'react';
 import MyCourseCard from './_components/MyCourseCard/MyCourseCard';
@@ -21,6 +22,7 @@ const MyCourse = () => {
 
   const currentStatus = (queryParams.status as 'all' | 'in-progress' | 'completed') || 'all';
   const currentSearchUrl = queryParams.search || '';
+  const currentPage = Number(queryParams.page) || 1;
 
   // Fetch stats for the filter bar
   const { data: statsData } = useGetMyBasicStatsQuery();
@@ -32,8 +34,8 @@ const MyCourse = () => {
   const { data, isLoading, isError, refetch } = useGetMyCoursesQuery({
     search: currentSearchUrl || undefined,
     stats: currentStatus === 'all' ? undefined : currentStatus,
-    page: 1,
-    limit: 100,
+    page: currentPage,
+    limit: 12,
   });
 
   const rawData = data?.data as
@@ -96,11 +98,19 @@ const MyCourse = () => {
           description="You haven't enrolled in any courses matching these parameters yet."
         />
       ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {enrolledCourses.map((enrolledCourse: IEnrolledCourse) => (
-            <MyCourseCard key={enrolledCourse.enrollmentId} enrolledCourse={enrolledCourse} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {enrolledCourses.map((enrolledCourse: IEnrolledCourse) => (
+              <MyCourseCard key={enrolledCourse.enrollmentId} enrolledCourse={enrolledCourse} />
+            ))}
+          </div>
+
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          {(data?.data as any)?.pagination && (
+            /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+            <CustomPagination meta={(data?.data as any).pagination} />
+          )}
+        </>
       )}
     </div>
   );
