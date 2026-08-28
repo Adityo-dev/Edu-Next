@@ -30,7 +30,7 @@ const LiveSessionsStats = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    <div className="grid grid-cols-3 gap-4">
       {isLoading
         ? [...Array(3)].map((_, i) => <StatsCardSkeleton key={i} />)
         : stats.map((stat, i) => (
