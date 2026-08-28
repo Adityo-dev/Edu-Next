@@ -32,7 +32,9 @@ const LiveSessionsStats = () => {
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
       {isLoading
-        ? [...Array(3)].map((_, i) => <StatsCardSkeleton key={i} />)
+        ? [...Array(3)].map((_, i) => (
+            <StatsCardSkeleton key={i} className={i === 2 ? 'col-span-2 sm:col-span-1' : ''} />
+          ))
         : stats.map((stat, i) => (
             <StatsCard
               key={i}
@@ -40,6 +42,7 @@ const LiveSessionsStats = () => {
               value={stat.value}
               icon={stat.icon}
               iconColor={stat.iconColor}
+              className={i === 2 ? 'col-span-2 sm:col-span-1' : ''}
             />
           ))}
     </div>

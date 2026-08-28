@@ -2,11 +2,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 interface StatsCardSkeletonProps {
   hasSub?: boolean;
+  className?: string;
 }
 
-const StatsCardSkeleton = ({ hasSub = false }: StatsCardSkeletonProps) => {
+const StatsCardSkeleton = ({ hasSub = false, className = '' }: StatsCardSkeletonProps) => {
   return (
-    <div className="dashboard-card-container">
+    <div className={`dashboard-card-container ${className}`}>
       <Skeleton className="mb-3 h-10 w-10" />
       <Skeleton className="mb-1 h-8 w-24" />
       <Skeleton className="mb-2 h-4 w-28" />
