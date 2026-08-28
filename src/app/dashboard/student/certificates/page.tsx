@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import CertificatesHeader from './_components/CertificatesHeader/CertificatesHeader';
 import CertificatesStats from './_components/CertificatesStats/CertificatesStats';
 import EarnedCertificates from './_components/EarnedCertificates/EarnedCertificates';
@@ -45,8 +45,9 @@ const inProgressCourses = [
 const CertificatesPage = () => {
   const [search, setSearch] = useState('');
 
-  const filtered = certificatesData.filter((c) =>
-    c.course.toLowerCase().includes(search.toLowerCase()),
+  const filtered = useMemo(
+    () => certificatesData.filter((c) => c.course.toLowerCase().includes(search.toLowerCase())),
+    [search],
   );
 
   return (

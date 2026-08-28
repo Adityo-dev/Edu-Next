@@ -52,6 +52,7 @@ export const studentCourseApi = apiClient.injectEndpoints({
         { type: 'Courses', id: courseId },
         'Courses',
         'CourseStats',
+        'StudentProgress',
       ],
     }),
 
@@ -74,6 +75,7 @@ export const studentCourseApi = apiClient.injectEndpoints({
         { type: 'Courses', id: courseId },
         'Courses',
         'CourseStats',
+        'StudentProgress',
       ],
     }),
   }),
