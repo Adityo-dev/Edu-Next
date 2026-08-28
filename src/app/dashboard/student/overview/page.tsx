@@ -3,7 +3,7 @@
 import ContinueLearning from './_components/ContinueLearning/ContinueLearning';
 import CourseProgress from './_components/CourseProgress/CourseProgress';
 import MyCertificates from './_components/MyCertificates/MyCertificates';
-import RecentActivity from './_components/RecentActivity/RecentActivity';
+import WeeklyActivity from '../progress/_components/WeeklyActivity/WeeklyActivity';
 import StudentStats from './_components/StudentStats/StudentStats';
 import UpcomingLiveSessions from './_components/UpcomingLiveSessions/UpcomingLiveSessions';
 import WelcomeSection from './_components/WelcomeSection/WelcomeSection';
@@ -28,7 +28,7 @@ const StudentOverviewPage = () => {
         {/* Right (1/3) */}
         <div className="space-y-6">
           <UpcomingLiveSessions />
-          <RecentActivity />
+          <WeeklyActivity />
           <CourseProgress />
         </div>
       </div>
