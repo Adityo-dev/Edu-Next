@@ -30,6 +30,7 @@ export default function CourseCard({
           src={course?.image}
           alt={course?.title}
           fill
+          quality={60}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
@@ -116,7 +117,7 @@ export default function CourseCard({
                 ৳{course?.price?.toLocaleString() || 0}
               </span>
               {course?.estimatedPrice && course.estimatedPrice > course.price && (
-                <span className="text-sm font-medium text-slate-400 line-through">
+                <span className="text-sm font-medium text-slate-500 line-through">
                   ৳{course?.estimatedPrice?.toLocaleString()}
                 </span>
               )}

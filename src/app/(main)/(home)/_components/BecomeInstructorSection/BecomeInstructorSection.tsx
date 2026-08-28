@@ -66,6 +66,7 @@ const BecomeInstructorSection = () => {
                 src="https://images.unsplash.com/photo-1573164713988-8665fc963095?w=600&q=80"
                 alt="Instructor teaching"
                 fill
+                quality={60}
                 className="object-cover"
               />
             </div>
@@ -76,6 +77,7 @@ const BecomeInstructorSection = () => {
                 src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80"
                 alt="Students learning"
                 fill
+                quality={60}
                 className="object-cover"
               />
             </div>
@@ -86,6 +88,7 @@ const BecomeInstructorSection = () => {
                 src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&q=80"
                 alt="Technology"
                 fill
+                quality={60}
                 className="object-cover"
               />
             </div>

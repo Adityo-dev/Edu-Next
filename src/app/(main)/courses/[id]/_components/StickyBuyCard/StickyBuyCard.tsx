@@ -144,7 +144,7 @@ export default function StickyBuyCard({
                 ৳{course.price.toLocaleString()}
               </span>
               {course.estimatedPrice && course.estimatedPrice > course.price && (
-                <span className="mb-1 text-lg font-semibold text-slate-400 line-through">
+                <span className="mb-1 text-lg font-semibold text-slate-500 line-through">
                   ৳{course.estimatedPrice.toLocaleString()}
                 </span>
               )}
@@ -240,7 +240,7 @@ export default function StickyBuyCard({
                 ৳{course.price.toLocaleString()}
               </span>
               {course.estimatedPrice && course.estimatedPrice > course.price && (
-                <span className="mb-0.5 text-sm font-semibold text-slate-400 line-through">
+                <span className="mb-0.5 text-sm font-semibold text-slate-500 line-through">
                   ৳{course.estimatedPrice.toLocaleString()}
                 </span>
               )}

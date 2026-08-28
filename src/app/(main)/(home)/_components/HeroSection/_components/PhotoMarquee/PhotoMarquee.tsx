@@ -72,6 +72,7 @@ const PhotoMarquee = () => {
                     src={img.src}
                     alt={img.alt}
                     fill
+                    quality={60}
                     className="object-cover transition-transform duration-500 hover:scale-105"
                     sizes="160px"
                   />
