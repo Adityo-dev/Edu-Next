@@ -100,7 +100,10 @@ const MainNavigationBar = ({ initialConfig }: MainNavigationBarProps) => {
           <div className="lg:hidden">
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild>
-                <button className="bg-primary/4 text-primary flex h-10 w-10 items-center justify-center rounded-md transition-all active:scale-90">
+                <button
+                  aria-label="Open menu"
+                  className="bg-primary/4 text-primary flex h-10 w-10 items-center justify-center rounded-md transition-all active:scale-90"
+                >
                   <Menu size={22} />
                 </button>
               </SheetTrigger>

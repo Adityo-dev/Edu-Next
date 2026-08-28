@@ -28,7 +28,7 @@ const CategorySection = () => {
           <div className="max-w-3xl">
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
               Browse by Topic: Find <br className="hidden lg:block" />
-              Your Perfect <span className="text-[#F59E0B] italic">Category</span>
+              Your Perfect <span className="text-[#D97706] italic">Category</span>
             </h2>
           </div>
           <div className="max-w-sm lg:self-end lg:pb-1">
@@ -118,8 +118,8 @@ const CategorySection = () => {
                   <ChevronLeft className="h-5 w-5" />
                 </button>
                 <button
-                  aria-label="Next Category"
-                  className="cat-next flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm bg-[#F59E0B] text-white shadow-orange-200/50 transition-all hover:bg-[#d98c0a] active:scale-95"
+                  aria-label="Next Categories"
+                  className="cat-next flex h-12 w-12 cursor-pointer items-center justify-center rounded-sm bg-[#D97706] text-white shadow-orange-200/50 transition-all hover:bg-[#B45309] active:scale-95"
                 >
                   <ChevronRight size={24} />
                 </button>

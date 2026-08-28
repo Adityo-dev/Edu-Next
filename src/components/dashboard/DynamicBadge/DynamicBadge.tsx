@@ -49,7 +49,7 @@ const DynamicBadge = ({
       style={{
         // Adding '1A' to the hex color for 10% opacity background
         backgroundColor: `${color}1A`,
-        color: color,
+        color: `color-mix(in srgb, ${color} 40%, black)`,
       }}
     >
       {/* Only render icon if it's provided */}

@@ -25,7 +25,7 @@ const HeroSection = () => {
         {/* Eyebrow pill */}
         <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 shadow-xs">
           <span className="h-2 w-2 animate-pulse rounded-full bg-amber-500" />
-          <span className="text-secondary text-sm font-semibold">
+          <span className="text-sm font-semibold text-amber-700">
             Join 12,000+ students learning today
           </span>
         </div>
