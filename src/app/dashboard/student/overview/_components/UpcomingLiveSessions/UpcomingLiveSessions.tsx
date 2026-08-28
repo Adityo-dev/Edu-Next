@@ -2,10 +2,9 @@
 
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
-import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import { useGetStudentDashboardSessionsQuery } from '@/redux/features/liveSessionsManagement/studentLiveSession.api';
 import { FormatDateTime } from '@/utils/formatDateTime';
-import { Calendar, Clock, ExternalLink, Video, VideoOff } from 'lucide-react';
+import { Calendar, Clock, ExternalLink, Video } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -32,6 +31,10 @@ const UpcomingLiveSessions = () => {
       .slice(0, 3);
   }, [data?.data]);
 
+  if (!isLoading && displaySessions.length === 0) {
+    return null;
+  }
+
   return (
     <div className="dashboard-card-container">
       <div className="mb-4 flex items-center justify-between">
@@ -51,7 +54,7 @@ const UpcomingLiveSessions = () => {
               <UpcomingLiveSessionCardSkeleton key={i} />
             ))}
           </div>
-        ) : displaySessions.length > 0 ? (
+        ) : (
           displaySessions.map((session) => {
             const isLive = session.status === 'live';
             const isUpcoming = session.status === 'upcoming';
@@ -134,12 +137,6 @@ const UpcomingLiveSessions = () => {
               </div>
             );
           })
-        ) : (
-          <EmptyState
-            title="No Upcoming Sessions"
-            icon={VideoOff}
-            description="There are no live or scheduled sessions at the moment."
-          />
         )}
       </div>
     </div>
