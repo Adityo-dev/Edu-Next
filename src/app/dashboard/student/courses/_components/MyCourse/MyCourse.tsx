@@ -105,10 +105,8 @@ const MyCourse = () => {
             ))}
           </div>
 
-          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-          {(data?.data as any)?.pagination && (
-            /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-            <CustomPagination meta={(data?.data as any).pagination} />
+          {data?.data?.pagination && data.data.pagination.totalPages > 1 && (
+            <CustomPagination meta={data.data.pagination} />
           )}
         </>
       )}
