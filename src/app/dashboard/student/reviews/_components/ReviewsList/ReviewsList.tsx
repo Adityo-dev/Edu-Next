@@ -56,9 +56,6 @@ const ReviewsList = () => {
     <div>
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold">Submitted Reviews</h2>
-        {isFetching && !isReviewsLoading && (
-          <span className="animate-pulse text-xs font-medium text-slate-500">Updating...</span>
-        )}
       </div>
 
       {isError ? (
@@ -79,7 +76,7 @@ const ReviewsList = () => {
         />
       ) : (
         <>
-          <div className="space-y-4">
+          <div className={`space-y-4 transition-opacity duration-300 ${isFetching && !isReviewsLoading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
             {reviews.map((review) => (
               <div key={review?._id} className="dashboard-card-container p-3">
                 <div className="grid grid-cols-[5rem_1fr] gap-x-4 gap-y-1">

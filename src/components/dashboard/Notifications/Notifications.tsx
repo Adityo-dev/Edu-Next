@@ -64,7 +64,7 @@ const Notifications = () => {
   const page = Number(searchParams.get('page')) || 1;
   const filter = (searchParams.get('filter') as 'all' | 'unread') || 'all';
 
-  const { data, isLoading, isError, refetch } = useGetNotificationsQuery({
+  const { data, isLoading, isFetching, isError, refetch } = useGetNotificationsQuery({
     page,
     limit: 20,
     filter,
@@ -118,7 +118,7 @@ const Notifications = () => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div>
       <div className="mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -180,7 +180,7 @@ const Notifications = () => {
             icon={Bell}
           />
         ) : (
-          <div className="space-y-2">
+          <div className={`space-y-2 transition-opacity duration-300 ${isFetching && !isLoading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
             {notifications.map((notif: INotification) => {
               const style = getNotificationStyle(notif?.type);
               const Icon = style.icon;

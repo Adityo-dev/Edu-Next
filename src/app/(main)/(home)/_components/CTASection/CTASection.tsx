@@ -59,7 +59,7 @@ const CTASection = () => {
               <DynamicActionButton
                 label="Register Now"
                 href="/register"
-                className="bg-secondary border-none text-slate-900 hover:bg-[#d98c0a]"
+                className="bg-secondary border-none  hover:bg-[#d98c0a]"
               />
               <DynamicActionButton
                 label="Browse Courses"
