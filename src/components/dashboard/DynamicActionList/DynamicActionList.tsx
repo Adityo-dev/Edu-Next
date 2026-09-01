@@ -4,17 +4,17 @@ import { Ban, Check, Eye, Loader2, MessageCircle, Pencil, Plus, Trash2, X } from
 import Link from 'next/link';
 
 /**
- * @component DynamicTableActions
+ * @component DynamicActionList
  * @description A highly reusable action bar component for tables, lists, or cards.
  * It intelligently switches between Next.js <Link> and standard <button> based on the presence of an 'href' prop.
- * * @param {DynamicTableActionsProps} props - The actions array containing configuration for each button/link.
+ * * @param {DynamicActionListProps} props - The actions array containing configuration for each button/link.
  * * @example
  * // Basic usage with default labels and icons
- * <DynamicTableActions actions={[{ type: 'edit', onClick: handleEdit }]} />
+ * <DynamicActionList actions={[{ type: 'edit', onClick: handleEdit }]} />
  * * // Usage as a Next.js Link with a custom label
- * <DynamicTableActions actions={[{ type: 'view', label: 'View Profile', href: '/profile/123' }]} />
+ * <DynamicActionList actions={[{ type: 'view', label: 'View Profile', href: '/profile/123' }]} />
  * * // Multiple actions with mixed types
- * <DynamicTableActions actions={[
+ * <DynamicActionList actions={[
  * { type: 'save', onClick: handleSave },
  * { type: 'suspend', onClick: () => handleSuspend(id), className: 'opacity-50' }
  * ]} />
@@ -39,11 +39,11 @@ interface ActionItem {
   className?: string;
 }
 
-interface DynamicTableActionsProps {
+interface DynamicActionListProps {
   actions: ActionItem[];
 }
 
-const DynamicTableActions = ({ actions }: DynamicTableActionsProps) => {
+const DynamicActionList = ({ actions }: DynamicActionListProps) => {
   //   Internal configuration map for action aesthetics.
   const iconMap = {
     edit: {
@@ -167,4 +167,4 @@ const DynamicTableActions = ({ actions }: DynamicTableActionsProps) => {
   );
 };
 
-export default DynamicTableActions;
+export default DynamicActionList;

@@ -2,7 +2,7 @@
 'use client';
 
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
-import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
+import DynamicActionList from '@/components/dashboard/DynamicActionList/DynamicActionList';
 import { useModal } from '@/context/ModalContext';
 import { TCategory } from '@/redux/features/categories/categoriesApi';
 import { FolderTree } from 'lucide-react';
@@ -36,7 +36,7 @@ const SubcategoryManager = () => {
                 <span className="truncate">{sub?.name}</span>
               </div>
               <div className="flex shrink-0 items-center gap-1">
-                <DynamicTableActions
+                <DynamicActionList
                   actions={[
                     { type: 'edit', onClick: () => handleOpenUpdate(sub, 'SUB') },
                     { type: 'delete', onClick: () => handleDeleteClick(sub) },

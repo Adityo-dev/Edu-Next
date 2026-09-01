@@ -3,7 +3,7 @@
 import CustomPagination from '@/components/dashboard/CustomPagination/CustomPagination';
 import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
-import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
+import DynamicActionList from '@/components/dashboard/DynamicActionList/DynamicActionList';
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
@@ -371,7 +371,7 @@ const CourseManagementTable = () => {
           });
         }
 
-        return <DynamicTableActions actions={tableActions} />;
+        return <DynamicActionList actions={tableActions} />;
       },
     },
   ];

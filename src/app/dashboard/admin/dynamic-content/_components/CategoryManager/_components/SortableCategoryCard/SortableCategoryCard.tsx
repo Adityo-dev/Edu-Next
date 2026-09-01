@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
+import DynamicActionList from '@/components/dashboard/DynamicActionList/DynamicActionList';
 import { useModal } from '@/context/ModalContext';
 import { TCategory } from '@/redux/features/categories/categoriesApi';
 import { useSortable } from '@dnd-kit/sortable';
@@ -89,7 +89,7 @@ const SortableCategoryCard = ({
       </button>
 
       <div className="border-border/40 mt-auto flex items-center justify-end border-t pt-2">
-        <DynamicTableActions
+        <DynamicActionList
           actions={[
             {
               type: 'add',

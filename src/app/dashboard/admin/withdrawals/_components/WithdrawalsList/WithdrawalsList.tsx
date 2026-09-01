@@ -1,6 +1,6 @@
 import CustomPagination from '@/components/dashboard/CustomPagination/CustomPagination';
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
-import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
+import DynamicActionList from '@/components/dashboard/DynamicActionList/DynamicActionList';
 import { useModal } from '@/context/ModalContext';
 import { useGetPendingWithdrawalsQuery } from '@/redux/features/withdrawal/withdrawal.api';
 import { ITableFilter } from '@/types/table-filter.types';
@@ -105,7 +105,7 @@ const WithdrawalsList = () => {
                   </div>
                   {wd.status === 'pending' && (
                     <div className="flex gap-2">
-                      <DynamicTableActions
+                      <DynamicActionList
                         actions={[
                           {
                             type: 'message',

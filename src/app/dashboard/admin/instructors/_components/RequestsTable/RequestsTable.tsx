@@ -3,7 +3,7 @@
 
 import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
-import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
+import DynamicActionList from '@/components/dashboard/DynamicActionList/DynamicActionList';
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import { useModal } from '@/context/ModalContext';
 import { useApproveBadgeRequestMutation } from '@/redux/features/admin/instructorManagement/adminInstructor.api';
@@ -107,7 +107,7 @@ const RequestsTable = ({ instructors }: RequestsTableProps) => {
           },
         });
 
-        return <DynamicTableActions actions={actions} />;
+        return <DynamicActionList actions={actions} />;
       },
     },
   ];

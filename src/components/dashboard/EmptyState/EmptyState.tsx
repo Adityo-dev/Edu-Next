@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
+import DynamicActionButton from '../DynamicActionButton/DynamicActionButton';
 
 interface NotFoundProps {
   title?: string;
@@ -9,6 +10,9 @@ interface NotFoundProps {
   className?: string;
   icon?: LucideIcon;
   actionButton?: React.ReactNode;
+  actionText?: string;
+  actionHref?: string;
+  onActionClick?: () => void;
 }
 
 const EmptyState = ({
@@ -17,6 +21,9 @@ const EmptyState = ({
   className,
   icon: Icon,
   actionButton,
+  actionText,
+  actionHref,
+  onActionClick,
 }: NotFoundProps) => {
   return (
     <div
@@ -34,12 +41,23 @@ const EmptyState = ({
         </div>
       </div>
 
-      <div className="max-w-sm space-y-2">
+      <div className="max-w-lg space-y-2">
         <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
         <p className="text-secondary text-sm leading-relaxed">{description}</p>
       </div>
 
       {actionButton && <div className="mt-5">{actionButton}</div>}
+
+      {!actionButton && actionText && (
+        <div className="mt-5">
+          <DynamicActionButton
+            label={actionText}
+            href={actionHref}
+            onClick={onActionClick}
+            variant="default"
+          />
+        </div>
+      )}
 
       <div className="mt-4 flex gap-1">
         <span className="bg-primary/20 h-1 w-8 rounded-full"></span>

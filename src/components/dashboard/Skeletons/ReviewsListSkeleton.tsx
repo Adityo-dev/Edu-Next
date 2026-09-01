@@ -1,8 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 
 const ReviewsListSkeleton = () => {
-  // Creating an array of 3 to show multiple skeleton cards
-  const skeletonArray = Array.from({ length: 3 });
+  const skeletonArray = Array.from({ length: 2 });
 
   return (
     <div className="space-y-4">

@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 'use client';
 
-import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
+import DynamicActionList from '@/components/dashboard/DynamicActionList/DynamicActionList';
 import { IReview } from '@/types/review.types';
 import { FormatDateTime } from '@/utils/formatDateTime';
 import { ShieldAlert, Star } from 'lucide-react';
@@ -138,7 +138,7 @@ const ReviewCard = ({
           </p>
 
           <div className="mt-2">
-            <DynamicTableActions actions={actions} />
+            <DynamicActionList actions={actions} />
           </div>
         </div>
       </div>

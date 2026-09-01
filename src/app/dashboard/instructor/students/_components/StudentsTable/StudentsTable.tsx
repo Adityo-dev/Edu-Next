@@ -2,7 +2,7 @@
 
 import CustomPagination from '@/components/dashboard/CustomPagination/CustomPagination';
 import CustomTable from '@/components/dashboard/CustomTable/CustomTable';
-import DynamicTableActions from '@/components/dashboard/DynamicTableActions/DynamicTableActions';
+import DynamicActionList from '@/components/dashboard/DynamicActionList/DynamicActionList';
 import DynamicTableFilterBar from '@/components/dashboard/DynamicTableFilterBar/DynamicTableFilterBar';
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
@@ -121,7 +121,7 @@ const InstructorStudentsPage = () => {
     {
       header: 'ACTION',
       cell: (row) => (
-        <DynamicTableActions
+        <DynamicActionList
           actions={[
             {
               type: 'message',
