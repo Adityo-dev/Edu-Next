@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/purity */
 import { Calendar, Clock, ExternalLink, Video } from 'lucide-react';
-import Image from 'next/image';
 
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
+import DynamicUserAvatar from '@/components/shared/DynamicUserAvatar/DynamicUserAvatar';
 import { IStudentLiveSession } from '@/types/liveSessions.types';
+import CountdownTimer from './CountdownTimer';
 
 interface LiveSessionCardProps {
   session: IStudentLiveSession;
@@ -12,12 +13,14 @@ interface LiveSessionCardProps {
 }
 
 const LiveSessionCard = ({ session, statusConfig }: LiveSessionCardProps) => {
-  const config = statusConfig[session.status];
-  const isLive = session.status === 'live';
-  const isCompleted = session.status === 'completed';
-  const isUpcoming = session.status === 'upcoming';
+  // Safely grab the config, defaulting to a gray fallback if status is missing/invalid
+  const config = statusConfig?.[session?.status as string] || { label: 'Unknown', color: '#6b7280' };
 
-  const startDateTime = new Date(session.startTime || Date.now());
+  const isLive = session?.status === 'live';
+  const isCompleted = session?.status === 'completed';
+  const isUpcoming = session?.status === 'upcoming';
+
+  const startDateTime = new Date(session?.startTime || Date.now());
   const dateFormatted = startDateTime.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -28,14 +31,13 @@ const LiveSessionCard = ({ session, statusConfig }: LiveSessionCardProps) => {
     minute: '2-digit',
   });
 
-  const courseTitle = session.course?.title || 'Unknown Course';
-  const platform = session.meetingPlatform || 'Zoom';
-  const duration = `${session.durationInMins || 0} Mins`;
+  const courseTitle = session?.course?.title || 'Unknown Course';
+  const platform = session?.meetingPlatform || 'Zoom';
+  const duration = `${session?.durationInMins || 0} Mins`;
 
-  const instructorName = session.instructor
-    ? `${session.instructor.firstName} ${session.instructor.lastName}`
+  const instructorName = session?.instructor
+    ? `${session?.instructor?.firstName || ''} ${session?.instructor?.lastName || ''}`.trim()
     : 'Unknown Instructor';
-  const instructorImage = session.instructor?.avatar || 'https://i.pravatar.cc/150';
 
   return (
     <div className="dashboard-card-container">
@@ -43,21 +45,19 @@ const LiveSessionCard = ({ session, statusConfig }: LiveSessionCardProps) => {
         {/* Left */}
         <div className="flex-1">
           <div className="mb-2 flex items-center gap-2">
-            <DynamicBadge text={config.label} color={config.color} size="sm" />
+            <DynamicBadge text={config?.label || 'Unknown'} color={config?.color || '#6b7280'} />
             <DynamicBadge text={platform} color="#6b7280" />
           </div>
 
-          <h3 className="font-se semibold mb-1 text-base">{session.title}</h3>
+          <h3 className="mb-1 text-base font-semibold">{session?.title || 'Untitled Session'}</h3>
           <p className="text-text-secondary mb-3 text-sm">{courseTitle}</p>
 
           <div className="text-text-secondary flex flex-wrap items-center gap-4 text-xs">
             <span className="flex items-center gap-1.5">
-              <Image
-                src={instructorImage}
+              <DynamicUserAvatar
+                src={session?.instructor?.avatar}
                 alt={instructorName}
-                width={18}
-                height={18}
-                className="rounded-full"
+                size={18}
               />
               {instructorName}
             </span>
@@ -80,22 +80,14 @@ const LiveSessionCard = ({ session, statusConfig }: LiveSessionCardProps) => {
               showIcon
               icon={Video}
               className="sm:h-10"
-              href={session.meetingLink}
+              href={session?.meetingLink || '#'}
               target="_blank"
               variant="danger"
             />
           )}
 
-          {isUpcoming && (
-            <DynamicActionButton
-              label="Add to Calendar"
-              showIcon
-              icon={ExternalLink}
-              className="sm:h-10"
-              href={session.meetingLink}
-              target="_blank"
-              variant="default"
-            />
+          {isUpcoming && session?.startTime && (
+            <CountdownTimer targetDate={session.startTime} />
           )}
 
           {isCompleted && (

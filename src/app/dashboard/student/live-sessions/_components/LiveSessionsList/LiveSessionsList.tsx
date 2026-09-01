@@ -17,6 +17,25 @@ const statusConfig: Record<string, { label: string; color: string }> = {
   completed: { label: 'Completed', color: '#16a34a' },
 };
 
+const SessionFilters: ITableFilter[] = [
+  {
+    type: 'tabs',
+    name: 'status',
+    placeholder: 'Status',
+    options: [
+      { label: 'All Sessions', value: 'all' },
+      { label: 'Live Now', value: 'live' },
+      { label: 'Upcoming', value: 'upcoming' },
+      { label: 'Completed', value: 'completed' },
+    ],
+  },
+  {
+    type: 'search',
+    name: 'search',
+    placeholder: 'Search sessions or courses...',
+  },
+];
+
 const LiveSessionsList = () => {
   const { getQueryObject } = useSetSearchQueryInURL();
 
@@ -24,7 +43,7 @@ const LiveSessionsList = () => {
   const currentStatus = (queryParams.status as 'all' | 'live' | 'upcoming' | 'completed') || 'all';
   const currentSearchUrl = queryParams.search || '';
 
-  const { data, isLoading, isError, refetch } = useGetStudentDashboardSessionsQuery({
+  const { data, isLoading, isError, isFetching, refetch } = useGetStudentDashboardSessionsQuery({
     status: currentStatus === 'all' ? undefined : currentStatus,
   });
 
@@ -36,33 +55,21 @@ const LiveSessionsList = () => {
     if (!currentSearchUrl) return rows;
     return rows.filter(
       (row) =>
-        row.title.toLowerCase().includes(currentSearchUrl.toLowerCase()) ||
-        row.course?.title?.toLowerCase().includes(currentSearchUrl.toLowerCase()),
+        row?.title?.toLowerCase()?.includes(currentSearchUrl.toLowerCase()) ||
+        row?.course?.title?.toLowerCase()?.includes(currentSearchUrl.toLowerCase()),
     );
   }, [rows, currentSearchUrl]);
 
-  const SessionFilters: ITableFilter[] = [
-    {
-      type: 'tabs',
-      name: 'status',
-      placeholder: 'Status',
-      options: [
-        { label: 'All Sessions', value: 'all' },
-        { label: 'Live Now', value: 'live' },
-        { label: 'Upcoming', value: 'upcoming' },
-        { label: 'Completed', value: 'completed' },
-      ],
-    },
-    {
-      type: 'search',
-      name: 'search',
-      placeholder: 'Search sessions or courses...',
-    },
-  ];
+
 
   return (
-    <div className="dashboard-card-container space-y-4 p-3">
-      <DynamicTableFilterBar fields={SessionFilters} />
+    <div className="space-y-6">
+      <div className="dashboard-card-container space-y-4 p-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Scheduled Sessions</h2>
+        </div>
+        <DynamicTableFilterBar fields={SessionFilters} />
+      </div>
 
       {isError ? (
         <ErrorState
@@ -77,15 +84,17 @@ const LiveSessionsList = () => {
           ))}
         </div>
       ) : filteredRows.length === 0 ? (
-        <EmptyState
-          title="No Sessions Found"
-          icon={VideoOff}
-          description="There are no live or scheduled sessions matching the selected criteria."
-        />
+        <div className="dashboard-card-container p-6">
+          <EmptyState
+            title="No Sessions Scheduled"
+            icon={VideoOff}
+            description="There are no live or upcoming sessions available at the moment. Please check back later when your instructors schedule new classes."
+          />
+        </div>
       ) : (
-        <div className="space-y-4">
+        <div className={`space-y-4 transition-opacity duration-300 ${isFetching && !isLoading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
           {filteredRows.map((session) => (
-            <LiveSessionCard key={session._id} session={session} statusConfig={statusConfig} />
+            <LiveSessionCard key={session?._id || Math.random()} session={session} statusConfig={statusConfig} />
           ))}
         </div>
       )}
