@@ -1,6 +1,5 @@
-'use client';
-
 import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
+import { Suspense } from 'react';
 import Achievements from './_components/Achievements/Achievements';
 import MotivationalBanner from './_components/MotivationalBanner/MotivationalBanner';
 import OverallProgress from './_components/OverallProgress/OverallProgress';
@@ -23,7 +22,9 @@ const StudentProgressPage = () => {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left (2/3) */}
         <div className="space-y-6 lg:col-span-2">
-          <ProgressTabs />
+          <Suspense fallback={<div className="h-64 animate-pulse rounded-md bg-slate-50" />}>
+            <ProgressTabs />
+          </Suspense>
         </div>
 
         {/* Right (1/3) */}

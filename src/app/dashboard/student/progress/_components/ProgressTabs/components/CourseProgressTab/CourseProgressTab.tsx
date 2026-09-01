@@ -1,7 +1,8 @@
 import { BookOpen, CheckCircle, Clock, Star } from 'lucide-react';
 import Image from 'next/image';
 import { useGetMyCoursesQuery } from '@/redux/features/courseManagement/studentCourse.api';
-import { Skeleton } from '@/components/ui/skeleton';
+import CourseProgressSkeleton from '@/components/dashboard/Skeletons/student/CourseProgressSkeleton';
+import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
 import { useMemo } from 'react';
 
 const CourseProgressTab = () => {
@@ -9,27 +10,19 @@ const CourseProgressTab = () => {
   const courses = useMemo(() => data?.data?.courses || [], [data?.data?.courses]);
 
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        {[...Array(3)].map((_, i) => (
-          <div key={i} className="dashboard-card-container flex gap-4">
-            <Skeleton className="h-20 w-28 shrink-0 rounded-sm" />
-            <div className="flex-1 space-y-3">
-              <Skeleton className="h-5 w-3/4" />
-              <Skeleton className="h-3 w-1/2" />
-              <Skeleton className="h-2 w-full" />
-              <Skeleton className="h-3 w-2/3" />
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    return <CourseProgressSkeleton />;
   }
 
   if (courses.length === 0) {
     return (
-      <div className="dashboard-card-container flex items-center justify-center py-12 text-sm text-slate-500">
-        No courses found.
+      <div className="dashboard-card-container p-6">
+        <EmptyState
+          title="No Courses Enrolled"
+          icon={BookOpen}
+          description="You haven't enrolled in any courses yet. Start your learning journey today!"
+          actionText="Browse Courses"
+          actionHref="/courses"
+        />
       </div>
     );
   }
@@ -57,7 +50,7 @@ const CourseProgressTab = () => {
                 />
                 {isCompleted && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                    <CheckCircle size={24} className="text-yellow-400" />
+                    <CheckCircle size={24} className="text-warning" />
                   </div>
                 )}
               </div>
@@ -82,13 +75,13 @@ const CourseProgressTab = () => {
                   <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
                     <div
                       className={`h-full rounded-full transition-all ${
-                        isCompleted ? 'bg-yellow-400' : 'bg-primary'
+                        isCompleted ? 'bg-warning' : 'bg-primary'
                       }`}
                       style={{ width: `${progress.percentage}%` }}
                     />
                   </div>
                   <span
-                    className={`text-xs font-black ${
+                    className={`text-xs font-semibold ${
                       isCompleted ? 'text-yellow-500' : 'text-primary'
                     }`}
                   >
