@@ -1,5 +1,3 @@
-'use client';
-
 import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 import LeaveReview from './_components/LeaveReview/LeaveReview';
 import ReviewsList from './_components/ReviewsList/ReviewsList';
