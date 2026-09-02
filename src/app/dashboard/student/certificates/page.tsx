@@ -1,10 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import CertificatesHeader from './_components/CertificatesHeader/CertificatesHeader';
 import CertificatesStats from './_components/CertificatesStats/CertificatesStats';
 import EarnedCertificates from './_components/EarnedCertificates/EarnedCertificates';
 import InProgressCertificates from './_components/InProgressCertificates/InProgressCertificates';
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 
 const certificatesData = [
   {
@@ -43,18 +42,13 @@ const inProgressCourses = [
 ];
 
 const CertificatesPage = () => {
-  const [search, setSearch] = useState('');
-
-  const filtered = useMemo(
-    () => certificatesData.filter((c) => c.course.toLowerCase().includes(search.toLowerCase())),
-    [search],
-  );
-
   return (
     <div>
       <div className="mx-auto space-y-6">
-        {/* Header */}
-        <CertificatesHeader search={search} setSearch={setSearch} />
+        <SectionHeader
+          title="My Certificates"
+          description="Download and share your earned certificates."
+        />
 
         {/* Stats */}
         <CertificatesStats
@@ -63,7 +57,7 @@ const CertificatesPage = () => {
         />
 
         {/* Earned Certificates */}
-        <EarnedCertificates certificates={filtered} />
+        <EarnedCertificates certificates={certificatesData} />
 
         {/* In Progress */}
         <InProgressCertificates courses={inProgressCourses} />

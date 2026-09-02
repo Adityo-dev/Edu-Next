@@ -4,5 +4,8 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   },
-  "cSpell.words": ["Bootcamp", "cooldown", "notif", "Wishlisted", "করছি"]
+  "cSpell.words": ["Bootcamp", "cooldown", "notif", "Wishlisted", "করছি"],
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }
