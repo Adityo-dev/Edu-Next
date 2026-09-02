@@ -1,6 +1,7 @@
 'use client';
 
 import { Award } from 'lucide-react';
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
 
 interface InProgressCourse {
   title: string;
@@ -14,10 +15,12 @@ interface InProgressCertificatesProps {
 const InProgressCertificates = ({ courses }: InProgressCertificatesProps) => {
   return (
     <div>
-      <h2 className="mb-4 text-lg font-bold">Certificates in Progress</h2>
+      <div className="mb-4">
+        <SectionHeader title="Certificates in Progress" />
+      </div>
       <div className="space-y-3">
         {courses.map((course, i) => (
-          <div key={i} className="dashboard-card-container flex items-center gap-4">
+          <div key={i} className="dashboard-card-container flex items-center gap-4 p-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-slate-200">
               <Award size={18} className="text-slate-300" />
             </div>

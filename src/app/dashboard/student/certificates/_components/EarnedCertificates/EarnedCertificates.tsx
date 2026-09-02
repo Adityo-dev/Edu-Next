@@ -2,6 +2,9 @@
 
 import { Award, Download, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
+import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
+import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
+import { Button } from '@/components/ui/button';
 
 interface Certificate {
   id: number;
@@ -20,7 +23,9 @@ interface EarnedCertificatesProps {
 const EarnedCertificates = ({ certificates }: EarnedCertificatesProps) => {
   return (
     <div>
-      <h2 className="mb-4 text-lg font-bold">Earned Certificates</h2>
+      <div className="mb-4">
+        <SectionHeader title="Earned Certificates" />
+      </div>
       {certificates.length === 0 ? (
         <div className="dashboard-card-container py-12 text-center text-slate-500">
           No certificates found matching your search.
@@ -33,7 +38,7 @@ const EarnedCertificates = ({ certificates }: EarnedCertificatesProps) => {
               className="group dashboard-card-container overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-md"
             >
               {/* Image */}
-              <div className="relative h-40 overflow-hidden">
+              <div className="relative aspect-video w-full overflow-hidden border-b border-slate-100">
                 <Image
                   src={cert.image}
                   alt={cert.course}
@@ -45,13 +50,13 @@ const EarnedCertificates = ({ certificates }: EarnedCertificatesProps) => {
                     <Award size={32} className="text-yellow-400" />
                   </div>
                 </div>
-                <span className="bg-primary absolute top-3 left-3 rounded-sm px-2.5 py-1 text-xs font-bold text-white">
-                  {cert.category}
-                </span>
+                <div className="absolute top-3 left-3">
+                  <DynamicBadge text={cert.category} color="#3b82f6" />
+                </div>
               </div>
 
               {/* Content */}
-              <div className="p-5">
+              <div className="p-4">
                 <h3 className="mb-1 line-clamp-2 text-sm leading-snug font-bold">{cert.course}</h3>
                 <p className="text-text-secondary mb-1 text-xs">{cert.instructor}</p>
                 <p className="text-text-secondary mb-4 text-xs">Completed: {cert.completedDate}</p>
@@ -62,13 +67,13 @@ const EarnedCertificates = ({ certificates }: EarnedCertificatesProps) => {
                 </div>
 
                 <div className="flex gap-2">
-                  <button className="bg-primary flex flex-1 items-center justify-center gap-1.5 rounded-sm py-2.5 text-xs font-bold text-white transition-all hover:bg-[#2a6159] active:scale-95">
-                    <Download size={13} />
+                  <Button className="flex flex-1 items-center justify-center gap-1.5 rounded-sm">
+                    <Download size={14} />
                     Download PDF
-                  </button>
-                  <button className="flex h-10 w-10 shrink-0 items-center justify-center rounded-sm border border-slate-200 text-slate-500 transition-all hover:bg-slate-50">
-                    <ExternalLink size={14} />
-                  </button>
+                  </Button>
+                  <Button variant="outline" className="h-10 w-10 shrink-0 rounded-sm p-0">
+                    <ExternalLink size={16} />
+                  </Button>
                 </div>
               </div>
             </div>

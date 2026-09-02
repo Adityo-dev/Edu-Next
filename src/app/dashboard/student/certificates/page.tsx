@@ -51,7 +51,7 @@ const CertificatesPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB]">
+    <div>
       <div className="mx-auto space-y-6">
         {/* Header */}
         <CertificatesHeader search={search} setSearch={setSearch} />

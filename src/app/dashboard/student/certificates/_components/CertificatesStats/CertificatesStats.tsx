@@ -1,5 +1,8 @@
 'use client';
 
+import { Award, Clock, Target } from 'lucide-react';
+import StatsCard from '@/components/dashboard/StatsCard/StatsCard';
+
 interface CertificatesStatsProps {
   earnedCount: number;
   inProgressCount: number;
@@ -7,19 +10,16 @@ interface CertificatesStatsProps {
 
 const CertificatesStats = ({ earnedCount, inProgressCount }: CertificatesStatsProps) => {
   return (
-    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-      <div className="dashboard-card-container text-center">
-        <p className="text-primary text-3xl font-black">{earnedCount}</p>
-        <p className="text-text-secondary text-sm">Certificates Earned</p>
-      </div>
-      <div className="dashboard-card-container text-center">
-        <p className="text-3xl font-black text-blue-500">{inProgressCount}</p>
-        <p className="text-text-secondary text-sm">In Progress</p>
-      </div>
-      <div className="dashboard-card-container col-span-2 text-center sm:col-span-1">
-        <p className="text-3xl font-black text-yellow-500">50%</p>
-        <p className="text-text-secondary text-sm">Overall Completion</p>
-      </div>
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <StatsCard label="Certificates Earned" value={earnedCount} icon={Award} iconColor="#34796f" />
+      <StatsCard label="In Progress" value={inProgressCount} icon={Clock} iconColor="#3b82f6" />
+      <StatsCard
+        label="Overall Completion"
+        value="50%"
+        icon={Target}
+        iconColor="#eab308"
+        className="sm:col-span-2 lg:col-span-1"
+      />
     </div>
   );
 };

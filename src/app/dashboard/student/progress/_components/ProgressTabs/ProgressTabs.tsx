@@ -23,7 +23,7 @@ const ProgressTabs = () => {
   const activeTab = searchParams.get('tab') || 'courses';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Tab Navigation */}
       <DynamicTableFilterBar fields={tabFilters} />
 

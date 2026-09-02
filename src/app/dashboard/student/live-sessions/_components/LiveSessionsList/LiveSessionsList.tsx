@@ -62,7 +62,7 @@ const LiveSessionsList = () => {
 
   return (
     <div className="space-y-6">
-      <div className="dashboard-card-container space-y-4 p-4">
+      <div className="dashboard-card-container space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Scheduled Sessions</h2>
         </div>
