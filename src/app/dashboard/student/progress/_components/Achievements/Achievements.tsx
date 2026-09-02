@@ -3,42 +3,74 @@
 import { useGetStudentAchievementsQuery } from '@/redux/features/progress/studentProgress.api';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import AchievementsSkeleton from '@/components/dashboard/Skeletons/student/AchievementsSkeleton';
+import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
 import { useMemo } from 'react';
+import { IStudentAchievement } from '@/types/progress.types';
+
+import { toast } from 'sonner';
 
 const Achievements = () => {
-  const { data, isLoading } = useGetStudentAchievementsQuery();
-  const achievements = useMemo(() => data?.data || [], [data?.data]);
+  const { data, isLoading, isError, isFetching, refetch } = useGetStudentAchievementsQuery();
+  const achievements: IStudentAchievement[] = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const rawData = data?.data as any;
+    if (Array.isArray(rawData)) return rawData;
+    if (Array.isArray(rawData?.result)) return rawData.result;
+    return [];
+  }, [data]);
+
+  const handleBadgeClick = (badge: IStudentAchievement) => {
+    if (window.innerWidth < 1024) {
+      toast(badge.title, {
+        description: badge.description,
+      });
+    }
+  };
 
   return (
     <div className="dashboard-card-container">
       <h3 className="mb-4 text-base font-semibold">Achievements</h3>
-      <div className="grid grid-cols-3 gap-3">
-        <TooltipProvider delayDuration={200}>
-          {isLoading
-            ? [...Array(6)].map((_, i) => <AchievementsSkeleton key={i} />)
-            : achievements.map((badge, i) => (
-                <Tooltip key={i}>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      className={`flex cursor-pointer flex-col items-center justify-center rounded-sm p-3 text-center transition-all focus:outline-none ${
-                        badge?.isUnlocked
-                          ? 'border border-emerald-100 bg-emerald-50 hover:bg-emerald-100'
-                          : 'border border-slate-100 bg-slate-50 opacity-50 hover:opacity-70'
-                      }`}
+      {isError ? (
+        <ErrorState
+          title="Failed to Load Achievements"
+          message="We couldn't fetch your achievements right now. Please try again."
+          onRetry={refetch}
+        />
+      ) : (
+        <div
+          className={`grid grid-cols-3 gap-3 transition-opacity duration-300 ${isFetching && !isLoading ? 'pointer-events-none opacity-50' : 'opacity-100'}`}
+        >
+          <TooltipProvider delayDuration={200}>
+            {isLoading
+              ? [...Array(6)].map((_, i) => <AchievementsSkeleton key={i} />)
+              : achievements.map((badge, i) => (
+                  <Tooltip key={i}>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={() => handleBadgeClick(badge)}
+                        className={`flex cursor-pointer flex-col items-center justify-center rounded-sm p-3 text-center transition-all focus:outline-none ${
+                          badge?.isUnlocked
+                            ? 'border border-emerald-100 bg-emerald-50 hover:bg-emerald-100'
+                            : 'border border-slate-100 bg-slate-50 opacity-50 hover:opacity-70'
+                        }`}
+                      >
+                        <span className="mb-1 text-2xl">{badge?.icon}</span>
+                        <span className="text-xs leading-tight font-semibold">{badge?.title}</span>
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="bottom"
+                      className="hidden max-w-[200px] text-center lg:block"
                     >
-                      <span className="mb-1 text-2xl">{badge?.icon}</span>
-                      <span className="text-xs leading-tight font-semibold">{badge?.title}</span>
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" className="max-w-[200px] text-center">
-                    <p className="font-semibold text-white">{badge?.title}</p>
-                    <p className="mt-1 text-xs">{badge?.description}</p>
-                  </TooltipContent>
-                </Tooltip>
-              ))}
-        </TooltipProvider>
-      </div>
+                      <p className="font-semibold text-white">{badge?.title}</p>
+                      <p className="mt-1 text-xs">{badge?.description}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ))}
+          </TooltipProvider>
+        </div>
+      )}
     </div>
   );
 };
