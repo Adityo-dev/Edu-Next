@@ -3,6 +3,7 @@
 'use client';
 
 import CoursePlayerSkeleton from '@/components/dashboard/Skeletons/student/CoursePlayerSkeleton';
+import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
 import {
   useGetCoursePlaybackDataQuery,
   useMarkLessonAsCompleteMutation,
@@ -19,7 +20,7 @@ import VideoPlayer from './_components/VideoPlayer/VideoPlayer';
 
 export default function CoursePlayerPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { data, isLoading } = useGetCoursePlaybackDataQuery(id);
+  const { data, isLoading, isError, refetch } = useGetCoursePlaybackDataQuery(id);
   const [markLessonAsComplete] = useMarkLessonAsCompleteMutation();
 
   const courseData = data?.data?.course;
@@ -110,6 +111,18 @@ export default function CoursePlayerPage({ params }: { params: Promise<{ id: str
 
   if (isLoading) {
     return <CoursePlayerSkeleton />;
+  }
+
+  if (isError) {
+    return (
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center p-4">
+        <ErrorState
+          title="Failed to load course content"
+          message="We couldn't load the course data. Please check your internet connection or try again."
+          onRetry={refetch}
+        />
+      </div>
+    );
   }
 
   if (!courseData) {
