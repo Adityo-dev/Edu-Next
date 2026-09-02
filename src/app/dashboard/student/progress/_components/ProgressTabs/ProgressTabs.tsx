@@ -28,7 +28,7 @@ const ProgressTabs = () => {
       <DynamicTableFilterBar fields={tabFilters} />
 
       {/* Tabs Content */}
-      <div className="mt-4">
+      <div>
         {activeTab === 'courses' && <CourseProgressTab />}
         {activeTab === 'quizzes' && <QuizHistoryTab />}
       </div>

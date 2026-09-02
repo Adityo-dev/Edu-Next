@@ -65,33 +65,36 @@ const CourseProgressTab = () => {
                 key={enrollment.enrollmentId}
                 className="dashboard-card-container p-3 transition-all hover:border-emerald-100"
               >
-                <div className="flex gap-4">
+                <div className="grid grid-cols-[112px_1fr] gap-x-3 gap-y-3 sm:grid-cols-[144px_1fr] sm:gap-x-4 sm:gap-y-1">
                   {/* Thumbnail */}
-                  <div className="relative h-20 w-36 shrink-0 overflow-hidden rounded-sm">
+                  <div className="relative col-span-1 row-span-1 aspect-video w-full overflow-hidden rounded-sm sm:row-span-2">
                     <Image
                       src={course.thumbnail}
                       alt={course.title}
                       fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="object-cover"
                     />
                     {isCompleted && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                        <CheckCircle size={24} className="text-warning" />
+                        <CheckCircle size={16} className="text-warning sm:h-6 sm:w-6" />
                       </div>
                     )}
                   </div>
 
-                  {/* Info */}
-                  <div className="flex-1">
-                    <div className="mb-1 flex items-start justify-between gap-2">
-                      <h3 className="line-clamp-1 text-sm font-semibold">{course.title}</h3>
-                      <DynamicBadge
-                        text={isCompleted ? 'Completed' : 'In Progress'}
-                        color={isCompleted ? '#16a34a' : '#3b82f6'}
-                      />
-                    </div>
+                  {/* Title & Badge */}
+                  <div className="col-span-1 flex flex-col items-start gap-1.5 sm:flex-row sm:justify-between sm:gap-2 sm:pt-0.5">
+                    <h3 className="line-clamp-2 text-sm font-semibold sm:line-clamp-1">
+                      {course.title}
+                    </h3>
+                    <DynamicBadge
+                      text={isCompleted ? 'Completed' : 'In Progress'}
+                      color={isCompleted ? '#16a34a' : '#3b82f6'}
+                    />
+                  </div>
 
+                  {/* Progress & Stats (Full width on mobile, right column on PC) */}
+                  <div className="col-span-2 sm:col-span-1 sm:col-start-2">
                     <p className="text-text-secondary mb-2 text-xs">
                       By {course.instructor.fullName}
                     </p>
@@ -118,7 +121,6 @@ const CourseProgressTab = () => {
                       <span className="text-slate-300">|</span>
                       <span className="flex items-center gap-1">
                         <Clock size={11} />
-                        {/* The API currently provides totalDuration but not exact spent hours in this format, mapping total duration for now */}
                         {course.totalDuration}
                       </span>
                       {progress.averageQuizScore !== undefined && (

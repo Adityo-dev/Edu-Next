@@ -5,7 +5,7 @@ const MyCourseCardSkeleton = () => {
   return (
     <div className="dashboard-card-container overflow-hidden">
       {/* Image Section Skeleton */}
-      <div className="relative block h-44 w-full bg-slate-100">
+      <div className="relative block aspect-video w-full shrink-0 overflow-hidden rounded-sm bg-slate-100">
         <Skeleton className="h-full w-full rounded-none" />
 
         {/* Status Badge Skeleton */}
