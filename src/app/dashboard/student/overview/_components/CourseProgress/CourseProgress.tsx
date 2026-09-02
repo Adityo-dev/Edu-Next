@@ -2,10 +2,13 @@
 
 import { useGetMyCoursesQuery } from '@/redux/features/courseManagement/studentCourse.api';
 import { Skeleton } from '@/components/ui/skeleton';
+import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
+import { BookOpen } from 'lucide-react';
 import { useMemo } from 'react';
 
 const CourseProgress = () => {
-  const { data, isLoading } = useGetMyCoursesQuery({ limit: 3 });
+  const { data, isLoading, isFetching, isError, refetch } = useGetMyCoursesQuery({ limit: 3 });
   const courses = useMemo(() => data?.data?.courses || [], [data?.data?.courses]);
 
   // Calculate overall completion based on fetched courses
@@ -22,7 +25,13 @@ const CourseProgress = () => {
       <h2 className="mb-5 text-base font-semibold">Course Progress</h2>
 
       <div className="space-y-3">
-        {isLoading ? (
+        {isError ? (
+          <ErrorState
+            title="Failed to Load Progress"
+            message="We couldn't fetch your course progress right now. Please try again."
+            onRetry={refetch}
+          />
+        ) : isLoading ? (
           <>
             {[...Array(3)].map((_, i) => (
               <div key={i} className="mb-4">
@@ -35,39 +44,47 @@ const CourseProgress = () => {
               </div>
             ))}
           </>
-        ) : courses.length > 0 ? (
-          courses.map((enrollment) => (
-            <div key={enrollment.enrollmentId}>
-              <div className="mb-1.5 flex items-center justify-between">
-                <span className="line-clamp-1 text-xs font-medium text-slate-600">
-                  {enrollment.course.title}
-                </span>
-                <span className="text-primary ml-2 shrink-0 text-xs font-bold">
-                  {enrollment.progress.percentage}%
-                </span>
-              </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
-                <div
-                  className="bg-primary h-full rounded-full"
-                  style={{ width: `${enrollment.progress.percentage}%` }}
-                />
-              </div>
-              <div className="mt-1 flex items-center justify-between">
-                <p className="text-text-secondary text-[10px]">
-                  {enrollment.progress.completedLessonsCount}/{enrollment.course.lessonsCount}{' '}
-                  lessons
-                </p>
-                {/* Optional: Show average quiz score if requested */}
-                {enrollment.progress.averageQuizScore !== undefined && (
-                  <p className="text-text-secondary text-[10px]">
-                    Quiz Avg: {enrollment.progress.averageQuizScore}%
-                  </p>
-                )}
-              </div>
-            </div>
-          ))
+        ) : courses.length === 0 ? (
+          <EmptyState
+            title="No Progress Yet"
+            icon={BookOpen}
+            description="You haven't started any courses yet. Enroll in a course to track your progress here."
+          />
         ) : (
-          <p className="py-4 text-center text-xs text-slate-500">No course progress found.</p>
+          <div
+            className={`space-y-4 transition-opacity duration-300 ${isFetching && !isLoading ? 'pointer-events-none opacity-50' : 'opacity-100'}`}
+          >
+            {courses.map((enrollment, index) => (
+              <div key={enrollment?.enrollmentId || `course-prog-${index}`}>
+                <div className="mb-1.5 flex items-center justify-between">
+                  <span className="line-clamp-1 text-xs font-medium text-slate-600">
+                    {enrollment?.course?.title || 'Unknown Course'}
+                  </span>
+                  <span className="text-primary ml-2 shrink-0 text-xs font-bold">
+                    {enrollment?.progress?.percentage || 0}%
+                  </span>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+                  <div
+                    className="bg-primary h-full rounded-full"
+                    style={{ width: `${enrollment?.progress?.percentage || 0}%` }}
+                  />
+                </div>
+                <div className="mt-1 flex items-center justify-between">
+                  <p className="text-text-secondary text-[10px]">
+                    {enrollment?.progress?.completedLessonsCount || 0}/
+                    {enrollment?.course?.lessonsCount || 0} lessons
+                  </p>
+                  {/* Optional: Show average quiz score if requested */}
+                  {enrollment?.progress?.averageQuizScore !== undefined && (
+                    <p className="text-text-secondary text-[10px]">
+                      Quiz Avg: {enrollment?.progress?.averageQuizScore}%
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         )}
       </div>
 

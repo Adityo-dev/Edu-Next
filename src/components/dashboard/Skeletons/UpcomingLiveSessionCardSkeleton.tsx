@@ -3,42 +3,37 @@ import { Skeleton } from '@/components/ui/skeleton';
 const UpcomingLiveSessionCardSkeleton = () => {
   return (
     <div className="dashboard-card-container p-3">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        {/* Left Side: Content */}
-        <div className="flex-1">
-          {/* Badges Skeleton */}
+      <div className="flex flex-col gap-3">
+        {/* Top Area */}
+        <div>
           <div className="mb-2 flex items-center gap-2">
-            <Skeleton className="h-5 w-16" />
-            <Skeleton className="h-5 w-12" />
+            <Skeleton className="h-[22px] w-16" />
+            <Skeleton className="h-[22px] w-12" />
           </div>
 
-          {/* Title Skeleton */}
-          <Skeleton className="mb-1.5 h-4 w-3/4 max-w-[280px]" />
+          <Skeleton className="mb-1 h-4 w-3/4 max-w-[280px]" />
+          <Skeleton className="h-3 w-1/2 max-w-[200px]" />
+        </div>
 
-          {/* Course Name Skeleton */}
-          <Skeleton className="mb-3 h-3 w-1/2 max-w-[200px]" />
-
-          {/* Meta details Skeleton (Instructor, Date, Time, Duration) */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <Skeleton className="h-5 w-5 rounded-full" />
-              <Skeleton className="h-3 w-20" />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Skeleton className="h-3 w-3" />
-              <Skeleton className="h-3 w-28" />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Skeleton className="h-3 w-3" />
-              <Skeleton className="h-3 w-16" />
-            </div>
+        {/* Meta Info */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <div className="flex items-center gap-1.5">
+            <Skeleton className="h-[18px] w-[18px] rounded-full" />
+            <Skeleton className="h-3 w-20" />
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Skeleton className="h-3 w-3 rounded-full" />
+            <Skeleton className="h-3 w-24" />
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Skeleton className="h-3 w-3 rounded-full" />
+            <Skeleton className="h-3 w-12" />
           </div>
         </div>
 
-        {/* Right Side: Actions Skeleton */}
-        <div className="flex shrink-0 items-center gap-2">
-          {/* Main Action Button */}
-          <Skeleton className="h-10! w-full sm:w-[100px]" />
+        {/* CTA Area */}
+        <div className="mt-1 flex items-center justify-start border-t border-slate-100 pt-3">
+          <Skeleton className="h-9 w-full" />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Award } from 'lucide-react';
+import { Award, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -35,9 +35,9 @@ const MyCertificates = () => {
         <h2 className="text-lg font-bold">My Certificates</h2>
         <Link
           href="/dashboard/student/certificates"
-          className="text-primary text-sm font-semibold hover:underline"
+          className="text-primary flex items-center gap-1 text-sm font-semibold hover:underline"
         >
-          View All →
+          View All <ArrowRight size={14} />
         </Link>
       </div>
 

@@ -1,19 +1,19 @@
 'use client';
 
 import EmptyState from '@/components/dashboard/EmptyState/EmptyState';
+import ErrorState from '@/components/dashboard/ErrorState/ErrorState';
 import ContinueLearningSkeleton from '@/components/dashboard/Skeletons/ContinueLearningSkeleton';
 import { useGetMyCoursesQuery } from '@/redux/features/courseManagement/studentCourse.api';
 import { IEnrolledCourse } from '@/types/courseManagement.types';
-import { BookOpen, Play } from 'lucide-react';
-import Image from 'next/image';
+import { BookOpen, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo } from 'react';
+import ContinueLearningCard from './_components/ContinueLearningCard';
 
 const ContinueLearning = () => {
-  const { data, isLoading } = useGetMyCoursesQuery({
-    stats: 'in-progress',
+  const { data, isLoading, isFetching, isError, refetch } = useGetMyCoursesQuery({
     page: 1,
-    limit: 10,
+    limit: 20,
   });
 
   const displayCourses = useMemo(() => {
@@ -32,7 +32,13 @@ const ContinueLearning = () => {
             ? rawData.data
             : [];
 
-    return enrolledCourses.slice(0, 3);
+    return [...enrolledCourses]
+      .sort((a, b) => {
+        const aCompleted = (a.progress?.percentage || 0) >= 100 ? 1 : 0;
+        const bCompleted = (b.progress?.percentage || 0) >= 100 ? 1 : 0;
+        return aCompleted - bCompleted;
+      })
+      .slice(0, 3);
   }, [data]);
 
   return (
@@ -41,82 +47,41 @@ const ContinueLearning = () => {
         <h2 className="text-base font-semibold">Continue Learning</h2>
         <Link
           href="/dashboard/student/courses"
-          className="text-primary text-sm font-semibold hover:underline"
+          className="text-primary flex items-center gap-1 text-sm font-semibold hover:underline"
         >
-          View All →
+          View All <ArrowRight size={14} />
         </Link>
       </div>
 
       <div className="space-y-4">
-        {isLoading ? (
+        {isError ? (
+          <ErrorState
+            title="Failed to Load Courses"
+            message="We couldn't fetch your in-progress courses right now. Please try again."
+            onRetry={refetch}
+          />
+        ) : isLoading ? (
           <div className="flex flex-col gap-4">
-            {[1, 2, 3].map((i) => (
+            {Array.from({ length: 3 }).map((_, i) => (
               <ContinueLearningSkeleton key={i} />
             ))}
           </div>
-        ) : displayCourses.length > 0 ? (
-          displayCourses.map((enrolled) => (
-            <div
-              key={enrolled.enrollmentId}
-              className="group flex items-center gap-4 rounded-sm border border-slate-100 p-4 transition-all duration-300 hover:border-emerald-100 hover:bg-emerald-50/30"
-            >
-              {/* Thumbnail */}
-              <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-sm">
-                <Image
-                  src={enrolled.course?.thumbnail || 'https://placehold.co/600x400/EEE/31343C'}
-                  alt={enrolled.course?.title || 'Course'}
-                  fill
-                  priority
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 240px"
-                />
-              </div>
-
-              {/* Info */}
-              <div className="min-w-0 flex-1">
-                <h4 className="group-hover:text-primary mb-0.5 truncate text-sm font-semibold transition-colors">
-                  {enrolled.course?.title}
-                </h4>
-                <p className="text-text-secondary mb-2 text-xs">
-                  {enrolled.course?.instructor?.fullName || 'Unknown Instructor'}
-                </p>
-                <p className="text-text-secondary mb-2 truncate text-xs">
-                  Progress:{' '}
-                  <span className="font-medium text-slate-600">
-                    {enrolled.progress?.completedLessonsCount || 0}/
-                    {enrolled.course?.lessonsCount || 0} Lessons
-                  </span>
-                </p>
-
-                {/* Progress Bar */}
-                <div className="flex items-center gap-3">
-                  <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
-                    <div
-                      className="bg-primary h-full rounded-full transition-all"
-                      style={{ width: `${Math.min(enrolled.progress?.percentage || 0, 100)}%` }}
-                    />
-                  </div>
-                  <span className="text-primary shrink-0 text-xs font-semibold">
-                    {Math.round(enrolled.progress?.percentage || 0)}%
-                  </span>
-                </div>
-              </div>
-
-              {/* Play Button */}
-              <Link
-                href={`/dashboard/student/courses/${enrolled.course?._id}`}
-                className="bg-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white opacity-0 shadow-sm transition-all duration-300 group-hover:opacity-100"
-              >
-                <Play size={14} fill="white" />
-              </Link>
-            </div>
-          ))
-        ) : (
+        ) : displayCourses.length === 0 ? (
           <EmptyState
-            title="No Courses in Progress"
+            title="Start Your Learning Journey"
             icon={BookOpen}
-            description="You don't have any courses currently in progress. Start learning today!"
+            description="You don't have any courses currently in progress. Enroll in a course today to build new skills and track your progress right here on your dashboard!"
+            actionText="Explore Courses"
+            actionHref="/courses"
           />
+        ) : (
+          <div
+            className={`space-y-4 transition-opacity duration-300 ${isFetching && !isLoading ? 'pointer-events-none opacity-50' : 'opacity-100'}`}
+          >
+            {displayCourses.map((enrolled) => (
+              <ContinueLearningCard key={enrolled.enrollmentId} enrolled={enrolled} />
+            ))}
+          </div>
         )}
       </div>
     </div>

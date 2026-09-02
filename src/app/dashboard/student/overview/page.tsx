@@ -11,7 +11,6 @@ import WelcomeSection from './_components/WelcomeSection/WelcomeSection';
 const StudentOverviewPage = () => {
   return (
     <section className="space-y-6">
-      {/* Welcome Section */}
       <WelcomeSection />
 
       {/* Stats Cards */}
@@ -20,16 +19,24 @@ const StudentOverviewPage = () => {
       {/* Main Grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left (2/3) */}
-        <div className="space-y-6 lg:col-span-2">
+        <div className="flex flex-col gap-6 lg:col-span-2">
           <ContinueLearning />
-          <MyCertificates />
+          {/* Desktop Only MyCertificates */}
+          <div className="hidden lg:block">
+            <MyCertificates />
+          </div>
         </div>
 
         {/* Right (1/3) */}
-        <div className="space-y-6">
+        <div className="flex flex-col gap-6">
           <UpcomingLiveSessions />
           <WeeklyActivity />
           <CourseProgress />
+        </div>
+
+        {/* Mobile Only MyCertificates at the bottom */}
+        <div className="block lg:hidden">
+          <MyCertificates />
         </div>
       </div>
     </section>
