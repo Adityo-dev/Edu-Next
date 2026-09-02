@@ -18,7 +18,7 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
       {/* Image */}
       <Link
         href={`/dashboard/student/courses/${course?._id}`}
-        className="relative block h-44 overflow-hidden bg-slate-100"
+        className="relative block aspect-video w-full shrink-0 overflow-hidden rounded-sm bg-slate-100"
       >
         <Image
           src={course?.thumbnail}

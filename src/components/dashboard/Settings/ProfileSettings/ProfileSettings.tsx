@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-// ─── Zod Schemas ──────────────────────────────────────────────────────────────
+// ─── Zod Schemas
 
 const baseSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),

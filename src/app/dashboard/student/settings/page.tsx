@@ -42,7 +42,7 @@ const SettingsPage = () => {
       />
 
       {/* Content */}
-      <div className="rounded-md border border-slate-100 bg-white p-6 shadow-xs">
+      <div className="dashboard-card-container">
         {/* Profile Tab */}
         {activeTab === 'profile' && <ProfileSettings />}
 
