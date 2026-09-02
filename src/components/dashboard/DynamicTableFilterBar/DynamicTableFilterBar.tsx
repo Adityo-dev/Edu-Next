@@ -28,8 +28,9 @@ const DynamicTableFilterBar = ({
   exportText = 'Export CSV',
   onExport,
 }: DynamicTableFilterBarProps) => {
-  const { setMultipleQueries, getQueryObject } = useSetSearchQueryInURL();
+  const { setMultipleQueries, getQueryObject, searchParams } = useSetSearchQueryInURL();
   const queryParams = getQueryObject();
+  const searchParamsString = searchParams.toString();
 
   // 1. Search Logic & State Synchronization (State Derivation Method)
   const searchField = fields.find((f) => f.type === 'search');
@@ -57,20 +58,44 @@ const DynamicTableFilterBar = ({
   // 2. Filter Extraction (Filters can be configured as 'select' or 'tabs')
   const filterFields = fields.filter((f) => f.type === 'select' || (f.type as string) === 'tabs');
 
+  // Optimistic UI state for instant tab switching
+  const [localFilterValues, setLocalFilterValues] = useState<Record<string, string>>({});
+
+  // Sync local state if URL changes externally
+  useEffect(() => {
+    const syncedState: Record<string, string> = {};
+    let hasChanges = false;
+    filterFields.forEach((field) => {
+      const paramName = field.name.replace('-filter', '');
+      const urlValue = queryParams[paramName] || field.value || 'all';
+      if (localFilterValues[paramName] !== urlValue) {
+        hasChanges = true;
+      }
+      syncedState[paramName] = urlValue as string;
+    });
+    if (hasChanges) {
+      setLocalFilterValues(syncedState);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParamsString]); 
+
   return (
     <div className="flex w-full flex-wrap items-center justify-between gap-4">
       <div className="flex flex-wrap items-center gap-3">
         {filterFields.map((field) => {
           const paramName = field.name.replace('-filter', '');
-          const currentFieldValue = queryParams[paramName] || field.value || 'all';
+          const currentFieldValue = localFilterValues[paramName] !== undefined 
+            ? localFilterValues[paramName] 
+            : (queryParams[paramName] || field.value || 'all');
 
           // Tabs Filter
           if ((field.type as string) === 'tabs' && field.options) {
             return (
               <Tabs
                 key={field.name}
-                value={currentFieldValue}
+                value={currentFieldValue as string}
                 onValueChange={(val) => {
+                  setLocalFilterValues(prev => ({ ...prev, [paramName]: val }));
                   setMultipleQueries({ [paramName]: val === 'all' ? undefined : val, page: 1 });
                   if (field.onChange) field.onChange(val);
                 }}
@@ -96,8 +121,9 @@ const DynamicTableFilterBar = ({
             return (
               <div key={field.name} className="w-full sm:w-44">
                 <Select
-                  value={currentFieldValue}
+                  value={currentFieldValue as string}
                   onValueChange={(val) => {
+                    setLocalFilterValues(prev => ({ ...prev, [paramName]: val }));
                     setMultipleQueries({ [paramName]: val === 'all' ? undefined : val, page: 1 });
                     if (field.onChange) field.onChange(val);
                   }}

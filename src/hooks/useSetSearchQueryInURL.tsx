@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, startTransition } from 'react';
 
 const useSetSearchQueryInURL = () => {
   const router = useRouter();
@@ -29,7 +29,9 @@ const useSetSearchQueryInURL = () => {
 
       const updatedPath = newQueryString ? `${pathname}?${newQueryString}` : pathname;
 
-      router.replace(updatedPath, { scroll: false });
+      startTransition(() => {
+        router.replace(updatedPath, { scroll: false });
+      });
     },
     [searchParams, pathname, router],
   );
