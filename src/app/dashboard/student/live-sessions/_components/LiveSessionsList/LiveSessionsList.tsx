@@ -60,8 +60,6 @@ const LiveSessionsList = () => {
     );
   }, [rows, currentSearchUrl]);
 
-
-
   return (
     <div className="space-y-6">
       <div className="dashboard-card-container space-y-4 p-4">
@@ -92,9 +90,15 @@ const LiveSessionsList = () => {
           />
         </div>
       ) : (
-        <div className={`space-y-4 transition-opacity duration-300 ${isFetching && !isLoading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
-          {filteredRows.map((session) => (
-            <LiveSessionCard key={session?._id || Math.random()} session={session} statusConfig={statusConfig} />
+        <div
+          className={`space-y-4 transition-opacity duration-300 ${isFetching && !isLoading ? 'pointer-events-none opacity-50' : 'opacity-100'}`}
+        >
+          {filteredRows.map((session, i) => (
+            <LiveSessionCard
+              key={session?._id || `session-${i}`}
+              session={session}
+              statusConfig={statusConfig}
+            />
           ))}
         </div>
       )}

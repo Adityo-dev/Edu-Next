@@ -5,7 +5,9 @@ import { getNotificationStyle } from './Notifications';
 
 interface NotificationCardProps {
   notification: INotification;
+  // eslint-disable-next-line no-unused-vars
   onMarkRead?: (id: string) => void;
+  // eslint-disable-next-line no-unused-vars
   onDelete?: (id: string) => void;
 }
 
@@ -16,9 +18,7 @@ const NotificationCard = ({ notification, onMarkRead, onDelete }: NotificationCa
   return (
     <div
       className={`group flex items-start gap-4 rounded-md border p-3 transition-all ${
-        !notification?.isRead
-          ? 'border-primary/30 bg-white'
-          : 'border-border bg-white opacity-65'
+        !notification?.isRead ? 'border-primary/30 bg-white' : 'border-border bg-white opacity-65'
       }`}
     >
       <div

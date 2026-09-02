@@ -74,19 +74,21 @@ const DynamicTableFilterBar = ({
       syncedState[paramName] = urlValue as string;
     });
     if (hasChanges) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocalFilterValues(syncedState);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParamsString]); 
+  }, [searchParamsString]);
 
   return (
     <div className="flex w-full flex-wrap items-center justify-between gap-4">
       <div className="flex flex-wrap items-center gap-3">
         {filterFields.map((field) => {
           const paramName = field.name.replace('-filter', '');
-          const currentFieldValue = localFilterValues[paramName] !== undefined 
-            ? localFilterValues[paramName] 
-            : (queryParams[paramName] || field.value || 'all');
+          const currentFieldValue =
+            localFilterValues[paramName] !== undefined
+              ? localFilterValues[paramName]
+              : queryParams[paramName] || field.value || 'all';
 
           // Tabs Filter
           if ((field.type as string) === 'tabs' && field.options) {
@@ -95,7 +97,7 @@ const DynamicTableFilterBar = ({
                 key={field.name}
                 value={currentFieldValue as string}
                 onValueChange={(val) => {
-                  setLocalFilterValues(prev => ({ ...prev, [paramName]: val }));
+                  setLocalFilterValues((prev) => ({ ...prev, [paramName]: val }));
                   setMultipleQueries({ [paramName]: val === 'all' ? undefined : val, page: 1 });
                   if (field.onChange) field.onChange(val);
                 }}
@@ -123,7 +125,7 @@ const DynamicTableFilterBar = ({
                 <Select
                   value={currentFieldValue as string}
                   onValueChange={(val) => {
-                    setLocalFilterValues(prev => ({ ...prev, [paramName]: val }));
+                    setLocalFilterValues((prev) => ({ ...prev, [paramName]: val }));
                     setMultipleQueries({ [paramName]: val === 'all' ? undefined : val, page: 1 });
                     if (field.onChange) field.onChange(val);
                   }}

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/purity */
-import { Calendar, Clock, ExternalLink, Video } from 'lucide-react';
+import { Calendar, Clock, Video } from 'lucide-react';
 
 import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
@@ -14,7 +14,10 @@ interface LiveSessionCardProps {
 
 const LiveSessionCard = ({ session, statusConfig }: LiveSessionCardProps) => {
   // Safely grab the config, defaulting to a gray fallback if status is missing/invalid
-  const config = statusConfig?.[session?.status as string] || { label: 'Unknown', color: '#6b7280' };
+  const config = statusConfig?.[session?.status as string] || {
+    label: 'Unknown',
+    color: '#6b7280',
+  };
 
   const isLive = session?.status === 'live';
   const isCompleted = session?.status === 'completed';
@@ -54,11 +57,7 @@ const LiveSessionCard = ({ session, statusConfig }: LiveSessionCardProps) => {
 
           <div className="text-text-secondary flex flex-wrap items-center gap-4 text-xs">
             <span className="flex items-center gap-1.5">
-              <DynamicUserAvatar
-                src={session?.instructor?.avatar}
-                alt={instructorName}
-                size={18}
-              />
+              <DynamicUserAvatar src={session?.instructor?.avatar} alt={instructorName} size={18} />
               {instructorName}
             </span>
             <span className="flex items-center gap-1.5">
@@ -86,9 +85,7 @@ const LiveSessionCard = ({ session, statusConfig }: LiveSessionCardProps) => {
             />
           )}
 
-          {isUpcoming && session?.startTime && (
-            <CountdownTimer targetDate={session.startTime} />
-          )}
+          {isUpcoming && session?.startTime && <CountdownTimer targetDate={session.startTime} />}
 
           {isCompleted && (
             <span className="rounded-sm border border-slate-200 px-6 py-2.5 text-sm font-semibold text-slate-400">
