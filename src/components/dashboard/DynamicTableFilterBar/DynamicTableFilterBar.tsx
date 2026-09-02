@@ -81,8 +81,8 @@ const DynamicTableFilterBar = ({
   }, [searchParamsString]);
 
   return (
-    <div className="flex w-full flex-wrap items-center justify-between gap-4">
-      <div className="flex flex-wrap items-center gap-3">
+    <div className="flex w-full max-w-full flex-wrap items-center justify-between gap-4">
+      <div className="flex w-full max-w-full flex-wrap items-center gap-3 sm:w-auto">
         {filterFields.map((field) => {
           const paramName = field.name.replace('-filter', '');
           const currentFieldValue =
@@ -101,14 +101,14 @@ const DynamicTableFilterBar = ({
                   setMultipleQueries({ [paramName]: val === 'all' ? undefined : val, page: 1 });
                   if (field.onChange) field.onChange(val);
                 }}
-                className="w-full sm:w-auto"
+                className="w-full max-w-full sm:w-auto"
               >
-                <TabsList className="no-scrollbar h-10! w-full justify-start overflow-x-auto overflow-y-hidden rounded-sm border border-slate-200 bg-white p-0 shadow-xs sm:w-auto sm:justify-center">
+                <TabsList className="no-scrollbar flex h-10! w-full max-w-full justify-start overflow-x-auto overflow-y-hidden rounded-sm border border-slate-200 bg-white p-0 shadow-xs sm:w-auto sm:justify-center">
                   {field.options.map((option) => (
                     <TabsTrigger
                       key={option.value}
                       value={option.value}
-                      className="data-[state=active]:bg-primary cursor-pointer rounded-xs px-4 py-2 text-sm font-semibold text-slate-500 capitalize transition-all hover:bg-slate-50 data-[state=active]:text-white"
+                      className="data-[state=active]:bg-primary cursor-pointer rounded-xs px-4 py-2 text-sm font-semibold whitespace-nowrap text-slate-500 capitalize transition-all hover:bg-slate-50 data-[state=active]:text-white"
                     >
                       {option.label}
                     </TabsTrigger>
