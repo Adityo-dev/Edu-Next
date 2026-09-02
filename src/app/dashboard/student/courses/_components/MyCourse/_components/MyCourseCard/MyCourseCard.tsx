@@ -1,3 +1,4 @@
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { IEnrolledCourse } from '@/types/courseManagement.types';
 import { BookOpen, Clock, Play, Star } from 'lucide-react';
 import Image from 'next/image';
@@ -7,10 +8,7 @@ interface MyCourseCardProps {
   enrolledCourse: IEnrolledCourse;
 }
 
-const statusColors: Record<string, string> = {
-  'In Progress': 'bg-blue-50 text-blue-600',
-  Completed: 'bg-emerald-50 text-primary',
-};
+import { FormatDateTime } from '@/utils/formatDateTime';
 
 const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
   const { course, progress } = enrolledCourse;
@@ -31,30 +29,12 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
 
-        {/* Status Badge */}
-        <span
-          className={`absolute top-3 left-3 rounded-sm px-2.5 py-1 text-xs font-semibold shadow-sm ${
-            statusColors[progress?.status] || 'bg-slate-100 text-slate-700'
-          }`}
-        >
-          {progress?.status}
-        </span>
-
-        {/* Certificate Badge */}
-        {progress?.isCourseCompleted && (
-          <span className="absolute top-3 right-3 rounded-sm bg-yellow-400 px-2.5 py-1 text-xs font-semibold text-white shadow-sm">
-            🎓 Certified
-          </span>
-        )}
-
         {/* Progress Overlay */}
         <div className="absolute right-0 bottom-0 left-0 bg-linear-to-t from-black/60 to-transparent p-2.5">
           <div className="flex items-center gap-2">
             <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/30">
               <div
-                className={`h-full rounded-full ${
-                  progress?.isCourseCompleted ? 'bg-yellow-400' : 'bg-primary'
-                }`}
+                className="bg-primary h-full rounded-full"
                 style={{ width: `${progress?.percentage || 0}%` }}
               />
             </div>
@@ -90,7 +70,7 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
         </div>
 
         {/* Stats Row */}
-        <div className="text-text-secondary mb-4 flex items-center gap-3 text-xs">
+        <div className="text-text-secondary mb-4 flex flex-wrap items-center gap-3 text-xs">
           <span className="flex items-center gap-1">
             <BookOpen size={11} />
             {progress?.completedLessonsCount}/{course?.lessonsCount} lessons
@@ -100,11 +80,16 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
             <Clock size={11} />
             {course?.totalDuration}
           </span>
-          <span className="text-slate-300">|</span>
-          <span className="flex items-center gap-1">
-            <Star size={11} fill="#ffc107" color="#ffc107" />
-            {course?.rating}
-          </span>
+
+          {progress?.averageQuizScore !== undefined && (
+            <>
+              <span className="text-slate-300">|</span>
+              <span className="flex items-center gap-1">
+                <Star size={11} fill="#ffc107" color="#ffc107" />
+                Quiz: {progress.averageQuizScore}%
+              </span>
+            </>
+          )}
         </div>
 
         <div className="mb-4 h-px bg-slate-100" />
@@ -112,9 +97,8 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
         {/* Last Accessed + CTA */}
         <div className="flex items-center justify-between">
           <p className="text-text-secondary text-xs">
-            {progress?.lastActivityAt
-              ? new Date(progress?.lastActivityAt).toLocaleDateString()
-              : 'N/A'}
+            Last active:{' '}
+            {progress?.lastActivityAt ? FormatDateTime(progress.lastActivityAt) : 'N/A'}
           </p>
 
           {progress?.isCourseCompleted ? (
@@ -124,13 +108,13 @@ const MyCourseCard = ({ enrolledCourse }: MyCourseCardProps) => {
               </button>
             </div>
           ) : (
-            <Link
+            <DynamicActionButton
               href={`/dashboard/student/courses/${course?._id}`}
-              className="bg-primary flex items-center gap-1.5 rounded-sm px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-[#2a6159] active:scale-95"
-            >
-              <Play size={11} fill="white" />
-              Continue
-            </Link>
+              label="Continue"
+              icon={Play}
+              showIcon
+              className="h-8! px-4!"
+            />
           )}
         </div>
       </div>

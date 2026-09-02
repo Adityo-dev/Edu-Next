@@ -1,115 +1,59 @@
-import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { ILesson } from '@/types/courseManagement.types';
-import { ArrowLeft, ArrowRight, Maximize } from 'lucide-react';
+import { FileText, Link as LinkIcon, HelpCircle } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 import QuizForm from './QuizForm';
 
 interface LessonInfoTabsProps {
   currentLesson: ILesson | null;
-  onPrevLesson: () => void;
-  onNextLesson: () => void;
-  hasNext: boolean;
-  hasPrev: boolean;
-  onFullScreen: () => void;
 }
 
-export default function LessonInfoTabs({
-  currentLesson,
-  onPrevLesson,
-  onNextLesson,
-  hasNext,
-  hasPrev,
-  onFullScreen,
-}: LessonInfoTabsProps) {
+export default function LessonInfoTabs({ currentLesson }: LessonInfoTabsProps) {
   const params = useParams();
   const courseId = params.id as string;
   const [activeTab, setActiveTab] = useState<'description' | 'reference' | 'quiz'>('description');
 
   return (
     <div className="border-subtle bg-pure-white text-text-secondary flex w-full flex-col border-t">
-      {/* Navigation Bar */}
-      <div className="border-subtle flex items-center justify-between gap-2 border-b px-3 py-4 md:px-6">
-        <DynamicActionButton
-          label="Prev"
-          icon={ArrowLeft}
-          showIcon
-          onClick={onPrevLesson}
-          disabled={!hasPrev}
-          className={`h-9! ${
-            !hasPrev
-              ? 'bg-teal-accent! text-text-placeholder! pointer-events-none border-transparent!'
-              : ''
-          }`}
-        />
-
-        <button
-          onClick={onFullScreen}
-          className="text-text-secondary hover:bg-teal-accent hover:text-text-primary flex shrink-0 items-center justify-center gap-1.5 rounded-md p-2 text-xs font-medium whitespace-nowrap transition-colors sm:px-3 sm:py-2 sm:text-sm"
-          title="Full Screen"
-        >
-          <Maximize size={18} className="shrink-0" />
-          <span className="hidden sm:inline">Full Screen</span>
-        </button>
-
-        <DynamicActionButton
-          label="Next"
-          icon={ArrowRight}
-          showIcon
-          onClick={onNextLesson}
-          disabled={!hasNext}
-          className={`h-9! ${
-            !hasNext
-              ? 'bg-teal-accent! text-text-placeholder! pointer-events-none border-transparent!'
-              : ''
-          }`}
-        />
-      </div>
-
       {/* Tabs */}
-      <div className="custom-scrollbar bg-section-slate overflow-x-auto px-4 pt-4 md:px-6">
-        <div className="border-subtle flex min-w-max items-center gap-4 border-b sm:gap-6">
-          <button
-            onClick={() => setActiveTab('description')}
-            className={`px-3 py-2 text-sm font-semibold whitespace-nowrap transition-colors sm:px-4 ${
-              activeTab === 'description'
-                ? 'border-primary bg-pure-white text-primary border-b-2'
-                : 'text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            Video Description
-          </button>
-          <button
-            onClick={() => setActiveTab('reference')}
-            className={`px-3 py-2 text-sm font-semibold whitespace-nowrap transition-colors sm:px-4 ${
-              activeTab === 'reference'
-                ? 'border-primary bg-pure-white text-primary border-b-2'
-                : 'text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            References
-          </button>
-          <button
-            onClick={() => setActiveTab('quiz')}
-            className={`px-3 py-2 text-sm font-semibold whitespace-nowrap transition-colors sm:px-4 ${
-              activeTab === 'quiz'
-                ? 'border-primary bg-pure-white text-primary border-b-2'
-                : 'text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            Quiz
-          </button>
-        </div>
+      <div className="custom-scrollbar bg-section-slate overflow-x-auto border-b border-slate-200">
+        <ul className="flex min-w-max items-center gap-6 px-4 pt-4 md:px-6">
+          {['description', 'reference', 'quiz'].map((tabKey) => {
+            const label =
+              tabKey === 'description'
+                ? 'Video Description'
+                : tabKey === 'reference'
+                  ? 'References'
+                  : 'Quiz';
+            return (
+              <li key={tabKey}>
+                <button
+                  onClick={() => setActiveTab(tabKey as 'description' | 'reference' | 'quiz')}
+                  className={`focus-visible:text-primary relative cursor-pointer pb-3 text-xs font-semibold transition-colors duration-300 outline-none ${
+                    activeTab === tabKey ? 'text-primary' : 'hover:text-primary text-slate-500'
+                  }`}
+                >
+                  {label}
+                  <span
+                    className={`bg-primary absolute bottom-0 left-0 h-[2px] transition-all duration-300 ease-out ${
+                      activeTab === tabKey ? 'w-full opacity-100' : 'w-0 opacity-0'
+                    }`}
+                  />
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
       {/* Lesson Details Content */}
-      <div className="bg-pure-white mb-8 p-4 md:p-6">
-        <h1 className="text-text-primary mb-1 text-xl font-bold md:text-2xl">
+      <div className="bg-pure-white mb-8 p-5">
+        <h1 className="text-text-primary mb-1 text-lg font-semibold md:text-xl">
           {currentLesson?.title || 'Lesson Title'}
         </h1>
         {currentLesson && (
           <p className="text-text-secondary mb-6 text-sm font-medium">
-            Duration: {currentLesson.duration}
+            Video Duration: {currentLesson.duration}
           </p>
         )}
 
@@ -118,18 +62,24 @@ export default function LessonInfoTabs({
             (currentLesson?.description ? (
               <div dangerouslySetInnerHTML={{ __html: currentLesson.description }} />
             ) : (
-              <p className="text-text-placeholder leading-relaxed italic">
-                No description available for this lesson.
-              </p>
+              <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-10 text-center">
+                <FileText className="mb-3 text-slate-300" size={32} strokeWidth={1.5} />
+                <p className="text-text-secondary text-sm font-medium">
+                  No description available for this lesson.
+                </p>
+              </div>
             ))}
 
           {activeTab === 'reference' &&
             (currentLesson?.references ? (
               <div dangerouslySetInnerHTML={{ __html: currentLesson.references }} />
             ) : (
-              <p className="text-text-placeholder leading-relaxed italic">
-                No references available for this lesson.
-              </p>
+              <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-10 text-center">
+                <LinkIcon className="mb-3 text-slate-300" size={32} strokeWidth={1.5} />
+                <p className="text-text-secondary text-sm font-medium">
+                  No references available for this lesson.
+                </p>
+              </div>
             ))}
 
           {activeTab === 'quiz' &&
@@ -145,9 +95,12 @@ export default function LessonInfoTabs({
                 ))}
               </div>
             ) : (
-              <p className="text-text-placeholder leading-relaxed italic">
-                No quiz available for this lesson yet.
-              </p>
+              <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-10 text-center">
+                <HelpCircle className="mb-3 text-slate-300" size={32} strokeWidth={1.5} />
+                <p className="text-text-secondary text-sm font-medium">
+                  No quiz available for this lesson yet.
+                </p>
+              </div>
             ))}
         </div>
       </div>

@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/accordion';
 import { ILesson } from '@/types/courseManagement.types';
 import { BookOpen, CheckCircle, ChevronDown, PlayCircle, Search } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export interface ICourseSection {
   _id?: string;
@@ -49,19 +49,22 @@ export default function CourseContentSidebar({
   const progressPercentage = progressData?.percentage || 0;
 
   const filteredSections = useMemo(() => {
+    if (!courseData?.sections) return [];
+
     return courseData.sections
       .map((section: ICourseSection) => {
-        const filteredLessons = section.lessons.filter((lesson: ILesson) =>
-          lesson.title.toLowerCase().includes(searchQuery.toLowerCase()),
+        const safeLessons = section?.lessons || [];
+        const filteredLessons = safeLessons.filter((lesson: ILesson) =>
+          lesson?.title?.toLowerCase().includes(searchQuery.toLowerCase()),
         );
         if (
-          section.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          section?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           filteredLessons.length > 0
         ) {
           return {
             ...section,
-            lessons: section.title.toLowerCase().includes(searchQuery.toLowerCase())
-              ? section.lessons
+            lessons: section?.title?.toLowerCase().includes(searchQuery.toLowerCase())
+              ? safeLessons
               : filteredLessons,
           };
         }
@@ -69,6 +72,19 @@ export default function CourseContentSidebar({
       })
       .filter((section): section is ICourseSection => section !== null);
   }, [courseData.sections, searchQuery]);
+
+  const [openSections, setOpenSections] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!courseData?.sections || !currentLessonId) return;
+    const index = courseData.sections.findIndex((s) =>
+      s.lessons?.some((l) => l._id === currentLessonId),
+    );
+    if (index !== -1) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setOpenSections([`section-${index}`]);
+    }
+  }, [currentLessonId, courseData?.sections]);
 
   return (
     <div
@@ -139,9 +155,8 @@ export default function CourseContentSidebar({
           ) : (
             <Accordion
               type="multiple"
-              defaultValue={courseData.sections.map(
-                (_: ICourseSection, i: number) => `section-${i}`,
-              )}
+              value={openSections}
+              onValueChange={setOpenSections}
               className="w-full"
             >
               {filteredSections.map((section: ICourseSection, si: number) => (

@@ -2,12 +2,14 @@
 /* eslint-disable no-unused-vars */
 'use client';
 
-import CoursePlayerSkeleton from '@/components/dashboard/Skeletons/CoursePlayerSkeleton';
+import CoursePlayerSkeleton from '@/components/dashboard/Skeletons/student/CoursePlayerSkeleton';
 import {
   useGetCoursePlaybackDataQuery,
   useMarkLessonAsCompleteMutation,
 } from '@/redux/features/courseManagement/studentCourse.api';
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 import { ILesson } from '@/types/courseManagement.types';
+import { ArrowLeft, ArrowRight, Maximize } from 'lucide-react';
 import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CourseContentSidebar, {
   ICourseSection,
@@ -69,13 +71,13 @@ export default function CoursePlayerPage({ params }: { params: Promise<{ id: str
       if (!currentLesson?._id || !courseData?._id) return;
 
       const isAlreadyCompleted = progressData?.completedLessons?.includes(
-        currentLesson._id as string,
+        currentLesson?._id as string,
       );
       if (isAlreadyCompleted) return;
 
       markLessonAsComplete({
-        courseId: courseData._id,
-        lessonId: currentLesson._id as string,
+        courseId: courseData?._id as string,
+        lessonId: currentLesson?._id as string,
       });
       completionFiredRef.current = true;
     },
@@ -136,6 +138,45 @@ export default function CoursePlayerPage({ params }: { params: Promise<{ id: str
           />
         </div>
 
+        {/* Navigation Bar (Moved from Tabs to be above Curriculum on Mobile) */}
+        <div className="border-subtle bg-pure-white flex items-center justify-between gap-2 border-b px-3 py-4 md:px-6">
+          <DynamicActionButton
+            label="Prev"
+            icon={ArrowLeft}
+            showIcon
+            onClick={handlePrevLesson}
+            disabled={!prevLesson}
+            className={`h-9! ${
+              !prevLesson
+                ? 'bg-teal-accent! text-text-placeholder! pointer-events-none border-transparent!'
+                : ''
+            }`}
+          />
+
+          <button
+            onClick={handleFullScreen}
+            className="text-text-secondary hover:bg-teal-accent hover:text-text-primary flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-md p-2 text-xs font-medium whitespace-nowrap transition-colors sm:px-3 sm:py-2 sm:text-sm"
+            title="Full Screen"
+          >
+            <Maximize size={18} className="shrink-0" />
+            <span className="hidden sm:inline">Full Screen</span>
+          </button>
+
+          <DynamicActionButton
+            label="Next"
+            icon={ArrowRight}
+            showIcon
+            iconPosition="right"
+            onClick={handleNextLesson}
+            disabled={!nextLesson}
+            className={`h-9! ${
+              !nextLesson
+                ? 'bg-teal-accent! text-text-placeholder! pointer-events-none border-transparent!'
+                : ''
+            }`}
+          />
+        </div>
+
         {/* Mobile Only: Course Curriculum inserted here between Video and Tabs */}
         <div className="block w-full lg:hidden">
           <CourseContentSidebar
@@ -149,14 +190,7 @@ export default function CoursePlayerPage({ params }: { params: Promise<{ id: str
 
         {/* Tabs and Navigation */}
         <div className="custom-scrollbar flex-1 overflow-y-auto">
-          <LessonInfoTabs
-            currentLesson={currentLesson}
-            onPrevLesson={handlePrevLesson}
-            onNextLesson={handleNextLesson}
-            hasNext={!!nextLesson}
-            hasPrev={!!prevLesson}
-            onFullScreen={handleFullScreen}
-          />
+          <LessonInfoTabs currentLesson={currentLesson} />
         </div>
       </div>
 
