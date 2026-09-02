@@ -4,7 +4,7 @@ import { Award, Download, ExternalLink } from 'lucide-react';
 import Image from 'next/image';
 import DynamicBadge from '@/components/dashboard/DynamicBadge/DynamicBadge';
 import SectionHeader from '@/components/dashboard/SectionHeader/SectionHeader';
-import { Button } from '@/components/ui/button';
+import DynamicActionButton from '@/components/dashboard/DynamicActionButton/DynamicActionButton';
 
 interface Certificate {
   id: number;
@@ -67,13 +67,19 @@ const EarnedCertificates = ({ certificates }: EarnedCertificatesProps) => {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button className="flex flex-1 items-center justify-center gap-1.5 rounded-sm">
-                    <Download size={14} />
-                    Download PDF
-                  </Button>
-                  <Button variant="outline" className="h-10 w-10 shrink-0 rounded-sm p-0">
-                    <ExternalLink size={16} />
-                  </Button>
+                  <DynamicActionButton
+                    label="Download PDF"
+                    icon={Download}
+                    showIcon
+                    className="h-10 flex-1 px-0"
+                  />
+                  <DynamicActionButton
+                    label=""
+                    icon={ExternalLink}
+                    showIcon
+                    variant="outline"
+                    className="h-10 w-10 shrink-0 px-0 [&>span]:hidden"
+                  />
                 </div>
               </div>
             </div>
