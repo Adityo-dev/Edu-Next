@@ -56,7 +56,7 @@ const EarnedCertificates = ({ certificates }: EarnedCertificatesProps) => {
               </div>
 
               {/* Content */}
-              <div className="p-4">
+              <div className="pt-4">
                 <h3 className="mb-1 line-clamp-2 text-sm leading-snug font-bold">{cert.course}</h3>
                 <p className="text-text-secondary mb-1 text-xs">{cert.instructor}</p>
                 <p className="text-text-secondary mb-4 text-xs">Completed: {cert.completedDate}</p>
