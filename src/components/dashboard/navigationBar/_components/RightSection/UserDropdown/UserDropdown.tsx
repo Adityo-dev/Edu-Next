@@ -79,15 +79,30 @@ export default function UserDropdown() {
         <DropdownMenuSeparator className="bg-slate-100" />
 
         <DropdownMenuGroup className="space-y-0.5 py-1">
-          <DropdownMenuItem className="hover:text-primary! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-slate-600 transition-all outline-none hover:bg-emerald-50 focus:bg-emerald-50">
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(`/dashboard/${user?.role?.toLowerCase() || 'student'}/settings`)
+            }
+            className="hover:text-primary! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-slate-600 transition-all outline-none hover:bg-emerald-50 focus:bg-emerald-50"
+          >
             <UserIcon size={15} className="text-slate-400" />
             Profile Settings
           </DropdownMenuItem>
-          <DropdownMenuItem className="hover:text-primary! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-slate-600 transition-all outline-none hover:bg-emerald-50 focus:bg-emerald-50">
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(`/dashboard/${user?.role?.toLowerCase() || 'student'}/notifications`)
+            }
+            className="hover:text-primary! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-slate-600 transition-all outline-none hover:bg-emerald-50 focus:bg-emerald-50"
+          >
             <Bell size={15} className="text-slate-400" />
             Notifications
           </DropdownMenuItem>
-          <DropdownMenuItem className="hover:text-primary! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-slate-600 transition-all outline-none hover:bg-emerald-50 focus:bg-emerald-50">
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(`/dashboard/${user?.role?.toLowerCase() || 'student'}/settings`)
+            }
+            className="hover:text-primary! flex cursor-pointer items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-slate-600 transition-all outline-none hover:bg-emerald-50 focus:bg-emerald-50"
+          >
             <Settings size={15} className="text-slate-400" />
             Settings
           </DropdownMenuItem>

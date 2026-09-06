@@ -21,7 +21,7 @@ export default function CourseCard({
 }: CourseCardProps) {
   return (
     <Link
-      href={`/courses/${course?.id}`}
+      href={`/courses/${course?.slug}`}
       className="group dashboard-card-container flex h-full flex-col overflow-hidden rounded-sm p-4! transition-all duration-300 hover:-translate-y-1 hover:border-emerald-100 hover:shadow-sm hover:shadow-emerald-100/40"
     >
       {/* Image */}
