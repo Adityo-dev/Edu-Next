@@ -50,8 +50,8 @@ export default function RelatedCourses({ slug }: RelatedCoursesProps) {
 
   if (isLoading) {
     return (
-      <div className="mt-12">
-        <h2 className="mb-6 text-2xl font-bold">Related Courses</h2>
+      <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs">
+        <h2 className="mb-4 text-xl font-semibold">Related Courses</h2>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
             <CourseCardSkeleton key={i} />
@@ -66,8 +66,8 @@ export default function RelatedCourses({ slug }: RelatedCoursesProps) {
   }
 
   return (
-    <div className="mt-12 border-t border-slate-200 pt-12">
-      <h2 className="mb-6 text-2xl font-bold">Related Courses</h2>
+    <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs">
+      <h2 className="mb-4 text-xl font-semibold">Related Courses</h2>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {relatedCourses.map((course: any) => (
           <CourseCard

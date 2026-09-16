@@ -320,14 +320,14 @@ const CourseDetailsPage = ({ params }: { params: Promise<{ id: string }> }) => {
               duration={course.duration}
             />
             <ReviewsAndAbout course={course} />
+            
+            {/* ── Related Courses ── */}
+            <RelatedCourses slug={id} />
           </div>
 
           {/* ── Right: Sticky Buy Card  */}
           <StickyBuyCard course={course} totalLessons={totalLessons} />
         </div>
-
-        {/* ── Related Courses ── */}
-        <RelatedCourses slug={id} />
       </div>
     </section>
   );

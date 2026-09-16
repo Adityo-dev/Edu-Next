@@ -8,19 +8,9 @@ import Image from 'next/image';
 import DynamicUserAvatar from '@/components/shared/DynamicUserAvatar/DynamicUserAvatar';
 import Link from 'next/link';
 
-interface RelatedCourse {
-  id: string | number;
-  title: string;
-  image: string;
-  instructor: string;
-  price: number;
-  rating: number;
-}
-
 interface CourseData {
   id: string;
   rating?: number;
-  relatedCourses: RelatedCourse[];
 }
 
 export default function ReviewsAndAbout({ course }: { course: CourseData }) {
@@ -139,41 +129,6 @@ export default function ReviewsAndAbout({ course }: { course: CourseData }) {
         )}
       </div>
 
-      {/* Related Courses */}
-      <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white p-4 shadow-xs">
-        <h2 className="mb-4 text-xl font-semibold">Related Courses</h2>
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-          {course.relatedCourses.map((c: RelatedCourse) => (
-            <Link
-              href={`/courses/${c.id}`}
-              key={c.id}
-              className="group overflow-hidden rounded-md border border-slate-100 transition-all duration-300 hover:border-emerald-100 hover:shadow-sm"
-            >
-              <div className="relative h-36 overflow-hidden">
-                <Image
-                  src={c.image}
-                  alt={c.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-              <div className="p-4">
-                <h4 className="group-hover:text-primary mb-1 line-clamp-2 text-sm font-bold transition-colors">
-                  {c.title}
-                </h4>
-                <p className="text-text-secondary mb-2 text-xs">{c.instructor}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-primary font-bold">৳{c.price.toLocaleString()}</span>
-                  <span className="flex items-center gap-1 text-xs text-slate-500">
-                    <Star size={11} fill="#ffc107" color="#ffc107" />
-                    {c.rating}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
     </>
   );
 }
