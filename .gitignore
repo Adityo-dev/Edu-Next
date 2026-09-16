@@ -31,6 +31,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
+.env
 .env.development.local
 .env.production.local
 
@@ -41,5 +42,3 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 branch_structure.json
-temp_auto_push.bat
-temp_interactive_push.bat
