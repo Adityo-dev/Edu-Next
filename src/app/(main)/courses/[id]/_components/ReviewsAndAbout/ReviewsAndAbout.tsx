@@ -21,19 +21,19 @@ export default function ReviewsAndAbout({ course }: { course: CourseData }) {
 
   const ratingBreakdown = stats?.starPercentage
     ? [
-        { stars: 5, percent: stats.starPercentage['5'] || 0 },
-        { stars: 4, percent: stats.starPercentage['4'] || 0 },
-        { stars: 3, percent: stats.starPercentage['3'] || 0 },
-        { stars: 2, percent: stats.starPercentage['2'] || 0 },
-        { stars: 1, percent: stats.starPercentage['1'] || 0 },
-      ]
+      { stars: 5, percent: stats.starPercentage['5'] || 0 },
+      { stars: 4, percent: stats.starPercentage['4'] || 0 },
+      { stars: 3, percent: stats.starPercentage['3'] || 0 },
+      { stars: 2, percent: stats.starPercentage['2'] || 0 },
+      { stars: 1, percent: stats.starPercentage['1'] || 0 },
+    ]
     : [
-        { stars: 5, percent: 0 },
-        { stars: 4, percent: 0 },
-        { stars: 3, percent: 0 },
-        { stars: 2, percent: 0 },
-        { stars: 1, percent: 0 },
-      ];
+      { stars: 5, percent: 0 },
+      { stars: 4, percent: 0 },
+      { stars: 3, percent: 0 },
+      { stars: 2, percent: 0 },
+      { stars: 1, percent: 0 },
+    ];
 
   const averageRating = stats?.averageRating || 0;
   return (
