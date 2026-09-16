@@ -4,8 +4,23 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   },
-  "cSpell.words": ["Bootcamp", "cooldown", "notif", "Wishlisted", "করছি"],
+  "cSpell.words": [
+    "Bootcamp",
+    "cooldown",
+    "notif",
+    "Wishlisted",
+    "করছি"
+  ],
   "[typescriptreact]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "task.allowAutomaticTasks": true,
+  "debug.openDebug": "neverOpen",
+  "terminal.integrated.inheritEnv": false,
+  "tasks": {
+    "label": "lint on open",
+    "type": "shell",
+    "command": "npm run lint",
+    "runOn": "folderOpen"
   }
 }
