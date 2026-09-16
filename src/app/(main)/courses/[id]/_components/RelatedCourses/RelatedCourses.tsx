@@ -29,9 +29,10 @@ export default function RelatedCourses({ slug }: RelatedCoursesProps) {
     const apiCourses = data?.data?.courses || [];
     return apiCourses.map((c: any) => ({
       id: c.slug || c._id,
+      slug: c.slug,
       title: c.title,
       image: c.thumbnail,
-      badge: c.badge || '', // From api if available
+      badge: c.badge || '',
       category: c.category,
       subCategory: c.subCategory,
       level: c.level,

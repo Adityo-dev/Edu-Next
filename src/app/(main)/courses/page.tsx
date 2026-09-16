@@ -143,6 +143,7 @@ const CoursesPageContent = () => {
   const filtered = useMemo(() => {
     return apiCourses.map((c: any) => ({
       id: c.slug || c._id,
+      slug: c.slug,
       title: c.title,
       image: c.thumbnail,
       badge: c.badge,
