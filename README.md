@@ -64,39 +64,5 @@
 - **Notifications:** Sonner
 
 
-## 📦 কিভাবে রান করবেন (Getting Started)
-
-লোকাল পিসিতে প্রজেক্টটি রান করার জন্য নিচের ধাপগুলো অনুসরণ করুন:
-
-**১. রিপোজিটরি ক্লোন করুন:**
-```bash
-git clone https://github.com/Adityo-dev/Edu-Next.git
-cd Edu-Next
-```
-
-**২. ডিপেন্ডেন্সি ইন্সটল করুন:**
-```bash
-pnpm install
-```
-
-**৩. এনভায়রনমেন্ট ভ্যারিয়েবল (.env) সেট করুন:**
-রুট ফোল্ডারে `.env` ফাইল তৈরি করে নিচের লিংকটি বসান:
-```env
-NEXT_PUBLIC_BASE_API=https://edunext-apis.onrender.com/api/v1
-```
-
-**৪. লোকাল সার্ভার চালু করুন:**
-Next.js এবং Turbopack এর জন্য মেমরি লিমিট বাড়িয়ে সার্ভার রান করা ভালো:
-
-```bash
-# Windows (PowerShell) এর জন্য:
-$env:NODE_OPTIONS="--max-old-space-size=8192"; pnpm dev
-
-# Mac/Linux এর জন্য:
-NODE_OPTIONS="--max-old-space-size=8192" pnpm dev
-```
-
-এবার আপনার ব্রাউজারে [http://localhost:3000](http://localhost:3000) লিংকটি ওপেন করুন।
-
 ---
 *Developed for the future of online education in Bangladesh.*
